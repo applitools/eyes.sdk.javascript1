@@ -1,6 +1,6 @@
 'use strict';
 
-const GeneralUtils = require('./GeneralUtils');
+const GeneralUtils = require('./utils/GeneralUtils');
 
 /**
  * Encapsulates the information for the validation about to execute.

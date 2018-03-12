@@ -1,5 +1,7 @@
 'use strict';
 
+const GeneralUtils = require('../utils/GeneralUtils');
+
 /**
  * A container for a MatchWindowData along with the screenshot used for
  * creating it. (We specifically avoid inheritance so we don't have to deal
@@ -13,16 +15,29 @@ class MatchWindowDataWithScreenshot {
      */
     constructor(matchWindowData, screenshot) {
         this._matchWindowData = matchWindowData;
-        this.screenshot = screenshot;
+        this._screenshot = screenshot;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {MatchWindowData} */
     getMatchWindowData() {
         return this._matchWindowData;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /** @return {EyesScreenshot} */
     getScreenshot() {
-        return this.screenshot;
+        return this._screenshot;
+    }
+
+    /** @override */
+    toJSON() {
+        return GeneralUtils.toPlain(this);
+    }
+
+    /** @override */
+    toString() {
+        return `MatchWindowDataWithScreenshot { ${JSON.stringify(this)} }`;
     }
 }
 

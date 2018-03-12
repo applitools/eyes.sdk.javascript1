@@ -1,9 +1,9 @@
 const assert = require("assert");
 
-const GeneralUtils = require("../src/GeneralUtils");
+const GeneralUtils = require("../src/utils/GeneralUtils");
 
 describe('GeneralUtils', function(){
-    describe('#urlConcat()', function(){
+    describe('urlConcat()', function(){
         it('should return / when the values are empty', function() {
             assert.equal(GeneralUtils.urlConcat('', ''), "/");
         });
@@ -35,7 +35,31 @@ describe('GeneralUtils', function(){
         });
     });
 
-    describe('#jwtDecode()', function(){
+    describe('toISO8601DateTime()', function(){
+        it('should return formatted string', function() {
+            // noinspection MagicNumberJS
+            const date = new Date(1520616682000);
+            assert.equal(GeneralUtils.toISO8601DateTime(date), "2018-03-09T17:31:22Z");
+        });
+    });
+
+    describe('toRfc1123DateTime()', function(){
+        it('should return formatted string', function() {
+            // noinspection MagicNumberJS
+            const date = new Date(1520616682000);
+            assert.equal(GeneralUtils.toRfc1123DateTime(date), "Fri, 09 Mar 2018 17:31:22 GMT");
+        });
+    });
+
+    describe('fromISO8601DateTime()', function(){
+        it('should return formatted string', function() {
+            const input = "2018-03-09T17:31:22Z";
+            // noinspection MagicNumberJS
+            assert.equal(GeneralUtils.fromISO8601DateTime(input).getTime(), 1520616682000);
+        });
+    });
+
+    describe('jwtDecode()', function(){
         it('decoded should be equal with original', function() {
             const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
             const decoded = GeneralUtils.jwtDecode(token);
@@ -46,7 +70,7 @@ describe('GeneralUtils', function(){
         });
     });
 
-    describe('#elapsedString()', function(){
+    describe('elapsedString()', function(){
         it('should return correct amount of seconds', function() {
             assert.equal(GeneralUtils.elapsedString(6000), '6s 0ms');
         });

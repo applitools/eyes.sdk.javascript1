@@ -1,6 +1,5 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
 const MatchLevel = require('./MatchLevel');
 
 /**
@@ -107,6 +106,7 @@ class ImageMatchSettings {
         this._floatingMatchSettings = value;
     }
 
+    /** @override */
     toJSON() {
         return {
             matchLevel: this._matchLevel,
@@ -119,7 +119,7 @@ class ImageMatchSettings {
 
     /** @override */
     toString() {
-        return `ImageMatchSettings { ${GeneralUtils.toJson(this)} }`;
+        return `ImageMatchSettings { ${JSON.stringify(this)} }`;
     }
 }
 

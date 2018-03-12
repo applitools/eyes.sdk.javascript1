@@ -1,7 +1,7 @@
 'use strict';
 
 const RegionProvider = require('./RegionProvider');
-const Region = require('./Region');
+const Region = require('../geometry/Region');
 
 class NullRegionProvider extends RegionProvider {
 

@@ -1,6 +1,5 @@
 const assert = require("assert");
 
-const GeneralUtils = require('../src/GeneralUtils');
 const AppEnvironment = require("../src/AppEnvironment");
 const BatchInfo = require("../src/BatchInfo");
 const SessionType = require("../src/server/SessionType");
@@ -23,8 +22,8 @@ describe('SessionStartInfo', () => {
             "some branch name", "some parent branch name", false, false, properties, false
         );
 
-        const actualSerialization = GeneralUtils.toJson(ssi);
-        const expectedSerialization = `{"agentId":"some agent","sessionType":"SEQUENTIAL","appIdOrName":"my app","verId":"1.0.0","scenarioIdOrName":"some scenario","batchInfo":${GeneralUtils.toJson(batchInfo)},"baselineEnvName":"some baseline name","environmentName":"env name","environment":{"inferred":null},"defaultMatchSettings":{"matchLevel":"Strict","ignore":[],"floating":[]},"branchName":"some branch name","parentBranchName":"some parent branch name","compareWithParentBranch":false,"ignoreBaseline":false,"properties":[{"name":"property name","value":"property value"},{"name":null,"value":null}],"render":false}`;
+        const actualSerialization = JSON.stringify(ssi);
+        const expectedSerialization = `{"agentId":"some agent","sessionType":"SEQUENTIAL","appIdOrName":"my app","verId":"1.0.0","scenarioIdOrName":"some scenario","batchInfo":${JSON.stringify(batchInfo)},"baselineEnvName":"some baseline name","environmentName":"env name","environment":{"inferred":null},"defaultMatchSettings":{"matchLevel":"Strict","ignore":[],"floating":[]},"branchName":"some branch name","parentBranchName":"some parent branch name","compareWithParentBranch":false,"ignoreBaseline":false,"properties":[{"name":"property name","value":"property value"},{"name":null,"value":null}],"render":false}`;
         assert.equal(actualSerialization, expectedSerialization, "SessionStartInfo serialization does not match!");
     });
 });

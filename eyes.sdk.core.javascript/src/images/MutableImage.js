@@ -2,10 +2,10 @@
 
 const fs = require("fs");
 
-const Location = require('../positioning/Location');
-const RectangleSize = require('../positioning/RectangleSize');
+const Location = require('../geometry/Location');
+const RectangleSize = require('../geometry/RectangleSize');
 const ImageUtils = require('./ImageUtils');
-const GeneralUtils = require('../GeneralUtils');
+const GeneralUtils = require('../utils/GeneralUtils');
 
 const disabled = !fs.open;
 

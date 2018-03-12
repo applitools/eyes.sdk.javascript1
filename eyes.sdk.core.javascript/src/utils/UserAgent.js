@@ -1,6 +1,6 @@
 'use strict';
 
-const ArgumentGuard = require('./ArgumentGuard');
+const ArgumentGuard = require('../ArgumentGuard');
 const BrowserNames = require('./BrowserNames');
 const OSNames = require('./OSNames');
 
@@ -111,6 +111,7 @@ class UserAgent {
         }
 
         // OS Normalization
+        // noinspection IfStatementWithTooManyBranchesJS
         if (result._OS.startsWith("CPU")) {
             result._OS = OSNames.IOS;
         } else if (result._OS === "Windows XP") {

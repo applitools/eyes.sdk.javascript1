@@ -1,111 +1,121 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
+const GeneralUtils = require('../utils/GeneralUtils');
+const RenderingInfo = require('../renderer/RenderingInfo');
 
 /**
  * Encapsulates data for the session currently running in the agent.
  */
 class RunningSession {
 
-    constructor(arg1, sessionId, batchId, baselineId, url) {
-        if (arg1 instanceof Object) {
-            return new RunningSession(arg1.id, arg1.sessionId, arg1.batchId, arg1.baselineId, arg1.url);
-        }
-
-        this._id = arg1;
-        this._sessionId = sessionId;
-        this._batchId = batchId;
-        this._baselineId = baselineId;
-        this._url = url;
-        /** @type {RenderingInfo} */
+    constructor() {
+        this._id = null;
+        this._sessionId = null;
+        this._batchId = null;
+        this._baselineId = null;
+        this._url = null;
         this._renderingInfo = null;
 
         this._isNewSession = false;
     }
 
+    /**
+     * @param {Object} object
+     * @return {RunningSession}
+     **/
+    static fromObject(object) {
+        return GeneralUtils.assignTo(new RunningSession(), object, {
+            renderingInfo: RenderingInfo.fromObject
+        });
+    };
+
+    /** @return {String} */
     getId() {
         return this._id;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setId(value) {
         this._id = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getSessionId() {
         return this._sessionId;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setSessionId(value) {
         this._sessionId = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getBatchId() {
         return this._batchId;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setBatchId(value) {
         this._batchId = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getBaselineId() {
         return this._baselineId;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setBaselineId(value) {
         this._baselineId = value;
     }
 
+    /** @return {String} */
     getUrl() {
         return this._url;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setUrl(value) {
         this._url = value;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @returns {RenderingInfo}
-     */
+    /** @return {RenderingInfo} */
     getRenderingInfo() {
         return this._renderingInfo;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {RenderingInfo} value */
     setRenderingInfo(value) {
         this._renderingInfo = value;
     }
 
+    /** @return {Boolean} */
     getIsNewSession() {
         return this._isNewSession;
     }
 
+    /** @param {Boolean} value */
     setNewSession(value) {
         this._isNewSession = value;
     }
 
+    /** @override */
     toJSON() {
-        return {
-            id: this._id,
-            sessionId: this._sessionId,
-            batchId: this._batchId,
-            baselineId: this._baselineId,
-            url: this._url,
-            renderingInfo: this._renderingInfo
-        };
+        return GeneralUtils.toPlain(this);
     }
 
     /** @override */
     toString() {
-        return `RunningSession { ${GeneralUtils.toJson(this)} }`;
+        return `RunningSession { ${JSON.stringify(this)} }`;
     }
 }
 

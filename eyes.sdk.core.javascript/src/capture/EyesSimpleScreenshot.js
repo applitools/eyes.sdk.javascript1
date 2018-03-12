@@ -1,10 +1,10 @@
 'use strict';
 
 const ArgumentGuard = require('../ArgumentGuard');
-const Region = require('../positioning/Region');
-const RectangleSize = require('../positioning/RectangleSize');
-const Location = require('../positioning/Location');
-const CoordinatesType = require('../positioning/CoordinatesType');
+const Region = require('../geometry/Region');
+const RectangleSize = require('../geometry/RectangleSize');
+const Location = require('../geometry/Location');
+const CoordinatesType = require('../geometry/CoordinatesType');
 const OutOfBoundsError = require('../errors/OutOfBoundsError');
 const CoordinatesTypeConversionError = require('../errors/CoordinatesTypeConversionError');
 const EyesScreenshot = require('./EyesScreenshot');

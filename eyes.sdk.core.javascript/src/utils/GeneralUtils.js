@@ -4,7 +4,6 @@ const dateformat = require('dateformat');
 const stackTrace = require('stack-trace');
 
 const DATE_FORMAT_ISO8601_FOR_OUTPUT = "yyyy-mm-dd'T'HH:MM:ss'Z'";
-const DATE_FORMAT_ISO8601_FOR_INPUT = "yyyy-mm-dd'T'HH:MM:ssXXX";
 const DATE_FORMAT_RFC1123 = "ddd, dd mmm yyyy HH:MM:ss 'GMT'";
 
 const BASE64_CHARS_PATTERN = /[^A-Z0-9+\/=]/i;
@@ -17,7 +16,6 @@ const MS_IN_M = 60000;
  */
 class GeneralUtils {
 
-    //noinspection JSUnusedGlobalSymbols
     /**
      * Concatenate the url to the suffixes - making sure there are no double slashes
      *
@@ -29,12 +27,12 @@ class GeneralUtils {
         let concatUrl = GeneralUtils.stripTrailingSlash(url);
 
         for (let i = 0, l = suffixes.length; i < l; ++i) {
-            const isLast = i === l - 1;
-            if (!suffixes[i].startsWith('/') && !(isLast && suffixes[i].startsWith('?'))) {
+            /** @type {string} */
+            const suffix = suffixes[i];
+            if (!suffix.startsWith('/') && !((i === l - 1) && suffix.startsWith('?'))) {
                 concatUrl += '/';
             }
-
-            concatUrl += GeneralUtils.stripTrailingSlash(suffixes[i]);
+            concatUrl += GeneralUtils.stripTrailingSlash(suffix);
         }
 
         return concatUrl;
@@ -54,14 +52,72 @@ class GeneralUtils {
     /**
      * Convert object into json string
      *
-     * @param {Object} o
+     * @deprecated use JSON.stringify instead
+     * @param {Object} object
      * @return {String}
      */
-    static toJson(o) {
-        return JSON.stringify(o);
+    static toJson(object) {
+        return JSON.stringify(object);
     };
 
-    //noinspection JSUnusedGlobalSymbols
+    /**
+     * Convert a class to plain object
+     *
+     * @param {Object} object
+     * @param {Array.<string>} [exclude]
+     * @return {Object}
+     */
+    static toPlain(object, exclude = []) {
+        if (object == null) {
+            throw new TypeError('Cannot make null plain.');
+        }
+
+        const plainObject = {};
+        for (let objectKey in object) {
+            const publicKey = objectKey.replace('_', '');
+            if (object.hasOwnProperty(objectKey) && !exclude.includes(objectKey)) {
+                if (object[objectKey] instanceof Object && typeof object[objectKey].toJSON === 'function') {
+                    plainObject[publicKey] = object[objectKey].toJSON();
+                } else {
+                    plainObject[publicKey] = object[objectKey];
+                }
+            }
+        }
+        return plainObject;
+    };
+
+    /**
+     * Assign all properties of the object that exists in the instance to it
+     *
+     * @template T
+     * @param {T} inst
+     * @param {Object} object
+     * @param {Object} [mapping]
+     * @return {T}
+     */
+    static assignTo(inst, object, mapping = {}) {
+        if (inst == null) {
+            throw new TypeError('Cannot assign object to null.');
+        }
+
+        if (object == null) {
+            throw new TypeError('Cannot assign empty object or null.');
+        }
+
+        for (let objectKey in object) {
+            const privateKey = '_' + objectKey;
+            if (object.hasOwnProperty(objectKey) && inst.hasOwnProperty(privateKey)) {
+                if (mapping.hasOwnProperty(objectKey)) {
+                    inst[privateKey] = mapping[objectKey].call(null, object[objectKey]);
+                } else {
+                    inst[privateKey] = object[objectKey];
+                }
+            }
+        }
+
+        return inst;
+    };
+
     /**
      * Mixin methods from one object into another.
      * Follow the prototype chain and apply form root to current - but skip the top (Object)
@@ -100,7 +156,6 @@ class GeneralUtils {
         });
     };
 
-    //noinspection JSUnusedGlobalSymbols
     /**
      * Clone object
      *
@@ -238,7 +293,7 @@ class GeneralUtils {
     static stringify(...args) {
         return args.map(function (arg) {
             if (typeof arg === 'object') {
-                return GeneralUtils.toJson(arg);
+                return JSON.stringify(arg);
             }
 
             return arg;

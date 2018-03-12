@@ -1,9 +1,9 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
-const MatchWindowData = require('./MatchWindowData');
+const GeneralUtils = require('./utils/GeneralUtils');
+const MatchWindowData = require('./match/MatchWindowData');
 const MatchWindowTask = require('./MatchWindowTask');
-const MatchSingleWindowData = require('./MatchSingleWindowData');
+const MatchSingleWindowData = require('./match/MatchSingleWindowData');
 
 /**
  * Handles matching of output with the expected output (including retry and 'ignore mismatch' when needed).
@@ -93,11 +93,11 @@ class MatchSingleWindowTask extends MatchWindowTask {
         return GeneralUtils.sleep(MatchWindowTask.MATCH_INTERVAL, that._promiseFactory).then(() => {
             // get first screenshot
             return that._tryTakeScreenshot(userInputs, region, tag, true, checkSettings, imageMatchSettings).then(screenshot => {
-                if (!that._matchResult.getIsDifferent()) {
-                    return screenshot;
-                } else {
+                if (that._matchResult.getIsDifferent()) {
                     return that._takingScreenshotLoop(userInputs, region, tag, ignoreMismatch, imageMatchSettings,
                         retryTimeout, GeneralUtils.currentTimeMillis() - start, start, screenshot);
+                } else {
+                    return screenshot;
                 }
             });
         });

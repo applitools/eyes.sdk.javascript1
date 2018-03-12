@@ -25,11 +25,12 @@
   "license": "SEE LICENSE IN LICENSE",
   "main": "index",
   "dependencies": {
-    "@applitools/eyes.sdk.core": "^1.0.0",
+    "@applitools/eyes.sdk.core": "^1.4.2",
     "selenium-webdriver": "^3.6.0"
   },
   "devDependencies": {
-    "mocha": "^5.0.1"
+    "mocha": "^5.0.1",
+    "chromedriver": "^2.35.0"
   },
   "scripts": {
     "test": "mocha ./test/**/*.spec.js -t 300000"

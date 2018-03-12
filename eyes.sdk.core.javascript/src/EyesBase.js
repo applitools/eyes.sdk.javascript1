@@ -2,34 +2,34 @@
 
 const Logger = require('./logging/Logger');
 
-const Region = require('./positioning/Region');
-const Location = require('./positioning/Location');
-const RectangleSize = require('./positioning/RectangleSize');
-const CoordinatesType = require('./positioning/CoordinatesType');
+const Region = require('./geometry/Region');
+const Location = require('./geometry/Location');
+const RectangleSize = require('./geometry/RectangleSize');
+const CoordinatesType = require('./geometry/CoordinatesType');
 
 const FileDebugScreenshotsProvider = require('./debug/FileDebugScreenshotsProvider');
 const NullDebugScreenshotProvider = require('./debug/NullDebugScreenshotProvider');
 
-const SimplePropertyHandler = require('./handlers/SimplePropertyHandler');
-const ReadOnlyPropertyHandler = require('./handlers/ReadOnlyPropertyHandler');
+const SimplePropertyHandler = require('./utils/SimplePropertyHandler');
+const ReadOnlyPropertyHandler = require('./utils/ReadOnlyPropertyHandler');
 
 const ImageDeltaCompressor = require('./images/ImageDeltaCompressor');
 
 const AppOutputProvider = require('./capture/AppOutputProvider');
 const AppOutputWithScreenshot = require('./capture/AppOutputWithScreenshot');
-const AppOutput = require('./capture/AppOutput');
+const AppOutput = require('./match/AppOutput');
 
 const FixedScaleProvider = require('./scaling/FixedScaleProvider');
 const NullScaleProvider = require('./scaling/NullScaleProvider');
 
-const NullCutProvider = require('./cutting/NullCutProvider');
+const NullCutProvider = require('./cropping/NullCutProvider');
 
 const InvalidPositionProvider = require('./positioning/InvalidPositionProvider');
 
 const TextTrigger = require('./triggers/TextTrigger');
 const MouseTrigger = require('./triggers/MouseTrigger');
 
-const MatchResult = require('./server/MatchResult');
+const MatchResult = require('./match/MatchResult');
 const MatchLevel = require('./match/MatchLevel');
 const ImageMatchSettings = require('./match/ImageMatchSettings');
 const MatchWindowData = require('./match/MatchWindowData');
@@ -41,21 +41,21 @@ const TestFailedError = require('./errors/TestFailedError');
 
 const CheckSettings = require('./fluent/CheckSettings');
 
-const RenderWindowTask = require('./rendering/RenderWindowTask');
+const RenderWindowTask = require('./RenderWindowTask');
 
 const SessionStartInfo = require('./server/SessionStartInfo');
 const SessionType = require('./server/SessionType');
 const PropertyData = require('./server/PropertyData');
-const TestResultsStatus = require('./server/TestResultsStatus');
-const TestResults = require('./server/TestResults');
+const TestResultsStatus = require('./TestResultsStatus');
+const TestResults = require('./TestResults');
 const ServerConnector = require('./server/ServerConnector');
 
 const FailureReports = require('./FailureReports');
-const GeneralUtils = require('./GeneralUtils');
+const GeneralUtils = require('./utils/GeneralUtils');
 const ArgumentGuard = require('./ArgumentGuard');
 const AppEnvironment = require('./AppEnvironment');
-const MatchWindowTask = require('./match/MatchWindowTask');
-const MatchSingleWindowTask = require('./match/MatchSingleWindowTask');
+const MatchWindowTask = require('./MatchWindowTask');
+const MatchSingleWindowTask = require('./MatchSingleWindowTask');
 const SessionEventHandler = require('./SessionEventHandler');
 const BatchInfo = require('./BatchInfo');
 const PromiseFactory = require('./PromiseFactory');
@@ -119,7 +119,7 @@ class EyesBase {
         this._render = false;
 
         /** @type {boolean} */
-        this._useImageDeltaCompression = false;
+        this._useImageDeltaCompression = true;
 
         /** @type {int} */
         this._validationId = -1;
@@ -136,6 +136,7 @@ class EyesBase {
          */
         this._saveFailedTests = false;
 
+        // noinspection JSUnusedGlobalSymbols
         /** @type {RenderWindowTask} */ this._renderWindowTask = new RenderWindowTask(this._promiseFactory, this._logger, this._serverConnector);
 
         /** @type {Boolean} */ this._shouldMatchWindowRunOnceOnTimeout = undefined;
@@ -850,7 +851,7 @@ class EyesBase {
             }
 
             if (!that._isOpen) {
-                that._logger.log(`Session not open, nothing to do.`);
+                that._logger.verbose(`Session not open, nothing to do.`);
                 that._finallyClose();
                 return resolve();
             }
@@ -1037,7 +1038,7 @@ class EyesBase {
      * @param {String} hostApp The application running the AUT (e.g., Chrome).
      */
     setHostApp(hostApp) {
-        this._logger.log(`Host OS: ${hostApp}`);
+        this._logger.log(`Host App: ${hostApp}`);
 
         if (hostApp) {
             this._hostApp = hostApp.trim();
@@ -1060,7 +1061,7 @@ class EyesBase {
      * @param baselineName {String} If specified, determines the baseline to compare with and disables automatic baseline inference.
      */
     setBaselineName(baselineName) {
-        this._logger.log(`Baseline environment name: ${baselineName}`);
+        this._logger.log(`Baseline name: ${baselineName}`);
 
         if (baselineName) {
             this._baselineEnvName = baselineName.trim();
@@ -1429,7 +1430,7 @@ class EyesBase {
 
             ArgumentGuard.notNull(testName, "testName");
 
-            this._logger.log(`Agent = ${this._getFullAgentId()}`);
+            this._logger.verbose(`Agent = ${this._getFullAgentId()}`);
             this._logger.verbose(`openBase('${appName}', '${testName}', '${viewportSize}')`);
 
             this._validateApiKey();
@@ -1492,9 +1493,9 @@ class EyesBase {
         }
 
         const that = this;
-        that._logger.log("No running session, calling start session...");
+        that._logger.verbose("No running session, calling start session...");
         return that.startSession().then(() => {
-            that._logger.log("Done!");
+            that._logger.verbose("Done!");
 
             const outputProvider = new AppOutputProvider();
             // A callback which will call getAppOutput
@@ -1530,11 +1531,11 @@ class EyesBase {
      * @private
      */
     _logOpenBase() {
-        this._logger.log(`Eyes server URL is '${this._serverConnector.getServerUrl()}'`);
+        this._logger.verbose(`Eyes server URL is '${this._serverConnector.getServerUrl()}'`);
         this._logger.verbose(`Timeout = '${this._serverConnector.getTimeout()}'`);
-        this._logger.log(`matchTimeout = '${this._matchTimeout}'`);
-        this._logger.log(`Default match settings = '${this._defaultMatchSettings}'`);
-        this._logger.log(`FailureReports = '${this._failureReports}'`);
+        this._logger.verbose(`matchTimeout = '${this._matchTimeout}'`);
+        this._logger.verbose(`Default match settings = '${this._defaultMatchSettings}'`);
+        this._logger.verbose(`FailureReports = '${this._failureReports}'`);
     }
 
     /**
@@ -1841,13 +1842,16 @@ class EyesBase {
 
                             return lastScreenshot.getImage().getImageData().then(sourceData => {
                                 return screenshot.getImage().getImageData().then(targetData => {
-                                    return ImageDeltaCompressor.compressByRawBlocks(targetData, targetBuffer, sourceData);
+                                    screenshotBuffer = ImageDeltaCompressor.compressByRawBlocks(targetData, targetBuffer, sourceData);
+                                    const savedSize = targetBuffer.length - screenshotBuffer.length;
+                                    if (savedSize === 0) {
+                                        that._logger.verbose("Compression skipped, because of significant difference.");
+                                    } else {
+                                        that._logger.verbose(`Compression finished, saved size is ${savedSize}.`);
+                                    }
                                 });
-                            }).then(compressedScreenshot => {
-                                screenshotBuffer = compressedScreenshot;
-                                that._logger.verbose("Done!");
                             }).catch(err => {
-                                that._logger.verbose("Failed to compress screenshot!", err);
+                                that._logger.log("Failed to compress screenshot!", err);
                             });
                         }
                     });

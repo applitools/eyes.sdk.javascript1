@@ -141,7 +141,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
             return driver.manage().window().getSize();
         }).then(/** {width:number, height:number} */ result => {
             const currentSize = new RectangleSize(result.width, result.height);
-            logger.log(`Current browser size: ${currentSize}`);
+            logger.verbose(`Current browser size: ${currentSize}`);
             if (currentSize.equals(requiredSize)) {
                 return true;
             }

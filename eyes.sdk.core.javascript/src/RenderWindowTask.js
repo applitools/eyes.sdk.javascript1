@@ -1,9 +1,9 @@
 'use strict';
 
-const ArgumentGuard = require('../ArgumentGuard');
-const GeneralUtils = require('../GeneralUtils');
-const RenderStatus = require('./RenderStatus');
-const RenderRequest = require('./RenderRequest');
+const ArgumentGuard = require('./ArgumentGuard');
+const GeneralUtils = require('./utils/GeneralUtils');
+const RenderStatus = require('./renderer/RenderStatus');
+const RenderRequest = require('./renderer/RenderRequest');
 
 const GET_STATUS_INTERVAL = 500; // Milliseconds
 
@@ -48,7 +48,7 @@ class RenderWindowTask {
      */
     getRenderStatus(runningRender) {
         const that = this;
-        return that._serverConnector.renderStatus(runningRender).catch(err => {
+        return that._serverConnector.renderStatus(runningRender).catch(() => {
             return GeneralUtils.sleep(GET_STATUS_INTERVAL, that._promiseFactory).then(() => {
                 return that.getRenderStatus(runningRender);
             });

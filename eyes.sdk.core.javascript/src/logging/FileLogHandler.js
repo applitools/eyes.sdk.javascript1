@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const GeneralUtils = require('../GeneralUtils');
+const GeneralUtils = require('../utils/GeneralUtils');
 const LogHandler = require('./LogHandler');
 
 /**

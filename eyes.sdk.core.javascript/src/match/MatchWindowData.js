@@ -1,6 +1,6 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
+const GeneralUtils = require('../utils/GeneralUtils');
 const ArgumentGuard = require('../ArgumentGuard');
 
 /**
@@ -29,55 +29,55 @@ class Options {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getName() {
         return this._name;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Trigger[]} */
     getUserInputs() {
         return this._userInputs;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Boolean} */
     getIgnoreMismatch() {
         return this._ignoreMismatch;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Boolean} */
     getIgnoreMatch() {
         return this._ignoreMatch;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Boolean} */
     getForceMismatch() {
         return this._forceMismatch;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Boolean} */
     getForceMatch() {
         return this._forceMatch;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {ImageMatchSettings} */
     getImageMatchSettings() {
         return this._imageMatchSettings;
     }
 
+    /** @override */
     toJSON() {
-        return {
-            name: this._name,
-            userInputs: this._userInputs,
-            ignoreMismatch: this._ignoreMismatch,
-            ignoreMatch: this._ignoreMatch,
-            forceMismatch: this._forceMismatch,
-            forceMatch: this._forceMatch,
-            imageMatchSettings: this._imageMatchSettings
-        };
+        return GeneralUtils.toPlain(this);
     }
 
     /** @override */
     toString() {
-        return `Options { ${GeneralUtils.toJson(this)} }`;
+        return `Options { ${JSON.stringify(this)} }`;
     }
 }
 
@@ -105,49 +105,51 @@ class MatchWindowData {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {Trigger[]} */
     getUserInputs() {
         return this._userInputs;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {AppOutput} */
     getAppOutput() {
         return this._appOutput;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getTag() {
         return this._tag;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {?Boolean} */
     getIgnoreMismatch() {
         return this._ignoreMismatch;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {?Options} */
     getOptions() {
         return this._options;
     }
 
+    /** @override */
     toJSON() {
-        return {
-            tag: this._tag,
-            userInputs: this._userInputs,
-            appOutput: this._appOutput.toJSON() || this._appOutput,
-            ignoreMismatch: this._ignoreMismatch,
-            options: this._options
-        };
+        return GeneralUtils.toPlain(this);
     }
 
     /** @override */
     toString() {
         const object = this.toJSON();
 
+        // noinspection JSUnresolvedVariable
         if (object.appOutput.screenshot64) {
+            // noinspection JSUnresolvedVariable
             object.appOutput.screenshot64 = "REMOVED_FROM_OUTPUT";
         }
 
-        return `MatchWindowData { ${GeneralUtils.toJson(object)} }`;
+        return `MatchWindowData { ${JSON.stringify(object)} }`;
     }
 }
 

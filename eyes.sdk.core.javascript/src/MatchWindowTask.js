@@ -1,9 +1,9 @@
 'use strict';
 
-const Region = require('../positioning/Region');
-const ArgumentGuard = require('../ArgumentGuard');
-const GeneralUtils = require('../GeneralUtils');
-const MatchWindowData = require('./MatchWindowData');
+const Region = require('./geometry/Region');
+const ArgumentGuard = require('./ArgumentGuard');
+const GeneralUtils = require('./utils/GeneralUtils');
+const MatchWindowData = require('./match/MatchWindowData');
 
 const MATCH_INTERVAL = 500; // Milliseconds
 

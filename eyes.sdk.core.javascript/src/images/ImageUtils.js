@@ -4,7 +4,7 @@ const fs = require('fs');
 const png = require('png-async');
 
 const ArgumentGuard = require('../ArgumentGuard');
-const {ReadableBufferStream, WritableBufferStream} = require('../StreamUtils');
+const {ReadableBufferStream, WritableBufferStream} = require('../utils/StreamUtils');
 
 /**
  * Provide means of image manipulations.
@@ -155,6 +155,7 @@ class ImageUtils {
         for (let i = 0; i < hDst; i++) {
             for (let j = 0; j < wDst; j++) {
                 const y = i * (hSrc - 1) / hDst;
+                // noinspection JSSuspiciousNameCombination
                 const yPos = Math.floor(y);
                 const t = y - yPos;
                 const buf1Pos = (yPos * wDst + j) * 4;
@@ -352,6 +353,7 @@ class ImageUtils {
         ArgumentGuard.notNull(image, "image");
         ArgumentGuard.isInteger(deg, "deg");
 
+        // TODO: refactor it
         return promiseFactory.makePromise(resolve => {
             // noinspection MagicNumberJS
             if (deg % 360 === 0) {
@@ -370,6 +372,7 @@ class ImageUtils {
                 for (let x = 0; x < image.width; x++) {
                     for (let y = image.height - 1; y >= 0; y--) {
                         const idx = (image.width * y + x) << 2;
+                        // TODO: remove buffers `noAssert` argument
                         const data = image.data.readUInt32BE(idx, true);
                         buffer.writeUInt32BE(data, offset, true);
                         offset += 4;

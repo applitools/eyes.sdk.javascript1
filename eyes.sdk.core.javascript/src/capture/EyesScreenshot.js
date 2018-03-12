@@ -1,7 +1,7 @@
 'use strict';
 
 const ArgumentGuard = require('../ArgumentGuard');
-const Region = require('../positioning/Region');
+const Region = require('../geometry/Region');
 
 /**
  * Base class for handling screenshots.

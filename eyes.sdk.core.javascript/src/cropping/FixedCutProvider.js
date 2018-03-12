@@ -1,9 +1,9 @@
 'use strict';
 
-const Region = require('../positioning/Region');
+const Region = require('../geometry/Region');
 const CutProvider = require('./CutProvider');
 
-class UnscaledFixedCutProvider extends CutProvider {
+class FixedCutProvider extends CutProvider {
 
     /**
      * @param {Number} header The header to cut in pixels.
@@ -21,7 +21,6 @@ class UnscaledFixedCutProvider extends CutProvider {
     }
 
     /**
-     *
      * @param {MutableImage} image The image to cut.
      * @return {Promise.<MutableImage>} A new cut image.
      */
@@ -67,8 +66,13 @@ class UnscaledFixedCutProvider extends CutProvider {
      * @return {CutProvider} A new scale cut provider instance.
      */
     scale(scaleRatio) {
-        return new UnscaledFixedCutProvider(this._header, this._footer, this._left, this._right);
+        const scaledHeader = Math.ceil(this._header * scaleRatio);
+        const scaledFooter = Math.ceil(this._footer * scaleRatio);
+        const scaledLeft = Math.ceil(this._left * scaleRatio);
+        const scaledRight = Math.ceil(this._right * scaleRatio);
+
+        return new FixedCutProvider(scaledHeader, scaledFooter, scaledLeft, scaledRight);
     }
 }
 
-module.exports = UnscaledFixedCutProvider;
+module.exports = FixedCutProvider;

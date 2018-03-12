@@ -4,7 +4,7 @@ const {ArgumentGuard, PositionProvider, Location} = require('@applitools/eyes.sd
 
 const EyesSeleniumUtils = require('../EyesSeleniumUtils');
 const ScrollPositionMemento = require('./ScrollPositionMemento');
-const EyesDriverOperationError = require('./../errors/EyesDriverOperationError');
+const EyesDriverOperationError = require('../errors/EyesDriverOperationError');
 
 class ScrollPositionProvider extends PositionProvider {
 

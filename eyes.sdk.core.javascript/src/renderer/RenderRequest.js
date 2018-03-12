@@ -1,7 +1,6 @@
 'use strict';
 
 const ArgumentGuard = require('../ArgumentGuard');
-const GeneralUtils = require('../GeneralUtils');
 
 /**
  * Encapsulates data required to start render using the RenderingGrid API.
@@ -55,6 +54,7 @@ class RenderRequest {
         return this._renderWidth;
     }
 
+    /** @override */
     toJSON() {
         const resources = {};
         for (const resource of this._dom.getResources()) {
@@ -73,7 +73,7 @@ class RenderRequest {
 
     /** @override */
     toString() {
-        return `RenderRequest { ${GeneralUtils.toJson(this)} }`;
+        return `RenderRequest { ${JSON.stringify(this)} }`;
     }
 }
 

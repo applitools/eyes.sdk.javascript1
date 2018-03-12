@@ -1,7 +1,7 @@
 'use strict';
 
 const GetFloatingRegion = require('./GetFloatingRegion');
-const FloatingMatchSettings = require('../positioning/FloatingMatchSettings');
+const FloatingMatchSettings = require('../match/FloatingMatchSettings');
 
 class FloatingRegionByRectangle extends GetFloatingRegion {
 

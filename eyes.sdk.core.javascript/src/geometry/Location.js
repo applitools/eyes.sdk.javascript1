@@ -62,6 +62,7 @@ class Location {
         ArgumentGuard.isValidType(object, Object);
         ArgumentGuard.hasProperties(object, ['x', 'y'], 'object');
 
+        // noinspection JSSuspiciousNameCombination
         return new Location(Math.ceil(object.x), Math.ceil(object.y));
     }
 

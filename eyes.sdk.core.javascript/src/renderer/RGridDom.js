@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 
+const GeneralUtils = require('../utils/GeneralUtils');
 const ArgumentGuard = require('../ArgumentGuard');
 const RGridResource = require('./RGridResource');
 
@@ -7,12 +8,13 @@ class RGridDom {
 
     constructor() {
         this._domNodes = null;
-        this._resources = null;
+        this._resources = [];
 
         this._sha256hash = null;
-        this._asString = null;
+        this._contentAsCdt = null;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * @return {Object} The domNodes of the current page.
      */
@@ -20,6 +22,7 @@ class RGridDom {
         return this._domNodes;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * @param {Object} value The page's domNodes
      */
@@ -35,6 +38,7 @@ class RGridDom {
         return this._resources;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * @param {RGridResource[]} value The page's resourceType
      */
@@ -45,31 +49,15 @@ class RGridDom {
 
     asResource() {
         const res = new RGridResource();
-        res.setContent(this.asString());
+        res.setContent(this._getContentAsCdt());
         res.setContentType('x-applitools-html/cdt');
         return res;
-    }
-
-    asString() {
-        if (!this._asString) {
-            const resources = {};
-            for (const resource of this._resources) {
-                resources[resource.getUrl()] = resource.getHashAsObject()
-            }
-
-            this._asString = JSON.stringify({
-                resources: resources,
-                domNodes: this._domNodes,
-            });
-        }
-
-        return this._asString;
     }
 
     getSha256Hash() {
         if (!this._sha256hash) {
             this._sha256hash = crypto.createHash('sha256')
-                .update(this.asString())
+                .update(this._getContentAsCdt())
                 .digest('hex');
         }
 
@@ -81,6 +69,32 @@ class RGridDom {
             hashFormat: "sha256",
             hash: this.getSha256Hash()
         };
+    }
+
+    _getContentAsCdt() {
+        if (!this._contentAsCdt) {
+            const resources = {};
+            for (const resource of this._resources) {
+                resources[resource.getUrl()] = resource.getHashAsObject()
+            }
+
+            this._contentAsCdt = JSON.stringify({
+                resources: resources,
+                domNodes: this._domNodes,
+            });
+        }
+
+        return this._contentAsCdt;
+    }
+
+    /** @override */
+    toJSON() {
+        return GeneralUtils.toPlain(this, ['_contentAsCdt', '_sha256hash']);
+    }
+
+    /** @override */
+    toString() {
+        return `RGridDom { ${JSON.stringify(this)} }`;
     }
 }
 

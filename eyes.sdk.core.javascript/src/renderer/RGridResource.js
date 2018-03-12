@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 
+const GeneralUtils = require('../utils/GeneralUtils');
 const ArgumentGuard = require('../ArgumentGuard');
 
 class RGridResource {
@@ -19,6 +20,7 @@ class RGridResource {
         return this._url;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * @param {String} value The resource's url
      */
@@ -72,6 +74,16 @@ class RGridResource {
             hashFormat: "sha256",
             hash: this.getSha256Hash()
         };
+    }
+
+    /** @override */
+    toJSON() {
+        return GeneralUtils.toPlain(this, ['_sha256hash']);
+    }
+
+    /** @override */
+    toString() {
+        return `RGridResource { ${JSON.stringify(this)} }`;
     }
 }
 

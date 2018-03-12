@@ -4,14 +4,14 @@ const axios = require('axios');
 
 const ProxySettings = require('./ProxySettings');
 const RunningSession = require('./RunningSession');
-const TestResults = require('./TestResults');
-const MatchResult = require('./MatchResult');
-const GeneralUtils = require('../GeneralUtils');
+const TestResults = require('../TestResults');
+const MatchResult = require('../match/MatchResult');
+const GeneralUtils = require('../utils/GeneralUtils');
 const ArgumentGuard = require('../ArgumentGuard');
 
-const RenderingInfo = require('../rendering/RenderingInfo');
-const RunningRender = require('../rendering/RunningRender');
-const RenderStatusResults = require('../rendering/RenderStatusResults');
+const RenderingInfo = require('../renderer/RenderingInfo');
+const RunningRender = require('../renderer/RunningRender');
+const RenderStatusResults = require('../renderer/RenderStatusResults');
 
 // Constants
 const DEFAULT_TIMEOUT_MS = 300000; // 5 min
@@ -222,13 +222,9 @@ class ServerConnector {
         return sendRequest(that, 'startSession', uri, 'post', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK, HTTP_STATUS_CODES.CREATED];
             if (validStatusCodes.includes(response.status)) {
-                that._logger.verbose('ServerConnector.startSession - post succeeded');
-
-                const runningSession = new RunningSession(response.data);
+                that._logger.verbose('ServerConnector.startSession - post succeeded', response.data);
+                const runningSession = RunningSession.fromObject(response.data);
                 runningSession.setNewSession(response.status === HTTP_STATUS_CODES.CREATED);
-                if (response.data.renderingInfo) {
-                    runningSession.setRenderingInfo(new RenderingInfo(response.data.renderingInfo));
-                }
                 return runningSession;
             }
 
@@ -261,11 +257,8 @@ class ServerConnector {
         return sendLongRequest(that, 'stopSession', uri, 'delete', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                that._logger.verbose('ServerConnector.stopSession - post succeeded');
-
-                const testResults = new TestResults();
-                Object.assign(testResults, response.data);
-                return testResults;
+                that._logger.verbose('ServerConnector.stopSession - post succeeded', response.data);
+                return TestResults.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.stopSession - unexpected status (${response.statusText})`);
@@ -306,11 +299,8 @@ class ServerConnector {
         return sendLongRequest(that, 'matchWindow', uri, 'post', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                that._logger.verbose('ServerConnector.matchWindow - post succeeded');
-
-                const matchResult = new MatchResult();
-                Object.assign(matchResult, response.data);
-                return matchResult;
+                that._logger.verbose('ServerConnector.matchWindow - post succeeded', response.data);
+                return MatchResult.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.matchWindow - unexpected status (${response.statusText})`);
@@ -349,11 +339,8 @@ class ServerConnector {
         return sendLongRequest(that, 'matchSingleWindow', uri, 'post', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                that._logger.verbose('ServerConnector.matchSingleWindow - post succeeded');
-
-                const matchSingleResult = new TestResults();
-                Object.assign(matchSingleResult, response.data);
-                return matchSingleResult;
+                that._logger.verbose('ServerConnector.matchSingleWindow - post succeeded', response.data);
+                return TestResults.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.matchSingleWindow - unexpected status (${response.statusText})`);
@@ -387,11 +374,8 @@ class ServerConnector {
         return sendLongRequest(that, 'replaceWindow', uri, 'put', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                that._logger.verbose('ServerConnector.replaceWindow - post succeeded');
-
-                const matchResult = new MatchResult();
-                Object.assign(matchResult, response.data);
-                return matchResult;
+                that._logger.verbose('ServerConnector.replaceWindow - post succeeded', response.data);
+                return MatchResult.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.replaceWindow - unexpected status (${response.statusText})`);
@@ -418,9 +402,8 @@ class ServerConnector {
         return sendRequest(that, 'renderInfo', uri, 'get', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                const renderingInfo = new RenderingInfo(response.data);
-                that._logger.verbose('ServerConnector.renderInfo - post succeeded', renderingInfo);
-                return renderingInfo;
+                that._logger.verbose('ServerConnector.renderInfo - post succeeded', response.data);
+                return RenderingInfo.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.renderInfo - unexpected status (${response.statusText})`);
@@ -454,10 +437,8 @@ class ServerConnector {
         return sendRequest(that, 'render', uri, 'post', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                const runningRender = new RunningRender();
-                Object.assign(runningRender, response.data);
-                that._logger.verbose('ServerConnector.render - post succeeded', runningRender);
-                return runningRender;
+                that._logger.verbose('ServerConnector.render - post succeeded', response.data);
+                return RunningRender.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.render - unexpected status (${response.statusText})`);
@@ -559,9 +540,8 @@ class ServerConnector {
         return sendRequest(that, 'renderStatus', uri, 'get', options).then(response => {
             const validStatusCodes = [HTTP_STATUS_CODES.OK];
             if (validStatusCodes.includes(response.status)) {
-                const renderStatusResults = new RenderStatusResults(response.data);
-                that._logger.verbose('ServerConnector.renderStatus - get succeeded', renderStatusResults);
-                return renderStatusResults;
+                that._logger.verbose('ServerConnector.renderStatus - get succeeded', response.data);
+                return RenderStatusResults.fromObject(response.data);
             }
 
             throw new Error(`ServerConnector.renderStatus - unexpected status (${response.statusText})`);
@@ -614,7 +594,7 @@ const longRequestCheckStatus = (that, name, response) => {
         case HTTP_STATUS_CODES.GONE:
             return that._promiseFactory.reject(new Error('The server task has gone.'));
         default:
-            return that._promiseFactory.reject(new Error(`Unknown error processing long request: ${GeneralUtils.toJson(response)}`));
+            return that._promiseFactory.reject(new Error(`Unknown error processing long request: ${JSON.stringify(response)}`));
     }
 };
 
@@ -664,7 +644,7 @@ const sendRequest = (that, name, url, method, options = {}) => {
         request.transport = require('http');
     }
 
-    that._logger.verbose(`ServerConnector.${name} will now post call to ${request.url} with params ${GeneralUtils.toJson(request.params)}`);
+    that._logger.verbose(`ServerConnector.${name} will now post call to ${request.url} with params ${JSON.stringify(request.params)}`);
     return axios(request).then((response) => {
         that._logger.verbose(`ServerConnector.${name} - result ${response.statusText}, status code ${response.status}`);
         return response;
@@ -683,7 +663,7 @@ const sendRequest = (that, name, url, method, options = {}) => {
  * @return {Buffer} a buffer of bytes which represents the stringified JSON, prefixed with size.
  */
 const createDataBytes = (jsonData) => {
-    const dataStr = GeneralUtils.toJson(jsonData);
+    const dataStr = JSON.stringify(jsonData);
     const dataLen = Buffer.byteLength(dataStr, 'utf8');
 
     // The result buffer will contain the length of the data + 4 bytes of size

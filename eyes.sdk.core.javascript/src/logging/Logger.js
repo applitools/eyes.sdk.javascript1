@@ -1,7 +1,7 @@
 'use strict';
 
 const ArgumentGuard = require('../ArgumentGuard');
-const GeneralUtils = require('../GeneralUtils');
+const GeneralUtils = require('../utils/GeneralUtils');
 const NullLogHandler = require('./NullLogHandler');
 
 /**

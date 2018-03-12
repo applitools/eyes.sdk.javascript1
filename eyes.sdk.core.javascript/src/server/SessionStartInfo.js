@@ -1,6 +1,5 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
 const ArgumentGuard = require('../ArgumentGuard');
 
 /**
@@ -172,7 +171,7 @@ class SessionStartInfo {
 
     /** @override */
     toString() {
-        return `SessionStartInfo { ${GeneralUtils.toJson(this)} }`;
+        return `SessionStartInfo { ${JSON.stringify(this)} }`;
     }
 }
 

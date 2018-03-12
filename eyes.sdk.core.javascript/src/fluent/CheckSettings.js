@@ -1,8 +1,8 @@
 'use strict';
 
 const MatchLevel = require('../match/MatchLevel');
-const Region = require('../positioning/Region');
-const FloatingMatchSettings = require('../positioning/FloatingMatchSettings');
+const Region = require('../geometry/Region');
+const FloatingMatchSettings = require('../match/FloatingMatchSettings');
 const IgnoreRegionByRectangle = require('./IgnoreRegionByRectangle');
 const FloatingRegionByRectangle = require('./FloatingRegionByRectangle');
 const GetRegion = require('./GetRegion');
@@ -146,9 +146,7 @@ class CheckSettings {
      * @return {CheckSettings} This instance of the settings object.
      */
     timeout(timeoutMilliseconds) {
-        if (timeoutMilliseconds && Number.isInteger(timeoutMilliseconds)) {
-            this._timeout = timeoutMilliseconds;
-        }
+        this._timeout = timeoutMilliseconds;
         return this;
     }
 
@@ -236,6 +234,7 @@ class CheckSettings {
      * @return {CheckSettings} This instance of the settings object.
      */
     floating(regionOrContainer, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
+        // noinspection IfStatementWithTooManyBranchesJS
         if (regionOrContainer instanceof FloatingMatchSettings) {
             this._floatingRegions.push(new FloatingRegionByRectangle(regionOrContainer.getRegion(),
                 regionOrContainer.getMaxUpOffset(), regionOrContainer.getMaxDownOffset(),

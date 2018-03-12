@@ -1,7 +1,5 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
-
 /**
  * An application output (title, image, etc).
  */
@@ -19,35 +17,40 @@ class AppOutput {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getTitle() {
         return this._title;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setTitle(value) {
         this._title = value;
     }
 
-    // noinspection JSUnusedGlobalSymbols
+    /** @return {Buffer} */
     getScreenshot64() {
         return this._screenshot64;
     }
 
-    // noinspection JSUnusedGlobalSymbols
+    /** @param {Buffer} value */
     setScreenshot64(value) {
         this._screenshot64 = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getScreenshotUrl() {
         return this._screenshotUrl;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} value */
     setScreenshotUrl(value) {
         this._screenshotUrl = value;
     }
 
+    /** @override */
     toJSON() {
         const object = {
             title: this._title,

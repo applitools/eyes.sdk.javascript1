@@ -1,7 +1,7 @@
 'use strict';
 
 const ArgumentGuard = require('./ArgumentGuard');
-const GeneralUtils = require('./GeneralUtils');
+const GeneralUtils = require('./utils/GeneralUtils');
 
 /**
  * A batch of tests.
@@ -65,7 +65,7 @@ class BatchInfo {
 
     /** @override */
     toString() {
-        return `BatchInfo { ${GeneralUtils.toJson(this)} }`;
+        return `BatchInfo { ${JSON.stringify(this)} }`;
     }
 }
 

@@ -1,9 +1,8 @@
 const assert = require("assert");
 
-const GeneralUtils = require('../src/GeneralUtils');
-const RectangleSize = require("../src/positioning/RectangleSize");
-const Location = require("../src/positioning/Location");
-const Region = require("../src/positioning/Region");
+const RectangleSize = require("../src/geometry/RectangleSize");
+const Location = require("../src/geometry/Location");
+const Region = require("../src/geometry/Region");
 
 describe('Region', () => {
     const top = 1;
@@ -192,7 +191,7 @@ describe('Region', () => {
         const expectedSerialization = `{"left":${left},"top":${top},"width":${width},"height":${height}}`;
 
         const region = new Region(left, top, width, height);
-        const actualSerialization = GeneralUtils.toJson(region);
+        const actualSerialization = JSON.stringify(region);
 
         assert.strictEqual(expectedSerialization, actualSerialization, "Region serialization does not match!");
     });

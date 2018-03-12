@@ -1,7 +1,6 @@
 const assert = require("assert");
 
-const GeneralUtils = require('../src/GeneralUtils');
-const Location = require("../src/positioning/Location");
+const Location = require("../src/geometry/Location");
 
 describe('Location', () => {
     const top = 1;
@@ -61,7 +60,7 @@ describe('Location', () => {
         const expectedSerialization = `{"x":${left},"y":${top}}`;
 
         let location = new Location(left, top);
-        const actualSerialization = GeneralUtils.toJson(location);
+        const actualSerialization = JSON.stringify(location);
 
         assert.strictEqual(expectedSerialization, actualSerialization, "Location serialization does not match!");
     });

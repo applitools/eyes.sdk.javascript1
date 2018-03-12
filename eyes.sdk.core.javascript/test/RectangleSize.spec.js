@@ -1,7 +1,6 @@
 const assert = require("assert");
 
-const GeneralUtils = require('../src/GeneralUtils');
-const RectangleSize = require("../src/positioning/RectangleSize");
+const RectangleSize = require("../src/geometry/RectangleSize");
 
 describe('RectangleSize', () => {
     const width = 4;
@@ -62,7 +61,7 @@ describe('RectangleSize', () => {
         const expectedSerialization = `{"width":${width},"height":${height}}`;
 
         let size = new RectangleSize(width, height);
-        const actualSerialization = GeneralUtils.toJson(size);
+        const actualSerialization = JSON.stringify(size);
 
         assert.strictEqual(expectedSerialization, actualSerialization, "RectangleSize serialization does not match!");
     });

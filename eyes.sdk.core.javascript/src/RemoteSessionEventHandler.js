@@ -2,7 +2,7 @@
 
 const axios = require('axios');
 
-const GeneralUtils = require('./GeneralUtils');
+const GeneralUtils = require('./utils/GeneralUtils');
 const SessionEventHandler = require('./SessionEventHandler');
 
 // Constants

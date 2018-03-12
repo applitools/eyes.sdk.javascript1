@@ -1,7 +1,6 @@
 'use strict';
 
-const GeneralUtils = require('../GeneralUtils');
-const ArgumentGuard = require('../ArgumentGuard');
+const GeneralUtils = require('../utils/GeneralUtils');
 const MatchWindowData = require('./MatchWindowData');
 
 /**
@@ -27,91 +26,109 @@ class MatchSingleWindowData extends MatchWindowData {
         this._updateBaselineIfNew = true;
         this._removeSession = false;
         this._removeSessionIfMatching = false;
-        /** @type {string} */
         this._agentId = undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {SessionStartInfo} */
+    getStartInfo() {
+        return this._startInfo;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /** @param {SessionStartInfo} startInfo */
+    setStartInfo(startInfo) {
+        this._startInfo = startInfo;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /** @return {boolean} */
     getUpdateBaseline() {
         return this._updateBaseline;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {boolean} updateBaseline */
     setUpdateBaseline(updateBaseline) {
         this._updateBaseline = updateBaseline;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {boolean} */
     getUpdateBaselineIfDifferent() {
         return this._updateBaselineIfDifferent;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {boolean} updateBaselineIfDifferent */
     setUpdateBaselineIfDifferent(updateBaselineIfDifferent) {
         this._updateBaselineIfDifferent = updateBaselineIfDifferent;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {boolean} */
     getUpdateBaselineIfNew() {
         return this._updateBaselineIfNew;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {boolean} updateBaselineIfNew */
     setUpdateBaselineIfNew(updateBaselineIfNew) {
         this._updateBaselineIfNew = updateBaselineIfNew;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {boolean} */
     getRemoveSession() {
         return this._removeSession;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {boolean} removeSession */
     setRemoveSession(removeSession) {
         this._removeSession = removeSession;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {boolean} */
     getRemoveSessionIfMatching() {
         return this._removeSessionIfMatching;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {boolean} removeSessionIfMatching */
     setRemoveSessionIfMatching(removeSessionIfMatching) {
         this._removeSessionIfMatching = removeSessionIfMatching;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @return {String} */
     getAgentId() {
         return this._agentId;
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /** @param {String} agentId */
     setAgentId(agentId) {
         this._agentId = agentId;
     }
 
+    /** @override */
     toJSON() {
-        return Object.assign({
-            startInfo: this._startInfo,
-            updateBaseline: this._updateBaseline,
-            updateBaselineIfDifferent: this._updateBaselineIfDifferent,
-            updateBaselineIfNew: this._updateBaselineIfNew,
-            removeSession: this._removeSession,
-            removeSessionIfMatching: this._removeSessionIfMatching,
-            agentId: this._agentId,
-        }, super.toJSON());
+        return GeneralUtils.toPlain(this);
     }
 
     /** @override */
     toString() {
         const object = this.toJSON();
 
+        // noinspection JSUnresolvedVariable
         if (object.appOutput.screenshot64) {
+            // noinspection JSUnresolvedVariable
             object.appOutput.screenshot64 = "REMOVED_FROM_OUTPUT";
         }
 
-        return `MatchSingleWindowData { ${GeneralUtils.toJson(object)} }`;
+        return `MatchSingleWindowData { ${JSON.stringify(object)} }`;
     }
 }
 

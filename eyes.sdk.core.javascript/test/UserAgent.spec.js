@@ -1,7 +1,7 @@
 const {describe, it} = require("mocha");
 const assert = require("assert");
 
-const UserAgent = require("../src/UserAgent");
+const UserAgent = require("../src/utils/UserAgent");
 
 describe('UserAgent', () => {
     describe('#parseUserAgentString()', () => {

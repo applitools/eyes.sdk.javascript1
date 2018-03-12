@@ -1,5 +1,7 @@
 'use strict';
 
+const GeneralUtils = require('../utils/GeneralUtils');
+
 /**
  * Encapsulates match settings for the a session.
  */
@@ -87,9 +89,13 @@ class ExactMatchSettings {
     }
 
     /** @override */
+    toJSON() {
+        return GeneralUtils.toPlain(this);
+    }
+
+    /** @override */
     toString() {
-        return `[min diff intensity: ${this._minDiffIntensity}, min diff width ${this._minDiffWidth}, ` +
-               `min diff height ${this._minDiffHeight}, match threshold: ${this._matchThreshold}]`;
+        return `ExactMatchSettings { ${JSON.stringify(this)} }`;
     }
 }
 

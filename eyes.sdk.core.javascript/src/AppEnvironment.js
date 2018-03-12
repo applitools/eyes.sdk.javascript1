@@ -1,7 +1,5 @@
 'use strict';
 
-const GeneralUtils = require('./GeneralUtils');
-
 /**
  * The environment in which the application under test is executing.
  */
@@ -120,7 +118,7 @@ class AppEnvironment {
 
     /** @override */
     toString() {
-        return `AppEnvironment { ${GeneralUtils.toJson(this)} }`;
+        return `AppEnvironment { ${JSON.stringify(this)} }`;
     }
 }
 

@@ -32,6 +32,7 @@ exports.RegionPositionCompensationFactory = require('./src/positioning/RegionPos
 exports.SafariRegionPositionCompensation = require('./src/positioning/SafariRegionPositionCompensation');
 exports.ScrollPositionMemento = require('./src/positioning/ScrollPositionMemento');
 exports.ScrollPositionProvider = require('./src/positioning/ScrollPositionProvider');
+exports.StitchMode = require('./src/positioning/StitchMode');
 
 exports.MoveToRegionVisibilityStrategy = require('./src/regionVisibility/MoveToRegionVisibilityStrategy');
 exports.NopRegionVisibilityStrategy = require('./src/regionVisibility/NopRegionVisibilityStrategy');
@@ -48,4 +49,3 @@ exports.EyesSeleniumUtils = require('./src/EyesSeleniumUtils');
 exports.ImageOrientationHandler = require('./src/ImageOrientationHandler');
 exports.JavascriptHandler = require('./src/JavascriptHandler');
 exports.SeleniumJavaScriptExecutor = require('./src/SeleniumJavaScriptExecutor');
-exports.StitchMode = require('./src/StitchMode');

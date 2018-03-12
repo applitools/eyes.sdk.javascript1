@@ -1,6 +1,6 @@
 'use strict';
 
-const GeneralUtils = require('./GeneralUtils');
+const GeneralUtils = require('./utils/GeneralUtils');
 
 /**
  * Argument validation utilities.
