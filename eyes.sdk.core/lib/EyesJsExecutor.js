@@ -25,11 +25,6 @@ class EyesJsExecutor {
    * @return {!Promise} A promise that will be resolved when the sleep has finished.
    */
   sleep(ms) {}
-
-  /**
-   * @return {PromiseFactory}
-   */
-  getPromiseFactory() {}
 }
 
 exports.EyesJsExecutor = EyesJsExecutor;

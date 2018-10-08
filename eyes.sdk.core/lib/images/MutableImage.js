@@ -12,39 +12,34 @@ const disabled = !fs.open;
 /**
  * Parses the image if possible - meaning dimensions and BMP are extracted and available
  *
- * @param {MutableImage} that The context of the current instance of MutableImage
+ * @param {MutableImage} mutableImage The context of the current instance of MutableImage
+ * @return {Promise<void>}
  */
-const parseImage = that => that._promiseFactory.makePromise(resolve => {
-  if (that._isParsed || disabled) {
-    return resolve();
+async function parseImage(mutableImage) {
+  if (mutableImage._isParsed || disabled) {
+    return;
   }
 
-  return ImageUtils.parseImage(that._imageBuffer, that._promiseFactory).then(imageData => {
-    that._imageBmp = imageData;
-    // noinspection JSUnresolvedVariable
-    that._width = imageData.width;
-    // noinspection JSUnresolvedVariable
-    that._height = imageData.height;
-    that._isParsed = true;
-    resolve();
-  });
-});
+  const imageData = await ImageUtils.parseImage(mutableImage._imageBuffer);
+  mutableImage._imageBmp = imageData;
+  mutableImage._width = imageData.width;
+  mutableImage._height = imageData.height;
+  mutableImage._isParsed = true;
+}
 
 /**
  * Packs the image if possible - meaning the buffer is updated according to the edited BMP
  *
- * @param {MutableImage} that The context of the current instance of MutableImage
+ * @param {MutableImage} mutableImage The context of the current instance of MutableImage
+ * @return {Promise<void>}
  */
-const packImage = that => that._promiseFactory.makePromise(resolve => {
-  if (!that._isParsed || that._imageBuffer || disabled) {
-    return resolve();
+async function packImage(mutableImage) {
+  if (!mutableImage._isParsed || mutableImage._imageBuffer || disabled) {
+    return;
   }
 
-  return ImageUtils.packImage(that._imageBmp, that._promiseFactory).then(buffer => {
-    that._imageBuffer = buffer;
-    resolve();
-  });
-});
+  mutableImage._imageBuffer = await ImageUtils.packImage(mutableImage._imageBmp);
+}
 
 /**
  * Retrieve image size - if image is not parsed, get image size from buffer
@@ -68,17 +63,14 @@ const retrieveImageSize = that => {
 class MutableImage {
   /**
    * @param {Buffer|string} image Encoded bytes of image (buffer or base64 string)
-   * @param {PromiseFactory} promiseFactory An object which will be used for creating deferreds/promises.
    */
-  constructor(image, promiseFactory) {
+  constructor(image) {
     if (GeneralUtils.isBase64(image)) {
-      return MutableImage.fromBase64(image, promiseFactory);
+      return MutableImage.fromBase64(image);
     }
 
     /** @type {Buffer} */
     this._imageBuffer = image;
-    /** @type {PromiseFactory} */
-    this._promiseFactory = promiseFactory;
     /** @type {boolean} */
     this._isParsed = false;
     /** @type {png.Image|Image} */
@@ -95,21 +87,19 @@ class MutableImage {
 
   /**
    * @param {string} str Base64 string of image
-   * @param {PromiseFactory} promiseFactory An object which will be used for creating deferreds/promises.
    * @return {MutableImage}
    */
-  static fromBase64(str, promiseFactory) {
-    return new MutableImage(Buffer.from(str, 'base64'), promiseFactory);
+  static fromBase64(str) {
+    return new MutableImage(Buffer.from(str, 'base64'));
   }
 
   /**
    * @param {number} width
    * @param {number} height
-   * @param {PromiseFactory} promiseFactory An object which will be used for creating deferreds/promises.
    * @return {MutableImage}
    */
-  static newImage(width, height, promiseFactory) {
-    const result = new MutableImage(null, promiseFactory);
+  static newImage(width, height) {
+    const result = new MutableImage(null);
     result._isParsed = true;
     result._imageBmp = ImageUtils.createImage(width, height);
     result._width = width;
@@ -122,10 +112,10 @@ class MutableImage {
    * Coordinates represent the image's position in a larger context (if any).
    * E.g., A screenshot of the browser's viewport of a web page.
    *
-   * @return {Promise<Location>} The coordinates of the image in the larger context (if any)
+   * @return {Location} The coordinates of the image in the larger context (if any)
    */
   getCoordinates() {
-    return this._promiseFactory.resolve(new Location(this._left, this._top));
+    return new Location(this._left, this._top);
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -134,12 +124,10 @@ class MutableImage {
    * E.g., A screenshot of the browser's viewport of a web page.
    *
    * @param {Location} coordinates
-   * @return {Promise<void>}
    */
   setCoordinates(coordinates) {
     this._left = coordinates.getX();
     this._top = coordinates.getY();
-    return this._promiseFactory.resolve();
   }
 
   /**
@@ -174,15 +162,15 @@ class MutableImage {
    *
    * @return {Promise<{imageBuffer: Buffer, width: number, height: number}>}
    */
-  asObject() {
-    const that = this;
-    return packImage(that)
-      .then(() => retrieveImageSize(that))
-      .then(() => ({
-        imageBuffer: that._imageBuffer,
-        width: that._width,
-        height: that._height,
-      }));
+  async asObject() {
+    await packImage(this);
+    retrieveImageSize(this);
+
+    return {
+      imageBuffer: this._imageBuffer,
+      width: this._width,
+      height: this._height,
+    };
   }
 
   /**
@@ -191,23 +179,21 @@ class MutableImage {
    * @param {number} scaleRatio
    * @return {Promise<MutableImage>}
    */
-  scale(scaleRatio) {
+  async scale(scaleRatio) {
     if (scaleRatio === 1) {
-      return this._promiseFactory.resolve(this);
+      return this;
     }
 
-    const that = this;
-    return parseImage(that).then(() => {
-      if (that._isParsed) {
-        return ImageUtils.scaleImage(that._imageBmp, scaleRatio, that._promiseFactory).then(() => {
-          that._imageBuffer = null;
-          that._width = that._imageBmp.width;
-          that._height = that._imageBmp.height;
-          return that;
-        });
-      }
-      return that;
-    });
+    await parseImage(this);
+
+    if (this._isParsed) {
+      await ImageUtils.scaleImage(this._imageBmp, scaleRatio);
+      this._imageBuffer = null;
+      this._width = this._imageBmp.width;
+      this._height = this._imageBmp.height;
+    }
+
+    return this;
   }
 
   /**
@@ -216,19 +202,17 @@ class MutableImage {
    * @param {Region} region
    * @return {Promise<MutableImage>}
    */
-  crop(region) {
-    const that = this;
-    return parseImage(that).then(() => {
-      if (that._isParsed) {
-        return ImageUtils.cropImage(that._imageBmp, region, that._promiseFactory).then(() => {
-          that._imageBuffer = null;
-          that._width = that._imageBmp.width;
-          that._height = that._imageBmp.height;
-          return that;
-        });
-      }
-      return that;
-    });
+  async crop(region) {
+    await parseImage(this);
+
+    if (this._isParsed) {
+      await ImageUtils.cropImage(this._imageBmp, region);
+      this._imageBuffer = null;
+      this._width = this._imageBmp.width;
+      this._height = this._imageBmp.height;
+    }
+
+    return this;
   }
 
   /**
@@ -238,12 +222,10 @@ class MutableImage {
    * @param {Region} region
    * @return {Promise<MutableImage>}
    */
-  getImagePart(region) {
-    const that = this;
-    return packImage(that).then(() => {
-      const newImage = new MutableImage(Buffer.from(that._imageBuffer), that._promiseFactory);
-      return newImage.crop(region);
-    });
+  async getImagePart(region) {
+    await packImage(this);
+    const newImage = new MutableImage(Buffer.from(this._imageBuffer));
+    return newImage.crop(region);
   }
 
   /**
@@ -252,25 +234,23 @@ class MutableImage {
    * @param {number} degrees The number of degrees to rotate the image by
    * @return {Promise<MutableImage>}
    */
-  rotate(degrees) {
-    const that = this;
+  async rotate(degrees) {
     // noinspection MagicNumberJS
     if (degrees % 360 === 0) {
-      return that._promiseFactory.resolve(that);
+      return this;
     }
 
-    return parseImage(that).then(() => {
-      if (that._isParsed) {
-        // If the region's coordinates are relative to the image, we convert them to absolute coordinates.
-        return ImageUtils.rotateImage(that._imageBmp, degrees, that._promiseFactory).then(() => {
-          that._imageBuffer = null;
-          that._width = that._imageBmp.width;
-          that._height = that._imageBmp.height;
-          return that;
-        });
-      }
-      return that;
-    });
+    await parseImage(this);
+
+    if (this._isParsed) {
+      // If the region's coordinates are relative to the image, we convert them to absolute coordinates.
+      await ImageUtils.rotateImage(this._imageBmp, degrees);
+      this._imageBuffer = null;
+      this._width = this._imageBmp.width;
+      this._height = this._imageBmp.height;
+    }
+
+    return this;
   }
 
   /**
@@ -279,26 +259,24 @@ class MutableImage {
    * @param {MutableImage} srcImage
    * @return {Promise<void>}
    */
-  copyRasterData(dx, dy, srcImage) {
-    const that = this;
-    return parseImage(that)
-      .then(() => srcImage.getImageData())
-      .then(srcImageBmp => {
-        let width = srcImage.getWidth();
-        let height = srcImage.getHeight();
-        const maxWidth = that.getWidth() - dx;
-        const maxHeight = that.getHeight() - dy;
+  async copyRasterData(dx, dy, srcImage) {
+    await parseImage(this);
 
-        if (maxWidth < width) {
-          width = maxWidth;
-        }
+    const srcImageBmp = await srcImage.getImageData();
+    let width = srcImage.getWidth();
+    let height = srcImage.getHeight();
+    const maxWidth = this.getWidth() - dx;
+    const maxHeight = this.getHeight() - dy;
 
-        if (maxHeight < height) {
-          height = maxHeight;
-        }
+    if (maxWidth < width) {
+      width = maxWidth;
+    }
 
-        ImageUtils.copyPixels(that._imageBmp, { x: dx, y: dy }, srcImageBmp, { x: 0, y: 0 }, { width, height });
-      });
+    if (maxHeight < height) {
+      height = maxHeight;
+    }
+
+    ImageUtils.copyPixels(this._imageBmp, { x: dx, y: dy }, srcImageBmp, { x: 0, y: 0 }, { width, height });
   }
 
   /**
@@ -307,41 +285,33 @@ class MutableImage {
    * @param {string} filename
    * @return {Promise<void>}
    */
-  save(filename) {
-    const that = this;
-    return that.getImageBuffer().then(imageBuffer => ImageUtils.saveImage(imageBuffer, filename, that._promiseFactory));
+  async save(filename) {
+    const imageBuffer = await this.getImageBuffer();
+    await ImageUtils.saveImage(imageBuffer, filename);
   }
 
   /**
    * @return {?Promise<Buffer>}
    */
-  getImageBuffer() {
-    const that = this;
-    return packImage(that).then(() => that._imageBuffer);
+  async getImageBuffer() {
+    await packImage(this);
+    return this._imageBuffer;
   }
 
   /**
-   * @return {?Promise<Buffer>}
+   * @return {?Promise<string>}
    */
-  getImageBase64() {
-    const that = this;
-    return packImage(that).then(() => that._imageBuffer.toString('base64'));
+  async getImageBase64() {
+    await packImage(this);
+    return this._imageBuffer.toString('base64');
   }
 
   /**
    * @return {?Promise<png.Image|Image>}
    */
-  getImageData() {
-    const that = this;
-    return parseImage(that).then(() => that._imageBmp);
-  }
-
-  /**
-   * @param [value=this] What to resolve
-   * @return {Promise<MutableImage>}
-   */
-  resolve(value = this) {
-    return this._promiseFactory.resolve(value);
+  async getImageData() {
+    await parseImage(this);
+    return this._imageBmp;
   }
 }
 

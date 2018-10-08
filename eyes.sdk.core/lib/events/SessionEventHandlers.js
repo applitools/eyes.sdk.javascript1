@@ -3,9 +3,8 @@
 const { SessionEventHandler } = require('./SessionEventHandler');
 
 class SessionEventHandlers extends SessionEventHandler {
-  /** @inheritDoc */
-  constructor(promiseFactory) {
-    super(promiseFactory);
+  constructor() {
+    super();
 
     /** @type {SessionEventHandler[]} */
     this._eventHandlers = [];
@@ -34,42 +33,42 @@ class SessionEventHandlers extends SessionEventHandler {
 
   /** @inheritDoc */
   initStarted() {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.initStarted()));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.initStarted()));
   }
 
   /** @inheritDoc */
   initEnded() {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.initEnded()));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.initEnded()));
   }
 
   /** @inheritDoc */
   setSizeWillStart(sizeToSet) {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.setSizeWillStart(sizeToSet)));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.setSizeWillStart(sizeToSet)));
   }
 
   /** @inheritDoc */
   setSizeEnded() {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.setSizeEnded()));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.setSizeEnded()));
   }
 
   /** @inheritDoc */
   testStarted(autSessionId) {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.testStarted(autSessionId)));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.testStarted(autSessionId)));
   }
 
   /** @inheritDoc */
   testEnded(autSessionId, testResults) {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.testEnded(autSessionId, testResults)));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.testEnded(autSessionId, testResults)));
   }
 
   /** @inheritDoc */
   validationWillStart(autSessionId, validationInfo) {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.validationWillStart(autSessionId, validationInfo)));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.validationWillStart(autSessionId, validationInfo)));
   }
 
   /** @inheritDoc */
   validationEnded(autSessionId, validationId, validationResult) {
-    return this._promiseFactory.all(this._eventHandlers.map(eventHandler => eventHandler.validationEnded(autSessionId, validationId, validationResult)));
+    return Promise.all(this._eventHandlers.map(eventHandler => eventHandler.validationEnded(autSessionId, validationId, validationResult)));
   }
 }
 

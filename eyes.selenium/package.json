@@ -34,11 +34,11 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes.sdk.core": "~1.9.0",
-    "selenium-webdriver": "^3.6.0"
+    "@applitools/eyes.sdk.core": "~1.11.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
   },
   "devDependencies": {
-    "chromedriver": "^2.41.0",
+    "chromedriver": "^2.42.0",
     "mocha": "^5.2.0",
     "mocha.parallel": "^0.15.6"
   },
@@ -47,6 +47,6 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
-    "node": ">=6.9.0"
+    "node": ">=8.9.0"
   }
 }

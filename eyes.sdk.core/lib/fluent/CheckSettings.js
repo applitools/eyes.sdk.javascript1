@@ -202,14 +202,14 @@ class CheckSettings {
    * @deprecated use {@link ignoreRegions} instead
    */
   ignore(...regions) {
-    return this.ignoreRegions(regions);
+    return this.ignoreRegions(...regions);
   }
 
   /**
    * @deprecated use {@link ignoreRegions} instead
    */
   ignores(...regions) {
-    return this.ignoreRegions(regions);
+    return this.ignoreRegions(...regions);
   }
 
   // noinspection JSUnusedGlobalSymbols

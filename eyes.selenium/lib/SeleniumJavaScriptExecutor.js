@@ -1,36 +1,25 @@
 'use strict';
 
-const { EyesJsExecutor, ArgumentGuard } = require('@applitools/eyes.sdk.core');
+const { EyesJsExecutor } = require('@applitools/eyes.sdk.core');
 
 class SeleniumJavaScriptExecutor extends EyesJsExecutor {
   /**
    * @param {EyesWebDriver|WebDriver} driver
-   * @param {PromiseFactory} [promiseFactory]
    */
-  constructor(driver, promiseFactory) {
+  constructor(driver) {
     super();
 
-    if (!driver.getPromiseFactory) {
-      ArgumentGuard.notNull(promiseFactory, 'promiseFactory');
-    }
-
     this._driver = driver;
-    this._promiseFactory = promiseFactory || driver.getPromiseFactory();
   }
 
-  /** @override */
+  /** @inheritDoc */
   executeScript(script, ...args) {
     return this._driver.executeScript(script, args);
   }
 
-  /** @override */
+  /** @inheritDoc */
   sleep(millis) {
     return this._driver.sleep(millis);
-  }
-
-  /** @override */
-  getPromiseFactory() {
-    return this._promiseFactory;
   }
 }
 

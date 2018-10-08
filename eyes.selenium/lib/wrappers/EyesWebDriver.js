@@ -50,13 +50,6 @@ class EyesWebDriver extends IWebDriver {
   }
 
   /**
-   * @return {PromiseFactory}
-   */
-  getPromiseFactory() {
-    return this._eyes.getPromiseFactory();
-  }
-
-  /**
    * @return {WebDriver}
    */
   getRemoteWebDriver() {
@@ -64,116 +57,109 @@ class EyesWebDriver extends IWebDriver {
     return this._driver.driver || this._driver;
   }
 
-  /** @override */
-  controlFlow() {
-    return this._driver.controlFlow();
-  }
-
-  /** @override */
+  /** @inheritDoc */
   schedule(command, description) {
     return this._driver.schedule(command, description);
   }
 
-  /** @override */
+  /** @inheritDoc */
   setFileDetector(detector) {
     return this._driver.setFileDetector(detector);
   }
 
-  /** @override */
+  /** @inheritDoc */
   getExecutor() {
     return this._driver.getExecutor();
   }
 
-  /** @override */
+  /** @inheritDoc */
   getSession() {
     return this._driver.getSession();
   }
 
-  /** @override */
+  /** @inheritDoc */
   getCapabilities() {
     return this._driver.getCapabilities();
   }
 
-  /** @override */
+  /** @inheritDoc */
   quit() {
     return this._driver.quit();
   }
 
-  /** @override */
+  /** @inheritDoc */
   actions() {
     return this._driver.actions();
   }
 
-  /** @override */
+  /** @inheritDoc */
   touchActions() {
     return this._driver.touchActions();
   }
 
-  /** @override */
-  executeScript(script, ...varArgs) {
-    const logger = this._logger;
+  /** @inheritDoc */
+  async executeScript(script, ...varArgs) {
     this._logger.verbose('Execute script...');
     EyesSeleniumUtils.handleSpecialCommands(script, ...varArgs);
     // noinspection JSValidateTypes
-    return this._driver.executeScript(script, ...varArgs).then(result => {
-      logger.verbose('Done!');
-      return result;
-    });
+    const result = await this._driver.executeScript(script, ...varArgs);
+    this._logger.verbose('Done!');
+    return result;
   }
 
-  /** @override */
+  /** @inheritDoc */
   executeAsyncScript(script, ...varArgs) {
     EyesSeleniumUtils.handleSpecialCommands(script, ...varArgs);
     return this._driver.executeAsyncScript(script, ...varArgs);
   }
 
-  /** @override */
+  /** @inheritDoc */
   call(fn, optScope, ...varArgs) {
     return this._driver.call(fn, optScope, ...varArgs);
   }
 
-  /** @override */
+  /** @inheritDoc */
   wait(condition, optTimeout, optMessage) {
     return this._driver.wait(condition, optTimeout, optMessage);
   }
 
-  /** @override */
+  /** @inheritDoc */
   sleep(ms) {
     return this._driver.sleep(ms);
   }
 
-  /** @override */
+  /** @inheritDoc */
   getWindowHandle() {
     return this._driver.getWindowHandle();
   }
 
-  /** @override */
+  /** @inheritDoc */
   getAllWindowHandles() {
     return this._driver.getAllWindowHandles();
   }
 
-  /** @override */
+  /** @inheritDoc */
   getPageSource() {
     return this._driver.getPageSource();
   }
 
-  /** @override */
+  /** @inheritDoc */
   close() {
     return this._driver.close();
   }
 
-  /** @override */
+  /** @inheritDoc */
   get(url) {
     this._frameChain.clear();
     return this._driver.get(url);
   }
 
-  /** @override */
+  /** @inheritDoc */
   getCurrentUrl() {
     return this._driver.getCurrentUrl();
   }
 
-  /** @override */
+  /** @inheritDoc */
   getTitle() {
     return this._driver.getTitle();
   }
@@ -195,42 +181,30 @@ class EyesWebDriver extends IWebDriver {
    * @return {!Promise<!Array<!EyesWebElement>>} A promise that will be resolved to an array of the located
    *   {@link EyesWebElement}s.
    */
-  findElements(locator) {
-    const that = this;
-    return this._driver.findElements(locator)
-      .then(elements => elements.map(element => {
-        element = new EyesWebElement(that._logger, that, element);
-        // For Remote web elements, we can keep the IDs
-        that._elementsIds.set(element.getId(), element);
-        return element;
-      }));
+  async findElements(locator) {
+    const elements = await this._driver.findElements(locator);
+    return elements.map(element => {
+      element = new EyesWebElement(this._logger, this, element);
+      // For Remote web elements, we can keep the IDs
+      this._elementsIds.set(element.getId(), element);
+      return element;
+    });
   }
 
-  /** @override */
-  takeScreenshot() {
-    const that = this;
-    // Get the image as base64.
-    // noinspection JSValidateTypes
-    return this._driver.takeScreenshot()
-      .then(screenshot64 => {
-        const screenshot = new MutableImage(screenshot64, that.getPromiseFactory());
-        return EyesWebDriver.normalizeRotation(
-          that._logger,
-          that._driver,
-          screenshot,
-          that._rotation,
-          that.getPromiseFactory()
-        );
-      })
-      .then(screenshot => screenshot.getImageBase64());
+  /** @inheritDoc */
+  async takeScreenshot() {
+    const screenshot64 = await this._driver.takeScreenshot(); // Get the image as base64.
+    const screenshot = new MutableImage(screenshot64);
+    await EyesWebDriver.normalizeRotation(this._logger, this._driver, screenshot, this._rotation);
+    return screenshot.getImageBase64();
   }
 
-  /** @override */
+  /** @inheritDoc */
   manage() {
     return this._driver.manage();
   }
 
-  /** @override */
+  /** @inheritDoc */
   navigate() {
     return this._driver.navigate();
   }
@@ -432,38 +406,30 @@ class EyesWebDriver extends IWebDriver {
    * @param {boolean} [forceQuery=false] If true, we will perform the query even if we have a cached viewport size.
    * @return {Promise<RectangleSize>} The viewport size of the default content (outer most frame).
    */
-  getDefaultContentViewportSize(forceQuery = false) {
-    const that = this;
-    that._logger.verbose('getDefaultContentViewportSize()');
-    if (that._defaultContentViewportSize && !forceQuery) {
-      that._logger.verbose('Using cached viewport size: ', that._defaultContentViewportSize);
-      return that.getPromiseFactory().resolve(that._defaultContentViewportSize);
+  async getDefaultContentViewportSize(forceQuery = false) {
+    this._logger.verbose('getDefaultContentViewportSize()');
+    if (this._defaultContentViewportSize && !forceQuery) {
+      this._logger.verbose('Using cached viewport size: ', this._defaultContentViewportSize);
+      return this._defaultContentViewportSize;
     }
 
-    const switchTo = that.switchTo();
-    const currentFrames = new FrameChain(that._logger, that.getFrameChain());
-
-    let promise = that.getPromiseFactory().resolve();
+    const switchTo = this.switchTo();
+    const currentFrames = new FrameChain(this._logger, this.getFrameChain());
 
     // Optimization
     if (currentFrames.size() > 0) {
-      promise = promise.then(() => switchTo.defaultContent());
+      await switchTo.defaultContent();
     }
 
-    promise = promise.then(() => {
-      that._logger.verbose('Extracting viewport size...');
-      return EyesSeleniumUtils.getViewportSizeOrDisplaySize(that._logger, that._driver);
-    })
-      .then(defaultContentViewportSize => {
-        that._defaultContentViewportSize = defaultContentViewportSize;
-        that._logger.verbose('Done! Viewport size: ', that._defaultContentViewportSize);
-      });
+    this._logger.verbose('Extracting viewport size...');
+    this._defaultContentViewportSize = await EyesSeleniumUtils.getViewportSizeOrDisplaySize(this._logger, this._driver);
+    this._logger.verbose('Done! Viewport size: ', this._defaultContentViewportSize);
 
     if (currentFrames.size() > 0) {
-      promise = promise.then(() => switchTo.frames(currentFrames));
+      await switchTo.frames(currentFrames);
     }
 
-    return promise.then(() => that._defaultContentViewportSize);
+    return this._defaultContentViewportSize;
   }
 
   /**
@@ -476,25 +442,24 @@ class EyesWebDriver extends IWebDriver {
   /**
    * @return {Promise<string>}
    */
-  getUserAgent() {
-    const logger = this._logger;
-    return this._driver.executeScript('return navigator.userAgent;')
-      .then(userAgent => {
-        logger.verbose(`user agent: ${userAgent}`);
-        return userAgent;
-      })
-      .catch(() => {
-        logger.verbose('Failed to obtain user-agent string');
-        return null;
-      });
+  async getUserAgent() {
+    try {
+      const userAgent = await this._driver.executeScript('return navigator.userAgent;');
+      this._logger.verbose(`user agent: ${userAgent}`);
+      return userAgent;
+    } catch (err) {
+      this._logger.verbose(`Failed to obtain user-agent string ${err}`);
+      return null;
+    }
   }
 
   // noinspection JSUnusedGlobalSymbols
   /**
    * @return {Promise<string>} A copy of the current frame chain.
    */
-  getSessionId() {
-    return this._driver.getSession().getId();
+  async getSessionId() {
+    const session = await this._driver.getSession();
+    return session.getId();
   }
 
   /**
@@ -506,22 +471,21 @@ class EyesWebDriver extends IWebDriver {
    * @param {MutableImage} image The image to normalize.
    * @param {ImageRotation} rotation The degrees by which to rotate the image: positive values = clockwise rotation,
    *   negative values = counter-clockwise, 0 = force no rotation, null = rotate automatically as needed.
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<MutableImage>} A normalized image.
    */
-  static normalizeRotation(logger, driver, image, rotation, promiseFactory) {
+  static async normalizeRotation(logger, driver, image, rotation) {
     ArgumentGuard.notNull(logger, 'logger');
     ArgumentGuard.notNull(driver, 'driver');
     ArgumentGuard.notNull(image, 'image');
 
-    return promiseFactory.resolve()
-      .then(() => {
-        if (rotation) {
-          return rotation.getRotation();
-        }
-        return EyesSeleniumUtils.tryAutomaticRotation(logger, driver, image);
-      })
-      .then(degrees => image.rotate(degrees));
+    let degrees;
+    if (rotation) {
+      degrees = rotation.getRotation();
+    } else {
+      degrees = await EyesSeleniumUtils.tryAutomaticRotation(logger, driver, image);
+    }
+
+    return image.rotate(degrees);
   }
 }
 

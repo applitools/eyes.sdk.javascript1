@@ -10,34 +10,31 @@ let driver, eyes;
 describe('Eyes.Selenium.JavaScript - check-with-scaling', function () {
   this.timeout(5 * 60 * 1000);
 
-  before(function () {
+  before(async function () {
     const options = new Options().addArguments('--force-device-scale-factor=1.25');
     // noinspection JSCheckFunctionSignatures
-    driver = new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(options)
-      .build();
+    driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     eyes = new Eyes();
-    eyes.setApiKey(process.env.APPLITOOLS_API_KEY);
     eyes.setLogHandler(new ConsoleLogHandler(true));
   });
 
-  it('test check with scaling', function () {
-    return eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560)).then(driver => {
-      driver.get('https://astappiev.github.io/test-html-pages/');
+  it('test check with scaling', async function () {
+    await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560));
 
-      eyes.check('Entire window', Target.window().fully());
+    await driver.get('https://astappiev.github.io/test-html-pages/');
 
-      eyes.check('Text block', Target.region(By.id('overflowing-div')).fully());
+    await eyes.check('Entire window', Target.window().fully());
 
-      eyes.check('Minions', Target.region(By.id('overflowing-div-image')).fully());
+    await eyes.check('Text block', Target.region(By.id('overflowing-div')).fully());
 
-      return eyes.close();
-    });
+    await eyes.check('Minions', Target.region(By.id('overflowing-div-image')).fully());
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

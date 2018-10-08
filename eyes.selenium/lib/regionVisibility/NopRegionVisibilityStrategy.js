@@ -3,34 +3,23 @@
 const { RegionVisibilityStrategy } = require('./RegionVisibilityStrategy');
 
 class NopRegionVisibilityStrategy extends RegionVisibilityStrategy {
-  // noinspection JSCommentMatchesSignature
   /**
    * @param {Logger} logger
-   * @param {PromiseFactory} promiseFactory
    */
-  constructor(logger, promiseFactory) {
+  constructor(logger) {
     super();
 
     this._logger = logger;
-    this._promiseFactory = promiseFactory;
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  moveToRegion(positionProvider, location) {
+  /** @inheritDoc */
+  async moveToRegion(positionProvider, location) {
     this._logger.verbose('Ignored (no op).');
-    return this._promiseFactory.resolve();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  returnToOriginalPosition(positionProvider) {
+  /** @inheritDoc */
+  async returnToOriginalPosition(positionProvider) {
     this._logger.verbose('Ignored (no op).');
-    return this._promiseFactory.resolve();
   }
 }
 

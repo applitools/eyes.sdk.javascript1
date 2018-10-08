@@ -14,11 +14,10 @@ class ImageUtils {
    * Processes a PNG buffer - returns it as parsed Image.
    *
    * @param {Buffer} buffer Original image as PNG Buffer
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<png.Image|Image>} Decoded png image with byte buffer
    */
-  static parseImage(buffer, promiseFactory) {
-    return promiseFactory.makePromise(resolve => {
+  static parseImage(buffer) {
+    return new Promise(resolve => {
       if (!fs.open) {
         return resolve(buffer);
       }
@@ -35,11 +34,10 @@ class ImageUtils {
    * Repacks a parsed Image to a PNG buffer.
    *
    * @param {png.Image|Image} image Parsed image as returned from parseImage
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<Buffer>} PNG buffer which can be written to file or base64 string
    */
-  static packImage(image, promiseFactory) {
-    return promiseFactory.makePromise(resolve => {
+  static packImage(image) {
+    return new Promise(resolve => {
       if (!fs.open) {
         return resolve(image);
       }
@@ -68,12 +66,11 @@ class ImageUtils {
    *
    * @param {png.Image|Image} image - will be modified
    * @param {number} scaleRatio factor to multiply the image dimensions by (lower than 1 for scale down)
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<png.Image|Image>}
    */
-  static scaleImage(image, scaleRatio, promiseFactory) {
+  static scaleImage(image, scaleRatio) {
     if (scaleRatio === 1) {
-      return promiseFactory.makePromise(resolve => {
+      return new Promise(resolve => {
         resolve(image);
       });
     }
@@ -81,7 +78,7 @@ class ImageUtils {
     const ratio = image.height / image.width;
     const scaledWidth = Math.ceil(image.width * scaleRatio);
     const scaledHeight = Math.ceil(scaledWidth * ratio);
-    return ImageUtils.resizeImage(image, scaledWidth, scaledHeight, promiseFactory);
+    return ImageUtils.resizeImage(image, scaledWidth, scaledHeight);
   }
 
   /**
@@ -90,11 +87,10 @@ class ImageUtils {
    * @param {png.Image|Image} image - will be modified
    * @param {number} targetWidth The width to resize the image to
    * @param {number} targetHeight The height to resize the image to
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<png.Image|Image>}
    */
-  static resizeImage(image, targetWidth, targetHeight, promiseFactory) {
-    return promiseFactory.makePromise(resolve => {
+  static resizeImage(image, targetWidth, targetHeight) {
+    return new Promise(resolve => {
       const dst = {
         data: Buffer.alloc(targetWidth * targetHeight * 4),
         width: targetWidth,
@@ -306,11 +302,10 @@ class ImageUtils {
    *
    * @param {png.Image|Image} image
    * @param {Region} region Region to crop
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<png.Image|Image>}
    */
-  static cropImage(image, region, promiseFactory) {
-    return promiseFactory.makePromise((resolve, reject) => {
+  static cropImage(image, region) {
+    return new Promise((resolve, reject) => {
       if (!region) {
         return resolve(image);
       }
@@ -354,40 +349,37 @@ class ImageUtils {
    *
    * @param {png.Image|Image} image A parsed image, the image will be changed
    * @param {number} degrees The number of degrees to rotate the image by
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<png.Image|Image>}
    */
-  static rotateImage(image, degrees, promiseFactory) {
-    return promiseFactory.makePromise(resolve => {
-      ArgumentGuard.notNull(image, 'image');
-      ArgumentGuard.isInteger(degrees, 'deg');
+  static async rotateImage(image, degrees) {
+    ArgumentGuard.notNull(image, 'image');
+    ArgumentGuard.isInteger(degrees, 'deg');
 
-      let i = Math.round(degrees / 90) % 4;
-      while (i < 0) { i += 4; }
+    let i = Math.round(degrees / 90) % 4;
+    while (i < 0) { i += 4; }
 
-      while (i > 0) {
-        const dstBuffer = Buffer.alloc(image.data.length);
-        let dstOffset = 0;
-        for (let x = 0; x < image.width; x += 1) {
-          for (let y = image.height - 1; y >= 0; y -= 1) {
-            const srcOffset = ((image.width * y) + x) * 4;
-            const data = image.data.readUInt32BE(srcOffset);
-            dstBuffer.writeUInt32BE(data, dstOffset);
-            dstOffset += 4;
-          }
+    while (i > 0) {
+      const dstBuffer = Buffer.alloc(image.data.length);
+      let dstOffset = 0;
+      for (let x = 0; x < image.width; x += 1) {
+        for (let y = image.height - 1; y >= 0; y -= 1) {
+          const srcOffset = ((image.width * y) + x) * 4;
+          const data = image.data.readUInt32BE(srcOffset);
+          dstBuffer.writeUInt32BE(data, dstOffset);
+          dstOffset += 4;
         }
-
-        image.data = Buffer.from(dstBuffer);
-        const tmp = image.width;
-        // noinspection JSSuspiciousNameCombination
-        image.width = image.height;
-        image.height = tmp;
-
-        i -= 1;
       }
 
-      return resolve(image);
-    });
+      image.data = Buffer.from(dstBuffer);
+      const tmp = image.width;
+      // noinspection JSSuspiciousNameCombination
+      image.width = image.height;
+      image.height = tmp;
+
+      i -= 1;
+    }
+
+    return image;
   }
 
   /**
@@ -450,11 +442,10 @@ class ImageUtils {
    *
    * @param {Buffer} imageBuffer
    * @param {string} filename
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<void>}
    */
-  static saveImage(imageBuffer, filename, promiseFactory) {
-    return promiseFactory.makePromise((resolve, reject) => {
+  static saveImage(imageBuffer, filename) {
+    return new Promise((resolve, reject) => {
       fs.writeFile(filename, imageBuffer, err => {
         if (err) {
           return reject(err);
@@ -467,11 +458,10 @@ class ImageUtils {
   /**
    *
    * @param {string} path
-   * @param {PromiseFactory} promiseFactory
    * @return {Promise<Buffer>}
    */
-  static readImage(path, promiseFactory) {
-    return promiseFactory.makePromise((resolve, reject) => {
+  static readImage(path) {
+    return new Promise((resolve, reject) => {
       fs.readFile(path, (err, data) => {
         if (err) {
           return reject(err);

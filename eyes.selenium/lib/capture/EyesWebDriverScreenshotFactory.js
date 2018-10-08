@@ -11,23 +11,17 @@ class EyesWebDriverScreenshotFactory extends EyesScreenshotFactory {
   /**
    * @param {Logger} logger
    * @param {EyesWebDriver} driver
-   * @param {PromiseFactory} promiseFactory
    */
-  constructor(logger, driver, promiseFactory) {
+  constructor(logger, driver) {
     super();
 
     this._logger = logger;
     this._driver = driver;
-    this._promiseFactory = promiseFactory;
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  makeScreenshot(image) {
-    const result = new EyesWebDriverScreenshot(this._logger, this._driver, image, this._promiseFactory);
-    return result.init();
+  /** @inheritDoc */
+  async makeScreenshot(image) {
+    return EyesWebDriverScreenshot.fromScreenshotType(this._logger, this._driver, image);
   }
 }
 

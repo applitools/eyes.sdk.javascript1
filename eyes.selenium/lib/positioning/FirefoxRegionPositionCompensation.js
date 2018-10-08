@@ -15,10 +15,7 @@ class FirefoxRegionPositionCompensation extends RegionPositionCompensation {
     this._logger = logger;
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   compensateRegionPosition(region, pixelRatio) {
     if (pixelRatio === 1) {
       return region;

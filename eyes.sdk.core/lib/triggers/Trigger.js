@@ -14,7 +14,6 @@ class Trigger {
 
   // noinspection JSMethodCanBeStatic, JSUnusedGlobalSymbols
   /**
-   * @abstract
    * @return {Trigger.TriggerType}
    */
   getTriggerType() {

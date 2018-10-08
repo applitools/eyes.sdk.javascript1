@@ -9,30 +9,28 @@ let driver, eyes;
 describe('Eyes.Selenium.JavaScript - check window', function () {
   this.timeout(5 * 60 * 1000);
 
-  before(function () {
-    driver = new Builder()
-      .forBrowser('chrome')
-      .build();
+  before(async function () {
+    driver = await new Builder().forBrowser('chrome').build();
 
     eyes = new Eyes();
-    eyes.setApiKey(process.env.APPLITOOLS_API_KEY);
     eyes.setLogHandler(new ConsoleLogHandler(true));
     eyes.setHideScrollbars(true);
   });
 
-  it('test check window methods', function () {
-    return eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560)).then(driver => {
-      driver.get('https://astappiev.github.io/test-html-pages/');
+  it('test check window methods', async function () {
+    await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560));
 
-      eyes.check('Partial window', Target.window());
+    await driver.get('https://astappiev.github.io/test-html-pages/');
 
-      eyes.check('Entire window', Target.window().fully());
+    await eyes.check('Partial window', Target.window());
 
-      return eyes.close();
-    });
+    await eyes.check('Entire window', Target.window().fully());
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

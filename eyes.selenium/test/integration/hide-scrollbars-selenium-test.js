@@ -6,32 +6,32 @@ const { Eyes, Target } = require('../../index');
 
 let driver, eyes;
 describe('Eyes.Selenium.JavaScript - hide scrollbars', () => {
-  before(function () {
-    driver = new Builder()
+  before(async function () {
+    driver = await new Builder()
       .forBrowser('chrome')
       .usingServer('http://localhost:4444/wd/hub')
       .build();
 
     eyes = new Eyes();
-    eyes.setApiKey(process.env.APPLITOOLS_API_KEY);
     eyes.setLogHandler(new ConsoleLogHandler(true));
     eyes.setHideScrollbars(true);
     // eyes.setSaveDebugScreenshots(true);
   });
 
-  it('hide scrollbars selenium', function () {
-    return eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560)).then(driver => {
-      driver.get('https://astappiev.github.io/test-html-pages/');
+  it('hide scrollbars selenium', async function () {
+    await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560));
 
-      // eyes.setHideScrollbars(true);
-      // eyes.setScrollRootElement(By.id('overflowing-div-image'));
-      eyes.check('Entire window', Target.window().fully(true));
+    await driver.get('https://astappiev.github.io/test-html-pages/');
 
-      return eyes.close();
-    });
+    // eyes.setHideScrollbars(true);
+    // eyes.setScrollRootElement(By.id('overflowing-div-image'));
+    await eyes.check('Entire window', Target.window().fully(true));
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

@@ -9,7 +9,9 @@ class ImageProvider {
   /**
    * @return {Promise<MutableImage>}
    */
-  getImage() {}
+  async getImage() {
+    throw new Error('The method should be implemented!');
+  }
 }
 
 exports.ImageProvider = ImageProvider;

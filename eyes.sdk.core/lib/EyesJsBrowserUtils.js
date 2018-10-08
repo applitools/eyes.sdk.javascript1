@@ -146,13 +146,12 @@ class EyesJsBrowserUtils {
    * @param {WebElement} [scrollbarsRoot]
    * @return {Promise<string>} The previous value of the overflow property (could be {@code null}).
    */
-  static hideScrollbars(executor, stabilizationTimeout, scrollbarsRoot) {
-    return EyesJsBrowserUtils.setOverflow(executor, 'hidden', scrollbarsRoot).then(result => {
-      if (stabilizationTimeout > 0) {
-        return executor.sleep(stabilizationTimeout).then(() => result);
-      }
-      return result;
-    });
+  static async hideScrollbars(executor, stabilizationTimeout, scrollbarsRoot) {
+    const result = await EyesJsBrowserUtils.setOverflow(executor, 'hidden', scrollbarsRoot);
+    if (stabilizationTimeout > 0) {
+      await executor.sleep(stabilizationTimeout);
+    }
+    return result;
   }
 
   /**
@@ -161,10 +160,9 @@ class EyesJsBrowserUtils {
    * @param {EyesJsExecutor} executor The executor to use.
    * @return {Promise<Location>} The current scroll position of the current frame.
    */
-  static getCurrentScrollPosition(executor) {
-    return executor.executeScript(JS_GET_CURRENT_SCROLL_POSITION)
-      // If we can't find the current scroll position, we use 0 as default.
-      .then(result => new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0));
+  static async getCurrentScrollPosition(executor) {
+    const result = await executor.executeScript(JS_GET_CURRENT_SCROLL_POSITION);
+    return new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0);
   }
 
   /**
@@ -194,15 +192,16 @@ class EyesJsBrowserUtils {
    * @param {EyesJsExecutor} executor The executor to use.
    * @return {Promise<RectangleSize>} A promise which resolves to an object containing the width/height of the page.
    */
-  static getCurrentFrameContentEntireSize(executor) {
+  static async getCurrentFrameContentEntireSize(executor) {
     // IMPORTANT: Notice there's a major difference between scrollWidth and scrollHeight.
     // While scrollWidth is the maximum between an element's width and its content width,
     // scrollHeight might be smaller (!) than the clientHeight, which is why we take the maximum between them.
-    return executor.executeScript(JS_RETURN_CONTENT_ENTIRE_SIZE)
-      .then(result => new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0))
-      .catch(err => {
-        throw new EyesError('Failed to extract entire size!', err);
-      });
+    try {
+      const result = await executor.executeScript(JS_RETURN_CONTENT_ENTIRE_SIZE);
+      return new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0);
+    } catch (err) {
+      throw new EyesError('Failed to extract entire size!', err);
+    }
   }
 
   /**
@@ -211,12 +210,13 @@ class EyesJsBrowserUtils {
    * @param {EyesJsExecutor} executor The executor to use.
    * @return {Promise<RectangleSize>} A promise which resolves to an object containing the width/height of the page.
    */
-  static getOverflowAwareContentEntireSize(executor) {
-    return executor.executeScript(JS_GET_OVERFLOW_AWARE_CONTENT_ENTIRE_SIZE)
-      .then(result => new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0))
-      .catch(err => {
-        throw new EyesError('Failed to extract overflow aware entire size!', err);
-      });
+  static async getOverflowAwareContentEntireSize(executor) {
+    try {
+      const result = await executor.executeScript(JS_GET_OVERFLOW_AWARE_CONTENT_ENTIRE_SIZE);
+      return new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0);
+    } catch (err) {
+      throw new EyesError('Failed to extract overflow aware entire size!', err);
+    }
   }
 
   /**
@@ -225,9 +225,9 @@ class EyesJsBrowserUtils {
    * @param {EyesJsExecutor} executor The executor to use.
    * @return {Promise<RectangleSize>} The viewport size.
    */
-  static getViewportSize(executor) {
-    return executor.executeScript(JS_GET_VIEWPORT_SIZE)
-      .then(result => new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0));
+  static async getViewportSize(executor) {
+    const result = await executor.executeScript(JS_GET_VIEWPORT_SIZE);
+    return new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0);
   }
 
   /**
@@ -236,9 +236,9 @@ class EyesJsBrowserUtils {
    * @param {EyesJsExecutor} executor The executor to use.
    * @return {Promise<number>} A promise which resolves to the device pixel ratio (float type).
    */
-  static getDevicePixelRatio(executor) {
-    return executor.executeScript('return window.devicePixelRatio')
-      .then(result => parseFloat(result));
+  static async getDevicePixelRatio(executor) {
+    const result = await executor.executeScript('return window.devicePixelRatio');
+    return parseFloat(result);
   }
 
   /**

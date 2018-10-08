@@ -20,67 +20,60 @@ class Eyes extends EyesSelenium {
 
   /** @override */
   _init() {
-    EyesSeleniumUtils.setImageOrientationHandlerHandler(new AppiumImageOrientationHandler());
-    EyesSeleniumUtils.setJavascriptHandler(new AppiumJavascriptHandler(this._driver, this.getPromiseFactory()));
+    EyesSeleniumUtils.setImageOrientationHandler(new AppiumImageOrientationHandler());
+    EyesSeleniumUtils.setJavascriptHandler(new AppiumJavascriptHandler(this._driver));
   }
 
   /** @override */
-  _getScaleProviderFactory() {
-    const that = this;
-    return this._positionProviderHandler.get().getEntireSize()
-      .then(entireSize => EyesAppiumUtils.isMobileDevice(this._driver)
-        .then(isMobileDevice => new ContextBasedScaleProviderFactory(that._logger, entireSize, that._viewportSizeHandler.get(), that._devicePixelRatio, isMobileDevice, that._scaleProviderHandler)));
+  async _getScaleProviderFactory() {
+    const entireSize = await this._positionProviderHandler.get().getEntireSize();
+    const isMobileDevice = await EyesAppiumUtils.isMobileDevice(this._driver);
+    return new ContextBasedScaleProviderFactory(this._logger, entireSize, this._viewportSizeHandler.get(), this._devicePixelRatio, isMobileDevice, this._scaleProviderHandler);
   }
 
   /** @override */
-  getAppEnvironment() {
-    const that = this;
-    let appEnv;
-    return super.getAppEnvironment()
-      .then(appEnv_ => {
-        appEnv = appEnv_;
+  async getAppEnvironment() {
+    const appEnv = await super.getAppEnvironment();
 
-        // If hostOs isn't set, we'll try and extract and OS ourselves.
-        if (!appEnv.getOs()) {
-          that._logger.log('No OS set, checking for mobile OS...');
-          return that._driver.getCapabilities().then(capabilities => {
-            if (EyesAppiumUtils.isMobileDeviceFromCaps(capabilities)) {
-              let platformName = null;
-              that._logger.log('Mobile device detected! Checking device type..');
-              if (EyesAppiumUtils.isAndroidFromCaps(capabilities)) {
-                that._logger.log('Android detected.');
-                platformName = 'Android';
-              } else if (EyesAppiumUtils.isIOSFromCaps(capabilities)) {
-                that._logger.log('iOS detected.');
-                platformName = 'iOS';
-              } else {
-                that._logger.log('Unknown device type.');
-              }
+    // If hostOs isn't set, we'll try and extract and OS ourselves.
+    if (!appEnv.getOs()) {
+      this._logger.log('No OS set, checking for mobile OS...');
+      const capabilities = await this._driver.getCapabilities();
 
-              // We only set the OS if we identified the device type.
-              if (platformName) {
-                let os = platformName;
-                const platformVersion = EyesAppiumUtils.getPlatformVersionFromCaps(capabilities);
-                if (platformVersion) {
-                  const majorVersion = platformVersion.split('.', 2)[0];
-                  if (majorVersion) {
-                    os += ` ${majorVersion}`;
-                  }
-                }
-
-                that._logger.verbose(`Setting OS: ${os}`);
-                appEnv.setOs(os);
-              }
-            } else {
-              that._logger.log('No mobile OS detected.');
-            }
-          });
+      if (EyesAppiumUtils.isMobileDeviceFromCaps(capabilities)) {
+        let platformName = null;
+        this._logger.log('Mobile device detected! Checking device type..');
+        if (EyesAppiumUtils.isAndroidFromCaps(capabilities)) {
+          this._logger.log('Android detected.');
+          platformName = 'Android';
+        } else if (EyesAppiumUtils.isIOSFromCaps(capabilities)) {
+          this._logger.log('iOS detected.');
+          platformName = 'iOS';
+        } else {
+          this._logger.log('Unknown device type.');
         }
-      })
-      .then(() => {
-        that._logger.log('Done!');
-        return appEnv;
-      });
+
+        // We only set the OS if we identified the device type.
+        if (platformName) {
+          let os = platformName;
+          const platformVersion = EyesAppiumUtils.getPlatformVersionFromCaps(capabilities);
+          if (platformVersion) {
+            const majorVersion = platformVersion.split('.', 2)[0];
+            if (majorVersion) {
+              os += ` ${majorVersion}`;
+            }
+          }
+
+          this._logger.verbose(`Setting OS: ${os}`);
+          appEnv.setOs(os);
+        }
+      } else {
+        this._logger.log('No mobile OS detected.');
+      }
+    }
+
+    this._logger.log('Done!');
+    return appEnv;
   }
 }
 

@@ -3,10 +3,7 @@
 const { RegionPositionCompensation } = require('./RegionPositionCompensation');
 
 class NullRegionPositionCompensation extends RegionPositionCompensation {
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   compensateRegionPosition(region, pixelRatio) {
     return region;
   }

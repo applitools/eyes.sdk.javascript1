@@ -41,7 +41,7 @@ class EyesSimpleScreenshot extends EyesScreenshot {
    * @param {boolean} throwIfClipped Throw an EyesException if the region is not fully contained in the screenshot.
    * @return {Promise<EyesScreenshot>} Sub screenshot.
    */
-  getSubScreenshot(region, throwIfClipped) {
+  async getSubScreenshot(region, throwIfClipped) {
     ArgumentGuard.notNull(region, 'region');
 
     // We want to get the sub-screenshot in as-is coordinates type.
@@ -52,16 +52,14 @@ class EyesSimpleScreenshot extends EyesScreenshot {
       throw new OutOfBoundsError(`Region [${region}] is out of screenshot bounds [${this._bounds}]`);
     }
 
-    const that = this;
-    return this._image.getImagePart(subScreenshotRegion).then(subScreenshotImage => {
-      // Notice that we need the bounds-relative coordinates as parameter for new sub-screenshot.
-      const relativeSubScreenshotRegion = that.convertRegionLocation(
-        subScreenshotRegion,
-        CoordinatesType.SCREENSHOT_AS_IS,
-        CoordinatesType.CONTEXT_RELATIVE
-      );
-      return new EyesSimpleScreenshot(subScreenshotImage, relativeSubScreenshotRegion.getLocation());
-    });
+    const subScreenshotImage = await this._image.getImagePart(subScreenshotRegion);
+    // Notice that we need the bounds-relative coordinates as parameter for new sub-screenshot.
+    const relativeSubScreenshotRegion = this.convertRegionLocation(
+      subScreenshotRegion,
+      CoordinatesType.SCREENSHOT_AS_IS,
+      CoordinatesType.CONTEXT_RELATIVE
+    );
+    return new EyesSimpleScreenshot(subScreenshotImage, relativeSubScreenshotRegion.getLocation());
   }
 
   /**

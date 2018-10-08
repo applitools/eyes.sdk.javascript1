@@ -7,9 +7,7 @@ class NullCutProvider extends UnscaledFixedCutProvider {
     super(0, 0, 0, 0);
   }
 
-  /**
-   * @override
-   */
+  /** @inheritDoc */
   scale(scaleRatio) {
     return this;
   }

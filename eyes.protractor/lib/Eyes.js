@@ -23,11 +23,10 @@ class Eyes extends EyesSelenium {
 
     // extend protractor element to return ours
     if (!global.isEyesOverrodeProtractor) {
-      const that = this;
       const originalElementFn = global.element;
 
-      global.element = locator => new ElementFinderWrapper(that._logger, that._driver, originalElementFn(locator));
-      global.element.all = locator => new ElementArrayFinderWrapper(that._logger, that._driver, originalElementFn.all(locator));
+      global.element = locator => new ElementFinderWrapper(this._logger, this._driver, originalElementFn(locator));
+      global.element.all = locator => new ElementArrayFinderWrapper(this._logger, this._driver, originalElementFn.all(locator));
 
       global.isEyesOverrodeProtractor = true;
     }

@@ -10,9 +10,11 @@ const DEFAULT_CONNECTION_TIMEOUT_MS = 30000;
 const SERVER_SUFFIX = '/applitools/sessions';
 
 // *** Overriding callbacks
-const sendNotification = (requestOptions, resolve, reject) => axios(requestOptions)
-  .then(response => resolve(response.status))
-  .catch(err => reject(err));
+function sendNotification(requestOptions, resolve, reject) {
+  return axios(requestOptions)
+    .then(response => resolve(response.status))
+    .catch(err => reject(err));
+}
 
 class RemoteSessionEventHandler extends SessionEventHandler {
   constructor(serverUrl, accessKey) {
@@ -22,20 +24,13 @@ class RemoteSessionEventHandler extends SessionEventHandler {
       strictSSL: false,
       baseUrl: undefined,
       json: true,
-      params: {},
+      params: {
+        accessKey,
+      },
+      timeout: DEFAULT_CONNECTION_TIMEOUT_MS,
     };
 
-    this.setTimeout(DEFAULT_CONNECTION_TIMEOUT_MS);
     this.setServerUrl(serverUrl);
-    this.setAccessKey(accessKey);
-  }
-
-  setPromiseFactory(value) {
-    this._promiseFactory = value;
-  }
-
-  getPromiseFactory() {
-    return this._promiseFactory;
   }
 
   setTimeout(value) {
@@ -65,7 +60,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   initStarted(autSessionId) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = autSessionId;
       options.data = { action: 'initStart' };
@@ -76,7 +71,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   initEnded(autSessionId) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = autSessionId;
       options.data = { action: 'initEnd' };
@@ -87,7 +82,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   setSizeWillStart(autSessionId, sizeToSet) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = autSessionId;
       options.data = { action: 'setSizeStart', size: sizeToSet };
@@ -98,7 +93,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   setSizeEnded(autSessionId) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = autSessionId;
       options.data = { action: 'setSizeEnd' };
@@ -109,7 +104,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   testStarted(autSessionId) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = '';
       options.data = { autSessionId };
@@ -120,7 +115,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   testEnded(autSessionId, testResults) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = autSessionId;
       options.data = { action: 'testEnd', testResults };
@@ -131,7 +126,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   validationWillStart(autSessionId, validationInfo) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = `${autSessionId}/validations`;
       options.data = validationInfo.toObject();
@@ -142,7 +137,7 @@ class RemoteSessionEventHandler extends SessionEventHandler {
 
   /** @inheritDoc */
   validationEnded(autSessionId, validationId, validationResult) {
-    return this._promiseFactory.makePromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const options = Object.create(this._httpOptions);
       options.uri = `${autSessionId}/validations/${validationId}`;
       options.data = { action: 'validationEnd', asExpected: validationResult.getAsExpected() };

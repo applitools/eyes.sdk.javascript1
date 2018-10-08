@@ -9,16 +9,13 @@ const DEFAULT_CONCURRENCY_LIMIT = 100;
 
 class RenderWindowTask {
   /**
-   * @param {PromiseFactory} promiseFactory An object which will be used for creating deferreds/promises.
    * @param {Logger} logger A logger instance.
    * @param {ServerConnector} serverConnector Our gateway to the agent
    */
-  constructor(promiseFactory, logger, serverConnector) {
-    ArgumentGuard.notNull(promiseFactory, 'promiseFactory');
+  constructor(logger, serverConnector) {
     ArgumentGuard.notNull(logger, 'logger');
     ArgumentGuard.notNull(serverConnector, 'serverConnector');
 
-    this._promiseFactory = promiseFactory;
     this._logger = logger;
     this._serverConnector = serverConnector;
   }
@@ -28,28 +25,26 @@ class RenderWindowTask {
    * @param {RenderRequest} renderRequest
    * @return {Promise<string>} Rendered image URL
    */
-  renderWindow(renderRequest) {
-    const that = this;
-    return that.postRender(renderRequest)
-      .then(runningRender => that.getRenderStatus(runningRender))
-      .then(renderStatus => renderStatus.getImageLocation());
+  async renderWindow(renderRequest) {
+    const runningRender = await this.postRender(renderRequest);
+    const renderStatus = await this.getRenderStatus(runningRender);
+    return renderStatus.getImageLocation();
   }
 
   /**
    * @param {RenderRequest} renderRequest
    * @return {Promise<RunningRender>}
    */
-  postRender(renderRequest) {
-    const that = this;
-    return that._serverConnector.render(renderRequest).then(newRender => {
-      if (newRender.getRenderStatus() === RenderStatus.NEED_MORE_RESOURCES) {
-        renderRequest.setRenderId(newRender.getRenderId());
+  async postRender(renderRequest) {
+    const newRender = await this._serverConnector.render(renderRequest);
+    if (newRender.getRenderStatus() === RenderStatus.NEED_MORE_RESOURCES) {
+      renderRequest.setRenderId(newRender.getRenderId());
 
-        return that.putResources(renderRequest.getDom(), newRender).then(() => that.postRender(renderRequest));
-      }
+      await this.putResources(renderRequest.getDom(), newRender);
+      return this.postRender(renderRequest);
+    }
 
-      return newRender;
-    });
+    return newRender;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -66,15 +61,13 @@ class RenderWindowTask {
    * @param {RenderRequest} renderRequest
    * @return {Promise<void>}
    */
-  checkAndPutResources(renderRequest) {
-    const that = this;
-    return that._serverConnector.render(renderRequest).then(newRender => {
-      if (newRender.getRenderStatus() === RenderStatus.NEED_MORE_RESOURCES) {
-        return that.putResources(renderRequest.getDom(), newRender);
-      }
+  async checkAndPutResources(renderRequest) {
+    const newRender = await this._serverConnector.render(renderRequest);
+    if (newRender.getRenderStatus() === RenderStatus.NEED_MORE_RESOURCES) {
+      return this.putResources(renderRequest.getDom(), newRender);
+    }
 
-      return null;
-    });
+    return null;
   }
 
   /**
@@ -82,19 +75,17 @@ class RenderWindowTask {
    * @param {boolean} [delayBeforeRequest=false]
    * @return {Promise<RenderStatusResults>}
    */
-  getRenderStatus(runningRender, delayBeforeRequest = false) {
-    const that = this;
-    return that._serverConnector.renderStatus(runningRender, delayBeforeRequest).then(renderStatusResults => {
-      if (renderStatusResults.getStatus() === RenderStatus.RENDERING) {
-        return that.getRenderStatus(runningRender, true);
-      }
+  async getRenderStatus(runningRender, delayBeforeRequest = false) {
+    const renderStatusResults = await this._serverConnector.renderStatus(runningRender, delayBeforeRequest);
+    if (renderStatusResults.getStatus() === RenderStatus.RENDERING) {
+      return this.getRenderStatus(runningRender, true);
+    }
 
-      if (renderStatusResults.getStatus() === RenderStatus.ERROR) {
-        return that._promiseFactory.reject(renderStatusResults.getError());
-      }
+    if (renderStatusResults.getStatus() === RenderStatus.ERROR) {
+      throw new Error(renderStatusResults.getError());
+    }
 
-      return renderStatusResults;
-    });
+    return renderStatusResults;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -113,12 +104,9 @@ class RenderWindowTask {
    * @param {number} [concurrency]
    * @return {Promise<void>}
    */
-  putResources(rGridDom, runningRender, concurrency = DEFAULT_CONCURRENCY_LIMIT) {
-    const that = this;
-    let promise = that._promiseFactory.resolve();
-
+  async putResources(rGridDom, runningRender, concurrency = DEFAULT_CONCURRENCY_LIMIT) {
     if (runningRender.getNeedMoreDom()) {
-      promise = promise.then(() => that._serverConnector.renderPutResource(runningRender, rGridDom.asResource()));
+      await this._serverConnector.renderPutResource(runningRender, rGridDom.asResource());
     }
 
     if (runningRender.getNeedMoreResources()) {
@@ -127,15 +115,13 @@ class RenderWindowTask {
       const pool = new PromisePool(function* generatePutResourcesPromises() {
         for (let l = resources.length - 1; l >= 0; l -= 1) {
           if (runningRender.getNeedMoreResources().includes(resources[l].getUrl())) {
-            yield that._serverConnector.renderPutResource(runningRender, resources[l]);
+            yield this._serverConnector.renderPutResource(runningRender, resources[l]);
           }
         }
       }, concurrency);
 
-      promise = promise.then(() => pool.start());
+      await pool.start();
     }
-
-    return promise;
   }
 }
 

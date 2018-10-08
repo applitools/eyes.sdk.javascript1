@@ -12,7 +12,6 @@ const MATCH_INTERVAL = 500; // Milliseconds
  */
 class MatchWindowTask {
   /**
-   * @param {PromiseFactory} promiseFactory An object which will be used for creating deferreds/promises.
    * @param {Logger} logger A logger instance.
    * @param {ServerConnector} serverConnector Our gateway to the agent
    * @param {RunningSession} runningSession The running session in which we should match the window
@@ -20,7 +19,7 @@ class MatchWindowTask {
    * @param {EyesBase} eyes The eyes object.
    * @param {AppOutputProvider} appOutputProvider A callback for getting the application output when performing match.
    */
-  constructor(promiseFactory, logger, serverConnector, runningSession, retryTimeout, eyes, appOutputProvider) {
+  constructor(logger, serverConnector, runningSession, retryTimeout, eyes, appOutputProvider) {
     ArgumentGuard.notNull(serverConnector, 'serverConnector');
     ArgumentGuard.greaterThanOrEqualToZero(retryTimeout, 'retryTimeout');
     ArgumentGuard.notNull(appOutputProvider, 'appOutputProvider');
@@ -29,7 +28,6 @@ class MatchWindowTask {
       ArgumentGuard.notNull(runningSession, 'runningSession');
     }
 
-    this._promiseFactory = promiseFactory;
     this._logger = logger;
     this._serverConnector = serverConnector;
     this._runningSession = runningSession;
@@ -54,26 +52,15 @@ class MatchWindowTask {
    * @param {ImageMatchSettings} imageMatchSettings The settings to use.
    * @return {Promise<MatchResult>} The match result.
    */
-  performMatch(userInputs, appOutput, tag, ignoreMismatch, checkSettings, imageMatchSettings) {
-    const that = this;
-    return that._promiseFactory.resolve()
-      .then(() => MatchWindowTask.collectIgnoreRegions(checkSettings, imageMatchSettings, that._eyes, appOutput))
-      .then(() => MatchWindowTask.collectFloatingRegions(checkSettings, imageMatchSettings, that._eyes, appOutput))
-      .then(() => {
-        // Prepare match data.
-        const options = new MatchWindowData.Options(
-          tag,
-          userInputs,
-          ignoreMismatch,
-          false,
-          false,
-          false,
-          imageMatchSettings
-        );
-        const data = new MatchWindowData(userInputs, appOutput.getAppOutput(), tag, ignoreMismatch, options);
-        // Perform match.
-        return this._serverConnector.matchWindow(that._runningSession, data);
-      });
+  async performMatch(userInputs, appOutput, tag, ignoreMismatch, checkSettings, imageMatchSettings) {
+    await MatchWindowTask.collectIgnoreRegions(checkSettings, imageMatchSettings, this._eyes, appOutput);
+    await MatchWindowTask.collectFloatingRegions(checkSettings, imageMatchSettings, this._eyes, appOutput);
+
+    // Prepare match data.
+    const options = new MatchWindowData.Options(tag, userInputs, ignoreMismatch, false, false, false, imageMatchSettings);
+    const data = new MatchWindowData(userInputs, appOutput.getAppOutput(), tag, ignoreMismatch, options);
+    // Perform match.
+    return this._serverConnector.matchWindow(this._runningSession, data);
   }
 
   /**
@@ -83,16 +70,22 @@ class MatchWindowTask {
    * @param {AppOutputWithScreenshot} appOutput
    * @return {Promise<void>}
    */
-  static collectIgnoreRegions(checkSettings, imageMatchSettings, eyes, appOutput) {
-    return eyes.getPromiseFactory().resolve()
-      .then(() => MatchWindowTask.collectRegions(checkSettings.getIgnoreRegions(), eyes, appOutput.getScreenshot())
-        .then(ignoreRegions => imageMatchSettings.setIgnoreRegions(ignoreRegions)))
-      .then(() => MatchWindowTask.collectRegions(checkSettings.getLayoutRegions(), eyes, appOutput.getScreenshot())
-        .then(layoutRegions => imageMatchSettings.setLayoutRegions(layoutRegions)))
-      .then(() => MatchWindowTask.collectRegions(checkSettings.getStrictRegions(), eyes, appOutput.getScreenshot())
-        .then(strictRegions => imageMatchSettings.setStrictRegions(strictRegions)))
-      .then(() => MatchWindowTask.collectRegions(checkSettings.getContentRegions(), eyes, appOutput.getScreenshot())
-        .then(contentRegions => imageMatchSettings.setContentRegions(contentRegions)));
+  static async collectIgnoreRegions(checkSettings, imageMatchSettings, eyes, appOutput) {
+    const ignoreRegions =
+      await MatchWindowTask.collectRegions(checkSettings.getIgnoreRegions(), eyes, appOutput.getScreenshot());
+    imageMatchSettings.setIgnoreRegions(ignoreRegions);
+
+    const layoutRegions =
+      await MatchWindowTask.collectRegions(checkSettings.getLayoutRegions(), eyes, appOutput.getScreenshot());
+    imageMatchSettings.setLayoutRegions(layoutRegions);
+
+    const strictRegions =
+      await MatchWindowTask.collectRegions(checkSettings.getStrictRegions(), eyes, appOutput.getScreenshot());
+    imageMatchSettings.setStrictRegions(strictRegions);
+
+    const contentRegions =
+      await MatchWindowTask.collectRegions(checkSettings.getContentRegions(), eyes, appOutput.getScreenshot());
+    imageMatchSettings.setContentRegions(contentRegions);
   }
 
   /**
@@ -110,7 +103,7 @@ class MatchWindowTask {
         eyes.log('WARNING - ignore region was out of bounds.', e);
       }
     });
-    return eyes.getPromiseFactory().all(regionsPromises);
+    return Promise.all(regionsPromises);
   }
 
   /**
@@ -125,10 +118,9 @@ class MatchWindowTask {
     const regionPromises = checkSettings.getFloatingRegions()
       .map(container => container.getRegion(eyes, screenshot), eyes);
 
-    return eyes.getPromiseFactory().all(regionPromises)
-      .then(floatingRegions => {
-        imageMatchSettings.setFloatingRegions(floatingRegions);
-      });
+    return Promise.all(regionPromises).then(floatingRegions => {
+      imageMatchSettings.setFloatingRegions(floatingRegions);
+    });
   }
 
   /**
@@ -146,41 +138,20 @@ class MatchWindowTask {
    *   default retry timeout.
    * @return {Promise<MatchResult>} Returns the results of the match
    */
-  matchWindow(
-    userInputs,
-    region,
-    tag,
-    shouldRunOnceOnTimeout,
-    ignoreMismatch,
-    checkSettings,
-    imageMatchSettings,
-    retryTimeout
-  ) {
+  async matchWindow(userInputs, region, tag, shouldRunOnceOnTimeout, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout) {
     if (retryTimeout === undefined || retryTimeout === null || retryTimeout < 0) {
       retryTimeout = this._defaultRetryTimeout;
     }
 
-    const that = this;
     this._logger.verbose(`retryTimeout = ${retryTimeout}`);
-    return that._takeScreenshot(
-      userInputs,
-      region,
-      tag,
-      shouldRunOnceOnTimeout,
-      ignoreMismatch,
-      checkSettings,
-      imageMatchSettings,
-      retryTimeout
-    )
-      .then(screenshot => {
-        if (ignoreMismatch) {
-          return that._matchResult;
-        }
+    const screenshot = await this._takeScreenshot(userInputs, region, tag, shouldRunOnceOnTimeout, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout);
+    if (ignoreMismatch) {
+      return this._matchResult;
+    }
 
-        that._updateLastScreenshot(screenshot);
-        that._updateBounds(region);
-        return that._matchResult;
-      });
+    this._updateLastScreenshot(screenshot);
+    this._updateBounds(region);
+    return this._matchResult;
   }
 
   /**
@@ -195,55 +166,29 @@ class MatchWindowTask {
    * @param {number} retryTimeout
    * @return {Promise<EyesScreenshot>}
    */
-  _takeScreenshot(
-    userInputs,
-    region,
-    tag,
-    shouldRunOnceOnTimeout,
-    ignoreMismatch,
-    checkSettings,
-    imageMatchSettings,
-    retryTimeout
-  ) {
-    const that = this;
+  async _takeScreenshot(userInputs, region, tag, shouldRunOnceOnTimeout, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout) {
+    let screenshot;
     const elapsedTimeStart = GeneralUtils.currentTimeMillis();
-    let promise = this._promiseFactory.resolve();
+
     // If the wait to load time is 0, or "run once" is true, we perform a single check window.
     if (retryTimeout === 0 || shouldRunOnceOnTimeout) {
       if (shouldRunOnceOnTimeout) {
-        promise = promise.then(() => GeneralUtils.sleep(retryTimeout, that._promiseFactory));
+        await GeneralUtils.sleep(retryTimeout);
       }
 
-      promise = promise.then(() => that._tryTakeScreenshot(
-        userInputs,
-        region,
-        tag,
-        ignoreMismatch,
-        checkSettings,
-        imageMatchSettings
-      ));
+      screenshot = await this._tryTakeScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings);
     } else {
-      promise = promise.then(() => that._retryTakingScreenshot(
-        userInputs,
-        region,
-        tag,
-        ignoreMismatch,
-        checkSettings,
-        imageMatchSettings,
-        retryTimeout
-      ));
+      screenshot = await this._retryTakingScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout);
     }
 
-    return promise.then(screenshot => {
-      // noinspection MagicNumberJS
-      const elapsedTime = GeneralUtils.currentTimeMillis() - elapsedTimeStart;
-      that._logger.verbose(`Completed in ${GeneralUtils.elapsedString(elapsedTime)}`);
-      return screenshot;
-    });
+    // noinspection MagicNumberJS
+    const elapsedTime = GeneralUtils.currentTimeMillis() - elapsedTimeStart;
+    this._logger.verbose(`Completed in ${GeneralUtils.elapsedString(elapsedTime)}`);
+    return screenshot;
   }
 
   /**
-   * @private
+   * @protected
    * @param {Trigger[]} userInputs
    * @param {Region} region
    * @param {string} tag
@@ -253,72 +198,55 @@ class MatchWindowTask {
    * @param {number} retryTimeout
    * @return {Promise<EyesScreenshot>}
    */
-  _retryTakingScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout) {
-    const that = this;
+  async _retryTakingScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout) {
     const start = GeneralUtils.currentTimeMillis(); // Start the retry timer.
     const retry = GeneralUtils.currentTimeMillis() - start;
 
     // The match retry loop.
-    return that._takingScreenshotLoop(
-      userInputs,
-      region,
-      tag,
-      ignoreMismatch,
-      checkSettings,
-      imageMatchSettings,
-      retryTimeout,
-      retry,
-      start
-    )
-      .then(screenshot => {
-        // if we're here because we haven't found a match yet, try once more
-        if (!this._matchResult.getAsExpected()) {
-          return this._tryTakeScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings);
-        }
-        return screenshot;
-      });
-  }
+    const screenshot = await this._takingScreenshotLoop(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout, retry, start);
 
-  _takingScreenshotLoop(
-    userInputs,
-    region,
-    tag,
-    ignoreMismatch,
-    checkSettings,
-    imageMatchSettings,
-    retryTimeout,
-    retry,
-    start,
-    screenshot
-  ) {
-    if (retry >= retryTimeout) {
-      return this._promiseFactory.resolve(screenshot);
+    // if we're here because we haven't found a match yet, try once more
+    if (!this._matchResult.getAsExpected()) {
+      return this._tryTakeScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings);
     }
-
-    const that = this;
-    return GeneralUtils.sleep(MatchWindowTask.MATCH_INTERVAL, that._promiseFactory)
-      .then(() => that._tryTakeScreenshot(userInputs, region, tag, true, checkSettings, imageMatchSettings))
-      .then(newScreenshot => {
-        if (that._matchResult.getAsExpected()) {
-          return newScreenshot;
-        }
-
-        return that._takingScreenshotLoop(
-          userInputs,
-          region,
-          tag,
-          ignoreMismatch,
-          imageMatchSettings,
-          retryTimeout,
-          GeneralUtils.currentTimeMillis() - start,
-          start,
-          newScreenshot
-        );
-      });
+    return screenshot;
   }
 
   /**
-   * @private
+   * @protected
+   * @param {Trigger[]} userInputs
+   * @param {Region} region
+   * @param {string} tag
+   * @param {boolean} ignoreMismatch
+   * @param {CheckSettings} checkSettings
+   * @param {ImageMatchSettings} imageMatchSettings
+   * @param {number} retryTimeout
+   * @param {number} retry
+   * @param {number} start
+   * @param {EyesScreenshot} [screenshot]
+   * @return {Promise<EyesScreenshot>}
+   */
+  async _takingScreenshotLoop(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout, retry, start, screenshot) {
+    if (retry >= retryTimeout) {
+      return screenshot;
+    }
+
+    await GeneralUtils.sleep(MatchWindowTask.MATCH_INTERVAL);
+
+    const newScreenshot = await this._tryTakeScreenshot(userInputs, region, tag, true, checkSettings, imageMatchSettings);
+
+    if (this._matchResult.getAsExpected()) {
+      return newScreenshot;
+    }
+
+    return this._takingScreenshotLoop(
+      userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings, retryTimeout,
+      GeneralUtils.currentTimeMillis() - start, start, newScreenshot
+    );
+  }
+
+  /**
+   * @protected
    * @param {Trigger[]} userInputs
    * @param {Region} region
    * @param {string} tag
@@ -327,17 +255,11 @@ class MatchWindowTask {
    * @param {ImageMatchSettings} imageMatchSettings
    * @return {Promise<EyesScreenshot>}
    */
-  _tryTakeScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings) {
-    const that = this;
-    return that._appOutputProvider.getAppOutput(region, that._lastScreenshot)
-      .then(appOutput => {
-        const screenshot = appOutput.getScreenshot();
-        return that.performMatch(userInputs, appOutput, tag, ignoreMismatch, checkSettings, imageMatchSettings)
-          .then(matchResult => {
-            that._matchResult = matchResult;
-            return screenshot;
-          });
-      });
+  async _tryTakeScreenshot(userInputs, region, tag, ignoreMismatch, checkSettings, imageMatchSettings) {
+    const appOutput = await this._appOutputProvider.getAppOutput(region, this._lastScreenshot);
+    const screenshot = appOutput.getScreenshot();
+    this._matchResult = await this.performMatch(userInputs, appOutput, tag, ignoreMismatch, checkSettings, imageMatchSettings);
+    return screenshot;
   }
 
   /**
@@ -371,7 +293,7 @@ class MatchWindowTask {
       this._lastScreenshotBounds = region;
     }
 
-    return this._promiseFactory.resolve();
+    return Promise.resolve();
   }
 
   // noinspection JSUnusedGlobalSymbols

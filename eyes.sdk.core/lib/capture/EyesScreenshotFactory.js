@@ -10,7 +10,9 @@ class EyesScreenshotFactory {
    * @param {MutableImage} image
    * @return {Promise<EyesScreenshot>}
    */
-  makeScreenshot(image) {}
+  async makeScreenshot(image) {
+    throw new Error('The method should be implemented!');
+  }
 }
 
 exports.EyesScreenshotFactory = EyesScreenshotFactory;

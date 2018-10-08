@@ -119,7 +119,6 @@ exports.EyesJsExecutor = require('./lib/EyesJsExecutor').EyesJsExecutor;
 exports.FailureReports = require('./lib/FailureReports').FailureReports;
 exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask').MatchSingleWindowTask;
 exports.MatchWindowTask = require('./lib/MatchWindowTask').MatchWindowTask;
-exports.PromiseFactory = require('./lib/PromiseFactory').PromiseFactory;
 exports.RenderWindowTask = require('./lib/RenderWindowTask').RenderWindowTask;
 exports.TestResults = require('./lib/TestResults').TestResults;
 exports.TestResultsStatus = require('./lib/TestResultsStatus').TestResultsStatus;

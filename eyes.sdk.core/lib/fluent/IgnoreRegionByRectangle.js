@@ -11,11 +11,9 @@ class IgnoreRegionByRectangle extends GetRegion {
     this._region = region;
   }
 
-  /**
-   * @override
-   */
-  getRegion(eyesBase, screenshot) {
-    return eyesBase.getPromiseFactory().resolve(this._region);
+  /** @inheritDoc */
+  async getRegion(eyesBase, screenshot) {
+    return this._region;
   }
 }
 

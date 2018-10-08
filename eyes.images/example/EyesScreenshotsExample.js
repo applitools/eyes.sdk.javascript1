@@ -1,3 +1,5 @@
+'use strict';
+
 const fetch = require('node-fetch');
 const { ConsoleLogHandler, RectangleSize } = require('@applitools/eyes.sdk.core');
 const { Eyes, Target } = require('../index'); // should be replaced to '@applitools/eyes.images'

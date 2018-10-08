@@ -1,12 +1,12 @@
 'use strict';
 
 const { Builder, Capabilities, By } = require('selenium-webdriver');
-const { ConsoleLogHandler, BatchInfo, Location } = require('@applitools/eyes.sdk.core');
-const { TestUtils } = require('../../TestUtils');
-const { Eyes, Target, StitchMode } = require('../../../index');
+const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes.sdk.core');
+const { TestUtils } = require('./TestUtils');
+const { Eyes, Target, StitchMode } = require('../index');
 
 describe('IOSTest', function () {
-  this.timeout(30 * 60 * 1000);
+  this.timeout(5 * 60 * 1000);
 
   const batchInfo = new BatchInfo('Java3 Tests');
 
@@ -57,9 +57,7 @@ describe('IOSTest', function () {
 
       return eyes.open(driver, 'Eyes Selenium SDK - iOS Safari Cropping', testName).then(driver => {
         driver.get('https://www.applitools.com/customers');
-        // driver.scrollTo(new Location(0, 200));
 
-        // eyes.check('Window', Target.window().fully(fully));
         eyes.check('Initial view', Target.region(By.css('body')).fully(fully));
         return eyes.close();
       }).then(() => {

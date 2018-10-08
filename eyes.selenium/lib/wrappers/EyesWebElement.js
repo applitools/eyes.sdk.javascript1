@@ -71,37 +71,21 @@ class EyesWebElement extends WebElement {
   /**
    * @return {Promise<Region>}
    */
-  getBounds() {
-    const that = this;
-    // noinspection JSValidateTypes
-    return that.getLocation()
-      .then(/** @type {{x: number, y: number}} */location_ => {
-        let left = location_.x;
-        let top = location_.y;
-        let width = 0;
-        let height = 0;
+  async getBounds() {
+    const rect = await this.getRect();
+    let { x: left, y: top, width, height } = rect.width;
 
-        return that.getSize()
-          .then(/** @type {{width: number, height: number}} */size_ => {
-            ({ width, height } = size_);
-          })
-          .catch(() => {
-            // Not supported on all platforms.
-          })
-          .then(() => {
-            if (left < 0) {
-              width = Math.max(0, width + left);
-              left = 0;
-            }
+    if (left < 0) {
+      width = Math.max(0, width + left);
+      left = 0;
+    }
 
-            if (top < 0) {
-              height = Math.max(0, height + top);
-              top = 0;
-            }
+    if (top < 0) {
+      height = Math.max(0, height + top);
+      top = 0;
+    }
 
-            return new Region(left, top, width, height, CoordinatesType.CONTEXT_RELATIVE);
-          });
-      });
+    return new Region(left, top, width, height, CoordinatesType.CONTEXT_RELATIVE);
   }
 
   /**
@@ -118,50 +102,57 @@ class EyesWebElement extends WebElement {
    * @param {string} propStyle The style property which value we would like to extract.
    * @return {Promise<number>} The integer value of a computed style.
    */
-  getComputedStyleInteger(propStyle) {
-    return this.getComputedStyle(propStyle).then(result => Math.round(parseFloat(result.trim().replace('px', ''))));
+  async getComputedStyleInteger(propStyle) {
+    const result = await this.getComputedStyle(propStyle);
+    return Math.round(parseFloat(result.trim().replace('px', '')));
   }
 
   /**
    * @return {Promise<number>} The value of the scrollLeft property of the element.
    */
-  getScrollLeft() {
-    return this.executeScript(JS_GET_SCROLL_LEFT).then(result => Math.ceil(parseFloat(result)));
+  async getScrollLeft() {
+    const result = await this.executeScript(JS_GET_SCROLL_LEFT);
+    return Math.ceil(parseFloat(result));
   }
 
   /**
    * @return {Promise<number>} The value of the scrollTop property of the element.
    */
-  getScrollTop() {
-    return this.executeScript(JS_GET_SCROLL_TOP).then(result => Math.ceil(parseFloat(result)));
+  async getScrollTop() {
+    const result = await this.executeScript(JS_GET_SCROLL_TOP);
+    return Math.ceil(parseFloat(result));
   }
 
   /**
    * @return {Promise<number>} The value of the scrollWidth property of the element.
    */
-  getScrollWidth() {
-    return this.executeScript(JS_GET_SCROLL_WIDTH).then(result => Math.ceil(parseFloat(result)));
+  async getScrollWidth() {
+    const result = await this.executeScript(JS_GET_SCROLL_WIDTH);
+    return Math.ceil(parseFloat(result));
   }
 
   /**
    * @return {Promise<number>} The value of the scrollHeight property of the element.
    */
-  getScrollHeight() {
-    return this.executeScript(JS_GET_SCROLL_HEIGHT).then(result => Math.ceil(parseFloat(result)));
+  async getScrollHeight() {
+    const result = await this.executeScript(JS_GET_SCROLL_HEIGHT);
+    return Math.ceil(parseFloat(result));
   }
 
   /**
    * @return {Promise<number>}
    */
-  getClientWidth() {
-    return this.executeScript(JS_GET_CLIENT_WIDTH).then(result => Math.ceil(parseFloat(result)));
+  async getClientWidth() {
+    const result = await this.executeScript(JS_GET_CLIENT_WIDTH);
+    return Math.ceil(parseFloat(result));
   }
 
   /**
    * @return {Promise<number>}
    */
-  getClientHeight() {
-    return this.executeScript(JS_GET_CLIENT_HEIGHT).then(result => Math.ceil(parseFloat(result)));
+  async getClientHeight() {
+    const result = await this.executeScript(JS_GET_CLIENT_HEIGHT);
+    return Math.ceil(parseFloat(result));
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -230,175 +221,111 @@ class EyesWebElement extends WebElement {
     return this._eyesDriver.executeScript(script, this.getWebElement());
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getDriver() {
     return this.getWebElement().getDriver();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getId() {
     return this.getWebElement().getId();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  findElement(locator) {
-    const that = this;
-    // noinspection JSValidateTypes
-    return this.getWebElement()
-      .findElement(locator)
-      .then(element => new EyesWebElement(that._logger, that._eyesDriver, element));
+  // noinspection JSCheckFunctionSignatures
+  /** @inheritDoc */
+  async findElement(locator) {
+    const element = await this.getWebElement().findElement(locator);
+    return new EyesWebElement(this._logger, this._eyesDriver, element);
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  findElements(locator) {
-    const that = this;
-    return this.getWebElement()
-      .findElements(locator)
-      .then(elements => elements.map(element => new EyesWebElement(that._logger, that._eyesDriver, element)));
+  /** @inheritDoc */
+  async findElements(locator) {
+    const elements = await this.getWebElement().findElements(locator);
+    return elements.map(element => new EyesWebElement(this._logger, this._eyesDriver, element));
   }
 
   // noinspection JSCheckFunctionSignatures
   /**
-   * @override
    * @inheritDoc
    * @return {Promise<void>}
    */
-  click() {
+  async click() {
     // Letting the driver know about the current action.
-    const that = this;
-    return that.getBounds().then(currentControl => {
-      that._eyesDriver.getEyes().addMouseTrigger(MouseTrigger.MouseAction.Click, this);
-      that._logger.verbose(`click(${currentControl})`);
-      return that.getWebElement().click();
-    });
+    const currentControl = await this.getBounds();
+    this._eyesDriver.getEyes().addMouseTrigger(MouseTrigger.MouseAction.Click, this);
+    this._logger.verbose(`click(${currentControl})`);
+    return this.getWebElement().click();
   }
 
   // noinspection JSCheckFunctionSignatures
-  /**
-   * @override
-   * @inheritDoc
-   */
-  sendKeys(...keysToSend) {
-    const that = this;
-    // noinspection JSValidateTypes
-    return keysToSend.reduce((promise, keys) => promise.then(() => that._eyesDriver.getEyes()
-      .addTextTriggerForElement(that, String(keys))), that._eyesDriver.getPromiseFactory().resolve())
-      .then(() => that.getWebElement().sendKeys(...keysToSend));
+  /** @inheritDoc */
+  async sendKeys(...keysToSend) {
+    for (const keys of keysToSend) {
+      await this._eyesDriver.getEyes().addTextTriggerForElement(this, String(keys));
+    }
+
+    await this.getWebElement().sendKeys(...keysToSend);
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getTagName() {
     return this.getWebElement().getTagName();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getCssValue(cssStyleProperty) {
     return this.getWebElement().getCssValue(cssStyleProperty);
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getAttribute(attributeName) {
     return this.getWebElement().getAttribute(attributeName);
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   getText() {
     return this.getWebElement().getText();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  getSize() {
-    return this.getWebElement().getSize();
+  /** @inheritDoc */
+  async getRect() {
+    // The workaround is similar to Java one, but in js we always get raw data with decimal value which we should round up.
+    const rect = await this.getWebElement().getRect();
+    const width = Math.ceil(rect.width) || 0;
+    // noinspection JSSuspiciousNameCombination
+    const height = Math.ceil(rect.height) || 0;
+    const x = Math.ceil(rect.x) || 0;
+    // noinspection JSSuspiciousNameCombination
+    const y = Math.ceil(rect.y) || 0;
+    return { width, height, x, y };
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
-  getLocation() {
-    // The workaround is similar to Java one, but in js we always get raw data with decimal value which we should round
-    // up.
-    return this.getWebElement()
-      .getLocation()
-      .then(value => {
-        const x = Math.ceil(value.x) || 0;
-        // noinspection JSSuspiciousNameCombination
-        const y = Math.ceil(value.y) || 0;
-        return { x, y };
-      });
-  }
-
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   isEnabled() {
     return this.getWebElement().isEnabled();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   isSelected() {
     return this.getWebElement().isSelected();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   submit() {
     return this.getWebElement().submit();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   clear() {
     return this.getWebElement().clear();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   isDisplayed() {
     return this.getWebElement().isDisplayed();
   }
 
-  /**
-   * @override
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   takeScreenshot(optScroll) {
     return this.getWebElement().takeScreenshot(optScroll);
   }

@@ -2,7 +2,6 @@
 
 const { Region } = require('../geometry/Region');
 const { CutProvider } = require('./CutProvider');
-const { NullCutProvider } = require('./NullCutProvider');
 
 class UnscaledFixedCutProvider extends CutProvider {
   /**
@@ -20,57 +19,33 @@ class UnscaledFixedCutProvider extends CutProvider {
     this._right = right;
   }
 
-  /**
-   *
-   * @param {MutableImage} image The image to cut.
-   * @return {Promise<MutableImage>} A new cut image.
-   */
-  cut(image) {
-    const that = this;
-    let promise = image.resolve();
-
+  /** @inheritDoc */
+  async cut(image) {
     if (this._header > 0) {
-      promise = promise.then(() => {
-        const region = new Region(0, that._header, image.getWidth(), image.getHeight() - that._header);
-        return image.crop(region);
-      });
+      const region = new Region(0, this._header, image.getWidth(), image.getHeight() - this._header);
+      await image.crop(region);
     }
 
     if (this._footer > 0) {
-      promise = promise.then(() => {
-        const region = new Region(0, 0, image.getWidth(), image.getHeight() - that._footer);
-        return image.crop(region);
-      });
+      const region = new Region(0, 0, image.getWidth(), image.getHeight() - this._footer);
+      await image.crop(region);
     }
 
     if (this._left > 0) {
-      promise = promise.then(() => {
-        const region = new Region(that._left, 0, image.getWidth() - that._left, image.getHeight());
-        return image.crop(region);
-      });
+      const region = new Region(this._left, 0, image.getWidth() - this._left, image.getHeight());
+      await image.crop(region);
     }
 
     if (this._right > 0) {
-      promise = promise.then(() => {
-        const region = new Region(0, 0, image.getWidth() - that._right, image.getHeight());
-        return image.crop(region);
-      });
+      const region = new Region(0, 0, image.getWidth() - this._right, image.getHeight());
+      await image.crop(region);
     }
 
-    return promise;
+    return image;
   }
 
-  /**
-   * Get a scaled version of the cut provider.
-   *
-   * @param {number} scaleRatio The ratio by which to scale the current cut parameters.
-   * @return {CutProvider} A new scale cut provider instance.
-   */
+  /** @inheritDoc */
   scale(scaleRatio) {
-    if (this instanceof NullCutProvider) {
-      return this;
-    }
-
     return new UnscaledFixedCutProvider(this._header, this._footer, this._left, this._right);
   }
 }

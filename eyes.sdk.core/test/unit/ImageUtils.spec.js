@@ -2,11 +2,8 @@
 
 const assert = require('assert');
 
-const { ImageUtils, PromiseFactory } = require('../../index');
+const { ImageUtils } = require('../../index');
 const { makeImageMock } = require('../helpers');
-
-// construct
-const promiseFactory = new PromiseFactory(asyncAction => new Promise(asyncAction));
 
 describe('ImageUtils', function () {
   this.timeout(60 * 1000);
@@ -25,40 +22,41 @@ describe('ImageUtils', function () {
   });
 
   describe('rotateImage()', () => {
-    it('should rotate image for 90 degrees', () => {
+    it('should rotate image for 90 degrees', async () => {
       const expectedImage = makeImageMock(
         'roygbiv',
         'roygbiv',
         'roygbiv'
       );
 
-      return ImageUtils.rotateImage(originalImage, 90, promiseFactory)
-        .then(rotatedImage => assert.deepEqual(rotatedImage, expectedImage));
+      const rotatedImage = await ImageUtils.rotateImage(originalImage, 90);
+      assert.deepEqual(rotatedImage, originalImage); // because we also update original image
+      assert.deepEqual(rotatedImage, expectedImage);
     });
 
-    it('should rotate image for -90 degrees', () => {
+    it('should rotate image for -90 degrees', async () => {
       const expectedImage = makeImageMock(
         'vibgyor',
         'vibgyor',
         'vibgyor'
       );
 
-      return ImageUtils.rotateImage(originalImage, -90, promiseFactory)
-        .then(rotatedImage => assert.deepEqual(rotatedImage, expectedImage));
+      const rotatedImage = await ImageUtils.rotateImage(originalImage, -90);
+      assert.deepEqual(rotatedImage, expectedImage);
     });
 
-    it('should rotate image for 115 degrees (90 degrees)', () => {
+    it('should rotate image for 115 degrees (90 degrees)', async () => {
       const expectedImage = makeImageMock(
         'roygbiv',
         'roygbiv',
         'roygbiv'
       );
 
-      return ImageUtils.rotateImage(originalImage, 115, promiseFactory)
-        .then(rotatedImage => assert.deepEqual(rotatedImage, expectedImage));
+      const rotatedImage = await ImageUtils.rotateImage(originalImage, 115);
+      assert.deepEqual(rotatedImage, expectedImage);
     });
 
-    it('should rotate image for 180 degrees', () => {
+    it('should rotate image for 180 degrees', async () => {
       const expectedImage = makeImageMock(
         'rrr',
         'ooo',
@@ -69,8 +67,8 @@ describe('ImageUtils', function () {
         'vvv'
       );
 
-      return ImageUtils.rotateImage(originalImage, 180, promiseFactory)
-        .then(rotatedImage => assert.deepEqual(rotatedImage, expectedImage));
+      const rotatedImage = await ImageUtils.rotateImage(originalImage, 180);
+      assert.deepEqual(rotatedImage, expectedImage);
     });
   });
 });

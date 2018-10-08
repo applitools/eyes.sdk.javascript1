@@ -20,10 +20,8 @@ class FloatingRegionByRectangle extends GetFloatingRegion {
     this._maxRightOffset = maxRightOffset;
   }
 
-  /**
-   * @override
-   */
-  getRegion(eyesBase, screenshot) {
+  /** @inheritDoc */
+  async getRegion(eyesBase, screenshot) {
     const region = new FloatingMatchSettings(
       this._rect.getLeft(),
       this._rect.getTop(),
@@ -35,7 +33,7 @@ class FloatingRegionByRectangle extends GetFloatingRegion {
       this._maxRightOffset
     );
 
-    return eyesBase.getPromiseFactory().resolve(region);
+    return region;
   }
 }
 

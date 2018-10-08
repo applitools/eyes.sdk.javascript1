@@ -9,10 +9,8 @@ let driver, eyes;
 describe('Eyes Selenium SDK', function () {
   this.timeout(5 * 60 * 1000);
 
-  before(function () {
-    driver = new Builder()
-      .forBrowser(Browser.CHROME)
-      .build();
+  before(async function () {
+    driver = await new Builder().forBrowser(Browser.CHROME).build();
 
     eyes = new Eyes();
     eyes.setForceFullPageScreenshot(true);
@@ -22,17 +20,18 @@ describe('Eyes Selenium SDK', function () {
     // eyes.setSaveDebugScreenshots(true);
   });
 
-  it('WIX like test', function () {
-    return eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(1024, 600)).then(driver => {
-      driver.get('http://applitools.github.io/demo/TestPages/WixLikeTestPage/index.html');
+  it('WIX like test', async function () {
+    await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(1024, 600))
 
-      eyes.check('map', Target.frame('frame1').region(By.tagName('img')));
+    await driver.get('http://applitools.github.io/demo/TestPages/WixLikeTestPage/index.html');
 
-      return eyes.close();
-    });
+    await eyes.check('map', Target.frame('frame1').region(By.tagName('img')));
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

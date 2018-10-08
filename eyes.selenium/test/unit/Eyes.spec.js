@@ -11,31 +11,30 @@ let driver, eyes;
 describe('Eyes', function () {
   this.timeout(60 * 1000);
 
-  before(function () {
-    driver = new Builder()
-      .forBrowser('chrome')
-      .build();
+  beforeEach(async function () {
+    driver = await new Builder().forBrowser('chrome').build();
 
     eyes = new Eyes();
-    eyes.setApiKey(process.env.APPLITOOLS_API_KEY);
   });
 
   describe('#open()', function () {
-    it('should return EyesWebDriver', function () {
-      return eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560)).then(driver => {
-        assert.equal(driver instanceof EyesWebDriver, true);
-        return eyes.close();
-      });
+    it('should return EyesWebDriver', async function () {
+      driver = await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 560));
+      assert.equal(driver instanceof EyesWebDriver, true);
+      await eyes.close();
     });
 
-    it('should throw IllegalState: Eyes not open', function () {
-      return eyes.check('test', Target.window()).catch(error => {
-        assert.equal(error.message, 'IllegalState: Eyes not open');
-      });
+    it('should throw IllegalState: Eyes not open', async function () {
+      try {
+        await eyes.check('test', Target.window());
+      } catch (err) {
+        assert.equal(err.message, 'IllegalState: Eyes not open');
+      }
     });
   });
 
-  after(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

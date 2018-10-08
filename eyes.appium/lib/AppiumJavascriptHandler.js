@@ -8,38 +8,27 @@ const { AppiumJsCommandExtractor } = require('./AppiumJsCommandExtractor');
 class AppiumJavascriptHandler extends JavascriptHandler {
   /**
    * @param {EyesWebDriver} driver
-   * @param {PromiseFactory} promiseFactory
    */
-  constructor(driver, promiseFactory) {
-    super(promiseFactory);
+  constructor(driver) {
+    super();
 
     this._driver = driver;
   }
 
-  /**
-   * @override
-   * @param {!string} script
-   * @param {object...} args
-   * @return {Promise<void>}
-   */
-  handle(script, ...args) {
+  /** @inheritDoc */
+  async handle(script, ...args) {
     // Appium commands are sometimes sent as Javascript
     if (AppiumJsCommandExtractor.isAppiumJsCommand(script)) {
-      const that = this;
-      return that._driver.manage().window().getSize()
-        .then(windowSize => AppiumJsCommandExtractor.extractTrigger(that._driver.getElementIds(), windowSize, that._promiseFactory, script, args))
-        .then(trigger => {
-          if (trigger) {
-            // TODO - Daniel, additional type of triggers
-            if (trigger instanceof MouseTrigger) {
-              that._driver.getEyes()
-                .addMouseTrigger(trigger.getMouseAction(), trigger.getControl(), trigger.getLocation());
-            }
-          }
-        });
-    }
+      const windowRect = await this._driver.manage().window().getRect();
+      const trigger = await AppiumJsCommandExtractor.extractTrigger(this._driver.getElementIds(), windowRect, script, args);
 
-    return this._promiseFactory.resolve();
+      if (trigger) {
+        // TODO - Daniel, additional type of triggers
+        if (trigger instanceof MouseTrigger) {
+          this._driver.getEyes().addMouseTrigger(trigger.getMouseAction(), trigger.getControl(), trigger.getLocation());
+        }
+      }
+    }
   }
 }
 

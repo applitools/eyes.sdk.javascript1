@@ -1,7 +1,6 @@
 'use strict';
 
 const { WebElementPromise } = require('selenium-webdriver');
-const { CancellableThenable } = require('selenium-webdriver/lib/promise');
 
 const { EyesWebElement } = require('./EyesWebElement');
 
@@ -15,30 +14,17 @@ const { EyesWebElement } = require('./EyesWebElement');
  *       return el.click();
  *     });
  *
- * @implements {CancellableThenable<!EyesWebElement>}
  * @final
  */
 class EyesWebElementPromise extends EyesWebElement {
   /**
    * @param {Logger} logger
    * @param {!EyesWebDriver} driver The parent WebDriver instance for this element.
-   * @param {!promise.Thenable<!WebElement>} el A promise that will resolve to the promised element.
+   * @param {!Promise<!WebElement>} el A promise that will resolve to the promised element.
    */
   constructor(logger, driver, el) {
     const webElement = new WebElementPromise(driver.getRemoteWebDriver(), el);
     super(logger, driver, webElement);
-
-    /**
-     * Cancel operation is only supported if the wrapped thenable is also cancellable.
-     * @param {(string|Error)=} optReason
-     * @override
-     */
-    this.cancel = optReason => {
-      if (CancellableThenable.isImplementation(el)) {
-        // noinspection JSUnresolvedFunction
-        /** @type {!CancellableThenable} */ el.cancel(optReason);
-      }
-    };
 
     // noinspection JSUnresolvedVariable
     /** @override */
@@ -48,12 +34,12 @@ class EyesWebElementPromise extends EyesWebElement {
     /** @override */
     this.catch = el.catch.bind(el);
 
-    // For Remote web elements, we can keep the IDs, for Id based lookup (mainly used for Javascript related
-    // activities).
-    driver._elementsIds.set(el, this);
+    /**
+     * Defers returning the element ID until the wrapped WebElement has been resolved.
+     * @override
+     */
+    this.getId = () => el.then(el2 => el2.getId());
   }
 }
-
-CancellableThenable.addImplementation(EyesWebElementPromise);
 
 exports.EyesWebElementPromise = EyesWebElementPromise;

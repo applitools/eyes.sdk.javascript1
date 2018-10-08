@@ -27,41 +27,29 @@ class FirefoxScreenshotImageProvider extends ImageProvider {
    * @override
    * @return {Promise<MutableImage>}
    */
-  getImage() {
-    const that = this;
+  async getImage() {
     this._logger.verbose('Getting screenshot as base64...');
-    return this._tsInstance.takeScreenshot().then(screenshot64 => {
-      that._logger.verbose('Done getting base64! Creating BufferedImage...');
-      const image = new MutableImage(screenshot64, that._eyes.getPromiseFactory());
+    const screenshot64 = await this._tsInstance.takeScreenshot();
+    this._logger.verbose('Done getting base64! Creating BufferedImage...');
 
-      return that._eyes.getDebugScreenshotsProvider()
-        .save(image, 'FIREFOX_FRAME')
-        .then(() => {
-          const frameChain = that._tsInstance.getFrameChain();
-          if (frameChain.size() > 0) {
-            // Frame frame = frameChain.peek();
-            // Region region = eyes.getRegionToCheck();
-            const screenshot = new EyesWebDriverScreenshot(
-              that._logger,
-              that._eyes.getDriver(),
-              image,
-              that._eyes.getPromiseFactory()
-            );
+    const image = new MutableImage(screenshot64);
+    await this._eyes.getDebugScreenshotsProvider().save(image, 'FIREFOX_FRAME');
 
-            return screenshot.init()
-              .then(() => that._eyes.getViewportSize())
-              .then(viewportSize => {
-                const loc = screenshot.getFrameWindow().getLocation();
-                that._logger.verbose(`frame.getLocation(): ${loc}`);
+    const frameChain = this._tsInstance.getFrameChain();
+    if (frameChain.size() > 0) {
+      // Frame frame = frameChain.peek();
+      // Region region = eyes.getRegionToCheck();
+      const screenshot = await EyesWebDriverScreenshot.fromScreenshotType(this._logger, this._eyes.getDriver(), image);
 
-                const scaleRatio = that._eyes.getDevicePixelRatio();
-                return image.crop(new Region(loc.scale(scaleRatio), viewportSize.scale(scaleRatio)));
-              });
-          }
+      const viewportSize = await this._eyes.getViewportSize();
+      const location = screenshot.getFrameWindow().getLocation();
+      this._logger.verbose(`frame.getLocation(): ${location}`);
 
-          return image;
-        });
-    });
+      const scaleRatio = this._eyes.getDevicePixelRatio();
+      return image.crop(new Region(location.scale(scaleRatio), viewportSize.scale(scaleRatio)));
+    }
+
+    return image;
   }
 }
 

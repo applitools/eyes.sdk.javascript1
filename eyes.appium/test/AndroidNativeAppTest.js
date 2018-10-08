@@ -2,7 +2,7 @@
 
 const { Builder, Capabilities, By } = require('selenium-webdriver');
 const { ConsoleLogHandler } = require('@applitools/eyes.sdk.core');
-const { Eyes, Target } = require('../../../index');
+const { Eyes, Target } = require('../../eyes.selenium/index');
 
 let driver, /** @type Eyes */ eyes;
 describe('Android Appium Demo', function () {
@@ -42,7 +42,8 @@ describe('Android Appium Demo', function () {
     });
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

@@ -14,22 +14,19 @@ class IgnoreRegionByElement extends GetRegion {
   // noinspection JSCheckFunctionSignatures
   /**
    * @override
-   * @param {Eyes} eyesBase
+   * @param {Eyes} eyes
    * @param {EyesScreenshot} screenshot
+   * @return {Promise<Region>}
    */
-  getRegion(eyesBase, screenshot) {
-    const that = this;
-    return that._element.getLocation()
-      .then(point => that._element.getSize()
-        .then(size => {
-          const lTag = screenshot.convertLocation(
-            new Location(point),
-            CoordinatesType.CONTEXT_RELATIVE,
-            CoordinatesType.SCREENSHOT_AS_IS
-          );
+  async getRegion(eyes, screenshot) {
+    const rect = await this._element.getRect();
+    const lTag = screenshot.convertLocation(
+      new Location(rect),
+      CoordinatesType.CONTEXT_RELATIVE,
+      CoordinatesType.SCREENSHOT_AS_IS
+    );
 
-          return new Region(lTag.getX(), lTag.getY(), size.width, size.height);
-        }));
+    return new Region(lTag.getX(), lTag.getY(), rect.width, rect.height);
   }
 }
 

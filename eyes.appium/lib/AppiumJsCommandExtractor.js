@@ -23,23 +23,20 @@ class AppiumJsCommandExtractor {
    *
    * @param {Map<string, EyesWebElement>} elementsIds A mapping of known elements' IDs to elements.
    * @param {{width: number, height: number}} viewportSize The dimensions of the current viewport
-   * @param {PromiseFactory} promiseFactory
    * @param {string} script The Appium command from which the trigger would be extracted
    * @param {object...} args The trigger's parameters.
    * @return {Promise<Trigger>} The trigger which represents the given command.
    */
-  static extractTrigger(elementsIds, viewportSize, promiseFactory, script, ...args) {
+  static async extractTrigger(elementsIds, viewportSize, script, ...args) {
     if (script === TAP_COMMAND) {
       if (args.length !== 1) {
         // We don't know what the rest of the parameters are, so...
-        return promiseFactory.resolve(null);
+        return null;
       }
 
       /** @type {Map<string, string>} */
       let tapObject = new Map();
 
-      /** @type {number} */
-      let tapCount;
       /** @type {string} */
       let xObj, yObj, tapCountObj;
 
@@ -50,69 +47,58 @@ class AppiumJsCommandExtractor {
         tapCountObj = tapObject.get('tapCount');
       } catch (ignore) {
         // We only know how to handle Map as the arguments container.
-        return promiseFactory.resolve(null);
+        return null;
       }
 
       let x = xObj ? Number(xObj) : APPIUM_COORDINATES_DEFAULT;
       let y = yObj ? Number(yObj) : APPIUM_COORDINATES_DEFAULT;
 
-      // If an element is referenced, then the coordinates are relative to the element.
-      /** @type {EyesWebElement} */
-      let referencedElement;
+      let control;
+
       const elementId = tapObject.get('element');
-      return promiseFactory.resolve()
-        .then(() => {
-          if (elementId) {
-            referencedElement = elementsIds.get(elementId);
+      if (elementId) {
+        // If an element is referenced, then the coordinates are relative to the element.
+        const referencedElement = elementsIds.get(elementId);
 
-            // If an element was referenced, but we don't have it's ID,
-            // we can't create the trigger.
-            if (referencedElement === null) {
-              return null;
-            }
+        // If an element was referenced, but we don't have it's ID,
+        // we can't create the trigger.
+        if (!referencedElement) {
+          return null;
+        }
 
-            return referencedElement.getLocation()
-              .then(elementPosition => referencedElement.getSize()
-                .then(elementSize => {
-                  // If coordinates are percentage of the size of the viewport/element.
-                  if (x < 1) {
-                    x *= elementSize.width;
-                  }
-                  if (y < 1) {
-                    y *= elementSize.height;
-                  }
+        const elementRect = await referencedElement.getRect();
+        control = new Region(Math.ceil(elementRect.x), Math.ceil(elementRect.y), elementRect.width, elementRect.height);
 
-                  return new Region(Math.ceil(elementPosition.x), Math.ceil(elementPosition.y), elementSize.width, elementSize.height);
-                }));
-          }
+        // If coordinates are percentage of the size of the viewport/element.
+        if (x < 1) {
+          x *= elementRect.width;
+        }
+        if (y < 1) {
+          y *= elementRect.height;
+        }
+      } else {
+        // If coordinates are percentage of the size of the viewport/element.
+        if (x < 1) {
+          x *= viewportSize.width;
+        }
+        if (y < 1) {
+          y *= viewportSize.height;
+        }
 
-          // If coordinates are percentage of the size of the viewport/element.
-          if (x < 1) {
-            x *= viewportSize.width;
-          }
-          if (y < 1) {
-            y *= viewportSize.height;
-          }
+        // creating a fake control, for which the tap is at the right bottom corner
+        control = new Region(0, 0, Math.round(x), Math.round(y));
+      }
 
-          // creating a fake control, for which the tap is at the right bottom corner
-          return new Region(0, 0, Math.round(x), Math.round(y));
-        })
-        .then(control => {
-          if (!control) {
-            return null;
-          }
+      const location = new Location(Math.round(x), Math.round(y));
 
-          const location = new Location(Math.round(x), Math.round(y));
-
-          // Deciding whether this is click/double click.
-          tapCount = tapCountObj ? Number(tapCountObj) : APPIUM_TAP_COUNT_DEFAULT;
-          const action = (tapCount === 1) ? MouseTrigger.MouseAction.Click : MouseTrigger.MouseAction.DoubleClick;
-          return new MouseTrigger(action, control, location);
-        });
+      // Deciding whether this is click/double click.
+      const tapCount = tapCountObj ? Number(tapCountObj) : APPIUM_TAP_COUNT_DEFAULT;
+      const action = (tapCount === 1) ? MouseTrigger.MouseAction.Click : MouseTrigger.MouseAction.DoubleClick;
+      return new MouseTrigger(action, control, location);
     }
 
     // No trigger from the given command.
-    return promiseFactory.resolve(null);
+    return null;
   }
 }
 

@@ -8,7 +8,6 @@
 class AppOutputProvider {
   // noinspection JSMethodCanBeStatic, JSUnusedGlobalSymbols
   /**
-   * @abstract
    * @param {Region} region
    * @param {EyesScreenshot} lastScreenshot
    * @return {Promise<AppOutputWithScreenshot>}

@@ -4,12 +4,15 @@
  * @interface
  */
 class GetFloatingRegion {
+  // noinspection JSMethodCanBeStatic
   /**
    * @param {EyesBase} eyesBase
    * @param {EyesScreenshot} screenshot
    * @return {Promise<FloatingMatchSettings>}
    */
-  getRegion(eyesBase, screenshot) {}
+  async getRegion(eyesBase, screenshot) {
+    throw new Error('The method should be implemented!');
+  }
 }
 
 exports.GetFloatingRegion = GetFloatingRegion;

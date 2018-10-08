@@ -2,16 +2,16 @@
 
 const { Builder, Capabilities } = require('selenium-webdriver');
 const { ConsoleLogHandler } = require('@applitools/eyes.sdk.core');
-const { Eyes } = require('../../../index');
+const { Eyes } = require('../../eyes.selenium/index');
 
 let driver, /** @type Eyes */ eyes;
 describe('Contacts!', function () {
   before(function () {
     const capabilities = new Capabilities();
-    capabilities.set('platformName', 'Android');
-    capabilities.set('deviceName', 'Android Emulator');
-    capabilities.set('platformVersion', '6.0');
-    capabilities.set('app', 'http://saucelabs.com/example_files/ContactManager.apk');
+    capabilities.set('platformName', 'iOS');
+    capabilities.set('deviceName', 'iPhone 7 Simulator');
+    capabilities.set('platformVersion', '10.0');
+    capabilities.set('app', 'https://store.applitools.com/download/iOS.TestApp.app.zip');
     capabilities.set('clearSystemFiles', true);
     capabilities.set('noReset', true);
     const url = `https://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com:443/wd/hub`;
@@ -42,7 +42,8 @@ describe('Contacts!', function () {
     });
   });
 
-  afterEach(function () {
-    return driver.quit().then(() => eyes.abortIfNotClosed());
+  afterEach(async function () {
+    await driver.quit();
+    await eyes.abortIfNotClosed();
   });
 });

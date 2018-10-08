@@ -21,14 +21,11 @@ class TakesScreenshotImageProvider extends ImageProvider {
    * @override
    * @return {Promise<MutableImage>}
    */
-  getImage() {
+  async getImage() {
     this._logger.verbose('Getting screenshot as base64...');
-
-    const that = this;
-    return this._tsInstance.takeScreenshot().then(screenshot64 => {
-      that._logger.verbose('Done getting base64! Creating MutableImage...');
-      return new MutableImage(screenshot64, that._tsInstance.getPromiseFactory());
-    });
+    const screenshot64 = await this._tsInstance.takeScreenshot();
+    this._logger.verbose('Done getting base64! Creating MutableImage...');
+    return new MutableImage(screenshot64);
   }
 }
 

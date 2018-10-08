@@ -9,27 +9,6 @@
  */
 class SessionEventHandler {
   /**
-   * @param {PromiseFactory} [promiseFactory]
-   */
-  constructor(promiseFactory) {
-    this._promiseFactory = promiseFactory;
-  }
-
-  /**
-   * @param {PromiseFactory} value
-   */
-  setPromiseFactory(value) {
-    this._promiseFactory = value;
-  }
-
-  /**
-   * @return {PromiseFactory}
-   */
-  getPromiseFactory() {
-    return this._promiseFactory;
-  }
-
-  /**
    * Called when the data gathering for creating a session phase had started.
    * @return {Promise}
    */
