@@ -69,17 +69,18 @@ const MIN_MATCH_TIMEOUT = 500;
 const USE_DEFAULT_TIMEOUT = -1;
 
 /**
- * Core/Base class for Eyes - to allow code reuse for different SDKs (images, selenium, etc).
+ *  Core/Base class for Eyes - to allow code reuse for different SDKs (images, selenium, etc).
  */
+
 class EyesBase {
   // noinspection FunctionTooLongJS
   /**
-   * Creates a new {@code EyesBase}instance that interacts with the Eyes Server at the specified url.
-   *
-   * @param {?string} [serverUrl] The Eyes server URL.
-   * @param {?boolean} [isDisabled=false] Will be checked <b>before</b> any argument validation. If true, all method
-   *   will immediately return without performing any action.
-   * @param {?PromiseFactory} [promiseFactory] An object which will be used for creating deferreds/promises.
+   *  Creates a new {@code EyesBase}instance that interacts with the Eyes Server at the specified url.
+   * @protected
+   * @param {?string} [serverUrl] - The Eyes server URL.
+   * @param {?boolean} [isDisabled=false] - Will be checked <b>before</b> any argument validation. If true, all method
+   *   - will immediately return without performing any action.
+   * @param {?PromiseFactory} [promiseFactory] - An object which will be used for creating deferreds/promises.
    */
   constructor(
     serverUrl = EyesBase.getDefaultServerUrl(),
@@ -134,7 +135,7 @@ class EyesBase {
     this._sessionEventHandlers = new SessionEventHandlers(this._promiseFactory);
 
     /**
-     * Used for automatic save of a test run. New tests are automatically saved by default.
+     *  Used for automatic save of a test run. New tests are automatically saved by default.
      * @type {boolean}
      */
     this._saveNewTests = true;
@@ -171,19 +172,19 @@ class EyesBase {
     /** @type {string} */ this._baselineBranchName = undefined;
 
     /**
-     * Will be set for separately for each test.
+     *  Will be set for separately for each test.
      * @type {string}
      */
     this._currentAppName = undefined;
 
     /**
-     * The default app name if no current name was provided. If this is {@code null} then there is no default appName.
+     *  The default app name if no current name was provided. If this is {@code null} then there is no default appName.
      * @type {string}
      */
     this._appName = undefined;
 
     /**
-     * The session ID of webdriver instance
+     *  The session ID of webdriver instance
      * @type {string}
      */
     this._autSessionId = undefined;
@@ -193,7 +194,7 @@ class EyesBase {
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
   /**
-   * @param {boolean} [hardReset=false] If false, init providers only if they're not initialized.
+   * @param {boolean} [hardReset=false] - If false, init providers only if they're not initialized.
    * @private
    */
   _initProviders(hardReset = false) {
@@ -237,25 +238,25 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the user given agent id of the SDK.
+   *  Sets the user given agent id of the SDK.
    *
-   * @param agentId {string} The agent ID to set.
+   * @param agentId {string} - The agent ID to set.
    */
   setAgentId(agentId) {
     this._agentId = agentId;
   }
 
   /**
-   * @return {string} The user given agent id of the SDK.
+   * @return {string} - The user given agent id of the SDK.
    */
   getAgentId() {
     return this._agentId;
   }
 
   /**
-   * Sets the API key of your applitools Eyes account.
+   *  Sets the API key of your applitools Eyes account.
    *
-   * @param apiKey {string} The api key to be used.
+   * @param apiKey {string} - The api key to be used.
    */
   setApiKey(apiKey) {
     ArgumentGuard.notNull(apiKey, 'apiKey');
@@ -265,7 +266,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The currently set API key or {@code null} if no key is set.
+   * @return {string} - The currently set API key or {@code null} if no key is set.
    */
   getApiKey() {
     return this._serverConnector.getApiKey();
@@ -273,9 +274,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the current server URL used by the rest client.
+   *  Sets the current server URL used by the rest client.
    *
-   * @param serverUrl {string} The URI of the rest server, or {@code null} to use the default server.
+   * @param serverUrl {string} - The URI of the rest server, or {@code null} to use the default server.
    */
   setServerUrl(serverUrl) {
     if (serverUrl) {
@@ -285,9 +286,9 @@ class EyesBase {
     }
   }
 
-  // noinspection JSUnusedGlobalSymbols
+  // noinspection JSUnusedGlobalSymbolssetRenderingAuthToken
   /**
-   * @return {string} The URI of the eyes server.
+   * @return {string} - The URI of the eyes server.
    */
   getServerUrl() {
     return this._serverConnector.getServerUrl();
@@ -295,9 +296,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the authToken for rendering server.
-   *
-   * @param authToken {string} The authToken to be used.
+   *  Sets the authToken for rendering server.
+   * @protected
+   * @param authToken {string} - The authToken to be used.
    */
   setRenderingAuthToken(authToken) {
     this._serverConnector.setRenderingAuthToken(authToken);
@@ -305,7 +306,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The currently authToken or {@code null} if no key is set.
+   * @protected
+   * @return {string} - The currently authToken or {@code null} if no key is set.
    */
   getRenderingAuthToken() {
     return this._serverConnector.getRenderingAuthToken();
@@ -313,9 +315,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the current rendering server URL used by the rest client.
-   *
-   * @param serverUrl {string} The URI of the rendering server, or {@code null} to use the default server.
+   *  Sets the current rendering server URL used by the rest client.
+   * @protected
+   * @param serverUrl {string} - The URI of the rendering server, or {@code null} to use the default server.
    */
   setRenderingServerUrl(serverUrl) {
     this._serverConnector.setRenderingServerUrl(serverUrl);
@@ -323,7 +325,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The URI of the eyes server.
+   * @protected
+   * @return {string} - The URI of the eyes server.
    */
   getRenderingServerUrl() {
     return this._serverConnector.getRenderingServerUrl();
@@ -331,10 +334,10 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the proxy settings to be used by the request module.
+   *  Sets the proxy settings to be used by the request module.
    *
-   * @param {ProxySettings|string} proxySettingsOrUrl The ProxySettings object or proxy url to be used by the
-   *   serverConnector. If {@code null} then no proxy is set.
+   * @param {ProxySettings|string} proxySettingsOrUrl - The ProxySettings object or proxy url to be used by the
+   *   - serverConnector. If {@code null} then no proxy is set.
    * @param {string} [username]
    * @param {string} [password]
    */
@@ -344,7 +347,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {ProxySettings} current proxy settings used by the server connector, or {@code null} if no proxy is set.
+   * @return {ProxySettings} - current proxy settings used by the server connector, or {@code null} if no proxy is set.
    */
   getProxy() {
     return this._serverConnector.getProxy();
@@ -352,7 +355,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param isDisabled {boolean} If true, all interactions with this API will be silently ignored.
+   * @param isDisabled {boolean} - If true, all interactions with this API will be silently ignored.
    */
   setIsDisabled(isDisabled) {
     this._isDisabled = isDisabled;
@@ -360,7 +363,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether eyes is disabled.
+   * @return {boolean} - Whether eyes is disabled.
    */
   getIsDisabled() {
     return this._isDisabled;
@@ -368,7 +371,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param appName {string} The name of the application under test.
+   * @param appName {string} - The name of the application under test.
    */
   setAppName(appName) {
     this._appName = appName;
@@ -376,7 +379,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The name of the application under test.
+   * @return {string} - The name of the application under test.
    */
   getAppName() {
     return this._currentAppName || this._appName;
@@ -384,11 +387,11 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the branch in which the baseline for subsequent test runs resides. If the branch does not already exist it
-   * will be created under the specified parent branch (see {@link #setParentBranchName}). Changes to the baseline
-   * or model of a branch do not propagate to other branches.
+   *  Sets the branch in which the baseline for subsequent test runs resides. If the branch does not already exist it
+   *  will be created under the specified parent branch (see {@link #setParentBranchName}). Changes to the baseline
+   *  or model of a branch do not propagate to other branches.
    *
-   * @param branchName {string} Branch name or {@code null} to specify the default branch.
+   * @param branchName {string} - Branch name or {@code null} to specify the default branch.
    */
   setBranchName(branchName) {
     this._branchName = branchName;
@@ -396,7 +399,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The current branch name.
+   * @return {string} - The current branch name.
    */
   getBranchName() {
     return this._branchName;
@@ -404,9 +407,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the branch under which new branches are created.
+   *  Sets the branch under which new branches are created.
    *
-   * @param parentBranchName {string} Branch name or {@code null} to specify the default branch.
+   * @param parentBranchName {string} - Branch name or {@code null} to specify the default branch.
    */
   setParentBranchName(parentBranchName) {
     this._parentBranchName = parentBranchName;
@@ -414,7 +417,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The name of the current parent branch under which new branches will be created.
+   * @return {string} - The name of the current parent branch under which new branches will be created.
    */
   getParentBranchName() {
     return this._parentBranchName;
@@ -422,9 +425,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the baseline branch under which new branches are created.
+   *  Sets the baseline branch under which new branches are created.
    *
-   * @param baselineBranchName {string} Branch name or {@code null} to specify the default branch.
+   * @param baselineBranchName {string} - Branch name or {@code null} to specify the default branch.
    */
   setBaselineBranchName(baselineBranchName) {
     this._baselineBranchName = baselineBranchName;
@@ -432,7 +435,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The name of the baseline branch
+   * @return {string} - The name of the baseline branch
    */
   getBaselineBranchName() {
     return this._baselineBranchName;
@@ -440,7 +443,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Clears the user inputs list.
+   *  Clears the user inputs list.
    *
    * @protected
    */
@@ -454,7 +457,7 @@ class EyesBase {
   // noinspection JSUnusedGlobalSymbols
   /**
    * @protected
-   * @return {Trigger[]} User inputs collected between {@code checkWindowBase} invocations.
+   * @return {Trigger[]} - User inputs collected between {@code checkWindowBase} invocations.
    */
   getUserInputs() {
     if (this._isDisabled) {
@@ -465,8 +468,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the maximum time (in ms) a match operation tries to perform a match.
-   * @param {number} ms Total number of ms to wait for a match.
+   *  Sets the maximum time (in ms) a match operation tries to perform a match.
+   * @param {number} ms - Total number of ms to wait for a match.
    */
   setMatchTimeout(ms) {
     if (this._isDisabled) {
@@ -484,8 +487,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The maximum time in ms {@link #checkWindowBase(RegionProvider, string, boolean, number)} waits for a
-   *   match.
+   * @return {number} - The maximum time in ms {@link #checkWindowBase(RegionProvider, string, boolean, number)} waits for a
+   *   - match.
    */
   getMatchTimeout() {
     return this._matchTimeout;
@@ -493,9 +496,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Set whether or not new tests are saved by default.
+   *  Set whether or not new tests are saved by default.
    *
-   * @param {boolean} saveNewTests True if new tests should be saved by default. False otherwise.
+   * @param {boolean} saveNewTests - True if new tests should be saved by default. False otherwise.
    */
   setSaveNewTests(saveNewTests) {
     this._saveNewTests = saveNewTests;
@@ -503,7 +506,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} True if new tests are saved by default.
+   * @return {boolean} - True if new tests are saved by default.
    */
   getSaveNewTests() {
     return this._saveNewTests;
@@ -511,9 +514,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Set whether or not failed tests are saved by default.
+   *  Set whether or not failed tests are saved by default.
    *
-   * @param {boolean} saveFailedTests True if failed tests should be saved by default, false otherwise.
+   * @param {boolean} saveFailedTests - True if failed tests should be saved by default, false otherwise.
    */
   setSaveFailedTests(saveFailedTests) {
     this._saveFailedTests = saveFailedTests;
@@ -521,7 +524,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} True if failed tests are saved by default.
+   * @return {boolean} - True if failed tests are saved by default.
    */
   getSaveFailedTests() {
     return this._saveFailedTests;
@@ -529,7 +532,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the batch in which context future tests will run or {@code null} if tests are to run standalone.
+   *  Sets the batch in which context future tests will run or {@code null} if tests are to run standalone.
    *
    * @param batchOrName {BatchInfo|string} - the batch name or batch object
    * @param [batchId] {string} - ID of the batch, should be generated using GeneralUtils.guid()
@@ -552,7 +555,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {BatchInfo} The currently set batch info.
+   * @return {BatchInfo} - The currently set batch info.
    */
   getBatch() {
     if (!this._batch) {
@@ -565,7 +568,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {FailureReports} failureReports Use one of the values in FailureReports.
+   * @param {FailureReports} failureReports - Use one of the values in FailureReports.
    */
   setFailureReports(failureReports) {
     ArgumentGuard.isValidEnumValue(failureReports, FailureReports);
@@ -574,7 +577,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {FailureReports} The failure reports setting.
+   * @return {FailureReports} - The failure reports setting.
    */
   getFailureReports() {
     return this._failureReports;
@@ -582,9 +585,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Updates the match settings to be used for the session.
+   *  Updates the match settings to be used for the session.
    *
-   * @param {ImageMatchSettings} defaultMatchSettings The match settings to be used for the session.
+   * @param {ImageMatchSettings} defaultMatchSettings - The match settings to be used for the session.
    */
   setDefaultMatchSettings(defaultMatchSettings) {
     ArgumentGuard.notNull(defaultMatchSettings, 'defaultMatchSettings');
@@ -593,7 +596,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {ImageMatchSettings} The match settings used for the session.
+   * @return {ImageMatchSettings} - The match settings used for the session.
    */
   getDefaultMatchSettings() {
     return this._defaultMatchSettings;
@@ -601,11 +604,11 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * The test-wide match level to use when checking application screenshot with the expected output.
+   *  The test-wide match level to use when checking application screenshot with the expected output.
    *
-   * @deprecated This function is deprecated. Please use {@link #setDefaultMatchSettings} instead.
-   * @param {MatchLevel} matchLevel The test-wide match level to use when checking application screenshot with the
-   *   expected output.
+   * @deprecated - This function is deprecated. Please use {@link #setDefaultMatchSettings} instead.
+   * @param {MatchLevel} matchLevel - The test-wide match level to use when checking application screenshot with the
+   *   - expected output.
    */
   setMatchLevel(matchLevel) {
     ArgumentGuard.isValidEnumValue(matchLevel, MatchLevel);
@@ -614,8 +617,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @deprecated Please use{@link #getDefaultMatchSettings} instead.
-   * @return {MatchLevel} The test-wide match level.
+   * @deprecated - Please use{@link #getDefaultMatchSettings} instead.
+   * @return {MatchLevel} - The test-wide match level.
    */
   getMatchLevel() {
     return this._defaultMatchSettings.getMatchLevel();
@@ -623,7 +626,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The full agent id composed of both the base agent id and the user given agent id.
+   * @return {string} - The full agent id composed of both the base agent id and the user given agent id.
    */
   getFullAgentId() {
     const agentId = this.getAgentId();
@@ -636,7 +639,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether a session is open.
+   * @return {boolean} - Whether a session is open.
    */
   getIsOpen() {
     return this._isOpen;
@@ -650,9 +653,9 @@ class EyesBase {
   }
 
   /**
-   * Sets a handler of log messages generated by this API.
+   *  Sets a handler of log messages generated by this API.
    *
-   * @param {object} logHandler Handles log messages generated by this API.
+   * @param {object} logHandler - Handles log messages generated by this API.
    */
   setLogHandler(logHandler) {
     this._logger.setLogHandler(logHandler);
@@ -660,7 +663,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {LogHandler} The currently set log handler.
+   * @return {LogHandler} - The currently set log handler.
    */
   getLogHandler() {
     return this._logger.getLogHandler();
@@ -668,9 +671,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Manually set the the sizes to cut from an image before it's validated.
+   *  Manually set the the sizes to cut from an image before it's validated.
    *
-   * @param {CutProvider} [cutProvider] the provider doing the cut.
+   * @param {CutProvider} [cutProvider] - the provider doing the cut.
    */
   setImageCut(cutProvider) {
     if (cutProvider) {
@@ -689,9 +692,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Manually set the scale ratio for the images being validated.
+   *  Manually set the scale ratio for the images being validated.
    *
-   * @param {number} [scaleRatio=1] The scale ratio to use, or {@code null} to reset back to automatic scaling.
+   * @param {number} [scaleRatio=1] - The scale ratio to use, or {@code null} to reset back to automatic scaling.
    */
   setScaleRatio(scaleRatio) {
     if (scaleRatio) {
@@ -703,7 +706,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The ratio used to scale the images being validated.
+   * @return {number} - The ratio used to scale the images being validated.
    */
   getScaleRatio() {
     return this._scaleProviderHandler.get().getScaleRatio();
@@ -711,10 +714,10 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Adds a property to be sent to the server.
+   *  Adds a property to be sent to the server.
    *
-   * @param {string} name The property name.
-   * @param {string} value The property value.
+   * @param {string} name - The property name.
+   * @param {string} value - The property value.
    */
   addProperty(name, value) {
     const pd = new PropertyData(name, value);
@@ -723,7 +726,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Clears the list of custom properties.
+   *  Clears the list of custom properties.
    */
   clearProperties() {
     this._properties.length = 0;
@@ -731,7 +734,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {boolean} value If true, createSession request will return renderingInfo properties
+   * @protected
+   * @param {boolean} value - If true, createSession request will return renderingInfo properties
    */
   setRender(value) {
     this._render = value;
@@ -739,6 +743,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @return {boolean}
    */
   getRender() {
@@ -747,9 +752,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Automatically save differences as a baseline.
+   *  Automatically save differences as a baseline.
    *
-   * @param {boolean} saveDiffs Sets whether to automatically save differences as baseline.
+   * @param {boolean} saveDiffs - Sets whether to automatically save differences as baseline.
    */
   setSaveDiffs(saveDiffs) {
     this._saveDiffs = saveDiffs;
@@ -757,7 +762,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} whether to automatically save differences as baseline.
+   * @return {boolean} - whether to automatically save differences as baseline.
    */
   getSaveDiffs() {
     return this._saveDiffs;
@@ -765,7 +770,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {boolean} saveDebugScreenshots If true, will save all screenshots to local directory.
+   * @param {boolean} saveDebugScreenshots - If true, will save all screenshots to local directory.
    */
   setSaveDebugScreenshots(saveDebugScreenshots) {
     const prev = this._debugScreenshotsProvider;
@@ -788,7 +793,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {string} pathToSave Path where you want to save the debug screenshots.
+   * @param {string} pathToSave - Path where you want to save the debug screenshots.
    */
   setDebugScreenshotsPath(pathToSave) {
     this._debugScreenshotsProvider.setPath(pathToSave);
@@ -796,7 +801,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The path where you want to save the debug screenshots.
+   * @return {string} - The path where you want to save the debug screenshots.
    */
   getDebugScreenshotsPath() {
     return this._debugScreenshotsProvider.getPath();
@@ -804,7 +809,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {string} prefix The prefix for the screenshots' names.
+   * @param {string} prefix - The prefix for the screenshots' names.
    */
   setDebugScreenshotsPrefix(prefix) {
     this._debugScreenshotsProvider.setPrefix(prefix);
@@ -812,7 +817,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The prefix for the screenshots' names.
+   * @return {string} - The prefix for the screenshots' names.
    */
   getDebugScreenshotsPrefix() {
     return this._debugScreenshotsProvider.getPrefix();
@@ -820,6 +825,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {DebugScreenshotsProvider} debugScreenshotsProvider
    */
   setDebugScreenshotsProvider(debugScreenshotsProvider) {
@@ -836,9 +842,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the ignore blinking caret value.
+   *  Sets the ignore blinking caret value.
    *
-   * @param {boolean} value The ignore value.
+   * @param {boolean} value - The ignore value.
    */
   setIgnoreCaret(value) {
     this._defaultMatchSettings.setIgnoreCaret(value);
@@ -846,7 +852,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether to ignore or the blinking caret or not when comparing images.
+   * @return {boolean} - Whether to ignore or the blinking caret or not when comparing images.
    */
   getIgnoreCaret() {
     const ignoreCaret = this._defaultMatchSettings.getIgnoreCaret();
@@ -855,7 +861,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {boolean} compareWithParentBranch New compareWithParentBranch value, default is false
+   * @param {boolean} compareWithParentBranch - New compareWithParentBranch value, default is false
    */
   setCompareWithParentBranch(compareWithParentBranch) {
     this._compareWithParentBranch = compareWithParentBranch;
@@ -863,7 +869,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} The currently compareWithParentBranch value
+   * @return {boolean} - The currently compareWithParentBranch value
    */
   isCompareWithParentBranch() {
     return this._compareWithParentBranch;
@@ -871,7 +877,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {boolean} ignoreBaseline New ignoreBaseline value, default is false
+   * @param {boolean} ignoreBaseline - New ignoreBaseline value, default is false
    */
   setIgnoreBaseline(ignoreBaseline) {
     this._ignoreBaseline = ignoreBaseline;
@@ -879,18 +885,18 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} The currently ignoreBaseline value
+   * @return {boolean} - The currently ignoreBaseline value
    */
   isIgnoreBaseline() {
     return this._ignoreBaseline;
   }
 
   /**
-   * Ends the currently running test.
+   *  Ends the currently running test.
    *
-   * @param {boolean} [throwEx=true] If true, then the returned promise will 'reject' for failed/aborted tests.
-   * @return {Promise<TestResults>} A promise which resolves/rejects (depending on the value of 'throwEx') to the test
-   *   results.
+   * @param {boolean} [throwEx=true] - If true, then the returned promise will 'reject' for failed/aborted tests.
+   * @return {Promise<TestResults>} - A promise which resolves/rejects (depending on the value of 'throwEx') to the test
+   *   - results.
    */
   close(throwEx = true) {
     const that = this;
@@ -914,9 +920,9 @@ class EyesBase {
   }
 
   /**
-   * If a test is running, aborts it. Otherwise, does nothing.
+   *  If a test is running, aborts it. Otherwise, does nothing.
    *
-   * @return {Promise<TestResults>} A promise which resolves to the test results.
+   * @return {Promise<TestResults>} - A promise which resolves to the test results.
    */
   abortIfNotClosed() {
     const that = this;
@@ -940,14 +946,14 @@ class EyesBase {
   }
 
   /**
-   * Utility function for ending a session on the server.
+   *  Utility function for ending a session on the server.
    *
    * @private
-   * @param {boolean} isAborted Whether or not the test was aborted.
-   * @param {boolean} throwEx Whether 'reject' should be called if the results returned from the server indicate a test
-   *   failure.
-   * @return {Promise<TestResults>} A promise which resolves (or rejected, depending on 'throwEx' and the test result) after ending
-   *   the session.
+   * @param {boolean} isAborted - Whether or not the test was aborted.
+   * @param {boolean} throwEx - Whether 'reject' should be called if the results returned from the server indicate a test
+   *   - failure.
+   * @return {Promise<TestResults>} - A promise which resolves (or rejected, depending on 'throwEx' and the test result) after ending
+   *   - the session.
    */
   _endSession(isAborted, throwEx) {
     let serverResults, serverError;
@@ -1066,9 +1072,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the host OS name - overrides the one in the agent string.
+   *  Sets the host OS name - overrides the one in the agent string.
    *
-   * @param {string} hostOS The host OS running the AUT.
+   * @param {string} hostOS - The host OS running the AUT.
    */
   setHostOS(hostOS) {
     this._logger.log(`Host OS: ${hostOS}`);
@@ -1082,7 +1088,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The host OS as set by the user.
+   * @return {string} - The host OS as set by the user.
    */
   getHostOS() {
     return this._hostOS;
@@ -1090,9 +1096,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Sets the host application - overrides the one in the agent string.
+   *  Sets the host application - overrides the one in the agent string.
    *
-   * @param {string} hostApp The application running the AUT (e.g., Chrome).
+   * @param {string} hostApp - The application running the AUT (e.g., Chrome).
    */
   setHostApp(hostApp) {
     this._logger.log(`Host App: ${hostApp}`);
@@ -1106,7 +1112,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The application name running the AUT.
+   * @return {string} - The application name running the AUT.
    */
   getHostApp() {
     return this._hostApp;
@@ -1114,9 +1120,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @deprecated Only available for backward compatibility. See {@link #setBaselineEnvName(string)}.
-   * @param baselineName {string} If specified, determines the baseline to compare with and disables automatic baseline
-   *   inference.
+   * @deprecated - Only available for backward compatibility. See {@link #setBaselineEnvName(string)}.
+   * @param baselineName {string} - If specified, determines the baseline to compare with and disables automatic baseline
+   *   - inference.
    */
   setBaselineName(baselineName) {
     this._logger.log(`Baseline name: ${baselineName}`);
@@ -1130,8 +1136,8 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @deprecated Only available for backward compatibility. See {@link #getBaselineEnvName()}.
-   * @return {string} The baseline name, if it was specified.
+   * @deprecated - Only available for backward compatibility. See {@link #getBaselineEnvName()}.
+   * @return {string} - The baseline name, if it was specified.
    */
   getBaselineName() {
     return this._baselineEnvName;
@@ -1139,9 +1145,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * If not {@code null}, determines the name of the environment of the baseline.
+   *  If not {@code null}, determines the name of the environment of the baseline.
    *
-   * @param baselineEnvName {string} The name of the baseline's environment.
+   * @param baselineEnvName {string} - The name of the baseline's environment.
    */
   setBaselineEnvName(baselineEnvName) {
     this._logger.log(`Baseline environment name: ${baselineEnvName}`);
@@ -1155,9 +1161,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * If not {@code null}, determines the name of the environment of the baseline.
+   *  If not {@code null}, determines the name of the environment of the baseline.
    *
-   * @return {string} The name of the baseline's environment, or {@code null} if no such name was set.
+   * @return {string} - The name of the baseline's environment, or {@code null} if no such name was set.
    */
   getBaselineEnvName() {
     return this._baselineEnvName;
@@ -1165,9 +1171,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * If not {@code null} specifies a name for the environment in which the application under test is running.
+   *  If not {@code null} specifies a name for the environment in which the application under test is running.
    *
-   * @param envName {string} The name of the environment of the baseline.
+   * @param envName {string} - The name of the environment of the baseline.
    */
   setEnvName(envName) {
     this._logger.log(`Environment name: ${envName}`);
@@ -1181,9 +1187,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * If not {@code null} specifies a name for the environment in which the application under test is running.
+   *  If not {@code null} specifies a name for the environment in which the application under test is running.
    *
-   * @return {string} The name of the environment of the baseline, or {@code null} if no such name was set.
+   * @return {string} - The name of the environment of the baseline, or {@code null} if no such name was set.
    */
   getEnvName() {
     return this._environmentName;
@@ -1191,7 +1197,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {PositionProvider} The currently set position provider.
+   * @return {PositionProvider} - The currently set position provider.
    */
   getPositionProvider() {
     return this._positionProviderHandler.get();
@@ -1199,7 +1205,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {PositionProvider} positionProvider The position provider to be used.
+   * @param {PositionProvider} positionProvider - The position provider to be used.
    */
   setPositionProvider(positionProvider) {
     if (positionProvider) {
@@ -1210,15 +1216,15 @@ class EyesBase {
   }
 
   /**
-   * Takes a snapshot of the application under test and matches it with the expected output.
+   *  Takes a snapshot of the application under test and matches it with the expected output.
    *
    * @protected
-   * @param {RegionProvider} regionProvider Returns the region to check or empty region to check the entire window.
-   * @param {string} [tag=''] An optional tag to be associated with the snapshot.
-   * @param {boolean} [ignoreMismatch=false] Whether to ignore this check if a mismatch is found.
-   * @param {CheckSettings} [checkSettings]  The settings to use.
-   * @return {Promise<MatchResult>} The result of matching the output with the expected output.
-   * @throws DiffsFoundError Thrown if a mismatch is detected and immediate failure reports are enabled.
+   * @param {RegionProvider} regionProvider - Returns the region to check or empty region to check the entire window.
+   * @param {string} [tag=''] - An optional tag to be associated with the snapshot.
+   * @param {boolean} [ignoreMismatch=false] - Whether to ignore this check if a mismatch is found.
+   * @param {CheckSettings} [checkSettings]  - The settings to use.
+   * @return {Promise<MatchResult>} - The result of matching the output with the expected output.
+   * @throws DiffsFoundError - Thrown if a mismatch is detected and immediate failure reports are enabled.
    */
   checkWindowBase(
     regionProvider,
@@ -1273,15 +1279,15 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Takes a snapshot of the application under test and matches it with the expected output.
+   *  Takes a snapshot of the application under test and matches it with the expected output.
    *
    * @protected
-   * @param {RegionProvider} regionProvider Returns the region to check or empty rectangle to check the entire window.
-   * @param {string} [tag=''] An optional tag to be associated with the snapshot.
-   * @param {boolean} [ignoreMismatch=false] Whether to ignore this check if a mismatch is found.
-   * @param {CheckSettings} [checkSettings]  The settings to use.
-   * @return {Promise<TestResults>} The result of matching the output with the expected output.
-   * @throws DiffsFoundError Thrown if a mismatch is detected and immediate failure reports are enabled.
+   * @param {RegionProvider} regionProvider - Returns the region to check or empty rectangle to check the entire window.
+   * @param {string} [tag=''] - An optional tag to be associated with the snapshot.
+   * @param {boolean} [ignoreMismatch=false] - Whether to ignore this check if a mismatch is found.
+   * @param {CheckSettings} [checkSettings]  - The settings to use.
+   * @return {Promise<TestResults>} - The result of matching the output with the expected output.
+   * @throws DiffsFoundError - Thrown if a mismatch is detected and immediate failure reports are enabled.
    */
   checkSingleWindowBase(
     regionProvider,
@@ -1345,7 +1351,7 @@ class EyesBase {
         return that.beforeMatchWindow();
       })
       .then(() => EyesBase.matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, that, true))
-      .then(/** TestResults */result => {
+      .then( /** TestResults */ result => {
         testResult = result;
         return that.afterMatchWindow();
       })
@@ -1383,21 +1389,21 @@ class EyesBase {
 
   /**
    * @protected
-   * @return {Promise.<?string>}
+   * @return {Promise<?string>} - TBD was Promise.<?string> - is this corect ?
    */
   tryCaptureDom() {
     return this.getPromiseFactory().resolve(null);
   }
 
   /**
-   * Replaces an actual image in the current running session.
+   *  Replaces an actual image in the current running session.
    *
-   * @param {number} stepIndex The zero based index of the step in which to replace the actual image.
-   * @param {Buffer} screenshot The PNG bytes of the updated screenshot.
-   * @param {string} [tag] The updated tag for the step.
-   * @param {string} [title] The updated title for the step.
-   * @param {Trigger[]} [userInputs] The updated userInputs for the step.
-   * @return {Promise<MatchResult>} A promise which resolves when replacing is done, or rejects on error.
+   * @param {number} stepIndex - The zero based index of the step in which to replace the actual image.
+   * @param {Buffer} screenshot - The PNG bytes of the updated screenshot.
+   * @param {string} [tag] - The updated tag for the step.
+   * @param {string} [title] - The updated title for the step.
+   * @param {Trigger[]} [userInputs] - The updated userInputs for the step.
+   * @return {Promise<MatchResult>} - A promise which resolves when replacing is done, or rejects on error.
    */
   replaceWindow(stepIndex, screenshot, tag = '', title = '', userInputs = []) {
     this._logger.verbose('EyesBase.replaceWindow - running');
@@ -1513,15 +1519,15 @@ class EyesBase {
   }
 
   /**
-   * Starts a test.
+   *  Starts a test.
    *
    * @protected
-   * @param {string} appName The name of the application under test.
-   * @param {string} testName The test name.
-   * @param {RectangleSize|{width: number, height: number}} [viewportSize] The client's viewport size (i.e., the
-   *   visible part of the document's body) or {@code null} to allow any viewport size.
-   * @param {SessionType} [sessionType=SessionType.SEQUENTIAL]  The type of test (e.g., Progression for timing tests),
-   *   or {@code null} to use the default.
+   * @param {string} appName - The name of the application under test.
+   * @param {string} testName - The test name.
+   * @param {RectangleSize|{width: number, height: number}} [viewportSize] - The client's viewport size (i.e., the
+   *   - visible part of the document's body) or {@code null} to allow any viewport size.
+   * @param {SessionType} [sessionType=SessionType.SEQUENTIAL]  - The type of test (e.g., Progression for timing tests),
+   *   - or {@code null} to use the default.
    * @return {Promise<void>}
    */
   openBase(appName, testName, viewportSize, sessionType = SessionType.SEQUENTIAL) {
@@ -1668,9 +1674,9 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Define the viewport size as {@code size} without doing any actual action on the
+   *  Define the viewport size as {@code size} without doing any actual action on the
    *
-   * @param {RectangleSize} explicitViewportSize The size of the viewport. {@code null} disables the explicit size.
+   * @param {RectangleSize} explicitViewportSize - The size of the viewport. {@code null} disables the explicit size.
    */
   setExplicitViewportSize(explicitViewportSize) {
     if (!explicitViewportSize) {
@@ -1687,10 +1693,10 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Adds a trigger to the current list of user inputs.
+   *  Adds a trigger to the current list of user inputs.
    *
    * @protected
-   * @param {Trigger} trigger The trigger to add to the user inputs list.
+   * @param {Trigger} trigger - The trigger to add to the user inputs list.
    */
   addUserInput(trigger) {
     if (this._isDisabled) {
@@ -1702,11 +1708,11 @@ class EyesBase {
   }
 
   /**
-   * Adds a text trigger.
+   *  Adds a text trigger.
    *
    * @protected
-   * @param {Region} control The control's position relative to the window.
-   * @param {string} text The trigger's text.
+   * @param {Region} control - The control's position relative to the window.
+   * @param {string} text - The trigger's text.
    */
   addTextTriggerBase(control, text) {
     if (this._isDisabled) {
@@ -1741,12 +1747,12 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Adds a mouse trigger.
+   *  Adds a mouse trigger.
    *
    * @protected
-   * @param {MouseTrigger.MouseAction} action  Mouse action.
-   * @param {Region} control The control on which the trigger is activated (location is relative to the window).
-   * @param {Location} cursor The cursor's position relative to the control.
+   * @param {MouseTrigger.MouseAction} action  - Mouse action.
+   * @param {Region} control - The control on which the trigger is activated (location is relative to the window).
+   * @param {Location} cursor - The cursor's position relative to the control.
    */
   addMouseTriggerBase(action, control, cursor) {
     if (this._isDisabled) {
@@ -1796,10 +1802,10 @@ class EyesBase {
   }
 
   /**
-   * Application environment is the environment (e.g., the host OS) which runs the application under test.
+   *  Application environment is the environment (e.g., the host OS) which runs the application under test.
    *
    * @protected
-   * @return {Promise<AppEnvironment>} The current application environment.
+   * @return {Promise<AppEnvironment>} - The current application environment.
    */
   getAppEnvironment() {
     const appEnv = new AppEnvironment();
@@ -1822,7 +1828,7 @@ class EyesBase {
   }
 
   /**
-   * Start eyes session on the eyes server.
+   *  Start eyes session on the eyes server.
    *
    * @protected
    * @return {Promise<void>}
@@ -1931,10 +1937,10 @@ class EyesBase {
 
   /**
    * @private
-   * @param {Region} region The region of the screenshot which will be set in the application output.
-   * @param {EyesScreenshot} lastScreenshot Previous application screenshot (for compression) or `null` if not available.
-   * @param {CheckSettings} checkSettings The check settings object of the current test.
-   * @return {Promise<AppOutputWithScreenshot>} The updated app output and screenshot.
+   * @param {Region} region - The region of the screenshot which will be set in the application output.
+   * @param {EyesScreenshot} lastScreenshot - Previous application screenshot (for compression) or `null` if not available.
+   * @param {CheckSettings} checkSettings - The check settings object of the current test.
+   * @return {Promise<AppOutputWithScreenshot>} - The updated app output and screenshot.
    */
   _getAppOutputWithScreenshot(region, lastScreenshot, checkSettings) {
     const that = this;
@@ -2049,7 +2055,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Whether sessions are removed immediately after they are finished.
+   *  Whether sessions are removed immediately after they are finished.
    *
    * @param shouldRemove {boolean}
    */
@@ -2059,7 +2065,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether sessions are removed immediately after they are finished.
+   * @return {boolean} - Whether sessions are removed immediately after they are finished.
    */
   getRemoveSession() {
     return this._serverConnector.getRemoveSession();
@@ -2067,7 +2073,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {?string} The name of the currently running test.
+   * @return {?string} - The name of the currently running test.
    */
   getTestName() {
     return this._testName;
@@ -2075,7 +2081,7 @@ class EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {RunningSession} An object containing data about the currently running session.
+   * @return {RunningSession} - An object containing data about the currently running session.
    */
   getRunningSession() {
     return this._runningSession;
@@ -2085,7 +2091,7 @@ class EyesBase {
   /**
    * @protected
    * @abstract
-   * @return {string} The base agent id of the SDK.
+   * @return {string} - The base agent id of the SDK.
    */
   getBaseAgentId() {
     throw new TypeError('getBaseAgentId method is not implemented!');
@@ -2095,8 +2101,8 @@ class EyesBase {
   /**
    * @protected
    * @abstract
-   * Get the session id.
-   * @return {Promise<string>} A promise which resolves to the webdriver's session ID.
+   *  Get the session id.
+   * @return {Promise<string>} - A promise which resolves to the webdriver's session ID.
    */
   getAUTSessionId() {
     throw new TypeError('getAUTSessionId method is not implemented!');
@@ -2104,7 +2110,7 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * The viewport size of the AUT.
+   *  The viewport size of the AUT.
    *
    * @protected
    * @abstract
@@ -2118,7 +2124,7 @@ class EyesBase {
   /**
    * @protected
    * @abstract
-   * @param {RectangleSize} size The required viewport size.
+   * @param {RectangleSize} size - The required viewport size.
    * @return {Promise<void>}
    */
   setViewportSize(size) {
@@ -2127,14 +2133,14 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * The inferred string is in the format "source:info" where source is either "useragent" or "pos".
-   * Information associated with a "useragent" source is a valid browser user agent string. Information associated with
-   * a "pos" source is a string of the format "process-name;os-name" where "process-name" is the name of the main
-   * module of the executed process and "os-name" is the OS name.
+   *  The inferred string is in the format "source:info" where source is either "useragent" or "pos".
+   *  Information associated with a "useragent" source is a valid browser user agent string. Information associated with
+   *  a "pos" source is a string of the format "process-name;os-name" where "process-name" is the name of the main
+   *  module of the executed process and "os-name" is the OS name.
    *
    * @protected
    * @abstract
-   * @return {Promise<string>} The inferred environment string or {@code null} if none is available.
+   * @return {Promise<string>} - The inferred environment string or {@code null} if none is available.
    */
   getInferredEnvironment() {
     throw new TypeError('getInferredEnvironment method is not implemented!');
@@ -2142,7 +2148,7 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * An updated screenshot.
+   *  An updated screenshot.
    *
    * @protected
    * @abstract
@@ -2154,7 +2160,7 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * An updated screenshot.
+   *  An updated screenshot.
    *
    * @protected
    * @abstract
@@ -2166,7 +2172,7 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * The current title of of the AUT.
+   *  The current title of of the AUT.
    *
    * @protected
    * @abstract
@@ -2178,7 +2184,7 @@ class EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * A url pointing to a DOM capture of the AUT at the time of screenshot
+   *  A url pointing to a DOM capture of the AUT at the time of screenshot
    *
    * @protected
    * @abstract
@@ -2203,7 +2209,7 @@ class EyesBase {
   }
 
   /**
-   * The location of the image relative to the logical full page image, when cropping an image e.g. with checkRegion
+   *  The location of the image relative to the logical full page image, when cropping an image e.g. with checkRegion
    *
    * @protected
    * @abstract
@@ -2214,6 +2220,7 @@ class EyesBase {
   }
 
   /**
+   * @protected
    * @return {PromiseFactory}
    */
   getPromiseFactory() {

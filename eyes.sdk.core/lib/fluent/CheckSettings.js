@@ -62,8 +62,8 @@ class CheckSettings {
   /**
    * Defines whether to send the document DOM or not.
    *
-   * @param {boolean} [sendDom=true] When {@code true} sends the DOM to the server (the default).
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {boolean} [sendDom=true] - When {@code true} sends the DOM to the server (the default).
+   * @return {CheckSettings} - This instance of the settings object.
    */
   sendDom(sendDom = true) {
     this._sendDom = sendDom;
@@ -81,7 +81,7 @@ class CheckSettings {
   /**
    * Shortcut to set the match level to {@code MatchLevel.LAYOUT}.
    *
-   * @return {CheckSettings} This instance of the settings object.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   layout() {
     this._matchLevel = MatchLevel.Layout;
@@ -92,7 +92,7 @@ class CheckSettings {
   /**
    * Shortcut to set the match level to {@code MatchLevel.EXACT}.
    *
-   * @return {CheckSettings} This instance of the settings object.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   exact() {
     this._matchLevel = MatchLevel.Exact;
@@ -103,7 +103,7 @@ class CheckSettings {
   /**
    * Shortcut to set the match level to {@code MatchLevel.STRICT}.
    *
-   * @return {CheckSettings} This instance of the settings object.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   strict() {
     this._matchLevel = MatchLevel.Strict;
@@ -114,7 +114,7 @@ class CheckSettings {
   /**
    * Shortcut to set the match level to {@code MatchLevel.CONTENT}.
    *
-   * @return {CheckSettings} This instance of the settings object.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   content() {
     this._matchLevel = MatchLevel.Content;
@@ -125,8 +125,8 @@ class CheckSettings {
   /**
    * Set the match level by which to compare the screenshot.
    *
-   * @param {MatchLevel} matchLevel The match level to use.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {MatchLevel} matchLevel - The match level to use.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   matchLevel(matchLevel) {
     this._matchLevel = matchLevel;
@@ -144,8 +144,8 @@ class CheckSettings {
   /**
    * Defines if to detect and ignore a blinking caret in the screenshot.
    *
-   * @param {boolean} [ignoreCaret=true] Whether or not to detect and ignore a blinking caret in the screenshot.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {boolean} [ignoreCaret=true] - Whether or not to detect and ignore a blinking caret in the screenshot.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   ignoreCaret(ignoreCaret = true) {
     this._ignoreCaret = ignoreCaret;
@@ -164,7 +164,7 @@ class CheckSettings {
    * Defines that the screenshot will contain the entire element or region, even if it's outside the view.
    *
    * @param {boolean} [fully=true]
-   * @return {CheckSettings} This instance of the settings object.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   fully(fully = true) {
     this._stitchContent = fully;
@@ -192,8 +192,8 @@ class CheckSettings {
   /**
    * Defines the timeout to use when acquiring and comparing screenshots.
    *
-   * @param {number} timeoutMilliseconds The timeout to use in milliseconds.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {number} timeoutMilliseconds - The timeout to use in milliseconds.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   timeout(timeoutMilliseconds) {
     this._timeout = timeoutMilliseconds;
@@ -245,14 +245,14 @@ class CheckSettings {
   }
 
   /**
-   * @deprecated use {@link ignoreRegions} instead
+   * @deprecated - use {@link ignoreRegions} instead
    */
   ignore(...regions) {
     return this.ignoreRegions(regions);
   }
 
   /**
-   * @deprecated use {@link ignoreRegions} instead
+   * @deprecated - use {@link ignoreRegions} instead
    */
   ignores(...regions) {
     return this.ignoreRegions(regions);
@@ -262,8 +262,8 @@ class CheckSettings {
   /**
    * Adds one or more ignore regions.
    *
-   * @param {(GetRegion|Region)...} regions A region to ignore when validating the screenshot.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {(GetRegion|Region)...} regions - A region to ignore when validating the screenshot.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   ignoreRegions(...regions) {
     if (!regions) {
@@ -280,8 +280,8 @@ class CheckSettings {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Adds one or more layout regions.
-   * @param {(GetRegion|Region)...} regions A region to match using the Layout method.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {(GetRegion|Region)...} regions - A region to match using the Layout method.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   layoutRegions(...regions) {
     if (!regions) {
@@ -298,8 +298,8 @@ class CheckSettings {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Adds one or more strict regions.
-   * @param {(GetRegion|Region)...} regions A region to match using the Strict method.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {(GetRegion|Region)...} regions - A region to match using the Strict method.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   strictRegions(...regions) {
     if (!regions) {
@@ -316,8 +316,8 @@ class CheckSettings {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Adds one or more content regions.
-   * @param {(GetRegion|Region)...} regions A region to match using the Content method.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {(GetRegion|Region)...} regions - A region to match using the Content method.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   contentRegions(...regions) {
     if (!regions) {
@@ -364,13 +364,13 @@ class CheckSettings {
    * Adds a floating region. A floating region is a a region that can be placed within the boundaries of a bigger
    * region.
    *
-   * @param {GetFloatingRegion|Region|FloatingMatchSettings} regionOrContainer The content rectangle or region
+   * @param {GetFloatingRegion|Region|FloatingMatchSettings} regionOrContainer - The content rectangle or region
    *   container
-   * @param {number} [maxUpOffset] How much the content can move up.
-   * @param {number} [maxDownOffset] How much the content can move down.
-   * @param {number} [maxLeftOffset] How much the content can move to the left.
-   * @param {number} [maxRightOffset] How much the content can move to the right.
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {number} [maxUpOffset] - How much the content can move up.
+   * @param {number} [maxDownOffset] - How much the content can move down.
+   * @param {number} [maxLeftOffset] - How much the content can move to the left.
+   * @param {number} [maxRightOffset] - How much the content can move to the right.
+   * @return {CheckSettings} - This instance of the settings object.
    */
   floating(regionOrContainer, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
     // noinspection IfStatementWithTooManyBranchesJS
@@ -406,9 +406,9 @@ class CheckSettings {
    * Adds a floating region. A floating region is a a region that can be placed within the boundaries of a
    * bigger region.
    *
-   * @param {number} maxOffset How much each of the content rectangles can move in any direction.
-   * @param {Region...} regionsOrContainers One or more content rectangles or region containers
-   * @return {CheckSettings} This instance of the settings object.
+   * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
+   * @param {Region...} regionsOrContainers - One or more content rectangles or region containers
+   * @return {CheckSettings} - This instance of the settings object.
    */
   floatings(maxOffset, ...regionsOrContainers) {
     if (!regionsOrContainers) {

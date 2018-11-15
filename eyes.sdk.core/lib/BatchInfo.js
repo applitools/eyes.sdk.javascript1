@@ -9,9 +9,9 @@ const { GeneralUtils } = require('./utils/GeneralUtils');
 class BatchInfo {
   /**
    * Creates a new BatchInfo instance.
-   * @param {string} [name] Name of batch or {@code null} if anonymous.
-   * @param {Date} [startedAt] Batch start time, defaults to the current time.
-   * @param {string} [id] ID of the batch, should be generated using GeneralUtils.guid().
+   * @param {string} [name] - Name of batch or {@code null} if anonymous.
+   * @param {Date} [startedAt] - Batch start time, defaults to the current time.
+   * @param {string} [id] - ID of the batch, should be generated using GeneralUtils.guid().
    */
   constructor(name, startedAt, id) {
     this._id = id || process.env.APPLITOOLS_BATCH_ID || GeneralUtils.guid();
@@ -20,6 +20,7 @@ class BatchInfo {
   }
 
   /**
+   * @protected
    * @param {object} object
    * @return {BatchInfo}
    */
@@ -28,7 +29,7 @@ class BatchInfo {
   }
 
   /**
-   * @return {string} The id of the current batch.
+   * @return {string} - The id of the current batch.
    */
   getId() {
     return this._id;
@@ -39,7 +40,8 @@ class BatchInfo {
    * Sets a unique identifier for the batch. Sessions with batch info which includes the same ID will be grouped
    * together.
    *
-   * @param {string} value The batch's ID
+   * @protected
+   * @param {string} value - The batch's ID
    */
   setId(value) {
     ArgumentGuard.notNullOrEmpty(value, 'id');
@@ -47,8 +49,8 @@ class BatchInfo {
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /**
-   * @return The name of the batch or {@code null} if anonymous.
+  /** 
+   * @return {string} -  The name of the batch or {@code null} if anonymous.
    */
   getName() {
     return this._name;
@@ -56,18 +58,24 @@ class BatchInfo {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {Date} The batch start date
+   * @return {Date} - The batch start date
    */
   getStartedAt() {
     return GeneralUtils.fromISO8601DateTime(this._startedAt);
   }
 
-  /** @override */
+  /** 
+   * @override 
+   * @protected
+   */
   toJSON() {
     return GeneralUtils.toPlain(this);
   }
 
-  /** @override */
+  /** 
+   * @override 
+   * @protected
+   */
   toString() {
     return `BatchInfo { ${JSON.stringify(this)} }`;
   }

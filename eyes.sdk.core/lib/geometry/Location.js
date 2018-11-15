@@ -18,8 +18,8 @@ class Location {
    * - (location: Location): from another instance of Location
    * - (object: {x: number, y: number}): from object
    *
-   * @param {number|Location|LocationObject} arg1 The X coordinate of this location.
-   * @param {number} [arg2] The Y coordinate of the location.
+   * @param {number|Location|LocationObject} arg1 - The X coordinate of this location.
+   * @param {number} [arg2] - The Y coordinate of the location.
    */
   constructor(arg1, arg2) {
     const x = arg1;
@@ -67,14 +67,14 @@ class Location {
   }
 
   /**
-   * @return {number} The X coordinate of this location.
+   * @return {number} - The X coordinate of this location.
    */
   getX() {
     return this._x;
   }
 
   /**
-   * @return {number} The Y coordinate of this location.
+   * @return {number} - The Y coordinate of this location.
    */
   getY() {
     return this._y;
@@ -83,8 +83,8 @@ class Location {
   /**
    * Indicates whether some other Location is "equal to" this one.
    *
-   * @param {object|Location} obj The reference object with which to compare.
-   * @return {boolean} {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   * @param {object|Location} obj - The reference object with which to compare.
+   * @return {boolean} - returns {@code true} - if this object is the same as the obj argument; {@code false} otherwise.
    */
   equals(obj) {
     if (typeof obj !== typeof this || !(obj instanceof Location)) {
@@ -97,9 +97,9 @@ class Location {
   /**
    * Get a location translated by the specified amount.
    *
-   * @param {number} dx The amount to offset the x-coordinate.
-   * @param {number} dy The amount to offset the y-coordinate.
-   * @return {Location} A location translated by the specified amount.
+   * @param {number} dx - The amount to offset the x-coordinate.
+   * @param {number} dy - The amount to offset the y-coordinate.
+   * @return {Location} - A location translated by the specified amount.
    */
   offset(dx, dy) {
     return new Location(this._x + dx, this._y + dy);
@@ -117,8 +117,8 @@ class Location {
   /**
    * Get a location translated by the specified amount.
    *
-   * @param {Location} amount The amount to offset.
-   * @return {Location} A location translated by the specified amount.
+   * @param {Location} amount - The amount to offset.
+   * @return {Location} - A location translated by the specified amount.
    */
   offsetByLocation(amount) {
     return this.offset(amount.getX(), amount.getY());
@@ -127,23 +127,31 @@ class Location {
   /**
    * Get a scaled location.
    *
-   * @param {number} scaleRatio The ratio by which to scale the results.
-   * @return {Location} A scaled copy of the current location.
+   * @param {number} scaleRatio - The ratio by which to scale the results.
+   * @return {Location} - A scaled copy of the current location.
    */
   scale(scaleRatio) {
     return new Location(Math.ceil(this._x * scaleRatio), Math.ceil(this._y * scaleRatio));
   }
 
-  /** @override */
+  /** 
+  * @override 
+  * @protected
+  */
   toJSON() {
     return { x: this._x, y: this._y };
   }
 
-  /** @override */
+  /** 
+  * @override 
+  * @protected
+  */
   toString() {
     return `(${this._x}, ${this._y})`;
   }
-
+    /**
+    * protected
+    */
   toStringForFilename() {
     return `${this._x}_${this._y}`;
   }

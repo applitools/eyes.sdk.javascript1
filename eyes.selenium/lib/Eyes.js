@@ -50,7 +50,7 @@ const DEFAULT_STITCHING_OVERLAP = 50; // px
 const DEFAULT_WAIT_BEFORE_SCREENSHOTS = 100; // Milliseconds
 const DEFAULT_WAIT_SCROLL_STABILIZATION = 200; // Milliseconds
 
-/**
+/* TBD need to add types - should it be @private ?
  * @param positionProvider
  * @param frameChain
  * @param switchTo
@@ -76,9 +76,9 @@ class Eyes extends EyesBase {
   /**
    * Creates a new (possibly disabled) Eyes instance that interacts with the Eyes Server at the specified url.
    *
-   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] The Eyes server URL.
-   * @param {boolean} [isDisabled=false] Set to true to disable Applitools Eyes and use the webdriver directly.
-   * @param {PromiseFactory} [promiseFactory] If not specified will be created using `Promise` object
+   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] - The Eyes server URL.
+   * @paramprivate {boolean} [isDisabled=false] - Set to true to disable Applitools Eyes and use the webdriver directly.
+   * @paramprivate {PromiseFactory} [promiseFactory] - If not specified will be created using `Promise` object
    */
   constructor(serverUrl, isDisabled, promiseFactory) {
     super(serverUrl, isDisabled, promiseFactory);
@@ -192,7 +192,7 @@ class Eyes extends EyesBase {
   /**
    * Forces a full page screenshot (by scrolling and stitching) if the browser only supports viewport screenshots).
    *
-   * @param {boolean} shouldForce Whether to force a full page screenshot or not.
+   * @param {boolean} shouldForce - Whether to force a full page screenshot or not.
    */
   setForceFullPageScreenshot(shouldForce) {
     this._forceFullPageScreenshot = shouldForce;
@@ -200,7 +200,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether Eyes should force a full page screenshot.
+   * @return {boolean} - Whether Eyes should force a full page screenshot.
    */
   getForceFullPageScreenshot() {
     return this._forceFullPageScreenshot;
@@ -211,8 +211,8 @@ class Eyes extends EyesBase {
    * Sets the time to wait just before taking a screenshot (e.g., to allow positioning to stabilize when performing a
    * full page stitching).
    *
-   * @param {number} waitBeforeScreenshots The time to wait (Milliseconds). Values smaller or equal to 0, will cause the
-   *   default value to be used.
+   * @param {number} waitBeforeScreenshots - The time to wait (Milliseconds). Values smaller or equal to 0, will cause the
+   *   - default value to be used.
    */
   setWaitBeforeScreenshots(waitBeforeScreenshots) {
     if (waitBeforeScreenshots <= 0) {
@@ -224,7 +224,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The time to wait just before taking a screenshot.
+   * @return {number} - The time to wait just before taking a screenshot.
    */
   getWaitBeforeScreenshots() {
     return this._waitBeforeScreenshots;
@@ -234,7 +234,7 @@ class Eyes extends EyesBase {
   /**
    * Turns on/off the automatic scrolling to a region being checked by {@code checkRegion}.
    *
-   * @param {boolean} shouldScroll Whether to automatically scroll to a region being validated.
+   * @param {boolean} shouldScroll - Whether to automatically scroll to a region being validated.
    */
   setScrollToRegion(shouldScroll) {
     if (shouldScroll) {
@@ -246,7 +246,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether to automatically scroll to a region being validated.
+   * @return {boolean} - Whether to automatically scroll to a region being validated.
    */
   getScrollToRegion() {
     return !(this._regionVisibilityStrategy instanceof NopRegionVisibilityStrategy);
@@ -257,7 +257,7 @@ class Eyes extends EyesBase {
    * Set the type of stitching used for full page screenshots. When the page includes fixed position header/sidebar,
    * use {@link StitchMode#CSS}. Default is {@link StitchMode#SCROLL}.
    *
-   * @param {StitchMode} mode The stitch mode to set.
+   * @param {StitchMode} mode - The stitch mode to set.
    */
   setStitchMode(mode) {
     this._logger.verbose(`setting stitch mode to ${mode}`);
@@ -270,7 +270,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {StitchMode}  The current stitch mode settings.
+   * @return {StitchMode}  - The current stitch mode settings.
    */
   getStitchMode() {
     return this._stitchMode;
@@ -280,7 +280,7 @@ class Eyes extends EyesBase {
   /**
    * Sets the stitching overlap in pixels.
    *
-   * @param {number} pixels The width (in pixels) of the overlap.
+   * @param {number} pixels - The width (in pixels) of the overlap.
    */
   setStitchOverlap(pixels) {
     this._stitchingOverlap = pixels;
@@ -288,7 +288,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} Returns the stitching overlap in pixels.
+   * @return {number} - Returns the stitching overlap in pixels.
    */
   getStitchOverlap() {
     return this._stitchingOverlap;
@@ -298,7 +298,7 @@ class Eyes extends EyesBase {
   /**
    * Hide the scrollbars when taking screenshots.
    *
-   * @param {boolean} shouldHide Whether to hide the scrollbars or not.
+   * @param {boolean} shouldHide - Whether to hide the scrollbars or not.
    */
   setHideScrollbars(shouldHide) {
     this._hideScrollbars = shouldHide;
@@ -306,7 +306,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether or not scrollbars are hidden when taking screenshots.
+   * @return {boolean} - Whether or not scrollbars are hidden when taking screenshots.
    */
   getHideScrollbars() {
     return this._hideScrollbars;
@@ -329,7 +329,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {ImageRotation} rotation The image rotation data.
+   * @param {ImageRotation} rotation - The image rotation data.
    */
   setRotation(rotation) {
     this._rotation = rotation;
@@ -340,7 +340,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {ImageRotation} The image rotation data.
+   * @return {ImageRotation} - The image rotation data.
    */
   getRotation() {
     return this._rotation;
@@ -348,8 +348,8 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The device pixel ratio, or {@link #UNKNOWN_DEVICE_PIXEL_RATIO} if the DPR is not known yet or if
-   *   it wasn't possible to extract it.
+   * @return {number} - The device pixel ratio, or {@link #UNKNOWN_DEVICE_PIXEL_RATIO} if the DPR is not known yet or if
+   *   - it wasn't possible to extract it.
    */
   getDevicePixelRatio() {
     return this._devicePixelRatio;
@@ -359,13 +359,13 @@ class Eyes extends EyesBase {
   /**
    * Starts a test.
    *
-   * @param {WebDriver} driver The web driver that controls the browser hosting the application under test.
-   * @param {string} appName The name of the application under test.
-   * @param {string} testName The test name.
-   * @param {RectangleSize|{width: number, height: number}} [viewportSize=null] The required browser's viewport size
-   *   (i.e., the visible part of the document's body) or to use the current window's viewport.
-   * @param {SessionType} [sessionType=null] The type of test (e.g.,  standard test / visual performance test).
-   * @return {Promise<EyesWebDriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   * @param {WebDriver} driver - The web driver that controls the browser hosting the application under test.
+   * @param {string} appName - The name of the application under test.
+   * @param {string} testName - The test name.
+   * @param {RectangleSize|{width: number, height: number}} [viewportSize=null] - The required browser's viewport size
+   *   - (i.e., the visible part of the document's body) or to use the current window's viewport.
+   * @paramprivate {SessionType} [sessionType=null] - The type of test (e.g.,  standard test / visual performance test).
+   * @return {Promise<EyesWebDriver>} - A wrapped WebDriver which enables Eyes trigger recording and frame handling.
    */
   open(driver, appName, testName, viewportSize = null, sessionType = null) {
     ArgumentGuard.notNull(driver, 'driver');
@@ -435,11 +435,11 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * Preform visual validation
+   * Perform visual validation
    *
-   * @param {string} name A name to be associated with the match
-   * @param {SeleniumCheckSettings} checkSettings Target instance which describes whether we want a window/region/frame
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {string} name - A name to be associated with the match
+   * @param {SeleniumCheckSettings} checkSettings - Target instance which describes whether we want a window/region/frame
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   check(name, checkSettings) {
     ArgumentGuard.notNull(checkSettings, 'checkSettings');
@@ -597,6 +597,9 @@ class Eyes extends EyesBase {
     const that = this;
     this._logger.verbose('checkFullFrameOrElement()');
 
+    /*
+     * @private
+     */
     const RegionProviderImpl = class RegionProviderImpl extends RegionProvider {
       // noinspection JSUnusedGlobalSymbols
       /** @override */
@@ -726,7 +729,9 @@ class Eyes extends EyesBase {
    */
   _checkRegion(name, checkSettings) {
     const that = this;
-
+    /*
+     * @private
+     */
     const RegionProviderImpl = class RegionProviderImpl extends RegionProvider {
       // noinspection JSUnusedGlobalSymbols
       /** @override */
@@ -894,9 +899,9 @@ class Eyes extends EyesBase {
   /**
    * Takes a snapshot of the application under test and matches it with the expected output.
    *
-   * @param {string} tag An optional tag to be associated with the snapshot.
-   * @param {number} matchTimeout The amount of time to retry matching (Milliseconds).
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {string} tag - An optional tag to be associated with the snapshot.
+   * @param {number} matchTimeout - The amount of time to retry matching (Milliseconds).
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkWindow(tag, matchTimeout) {
     return this.check(tag, Target.window().timeout(matchTimeout));
@@ -907,11 +912,11 @@ class Eyes extends EyesBase {
    * Matches the frame given as parameter, by switching into the frame and using stitching to get an image of the
    * frame.
    *
-   * @param {EyesWebElement} element The element which is the frame to switch to. (as would be used in a call to
-   *   driver.switchTo().frame() ).
-   * @param {number} matchTimeout The amount of time to retry matching (milliseconds).
-   * @param {string} tag An optional tag to be associated with the match.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {WebElement} element - The element which is the frame to switch to. (as would be used in a call to
+   *  driver.switchTo().frame() ).
+   * @param {number} matchTimeout - The amount of time to retry matching (milliseconds).
+   * @param {string} tag - An optional tag to be associated with the match.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkFrame(element, matchTimeout, tag) {
     return this.check(tag, Target.frame(element).timeout(matchTimeout));
@@ -921,10 +926,10 @@ class Eyes extends EyesBase {
   /**
    * Takes a snapshot of the application under test and matches a specific element with the expected region output.
    *
-   * @param {WebElement|EyesWebElement} element The element to check.
-   * @param {?number} matchTimeout The amount of time to retry matching (milliseconds).
-   * @param {string} tag An optional tag to be associated with the match.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {WebElement} element - The element to check.
+   * @param {?number} matchTimeout - The amount of time to retry matching (milliseconds).
+   * @param {string} tag - An optional tag to be associated with the match.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkElement(element, matchTimeout, tag) {
     return this.check(tag, Target.region(element).timeout(matchTimeout).fully());
@@ -934,10 +939,10 @@ class Eyes extends EyesBase {
   /**
    * Takes a snapshot of the application under test and matches a specific element with the expected region output.
    *
-   * @param {By} locator The element to check.
-   * @param {?number} matchTimeout The amount of time to retry matching (milliseconds).
-   * @param {string} tag An optional tag to be associated with the match.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {By} locator - The element to check.
+   * @param {?number} matchTimeout - The amount of time to retry matching (milliseconds).
+   * @param {string} tag - An optional tag to be associated with the match.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkElementBy(locator, matchTimeout, tag) {
     return this.check(tag, Target.region(locator).timeout(matchTimeout).fully());
@@ -947,10 +952,10 @@ class Eyes extends EyesBase {
   /**
    * Visually validates a region in the screenshot.
    *
-   * @param {Region} region The region to validate (in screenshot coordinates).
-   * @param {string} tag An optional tag to be associated with the screenshot.
-   * @param {number} matchTimeout The amount of time to retry matching.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {Region} region - The region to validate (in screenshot coordinates).
+   * @param {string} tag - An optional tag to be associated with the screenshot.
+   * @param {number} matchTimeout - The amount of time to retry matching.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkRegion(region, tag, matchTimeout) {
     return this.check(tag, Target.region(region).timeout(matchTimeout));
@@ -960,10 +965,10 @@ class Eyes extends EyesBase {
   /**
    * Visually validates a region in the screenshot.
    *
-   * @param {WebElement|EyesWebElement} element The element defining the region to validate.
-   * @param {string} tag An optional tag to be associated with the screenshot.
-   * @param {number} matchTimeout The amount of time to retry matching.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {WebElement} element - The element defining the region to validate.
+   * @param {string} tag - An optional tag to be associated with the screenshot.
+   * @param {number} matchTimeout - The amount of time to retry matching.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkRegionByElement(element, tag, matchTimeout) {
     return this.check(tag, Target.region(element).timeout(matchTimeout));
@@ -973,10 +978,10 @@ class Eyes extends EyesBase {
   /**
    * Visually validates a region in the screenshot.
    *
-   * @param {By} by The WebDriver selector used for finding the region to validate.
-   * @param {string} tag An optional tag to be associated with the screenshot.
-   * @param {number} matchTimeout The amount of time to retry matching.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {By} by - The WebDriver selector used for finding the region to validate.
+   * @param {string} tag - An optional tag to be associated with the screenshot.
+   * @param {number} matchTimeout - The amount of time to retry matching.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkRegionBy(by, tag, matchTimeout) {
     return this.check(tag, Target.region(by).timeout(matchTimeout));
@@ -987,14 +992,14 @@ class Eyes extends EyesBase {
    * Switches into the given frame, takes a snapshot of the application under test and matches a region specified by
    * the given selector.
    *
-   * @param {string} frameNameOrId The name or id of the frame to switch to. (as would be used in a call to
-   *   driver.switchTo().frame()).
-   * @param {By} locator A Selector specifying the region to check.
-   * @param {?number} matchTimeout The amount of time to retry matching. (Milliseconds)
-   * @param {string} tag An optional tag to be associated with the snapshot.
-   * @param {boolean} stitchContent If {@code true}, stitch the internal content of the region (i.e., perform
-   *   {@link #checkElement(By, number, string)} on the region.
-   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   * @param {string} frameNameOrId - The name or id of the frame to switch to. (as would be used in a call to
+   *   - driver.switchTo().frame()).
+   * @param {By} locator - A Selector specifying the region to check.
+   * @param {?number} matchTimeout - The amount of time to retry matching. (Milliseconds)
+   * @param {string} tag - An optional tag to be associated with the snapshot.
+   * @param {boolean} stitchContent - If {@code true}, stitch the internal content of the region (i.e., perform
+   *  -  {@link #checkElement(By, number, string)} on the region.
+   * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
   checkRegionInFrame(frameNameOrId, locator, matchTimeout, tag, stitchContent) {
     return this.check(tag, Target.region(locator, frameNameOrId).timeout(matchTimeout).stitchContent(stitchContent));
@@ -1003,9 +1008,9 @@ class Eyes extends EyesBase {
   /**
    * Adds a mouse trigger.
    *
-   * @param {MouseTrigger.MouseAction} action  Mouse action.
-   * @param {Region} control The control on which the trigger is activated (context relative coordinates).
-   * @param {Location} cursor  The cursor's position relative to the control.
+   * @param {MouseTrigger.MouseAction} action  - Mouse action.
+   * @param {Region} control - The control on which the trigger is activated (context relative coordinates).
+   * @param {Location} cursor  - The cursor's position relative to the control.
    */
   addMouseTrigger(action, control, cursor) {
     if (this.getIsDisabled()) {
@@ -1031,8 +1036,8 @@ class Eyes extends EyesBase {
   /**
    * Adds a mouse trigger.
    *
-   * @param {MouseTrigger.MouseAction} action  Mouse action.
-   * @param {WebElement} element The WebElement on which the click was called.
+   * @param {MouseTrigger.MouseAction} action  - Mouse action.
+   * @param {WebElement} element - The WebElement on which the click was called.
    * @return {Promise<void>}
    */
   addMouseTriggerForElement(action, element) {
@@ -1069,8 +1074,8 @@ class Eyes extends EyesBase {
   /**
    * Adds a keyboard trigger.
    *
-   * @param {Region} control The control on which the trigger is activated (context relative coordinates).
-   * @param {string} text  The trigger's text.
+   * @param {Region} control - The control on which the trigger is activated (context relative coordinates).
+   * @param {string} text  - The trigger's text.
    */
   addTextTrigger(control, text) {
     if (this.getIsDisabled()) {
@@ -1095,8 +1100,8 @@ class Eyes extends EyesBase {
   /**
    * Adds a keyboard trigger.
    *
-   * @param {EyesWebElement} element The element for which we sent keys.
-   * @param {string} text  The trigger's text.
+   * @param {WebElement} element - The element for which we sent keys.
+   * @param {string} text  - The trigger's text.
    * @return {Promise<void>}
    */
   addTextTriggerForElement(element, text) {
@@ -1131,6 +1136,7 @@ class Eyes extends EyesBase {
    * variants.
    *
    * @override
+   * @return {Promise<RectangleSize>} 
    * @inheritDoc
    */
   getViewportSize() {
@@ -1179,8 +1185,8 @@ class Eyes extends EyesBase {
    * Call this method if for some reason you don't want to call {@link #open(WebDriver, string, string)} (or one of its
    * variants) yet.
    *
-   * @param {EyesWebDriver} driver The driver to use for getting the viewport.
-   * @return {Promise<RectangleSize>} The viewport size of the current context.
+   * @param {EyesWebDriver} driver - The driver to use for getting the viewport.
+   * @return {Promise<RectangleSize>} - The viewport size of the current context.
    */
   static getViewportSize(driver) {
     ArgumentGuard.notNull(driver, 'driver');
@@ -1192,8 +1198,8 @@ class Eyes extends EyesBase {
    * Set the viewport size using the driver. Call this method if for some reason you don't want to call
    * {@link #open(WebDriver, string, string)} (or one of its variants) yet.
    *
-   * @param {EyesWebDriver} driver The driver to use for setting the viewport.
-   * @param {RectangleSize} viewportSize The required viewport size.
+   * @param {EyesWebDriver} driver - The driver to use for setting the viewport.
+   * @param {RectangleSize} viewportSize - The required viewport size.
    * @return {Promise<void>}
    */
   static setViewportSize(driver, viewportSize) {
@@ -1203,17 +1209,26 @@ class Eyes extends EyesBase {
     return EyesSeleniumUtils.setViewportSize(new Logger(), driver, new RectangleSize(viewportSize));
   }
 
-  /** @override */
+  /** 
+   * @protected
+   * @override 
+   */
   beforeOpen() {
     return this._tryHideScrollbars();
   }
 
-  /** @override */
+  /** 
+   * @protected
+   * @override 
+   */
   beforeMatchWindow() {
     return this._tryHideScrollbars();
   }
 
-  /** @override */
+  /** 
+   * @protected
+   * @override 
+   */
   async tryCaptureDom() {
     try {
       this._logger.verbose('Getting window DOM...');
@@ -1225,14 +1240,18 @@ class Eyes extends EyesBase {
   }
 
   /**
+   * @protected
    * @override
+   * @return {String}
    */
   getDomUrl() {
     return this.getPromiseFactory().resolve(this._domUrl);
   }
 
   /**
+   * @protected
    * @override
+   * @param domUrl {String} 
    */
   setDomUrl(domUrl) {
     this._domUrl = domUrl;
@@ -1263,6 +1282,7 @@ class Eyes extends EyesBase {
   }
 
   /**
+   * @protected
    * @inheritDoc
    */
   getImageLocation() {
@@ -1522,7 +1542,7 @@ class Eyes extends EyesBase {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Set the failure report.
-   * @param {FailureReports} mode Use one of the values in FailureReports.
+   * @param {FailureReports} mode - Use one of the values in FailureReports.
    */
   setFailureReport(mode) {
     if (mode === FailureReports.IMMEDIATE) {
@@ -1536,8 +1556,8 @@ class Eyes extends EyesBase {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Set the image rotation degrees.
-   * @param degrees The amount of degrees to set the rotation to.
-   * @deprecated use {@link setRotation} instead
+   * @param {number} degrees - The amount of degrees to set the rotation to.
+   * @deprecated - use {@link setRotation} instead
    */
   setForcedImageRotation(degrees) {
     this.setRotation(new ImageRotation(degrees));
@@ -1546,8 +1566,8 @@ class Eyes extends EyesBase {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Get the rotation degrees.
-   * @return {number} The rotation degrees.
-   * @deprecated use {@link getRotation} instead
+   * @return {number} - The rotation degrees.
+   * @deprecated - use {@link getRotation} instead
    */
   getForcedImageRotation() {
     return this.getRotation().getRotation();
@@ -1556,7 +1576,7 @@ class Eyes extends EyesBase {
   // noinspection JSUnusedGlobalSymbols
   /**
    * Get the session id.
-   * @return {Promise<string>} A promise which resolves to the webdriver's session ID.
+   * @return {Promise<string>} - A promise which resolves to the webdriver's session ID.
    */
   getAUTSessionId() {
     return this.getPromiseFactory().makePromise(resolve => {
@@ -1570,7 +1590,7 @@ class Eyes extends EyesBase {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {PositionProvider} The currently set position provider.
+   * @return {PositionProvider} - The currently set position provider.
    */
   getElementPositionProvider() {
     return this._elementPositionProvider ? this._elementPositionProvider : this._positionProviderHandler.get();
