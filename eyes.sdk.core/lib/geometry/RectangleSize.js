@@ -42,7 +42,7 @@ class RectangleSize {
 
   /**
    * Creates a new instance of RectangleSize from other RectangleSize
-   *
+   * @protected
    * @param {RectangleSize} other
    * @return {RectangleSize}
    */
@@ -54,7 +54,7 @@ class RectangleSize {
 
   /**
    * Creates a new instance of RectangleSize from other RectangleSize
-   *
+   * @protected
    * @param {RectangleSizeObject} object
    * @return {RectangleSize}
    */
@@ -67,7 +67,7 @@ class RectangleSize {
 
   /**
    * Parses a string into a {link RectangleSize} instance.
-   *
+   * @protected
    * @param {string} size - A string representing width and height separated by "x".
    * @return {RectangleSize} - An instance representing the input size.
    */
@@ -82,6 +82,7 @@ class RectangleSize {
   }
 
   /** 
+   * @protected
    * @return {boolean} 
    */
   isEmpty() {
@@ -89,6 +90,7 @@ class RectangleSize {
   }
 
   /**
+   * @protected
    * @return {number} - The rectangle's width.
    */
   getWidth() {
@@ -96,6 +98,7 @@ class RectangleSize {
   }
 
   /**
+   * @protected
    * @return {number} - The rectangle's height.
    */
   getHeight() {
@@ -104,7 +107,7 @@ class RectangleSize {
 
   /**
    * Indicates whether some other RectangleSize is "equal to" this one.
-   *
+   * @protected
    * @param {object|RectangleSize} obj - The reference object with which to compare.
    * @return {boolean} - returns {@code true} if this object is the same as the obj argument; {@code false} otherwise.
    */
@@ -118,7 +121,7 @@ class RectangleSize {
 
   /**
    * Get a scaled version of the current size.
-   *
+   * @protected
    * @param {number} scaleRatio - The ratio by which to scale the results.
    * @return {RectangleSize} - A scaled copy of the current size.
    */
@@ -126,12 +129,18 @@ class RectangleSize {
     return new RectangleSize(Math.ceil(this._width * scaleRatio), Math.ceil(this._height * scaleRatio));
   }
 
-  /** @override */
+  /** 
+  * @protected
+  * @override 
+  */
   toJSON() {
     return { width: this._width, height: this._height };
   }
 
-  /** @override */
+  /** 
+  * @override 
+  * @protected
+  */
   toString() {
     return `${this._width}x${this._height}`;
   }

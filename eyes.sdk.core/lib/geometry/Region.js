@@ -166,7 +166,7 @@ class Region {
 
   /**
    * Creates a new instance of Region from Location and Size
-   *
+   * @protected
    * @param {Location} location - A Location instance from which to create the Region
    * @param {RectangleSize} size - A RectangleSize instance from which to create the Region
    * @param {CoordinatesType} [coordinatesType=SCREENSHOT_AS_IS] - The coordinatesType of the region
@@ -181,7 +181,7 @@ class Region {
 
   /**
    * Creates a new instance of Region from other Region
-   *
+   * @protected
    * @param {Region} other
    * @return {Region}
    */
@@ -193,7 +193,7 @@ class Region {
 
   /**
    * Creates a new instance of Region from object
-   *
+   * @protected
    * @param {RegionObject} object
    * @return {Region}
    */
@@ -212,6 +212,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @param {Logger} newLogger
    */
   static initLogger(newLogger) {
@@ -219,6 +220,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's left offset.
    */
   getLeft() {
@@ -227,6 +229,7 @@ class Region {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {number} value
    */
   setLeft(value) {
@@ -234,6 +237,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's top offset.
    */
   getTop() {
@@ -242,6 +246,7 @@ class Region {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {number} value
    */
   setTop(value) {
@@ -249,6 +254,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's right offset.
    */
   getRight() {
@@ -256,6 +262,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's bottom offset.
    */
   getBottom() {
@@ -263,6 +270,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's width.
    */
   getWidth() {
@@ -271,6 +279,7 @@ class Region {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {number} value
    */
   setWidth(value) {
@@ -278,6 +287,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {number} - The region's height.
    */
   getHeight() {
@@ -286,6 +296,7 @@ class Region {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {number} value
    */
   setHeight(value) {
@@ -293,6 +304,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {CoordinatesType} - The region's coordinatesType.
    */
   getCoordinatesType() {
@@ -301,6 +313,7 @@ class Region {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * @protected
    * @param {CoordinatesType} value
    */
   setCoordinatesType(value) {
@@ -308,6 +321,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {Location} - The (top,left) - position of the current region.
    */
   getLocation() {
@@ -316,7 +330,7 @@ class Region {
 
   /**
    * Set the (top,left) position of the current region
-   *
+   * @protected
    * @param {Location} location - The (top,left) position to set.
    */
   setLocation(location) {
@@ -326,6 +340,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {RectangleSize} - The size of the region.
    */
   getSize() {
@@ -334,7 +349,7 @@ class Region {
 
   /**
    * Set the (width,height) size of the current region
-   *
+   * @protected
    * @param {RectangleSize} size - The updated size of the region.
    */
   setSize(size) {
@@ -345,7 +360,7 @@ class Region {
 
   /**
    * Indicates whether some other Region is "equal to" this one.
-   *
+   * @protected
    * @param {object|Region} obj - The reference object with which to compare.
    * @return {boolean} - Return {@code true}  if this object is the same as the obj argument; {@code false} otherwise.
    */
@@ -364,6 +379,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {boolean} - Return {@code true} - if the region is empty; {@code false} otherwise.
    */
   isEmpty() {
@@ -377,6 +393,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {boolean} - Return {@code true} - if the region's size is 0, false otherwise.
    */
   isSizeEmpty() {
@@ -385,7 +402,7 @@ class Region {
 
   /**
    * Get a Region translated by the specified amount.
-   *
+   * @protected
    * @param {number} dx - The amount to offset the x-coordinate.
    * @param {number} dy - The amount to offset the y-coordinate.
    * @return {Region} - A region with an offset location.
@@ -395,6 +412,7 @@ class Region {
   }
 
   /**
+   * @protected
    * @return {Location}
    */
   getMiddleOffset() {
@@ -407,7 +425,7 @@ class Region {
   /**
    * Get a region which is a scaled version of the current region.
    * IMPORTANT: This also scales the LOCATION(!!) of the region (not just its size).
-   *
+   * @protected
    * @param {number} scaleRatio - The ratio by which to scale the results.
    * @return {Region} - A new region which is a scaled version of the current region.
    */
@@ -421,7 +439,7 @@ class Region {
 
   /**
    * Returns a list of sub-regions which compose the current region.
-   *
+   * @protected
    * @param {RectangleSize} subRegionSize - The default sub-region size to use.
    * @param {boolean} [isFixedSize=false] - If {@code false}, then sub-regions might have a size which is smaller then
    *   {@code subRegionSize} (thus there will be no overlap of regions). Otherwise, all sub-regions will have the same
@@ -439,7 +457,7 @@ class Region {
 
   /**
    * Check if a specified region is contained within the another region or location.
-   *
+   * @protected
    * @param {Region|Location} locationOrRegion - The region or location to check if it is contained within the current
    *   region.
    * @return {boolean} - True if the region is contained within given object, false otherwise.
@@ -470,7 +488,7 @@ class Region {
 
   /**
    * Check if a region is intersected with the current region.
-   *
+   * @protected
    * @param {Region} other - The region to check intersection with.
    * @return {boolean} - True if the regions are intersected, false otherwise.
    */
@@ -492,7 +510,7 @@ class Region {
 
   /**
    * Replaces this region with the intersection of itself and {@code other}
-   *
+   * @protected
    * @param {Region} other - The region with which to intersect.
    */
   intersect(other) {
@@ -556,7 +574,7 @@ class Region {
 
   /** 
   * @override
-  * 
+  * @protected
   */
   toString() {
     return `(${this._left}, ${this._top}) ${this._width}x${this._height}, ${this._coordinatesType}`;

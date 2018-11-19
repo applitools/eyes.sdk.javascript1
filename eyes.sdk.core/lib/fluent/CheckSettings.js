@@ -71,6 +71,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {boolean}
    */
   getSendDom() {
@@ -134,6 +135,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {MatchLevel}
    */
   getMatchLevel() {
@@ -153,6 +155,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {boolean}
    */
   getIgnoreCaret() {
@@ -182,6 +185,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {boolean}
    */
   getStitchContent() {
@@ -201,6 +205,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {number}
    */
   getTimeout() {
@@ -216,6 +221,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {Region}
    */
   getTargetRegion() {
@@ -332,6 +338,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {GetRegion[]}
    */
   getIgnoreRegions() {
@@ -339,6 +346,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {GetRegion[]}
    */
   getStrictRegions() {
@@ -346,6 +354,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {GetRegion[]}
    */
   getLayoutRegions() {
@@ -353,6 +362,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {GetRegion[]}
    */
   getContentRegions() {
@@ -423,6 +433,7 @@ class CheckSettings {
   }
 
   /**
+   * @protected
    * @return {GetFloatingRegion[]}
    */
   getFloatingRegions() {

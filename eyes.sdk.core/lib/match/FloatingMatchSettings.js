@@ -29,106 +29,163 @@ class FloatingMatchSettings {
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @return {number} */
+  /** 
+  * @protected
+  * @return {number} 
+  */
   getLeft() {
     return this._left;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value 
+    */
   setLeft(value) {
     this._left = value;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @return {number} */
+  /** 
+   * @protected
+   * @return {number}
+   */
   getTop() {
     return this._top;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+   * @protected
+   * @param {number} value 
+   */
   setTop(value) {
     this._top = value;
   }
 
-  /** @return {number} */
+  /** 
+    * @protected
+    * @return {number}
+    */
   getWidth() {
     return this._width;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value 
+    */
   setWidth(value) {
     this._width = value;
   }
 
-  /** @return {number} */
+  /** 
+   * @protected
+   * @return {number} 
+   */
   getHeight() {
     return this._height;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value 
+    */
   setHeight(value) {
     this._height = value;
   }
 
-  /** @return {number} */
+  /**
+    * @protected
+    * @return {number} 
+    */
   getMaxUpOffset() {
     return this._maxUpOffset;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value
+    */
   setMaxUpOffset(value) {
     this._maxUpOffset = value;
   }
 
-  /** @return {number} */
+  /** 
+    * @protected
+    * @return {number} 
+    */
   getMaxDownOffset() {
     return this._maxDownOffset;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value
+    */
   setMaxDownOffset(value) {
     this._maxDownOffset = value;
   }
 
-  /** @return {number} */
+  /** 
+    * @protected
+    * @return {number}
+    */
   getMaxLeftOffset() {
     return this._maxLeftOffset;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /**
+  * @protected
+  * @param {number} value
+  */
   setMaxLeftOffset(value) {
     this._maxLeftOffset = value;
   }
 
-  /** @return {number} */
+  /** 
+    * @protected
+    * @return {number}
+    */
   getMaxRightOffset() {
     return this._maxRightOffset;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+    * @protected
+    * @param {number} value 
+    */
   setMaxRightOffset(value) {
     this._maxRightOffset = value;
   }
 
-  /** @return {Region} */
+  /** 
+     * @protected
+     * @return {Region} 
+     */
   getRegion() {
     return new Region(this._left, this._top, this._width, this._height);
   }
 
-  /** @override */
+  /** 
+    * @protected
+    * @override
+    */
   toJSON() {
     return GeneralUtils.toPlain(this);
   }
 
-  /** @override */
+  /** 
+    * @protected
+    * @override 
+    */
   toString() {
     return `FloatingMatchSettings { ${JSON.stringify(this)} }`;
   }

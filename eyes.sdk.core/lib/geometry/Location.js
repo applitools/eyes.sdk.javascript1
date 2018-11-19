@@ -42,7 +42,7 @@ class Location {
 
   /**
    * Creates a new instance of Location from other Location
-   *
+   * @protected
    * @param {Location} other
    * @return {Location}
    */
@@ -54,7 +54,7 @@ class Location {
 
   /**
    * Creates a new instance of Location from object
-   *
+   * @protected
    * @param {LocationObject} object
    * @return {Location}
    */
@@ -67,6 +67,7 @@ class Location {
   }
 
   /**
+   * @protected
    * @return {number} - The X coordinate of this location.
    */
   getX() {
@@ -74,6 +75,7 @@ class Location {
   }
 
   /**
+   * @protected
    * @return {number} - The Y coordinate of this location.
    */
   getY() {
@@ -82,7 +84,7 @@ class Location {
 
   /**
    * Indicates whether some other Location is "equal to" this one.
-   *
+   * @protected
    * @param {object|Location} obj - The reference object with which to compare.
    * @return {boolean} - returns {@code true} - if this object is the same as the obj argument; {@code false} otherwise.
    */
@@ -96,7 +98,7 @@ class Location {
 
   /**
    * Get a location translated by the specified amount.
-   *
+   * @protected
    * @param {number} dx - The amount to offset the x-coordinate.
    * @param {number} dy - The amount to offset the y-coordinate.
    * @return {Location} - A location translated by the specified amount.
@@ -106,7 +108,7 @@ class Location {
   }
 
   /**
-   *
+   * @protected
    * @param {Location} other
    * @return {Location}
    */
@@ -116,7 +118,7 @@ class Location {
 
   /**
    * Get a location translated by the specified amount.
-   *
+   * @protected
    * @param {Location} amount - The amount to offset.
    * @return {Location} - A location translated by the specified amount.
    */
@@ -126,7 +128,7 @@ class Location {
 
   /**
    * Get a scaled location.
-   *
+   * @protected
    * @param {number} scaleRatio - The ratio by which to scale the results.
    * @return {Location} - A scaled copy of the current location.
    */
@@ -150,7 +152,7 @@ class Location {
     return `(${this._x}, ${this._y})`;
   }
     /**
-    * protected
+    * @protected
     */
   toStringForFilename() {
     return `${this._x}_${this._y}`;
