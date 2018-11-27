@@ -12,6 +12,7 @@ class MatchResult {
   }
 
   /**
+   * @private
    * @param {object} object
    * @return {MatchResult}
    */
@@ -19,34 +20,51 @@ class MatchResult {
     return GeneralUtils.assignTo(new MatchResult(), object);
   }
 
-  /** @return {boolean} */
+  /** 
+   * @return {boolean} 
+   */
   getAsExpected() {
     return this._asExpected;
   }
 
-  /** @param {boolean} value */
+  /** 
+  * @private
+  * @param {boolean} value
+  */
   setAsExpected(value) {
     this._asExpected = value;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @return {number} */
+  /** 
+  * @return {number} 
+  */
   getWindowId() {
     return this._windowId;
   }
 
   // noinspection JSUnusedGlobalSymbols
-  /** @param {number} value */
+  /** 
+  * @private
+  * @param {number} value 
+  */
   setWindowId(value) {
     this._windowId = value;
   }
 
-  /** @override */
+  /** 
+  * @private
+  * @override 
+  */
   toJSON() {
     return GeneralUtils.toPlain(this);
   }
 
-  /** @override */
+  /** 
+  * @private
+  * @override
+  * @return {string}
+  */
   toString() {
     return `MatchResult { ${JSON.stringify(this)} }`;
   }

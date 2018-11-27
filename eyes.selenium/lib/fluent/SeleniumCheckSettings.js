@@ -293,7 +293,7 @@ class SeleniumCheckSettings extends CheckSettings {
    * Adds a floating region. A floating region is a region that can be placed within the boundaries of a bigger region.
    *
    * @override
-   * @param {GetFloatingRegion|Region|FloatingMatchSettings|By|WebElement} regionOrContainer - The content
+   * @param {GetFloatingRegion|Region|By|WebElement} regionOrContainer - The content
    *   rectangle or region container
    * @param {number} [maxUpOffset] - How much the content can move up.
    * @param {number} [maxDownOffset] - How much the content can move down.
