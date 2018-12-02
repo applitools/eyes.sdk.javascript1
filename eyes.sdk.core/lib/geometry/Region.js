@@ -129,9 +129,10 @@ class Region {
    *
    * @param {number|Region|Location|RegionObject} arg1 - The left offset of this region.
    * @param {number|RectangleSize} [arg2] - The top offset of this region.
-   * @param {number|CoordinatesType} [arg3] - The width of the region.
+   * @paramprivate {number|CoordinatesType} [arg3] - The width of the region.
+   * @param {number} [arg3] - The width of the region.
    * @param {number} [arg4] - The height of the region.
-   * @param {CoordinatesType} [arg5=SCREENSHOT_AS_IS] - The coordinatesType of the region.
+   * @paramprivate {CoordinatesType} [arg5=SCREENSHOT_AS_IS] - The coordinatesType of the region.
    */
   constructor(arg1, arg2, arg3, arg4, arg5) {
     const left = arg1;
