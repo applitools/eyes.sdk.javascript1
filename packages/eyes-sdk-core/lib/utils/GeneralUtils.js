@@ -1,10 +1,11 @@
 'use strict';
 
-const merge = require('deepmerge');
+const _merge = require('deepmerge');
 const dateFormat = require('dateformat');
 
 const { TypeUtils } = require('./TypeUtils');
 
+const merge = _merge.default ? _merge.default : _merge;
 const DATE_FORMAT_ISO8601 = "yyyy-mm-dd'T'HH:MM:ss'Z'";
 const DATE_FORMAT_RFC1123 = "ddd, dd mmm yyyy HH:MM:ss 'GMT'";
 const DATE_FORMAT_LOGFILE = 'yyyy_mm_dd_HH_MM_ss_l';
