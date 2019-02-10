@@ -386,6 +386,22 @@ class Eyes extends EyesBase {
       this.setSendDom(true);
     }
 
+    const retVal = await this.setDriver(driver);
+
+    await super.openBase(appName, testName, viewportSize, sessionType);
+    return retVal;
+  }
+
+  /**
+   * Sets the webdriver
+   *
+   * @param {WebDriver|ThenableWebDriver} driver The web driver that controls the browser hosting the application under
+
+   * @return {Promise<EyesWebDriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   */
+  async setDriver(driver) {
+    ArgumentGuard.notNull(driver, 'driver');
+
     this._initDriver(driver);
 
     this._screenshotFactory = new EyesWebDriverScreenshotFactory(this._logger, this._driver);
@@ -397,8 +413,6 @@ class Eyes extends EyesBase {
 
     this._imageProvider = ImageProviderFactory.getImageProvider(this._userAgent, this, this._logger, this._driver);
     this._regionPositionCompensation = RegionPositionCompensationFactory.getRegionPositionCompensation(this._userAgent, this, this._logger);
-
-    await super.openBase(appName, testName, viewportSize, sessionType);
 
     this._devicePixelRatio = Eyes.UNKNOWN_DEVICE_PIXEL_RATIO;
     this._jsExecutor = new SeleniumJavaScriptExecutor(this._driver);
