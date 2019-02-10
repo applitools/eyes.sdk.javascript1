@@ -461,8 +461,21 @@ class Eyes extends EyesBase {
    * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
    */
   async check(name, checkSettings) {
-    ArgumentGuard.notNull(checkSettings, 'checkSettings');
     ArgumentGuard.isValidState(this._isOpen, 'Eyes not open');
+    return this._checkInner(name, checkSettings, super.checkWindowBase.bind(this));
+  }
+
+  // noinspection FunctionWithMoreThanThreeNegationsJS
+  /**
+   * Perform visual validation
+   *
+   * @param {string} name A name to be associated with the match
+   * @param {SeleniumCheckSettings|CheckSettings} checkSettings Target instance which describes whether we want a
+   *   window/region/frame
+   * @return {Promise<MatchResult>} A promise which is resolved when the validation is finished.
+   */
+  async _checkInner(name, checkSettings, checkFunction) {
+    ArgumentGuard.notNull(checkSettings, 'checkSettings');
 
     if (TypeUtils.isNotNull(name)) {
       checkSettings.withName(name);
@@ -492,7 +505,7 @@ class Eyes extends EyesBase {
 
     if (targetRegion) {
       originalFC = await this._tryHideScrollbars();
-      result = await super.checkWindowBase(new RegionProvider(targetRegion), name, false, checkSettings);
+      result = await checkFunction(new RegionProvider(targetRegion), name, false, checkSettings);
     } else if (checkSettings) {
       let targetElement = checkSettings.getTargetElement();
 
@@ -506,17 +519,17 @@ class Eyes extends EyesBase {
         this._targetElement = targetElement instanceof EyesWebElement ? targetElement :
           new EyesWebElement(this._logger, this._driver, targetElement);
         if (this._stitchContent) {
-          result = await this._checkElement(undefined, name, checkSettings);
+          result = await this._checkElement(undefined, name, checkSettings, checkFunction);
         } else {
-          result = await this._checkRegion(name, checkSettings);
+          result = await this._checkRegion(name, checkSettings, checkFunction);
         }
         this._targetElement = null;
       } else if (checkSettings.getFrameChain().length > 0) {
         originalFC = await this._tryHideScrollbars();
         if (this._stitchContent) {
-          result = await this._checkFullFrameOrElement(name, checkSettings);
+          result = await this._checkFullFrameOrElement(name, checkSettings, checkFunction);
         } else {
-          result = await this._checkFrameFluent(name, checkSettings);
+          result = await this._checkFrameFluent(name, checkSettings, checkFunction);
         }
       } else {
         if (!(await EyesSeleniumUtils.isMobileDevice(this._driver))) {
@@ -524,7 +537,7 @@ class Eyes extends EyesBase {
           await switchTo.defaultContent();
           originalFC = await this._tryHideScrollbars();
         }
-        result = await super.checkWindowBase(new NullRegionProvider(), name, false, checkSettings);
+        result = await checkFunction(new NullRegionProvider(), name, false, checkSettings);
       }
     }
 
@@ -553,6 +566,29 @@ class Eyes extends EyesBase {
     return result;
   }
 
+  // noinspection FunctionWithMoreThanThreeNegationsJS
+  /**
+   * Perform visual validation
+   *
+   * @param {string} name A name to be associated with the match
+   * @param {SeleniumCheckSettings|CheckSettings} checkSettings Target instance which describes whether we want a
+   * @return {Promise<Buffer>} A promise which is resolved when the validation is finished.
+   */
+  async generateCheckSnapshot(name, checkSettings) {
+    let snapshot;
+    await this._checkInner(name, checkSettings, async regionProvider => {
+      const screenshot = await this.getScreenshot();
+      const region = await regionProvider.getRegion();
+      if (region.isEmpty()) {
+        snapshot = screenshot.getImage();
+      } else {
+        const temp = await screenshot.getSubScreenshot(region);
+        snapshot = temp.getImage();
+      }
+    });
+    return snapshot.getImageBuffer();
+  }
+
   /**
    * @private
    * @param driver
@@ -576,13 +612,13 @@ class Eyes extends EyesBase {
    * @private
    * @return {Promise<MatchResult>}
    */
-  async _checkFrameFluent(name, checkSettings) {
+  async _checkFrameFluent(name, checkSettings, checkFunction) {
     const frameChain = new FrameChain(this._logger, this._driver.getFrameChain());
     const targetFrame = frameChain.pop();
     this._targetElement = targetFrame.getReference();
 
     await this._driver.switchTo().framesDoScroll(frameChain);
-    const result = await this._checkRegion(name, checkSettings);
+    const result = await this._checkRegion(name, checkSettings, checkFunction);
     this._targetElement = null;
     return result;
   }
@@ -659,7 +695,7 @@ class Eyes extends EyesBase {
    * @private
    * @return {Promise<MatchResult>}
    */
-  async _checkFullFrameOrElement(name, checkSettings) {
+  async _checkFullFrameOrElement(name, checkSettings, checkFunction ) {
     this._checkFrameOrElement = true;
     this._logger.verbose('checkFullFrameOrElement()');
 
@@ -674,7 +710,7 @@ class Eyes extends EyesBase {
       }
     };
 
-    const result = await super.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings);
+    const result = await checkFunction(new RegionProviderImpl(), name, false, checkSettings);
     this._checkFrameOrElement = false;
     return result;
   }
@@ -805,7 +841,7 @@ class Eyes extends EyesBase {
    * @private
    * @return {Promise<MatchResult>}
    */
-  async _checkRegion(name, checkSettings) {
+  async _checkRegion(name, checkSettings, checkFunction ) {
     const self = this;
     const RegionProviderImpl = class RegionProviderImpl extends RegionProvider {
       // noinspection JSUnusedGlobalSymbols
@@ -824,7 +860,7 @@ class Eyes extends EyesBase {
       }
     };
 
-    const result = await super.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings);
+    const result = await checkFunction(new RegionProviderImpl(), name, false, checkSettings);
     this._logger.verbose('Done! trying to scroll back to original position..');
     return result;
   }
@@ -833,7 +869,7 @@ class Eyes extends EyesBase {
    * @private
    * @return {Promise<MatchResult>}
    */
-  async _checkElement(eyesElement = this._targetElement, name, checkSettings) {
+  async _checkElement(eyesElement = this._targetElement, name, checkSettings, checkFunction ) {
     this._regionToCheck = null;
     const originalPositionMemento = await this._positionProviderHandler.get().getState();
 
@@ -885,7 +921,7 @@ class Eyes extends EyesBase {
         this._regionToCheck.intersect(this._effectiveViewport);
       }
 
-      result = await super.checkWindowBase(new NullRegionProvider(), name, false, checkSettings);
+      result = await checkFunction(new NullRegionProvider(), name, false, checkSettings);
     } finally {
       if (originalOverflow) {
         await eyesElement.setOverflow(originalOverflow);
