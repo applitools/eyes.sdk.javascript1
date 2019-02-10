@@ -2,12 +2,13 @@
 
 require('chromedriver');
 const assert = require('assert');
+const { expect } = require('chai').use(require('chai-image-assert')(__dirname));
 
 const { Builder, Capabilities } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
 
 const { Eyes, EyesWebDriver, Target } = require('../../index');
-const { throwsAsync } = require('../utils');
+
 
 let driver, eyes;
 describe('Eyes', function () {
@@ -33,7 +34,12 @@ describe('Eyes', function () {
     });
 
     it('should throw IllegalState: Eyes not open', async function () {
-      await throwsAsync(async () => eyes.check('test', Target.window()), 'IllegalState: Eyes not open');
+      try {
+        await eyes.check('test', Target.window());
+        assert.fail();
+      } catch (err) {
+        assert(err.message, 'IllegalState: Eyes not open');
+      }
     });
   });
 
@@ -43,5 +49,35 @@ describe('Eyes', function () {
 
   after(async function () {
     await driver.quit();
+  });
+
+  describe('generateCheckSnapshot', function () {
+    this.timeout(60 * 1000);
+
+    before(async function () {
+      await driver.navigate().to('http://applitools.github.io/demo/');
+
+      await eyes.setDriver(driver);
+      eyes.setHideScrollbars(true);
+
+      await eyes.setViewportSize({ width: 300, height: 300 });
+      // eslint-disable-next-line no-unused-expressions
+      expect(!eyes._isOpen).to.be.true;
+    });
+
+    it('should return full page capture', async function () {
+      const snapshot = await eyes.generateCheckSnapshot('', Target.window().fully());
+      expect(snapshot).to.matchImage('full-page');
+    });
+
+    it('should return a region capture', async function () {
+      const snapshot = await eyes.generateCheckSnapshot('', Target.region({ top: 100, left: 100, width: 100, height: 100 }));
+      expect(snapshot).to.matchImage('region');
+    });
+
+    it('should return a viewport capture', async function () {
+      const snapshot = await eyes.generateCheckSnapshot('', Target.window());
+      expect(snapshot).to.matchImage('viewport');
+    });
   });
 });

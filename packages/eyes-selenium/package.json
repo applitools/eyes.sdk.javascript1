@@ -40,6 +40,8 @@
   },
   "devDependencies": {
     "axios": "^0.18.0",
+    "chai": "^4.2.0",
+    "chai-image-assert": "^1.2.0",
     "chromedriver": "^2.45.0",
     "mocha": "^5.2.0",
     "selenium-webdriver": "^4.0.0-alpha.1"
