@@ -6,6 +6,7 @@ const { NullCutProvider } = require('../cropping/NullCutProvider');
 const { NullRegionPositionCompensation } = require('../positioning/NullRegionPositionCompensation');
 
 const MIN_SCREENSHOT_PART_HEIGHT = 10;
+const MIN_SCREENSHOT_PART_WIDTH = 10;
 
 class FullPageCaptureAlgorithm {
   /**
@@ -128,7 +129,7 @@ class FullPageCaptureAlgorithm {
     // in order to eliminate duplicate bottom scroll bars, as well as fixed
     // position footers.
     const partImageSize = new RectangleSize({
-      width: image.getWidth(),
+      width: Math.max(image.getWidth() - this._stitchingOverlap, MIN_SCREENSHOT_PART_WIDTH),
       height: Math.max(image.getHeight() - this._stitchingOverlap, MIN_SCREENSHOT_PART_HEIGHT),
     });
     this._logger.verbose(`entire page region: ${fullArea}, image part size: ${partImageSize}`);
@@ -164,7 +165,11 @@ class FullPageCaptureAlgorithm {
       // Giving it time to stabilize.
       await GeneralUtils.sleep(this._waitBeforeScreenshots);
       // Screen size may cause the scroll to only reach part of the way.
-      const originPosition = await positionProvider.getCurrentPosition();
+      let originPosition = await positionProvider.getCurrentPosition();
+      //todo
+      if (positionProvider.constructor.name === 'CssTranslateElementPositionProvider') {
+        originPosition = partRegion.getLocation();
+      }
       const targetPosition = originPosition.offset(-fullArea.getLeft(), -fullArea.getTop());
       this._logger.verbose(`Origin Position is set to ${originPosition}`);
 
