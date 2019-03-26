@@ -166,10 +166,11 @@ class FullPageCaptureAlgorithm {
       await GeneralUtils.sleep(this._waitBeforeScreenshots);
       // Screen size may cause the scroll to only reach part of the way.
       let originPosition = await positionProvider.getCurrentPosition();
-      //todo
+/* fixme
       if (positionProvider.constructor.name === 'CssTranslateElementPositionProvider') {
         originPosition = partRegion.getLocation();
       }
+*/
       const targetPosition = originPosition.offset(-fullArea.getLeft(), -fullArea.getTop());
       this._logger.verbose(`Origin Position is set to ${originPosition}`);
 
