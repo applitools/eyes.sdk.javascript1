@@ -6,6 +6,9 @@ const NS_IN_MS = 1000000;
 
 const timeStorage = {};
 
+/**
+ * @private
+ */
 class Time {
   constructor(name) {
     if (name) {
@@ -55,10 +58,12 @@ class Time {
 
 /**
  * Collection of utility methods for measure performance.
+ *
+ * @ignore
  */
 class PerformanceUtils {
   /**
-   * @param {string} [name] Instance name or {@code null} if don't want to store it
+   * @param {string} [name] - Instance name or {@code null} if don't want to store it
    * @param {boolean} [storeResults=true]
    * @return {Time}
    */
@@ -74,7 +79,7 @@ class PerformanceUtils {
   }
 
   /**
-   * @param {string} name Instance name
+   * @param {string} name - Instance name
    * @param {boolean} [deleteResults=false]
    * @return {{name: string, time: number, summary: string}}
    */
@@ -101,7 +106,7 @@ class PerformanceUtils {
   }
 
   /**
-   * @param {string} name Instance name
+   * @param {string} name - Instance name
    * @return {{name: string, time: number, summary: string}}
    */
   static result(name) {
@@ -121,7 +126,7 @@ class PerformanceUtils {
    * Format elapsed time by template (#m #s #ms)
    *
    * @param {number} milliseconds
-   * @return {string} formatted string
+   * @return {string} - formatted string
    */
   static elapsedString(milliseconds) {
     const minutes = Math.floor(milliseconds / MS_IN_M);

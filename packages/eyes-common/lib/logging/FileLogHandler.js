@@ -2,10 +2,12 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const { LogHandler } = require('./LogHandler');
 
 /**
+ * @private
  * @param {string} filename
  */
 function ensureDirectoryExistence(filename) {
@@ -17,24 +19,25 @@ function ensureDirectoryExistence(filename) {
 }
 
 /**
- * Write log massages to the browser/node console
+ * Write log messages to the browser/node console
  */
 class FileLogHandler extends LogHandler {
   /**
-   * @param {boolean} isVerbose Whether to handle or ignore verbose log messages.
-   * @param {string} [filename] The file in which to save the logs.
-   * @param {boolean} [append=true] Whether to append the logs to existing file, or to overwrite the existing file.
+   * @param {boolean} isVerbose - Whether to handle or ignore verbose log messages.
+   * @param {string} [filename] - The file in which to save the logs.
+   * @param {boolean} [append=true] - Whether to append the logs to existing file, or to overwrite the existing file.
    */
   constructor(isVerbose, filename = 'eyes.log', append = true) {
-    super();
+    super(isVerbose);
 
     this._filename = filename;
     this._append = append;
-    this.setIsVerbose(isVerbose);
   }
 
   /**
-   * Create a winston file logger
+   * Create a file logger
+   *
+   * @override
    */
   open() {
     this.close();
@@ -50,11 +53,13 @@ class FileLogHandler extends LogHandler {
   }
 
   /**
-   * Close the winston file logger
+   * Close the file logger
+   *
+   * @override
    */
   close() {
     if (this._writer) {
-      this._writer.end('\n');
+      this._writer.end();
       this._writer = undefined;
     }
   }
@@ -63,12 +68,13 @@ class FileLogHandler extends LogHandler {
   /**
    * Handle a message to be logged.
    *
-   * @param {boolean} verbose Whether this message is flagged as verbose or not.
-   * @param {string} logString The string to log.
+   * @override
+   * @param {boolean} verbose - Whether this message is flagged as verbose or not.
+   * @param {string} logString - The string to log.
    */
   onMessage(verbose, logString) {
-    if (this._writer && (!verbose || this._isVerbose)) {
-      this._writer.write(`${this.formatMessage(logString)}\n`);
+    if (this._writer && (!verbose || this.getIsVerbose())) {
+      this._writer.write(logString + os.EOL);
     }
   }
 }

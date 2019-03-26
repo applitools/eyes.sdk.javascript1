@@ -7,7 +7,7 @@ class Branch {
    * @param {string} id
    * @param {string} name
    * @param {boolean} isDeleted
-   * @param {object} updateInfo TODO: add typed
+   * @param {object} updateInfo - TODO: add typed `updateInfo`
    */
   constructor({ id, name, isDeleted, updateInfo } = {}) {
     this._id = id;

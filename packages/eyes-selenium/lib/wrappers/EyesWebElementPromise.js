@@ -15,16 +15,20 @@ const { EyesWebElement } = require('./EyesWebElement');
  *     });
  *
  * @final
+ * @ignore
  */
 class EyesWebElementPromise extends EyesWebElement {
   /**
    * @param {Logger} logger
    * @param {!EyesWebDriver} driver The parent WebDriver instance for this element.
    * @param {!Promise<!WebElement>} el A promise that will resolve to the promised element.
+   * @param {*} locator
    */
-  constructor(logger, driver, el) {
+  constructor(logger, driver, el, locator) {
     const webElement = new WebElementPromise(driver.getRemoteWebDriver(), el);
     super(logger, driver, webElement);
+
+    this._foundBy = String(locator);
 
     // noinspection JSUnresolvedVariable
     /**
@@ -43,6 +47,22 @@ class EyesWebElementPromise extends EyesWebElement {
      * @override
      */
     this.getId = () => el.then(el2 => el2.getId());
+  }
+
+  /**
+   * @override
+   */
+  toJSON() {
+    return {
+      foundBy: this._foundBy,
+    };
+  }
+
+  /**
+   * @override
+   */
+  toString() {
+    return `[EyesWebElementPromise] -> ${this._foundBy}`;
   }
 }
 

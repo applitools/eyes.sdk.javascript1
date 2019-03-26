@@ -1,20 +1,18 @@
 'use strict';
 
-const { DateTimeUtils } = require('../utils/DateTimeUtils');
-
 /**
  * Handles log messages produces by the Eyes API.
  *
  * @abstract
  */
 class LogHandler {
-  constructor() {
-    this._isVerbose = false;
-    this._isPrintSessionId = false;
-    this._sessionId = null;
+  /**
+   * @param {boolean} [isVerbose=false] - Whether to handle or ignore verbose log messages.
+   */
+  constructor(isVerbose = false) {
+    this.setIsVerbose(isVerbose);
   }
 
-  // noinspection JSUnusedGlobalSymbols
   /**
    * Whether to handle or ignore verbose log messages.
    *
@@ -29,70 +27,17 @@ class LogHandler {
   /**
    * Whether to handle or ignore verbose log messages.
    *
-   * @return {boolean} isVerbose
+   * @return {boolean} - isVerbose
    */
   getIsVerbose() {
     return this._isVerbose;
   }
 
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * If set to {@code true} then log output include session id, useful in multi-thread environment
-   *
-   * @param {boolean} [isPrintSessionId=false]
-   */
-  setPrintSessionId(isPrintSessionId) {
-    this._isPrintSessionId = isPrintSessionId || false;
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @return {boolean}
-   */
-  getIsPrintSessionId() {
-    return this._isPrintSessionId;
-  }
-
-  /**
-   * @param {string} sessionId
-   */
-  setSessionId(sessionId) {
-    this._sessionId = sessionId;
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @return {string}
-   */
-  getSessionId() {
-    return this._sessionId;
-  }
-
-  /**
-   * @protected
-   * @param {string} logString
-   */
-  formatMessage(logString) {
-    let eyes = 'Eyes:';
-    if (this._isPrintSessionId) {
-      eyes = `Eyes[${this._sessionId}]:`;
-    }
-
-    return `${DateTimeUtils.toISO8601DateTime()} ${eyes} ${logString}`;
-  }
-
-  /**
-   * @abstract
-   */
   open() {}
 
-  /**
-   * @abstract
-   */
   close() {}
 
   /**
-   * @abstract
    * @param {boolean} verbose
    * @param {string} logString
    */

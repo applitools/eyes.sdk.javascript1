@@ -7,16 +7,18 @@ const { MatchSingleWindowData, Options } = require('./match/MatchSingleWindowDat
 
 /**
  * Handles matching of output with the expected output (including retry and 'ignore mismatch' when needed).
+ *
+ * @ignore
  */
 class MatchSingleWindowTask extends MatchWindowTask {
   /**
-   * @param {Logger} logger A logger instance.
-   * @param {ServerConnector} serverConnector Our gateway to the agent
-   * @param {number} retryTimeout The default total time to retry matching (ms).
-   * @param {EyesBase} eyes The eyes object.
-   * @param {AppOutputProvider} appOutputProvider A callback for getting the application output when performing match.
-   * @param {SessionStartInfo} startInfo The start parameters for the session.
-   * @param {boolean} saveNewTests Used for automatic save of a test run. New tests are automatically saved by default.
+   * @param {Logger} logger - A logger instance.
+   * @param {ServerConnector} serverConnector - Our gateway to the agent
+   * @param {number} retryTimeout - The default total time to retry matching (ms).
+   * @param {EyesBase} eyes - The eyes object.
+   * @param {AppOutputProvider} appOutputProvider - A callback for getting the application output when performing match.
+   * @param {SessionStartInfo} startInfo - The start parameters for the session.
+   * @param {boolean} saveNewTests - Used for automatic save of a test run. New tests are automatically saved by default.
    */
   constructor(logger, serverConnector, retryTimeout, eyes, appOutputProvider, startInfo, saveNewTests) {
     super(logger, serverConnector, null, retryTimeout, eyes, appOutputProvider);
@@ -30,12 +32,12 @@ class MatchSingleWindowTask extends MatchWindowTask {
   /**
    * Creates the match model and calls the server connector matchWindow method.
    *
-   * @param {Trigger[]} userInputs The user inputs related to the current appOutput.
-   * @param {AppOutputWithScreenshot} appOutput The application output to be matched.
-   * @param {string} name Optional tag to be associated with the match (can be {@code null}).
-   * @param {boolean} ignoreMismatch Whether to instruct the server to ignore the match attempt in case of a mismatch.
-   * @param {ImageMatchSettings} imageMatchSettings The settings to use.
-   * @return {Promise<TestResults>} The match result.
+   * @param {Trigger[]} userInputs - The user inputs related to the current appOutput.
+   * @param {AppOutputWithScreenshot} appOutput - The application output to be matched.
+   * @param {string} name - Optional tag to be associated with the match (can be {@code null}).
+   * @param {boolean} ignoreMismatch - Whether to instruct the server to ignore the match attempt in case of a mismatch.
+   * @param {ImageMatchSettings} imageMatchSettings - The settings to use.
+   * @return {Promise<TestResults>} - The match result.
    */
   async performMatch(userInputs, appOutput, name, ignoreMismatch, imageMatchSettings) {
     // Prepare match model.

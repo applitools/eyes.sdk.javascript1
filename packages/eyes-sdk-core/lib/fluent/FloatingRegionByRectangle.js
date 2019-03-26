@@ -3,6 +3,9 @@
 const { GetFloatingRegion } = require('./GetFloatingRegion');
 const { FloatingMatchSettings } = require('../match/FloatingMatchSettings');
 
+/**
+ * @ignore
+ */
 class FloatingRegionByRectangle extends GetFloatingRegion {
   /**
    * @param {Region} rect

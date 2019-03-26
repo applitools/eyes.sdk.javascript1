@@ -4,8 +4,8 @@ const path = require('path');
 const axios = require('axios');
 const assert = require('assert');
 const { Capabilities, Builder } = require('selenium-webdriver');
-const { ConsoleLogHandler, FileLogHandler, DateTimeUtils } = require('@applitools/eyes-common');
-const { BatchInfo, RectangleSize, metadata } = require('@applitools/eyes-sdk-core');
+const { ConsoleLogHandler, FileLogHandler, DateTimeUtils, BatchInfo, RectangleSize } = require('@applitools/eyes-common');
+const { metadata } = require('@applitools/eyes-sdk-core');
 const { StitchMode, Eyes } = require('../../../index');
 
 class TestSetup {
@@ -43,11 +43,6 @@ class TestSetup {
     this._eyes.setHideScrollbars(true);
 
     const batchInfo = new BatchInfo('SeleniumJS Tests');
-    const batchId = process.env.APPLITOOLS_BATCH_ID;
-    if (batchId) {
-      batchInfo.setId(batchId);
-    }
-
     this._eyes.setBatch(batchInfo);
   }
 

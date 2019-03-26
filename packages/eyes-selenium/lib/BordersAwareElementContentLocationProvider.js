@@ -28,7 +28,7 @@ async function getPropertyValue(logger, element, propName) {
       }
     } else {
       // OK, this is weird, we got an element which is not EyesWebElement?? Log it and try to move on.
-      logger.verbose(`Element is not an EyesWebElement! (when trying to get ${propName}) Element's class: ${element.constructor.name}`);
+      logger.log(`Element is not an EyesWebElement! (when trying to get ${propName}) Element's class: ${element.constructor.name}`);
       logger.verbose('Using getCssValue...');
       styleResult = await element.getCssValue(propName);
       logger.verbose('Done!');
@@ -46,15 +46,17 @@ async function getPropertyValue(logger, element, propName) {
 
 /**
  * Encapsulates an algorithm to find an element's content location, based on the element's location.
+ *
+ * @ignore
  */
 class BordersAwareElementContentLocationProvider {
   /**
    * Returns a location based on the given location.
    *
-   * @param {Logger} logger The logger to use.
-   * @param {EyesWebElement} element The element for which we want to find the content's location.
-   * @param {Location} location The location of the element.
-   * @return {Promise<Location>} The location of the content of the element.
+   * @param {Logger} logger - The logger to use.
+   * @param {EyesWebElement} element - The element for which we want to find the content's location.
+   * @param {Location} location - The location of the element.
+   * @return {Promise<Location>} - The location of the content of the element.
    */
   static async getLocation(logger, element, location) {
     ArgumentGuard.notNull(logger, 'logger');

@@ -11,7 +11,7 @@ class FileDebugScreenshotsProvider extends DebugScreenshotsProvider {
   /**
    * @param {MutableImage} image
    * @param {string} suffix
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async save(image, suffix) {
     const timestamp = DateTimeUtils.toLogFileDateTime().replace(' ', '_');

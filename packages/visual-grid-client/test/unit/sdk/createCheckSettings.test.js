@@ -222,4 +222,14 @@ describe('createCheckSettings', () => {
       .then(x => x, err => err);
     expect(err).to.be.an.instanceof(Error);
   });
+
+  it('handles useDom and enablePatterns', () => {
+    let checkSettings = createCheckSettings({useDom: true, enablePatterns: false});
+    expect(checkSettings.getUseDom()).to.be.true;
+    expect(checkSettings.getEnablePatterns()).to.be.false;
+
+    checkSettings = createCheckSettings({});
+    expect(checkSettings.getUseDom()).to.be.undefined;
+    expect(checkSettings.getEnablePatterns()).to.be.undefined;
+  });
 });

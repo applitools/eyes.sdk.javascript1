@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.8.4...@applitools/eyes-images@4.8.5) (2019-03-24)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.8.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.8.3...@applitools/eyes-images@4.8.4) (2019-03-17)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.8.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.8.2...@applitools/eyes-images@4.8.3) (2019-03-14)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.8.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.8.1...@applitools/eyes-images@4.8.2) (2019-03-13)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.8.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.8.0...@applitools/eyes-images@4.8.1) (2019-02-27)
+
+
+### Bug Fixes
+
+* **eyes-images:** fix match of images by remote url using `Target.url()` ([88bb5ea](https://github.com/applitools/eyes.sdk.javascript1/commit/88bb5ea))
+* **eyes-images:** fix use of screenshot retrieved from ImageProvider ([02d90c2](https://github.com/applitools/eyes.sdk.javascript1/commit/02d90c2))
+
+
+
+
+
 # [4.8.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.7.0...@applitools/eyes-images@4.8.0) (2019-02-19)
 
 **Note:** Version bump only for package @applitools/eyes-images

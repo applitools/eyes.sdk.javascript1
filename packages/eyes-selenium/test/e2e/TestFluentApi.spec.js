@@ -1,10 +1,9 @@
 'use strict';
 
 const { By } = require('selenium-webdriver');
-const { Region, FloatingMatchSettings } = require('@applitools/eyes-sdk-core');
 const { TestsDataProvider } = require('./setup/TestsDataProvider');
 const { TestSetup } = require('./setup/TestSetup');
-const { Target } = require('../../index');
+const { Target, FloatingMatchSettings, Region } = require('../../index');
 
 let /** @type {Eyes} */ eyes, /** @type {EyesWebDriver} */ driver;
 const testedPageUrl = 'http://applitools.github.io/demo/TestPages/FramesTestPage/';

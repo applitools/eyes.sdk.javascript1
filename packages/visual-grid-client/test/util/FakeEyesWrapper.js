@@ -317,6 +317,22 @@ class FakeEyesWrapper extends EventEmitter {
   setApiKey(value) {
     this.apiKey = value;
   }
+
+  setUseDom(useDom) {
+    this.useDom = useDom;
+  }
+
+  getUseDom() {
+    return this.useDom;
+  }
+
+  setEnablePatterns(enablePatterns) {
+    this.enablePatterns = enablePatterns;
+  }
+
+  getEnablePatterns() {
+    return this.enablePatterns;
+  }
 }
 
 module.exports = FakeEyesWrapper;

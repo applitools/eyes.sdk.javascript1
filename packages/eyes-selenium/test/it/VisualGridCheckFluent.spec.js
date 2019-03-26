@@ -3,8 +3,7 @@
 require('chromedriver');
 const { Builder, By } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
-const { ConsoleLogHandler, Region } = require('@applitools/eyes-sdk-core');
-const { Eyes, Target, SeleniumConfiguration, BrowserType } = require('../../index');
+const { Eyes, Target, SeleniumConfiguration, BrowserType, ConsoleLogHandler, Region } = require('../../index');
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes;
 describe('VisualGridCheckFluent', function () {
@@ -23,12 +22,13 @@ describe('VisualGridCheckFluent', function () {
 
   beforeEach(async function () {
     const configuration = new SeleniumConfiguration();
-    configuration.setAppName(this.test.parent.title);
-    configuration.setTestName(this.currentTest.title);
+    configuration.appName = this.test.parent.title;
+    configuration.testName = this.currentTest.title;
     configuration.addBrowser(1200, 800, BrowserType.CHROME);
     configuration.addBrowser(1200, 800, BrowserType.FIREFOX);
+    eyes.setConfiguration(configuration);
 
-    driver = await eyes.open(driver, configuration);
+    driver = await eyes.open(driver);
   });
 
   it('TestCheckWindow', async function () {

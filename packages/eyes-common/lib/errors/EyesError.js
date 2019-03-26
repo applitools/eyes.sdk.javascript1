@@ -5,20 +5,16 @@
  */
 class EyesError extends Error {
   /**
-   * @param {string} [message] The error description string
-   * @param {Error} [error] Another error to inherit from
+   * @param {string} [message] - The error description string
+   * @param {Error} [error] - Another error to inherit from
    */
   constructor(message, error) {
     super();
 
-    /**
-   * @inheritDoc
-   */
+    /** @inheritDoc */
     this.name = this.constructor.name;
 
-    /**
-   * @inheritDoc
-   */
+    /** @inheritDoc */
     this.message = message;
 
     if (error instanceof Error) {

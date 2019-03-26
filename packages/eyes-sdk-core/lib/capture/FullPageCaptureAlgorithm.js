@@ -8,6 +8,9 @@ const { NullRegionPositionCompensation } = require('../positioning/NullRegionPos
 const MIN_SCREENSHOT_PART_HEIGHT = 10;
 const MIN_SCREENSHOT_PART_WIDTH = 10;
 
+/**
+ * @ignore
+ */
 class FullPageCaptureAlgorithm {
   /**
    * @param {Logger} logger
@@ -41,7 +44,7 @@ class FullPageCaptureAlgorithm {
    * @param {MutableImage} image
    * @param {Region} region
    * @param {string} name
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async _saveDebugScreenshotPart(image, region, name) {
     const suffix = `part-${name}-${region.getLeft()}_${region.getTop()}_${region.getWidth()}x${region.getHeight()}`;
@@ -53,10 +56,10 @@ class FullPageCaptureAlgorithm {
   /**
    * Returns a stitching of a region.
    *
-   * @param {Region} region The region to stitch. If {@code Region.EMPTY}, the entire image will be stitched.
-   * @param {Region} fullArea The wanted area of the resulting image. If unknown, pass in {@code null} or {@code RectangleSize.EMPTY}.
-   * @param {PositionProvider} positionProvider A provider of the scrolling implementation.
-   * @return {Promise<MutableImage>} An image which represents the stitched region.
+   * @param {Region} region - The region to stitch. If {@code Region.EMPTY}, the entire image will be stitched.
+   * @param {Region} fullArea - The wanted area of the resulting image. If unknown, pass in {@code null} or {@code RectangleSize.EMPTY}.
+   * @param {PositionProvider} positionProvider - A provider of the scrolling implementation.
+   * @return {Promise<MutableImage>} - An image which represents the stitched region.
    */
   async getStitchedRegion(region, fullArea, positionProvider) {
     this._logger.verbose('getStitchedRegion()');
@@ -67,11 +70,11 @@ class FullPageCaptureAlgorithm {
     this._logger.verbose(`positionProvider: ${positionProvider.constructor.name}; Region: ${region}`);
 
     // Saving the original position (in case we were already in the outermost frame).
-    const originalStitchedState = await positionProvider.getState();
-
-    // Saving the original position (in case we were already in the outermost frame).
     const originalPosition = await this._originProvider.getState();
     await this._originProvider.setPosition(Location.ZERO); // first scroll to 0,0 so CSS stitching works.
+
+    // Saving the original position (in case we were already in the outermost frame).
+    const originalStitchedState = await positionProvider.getState();
 
     this._logger.verbose('Getting top/left image...');
     let image = await this._imageProvider.getImage();
@@ -141,7 +144,7 @@ class FullPageCaptureAlgorithm {
     // Notice stitchedImage uses the same type of image as the screenshots.
     let stitchedImage = MutableImage.newImage(fullArea.getWidth(), fullArea.getHeight());
 
-    this._logger.verbose('Done! Adding initial screenshot..');
+    this._logger.verbose('Done! Adding initial screenshot...');
     // Starting with the screenshot we already captured at (0,0).
     const initialPart = image;
     this._logger.verbose(`Initial part:(0,0)[${initialPart.getWidth()} x ${initialPart.getHeight()}]`);
@@ -173,17 +176,18 @@ class FullPageCaptureAlgorithm {
 */
       const targetPosition = originPosition.offset(-fullArea.getLeft(), -fullArea.getTop());
       this._logger.verbose(`Origin Position is set to ${originPosition}`);
+      this._logger.verbose(`Target Position is ${targetPosition}`);
 
       // Actually taking the screenshot.
       this._logger.verbose('Getting image...');
       partImage = await this._imageProvider.getImage();
-      await this._debugScreenshotsProvider.save(partImage, `original-scrolled-${await originPosition.toStringForFilename()}`);
+      await this._debugScreenshotsProvider.save(partImage, `original-scrolled-${(await positionProvider.getCurrentPosition()).toStringForFilename()}`);
 
       // FIXME - cropping should be overlaid (see previous comment re cropping)
       if (!(scaledCutProvider instanceof NullCutProvider)) {
         this._logger.verbose('cutting...');
         partImage = await scaledCutProvider.cut(partImage);
-        await this._debugScreenshotsProvider.save(partImage, `original-scrolled-cut-${await originPosition.toStringForFilename()}`);
+        await this._debugScreenshotsProvider.save(partImage, `original-scrolled-cut-${(await positionProvider.getCurrentPosition()).toStringForFilename()}`);
       }
 
       if (!regionInScreenshot.isSizeEmpty()) {
@@ -222,7 +226,7 @@ class FullPageCaptureAlgorithm {
     this._logger.verbose(`Actual stitched size: ${actualImageWidth}x${actualImageHeight}`);
 
     if (actualImageWidth < stitchedImage.getWidth() || actualImageHeight < stitchedImage.getHeight()) {
-      this._logger.verbose('Trimming unnecessary margins..');
+      this._logger.verbose('Trimming unnecessary margins...');
       stitchedImage = await stitchedImage.crop(new Region(0, 0, Math.min(actualImageWidth, stitchedImage.getWidth()), Math.min(actualImageHeight, stitchedImage.getHeight())));
       this._logger.verbose('Done!');
     }
@@ -238,6 +242,10 @@ class FullPageCaptureAlgorithm {
    * @return {Promise<Region>}
    */
   async _getRegionInScreenshot(region, image, pixelRatio) {
+    if (region.isSizeEmpty()) {
+      return region;
+    }
+
     this._logger.verbose('Creating screenshot object...');
     // We need the screenshot to be able to convert the region to screenshot coordinates.
     const screenshot = await this._screenshotFactory.makeScreenshot(image);

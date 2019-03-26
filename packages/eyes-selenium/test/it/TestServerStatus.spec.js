@@ -1,14 +1,16 @@
 'use strict';
 
 require('chromedriver');
+const assert = require('assert');
 const assertRejects = require('assert-rejects');
-const { Builder, Capabilities } = require('selenium-webdriver');
+const { Builder, By, Capabilities } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
-const { RectangleSize, GeneralUtils, NewTestError, DiffsFoundError } = require('@applitools/eyes-sdk-core');
+const { GeneralUtils } = require('@applitools/eyes-common');
 
-const { Eyes, Target } = require('../../index');
+const { Eyes, Target, RectangleSize, NewTestError, DiffsFoundError, TestResults } = require('../../index');
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes;
+let /** @type {string} */ appName, /** @type {string} */ testName, /** @type {RectangleSize} */ viewportSize;
 describe('TestServerStatus', function () {
   this.timeout(5 * 60 * 1000);
 
@@ -19,29 +21,40 @@ describe('TestServerStatus', function () {
       .build();
 
     eyes = new Eyes();
-    eyes.setSaveNewTests(false);
-  });
-
-  it('TestSessionSummary_Status_Failed', async function () {
-    driver = await eyes.open(driver, this.test.parent.title, this.test.title, new RectangleSize(800, 599));
+    appName = this.test.parent.title;
+    testName = 'TestSessionSummary_' + GeneralUtils.guid();
+    viewportSize = new RectangleSize(800, 600);
 
     await driver.get('https://applitools.com/helloworld');
-
-    // await driver.findElement(By.css('button')).click();
-    await eyes.check('TestSessionSummary_Status_Failed', Target.window());
-
-    await assertRejects(eyes.close(), DiffsFoundError, 'Expected DiffsFoundError');
   });
 
   it('TestSessionSummary_Status_New', async function () {
-    const uuid = GeneralUtils.guid();
-    driver = await eyes.open(driver, this.test.parent.title, this.test.title + uuid, new RectangleSize(800, 599));
+    eyes.setSaveNewTests(false);
+    driver = await eyes.open(driver, appName, testName, viewportSize);
 
-    await driver.get('https://applitools.com/helloworld');
-
-    await eyes.check('TestSessionSummary_Status_New', Target.window());
+    await eyes.check('A new window', Target.window());
 
     await assertRejects(eyes.close(), NewTestError, 'Expected NewTestError');
+  });
+
+  it('TestSessionSummary_Status_Passed', async function () {
+    eyes.setSaveNewTests(true);
+    driver = await eyes.open(driver, appName, testName, viewportSize);
+
+    await eyes.check('A window', Target.window());
+
+    const results = await eyes.close();
+    assert.ok(results instanceof TestResults);
+    assert.ok(results.getIsNew());
+  });
+
+  it('TestSessionSummary_Status_Failed', async function () {
+    driver = await eyes.open(driver, appName, testName, viewportSize);
+
+    await driver.findElement(By.css('button')).click();
+    await eyes.check('A window', Target.window());
+
+    await assertRejects(eyes.close(), DiffsFoundError, 'Expected DiffsFoundError');
   });
 
   afterEach(async function () {

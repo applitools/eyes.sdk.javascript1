@@ -1,6 +1,6 @@
 'use strict';
 
-const { EyesError, RectangleSize, Location } = require('@applitools/eyes-common');
+const { EyesError, RectangleSize, Location, ArgumentGuard, GeneralUtils } = require('@applitools/eyes-common');
 
 const JS_GET_VIEWPORT_SIZE =
   'var height, width; ' +
@@ -72,76 +72,46 @@ const JS_GET_OVERFLOW_AWARE_CONTENT_ENTIRE_SIZE =
 
 const JS_TRANSFORM_KEYS = ['transform', '-webkit-transform'];
 
-const JS_GET_IS_BODY_OVERFLOW_HIDDEN =
-  'var styles = window.getComputedStyle(document.body, null);' +
-  'var overflow = styles.getPropertyValue("overflow");' +
-  'var overflowX = styles.getPropertyValue("overflow-x");' +
-  'var overflowY = styles.getPropertyValue("overflow-y");' +
-  'return overflow == "hidden" || overflowX == "hidden" || overflowY == "hidden"';
-
-const JS_GET_SET_OVERFLOW_STR = (elementName, overflowValue) =>
-  `var element = ${elementName}; var overflowValue = "${overflowValue}"; ` +
-  'var origOverflow = element.style.overflow; ' +
-  'element.style.overflow = overflowValue; ' +
-  'return origOverflow;';
-
 /**
  * Handles browser related functionality.
+ *
+ * @ignore
  */
 class EyesJsBrowserUtils {
   /**
    * Sets the overflow of the current context's document element.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {?string} value The overflow value to set.
-   * @param {WebElement} [scrollbarsRoot]
-   * @return {Promise<string>} The previous value of overflow (could be {@code null} if undefined).
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {?string} value - The overflow value to set.
+   * @param {WebElement} [rootElement]
+   * @return {Promise<string>} - The previous value of overflow (could be {@code null} if undefined).
    */
-  static setOverflow(executor, value, scrollbarsRoot) {
-    const script = JS_GET_SET_OVERFLOW_STR(
-      scrollbarsRoot ? 'arguments[0]' : 'document.documentElement',
-      value || 'undefined'
-    );
+  static async setOverflow(executor, value, rootElement) {
+    ArgumentGuard.notNull(executor, "executor");
+    ArgumentGuard.notNull(rootElement, "rootElement");
 
-    return executor.executeScript(script, scrollbarsRoot).catch(err => {
+    const script = `var el = arguments[0]; var origOverflow = el.style.overflow; var newOverflow = '${value}'; ` +
+      `el.style.overflow = newOverflow; ` +
+      `if (newOverflow.toUpperCase() === 'HIDDEN' && origOverflow.toUpperCase() !== 'HIDDEN') { el.setAttribute('data-applitools-original-overflow', origOverflow); } ` +
+      `return origOverflow;`;
+
+    try {
+      const result = await executor.executeScript(script, rootElement);
+      await GeneralUtils.sleep(200);
+      return result;
+    } catch (err) {
       throw new EyesError('Failed to set overflow', err);
-    });
-  }
-
-  /**
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<boolean>} A promise which resolves to the {@code true} if body overflow is hidden, {@code false}
-   *   otherwise.
-   */
-  static isBodyOverflowHidden(executor) {
-    return executor.executeScript(JS_GET_IS_BODY_OVERFLOW_HIDDEN).catch(err => {
-      throw new EyesError('Failed to get state of body overflow', err);
-    });
-  }
-
-  /**
-   * Updates the document's body "overflow" value
-   *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {?string} overflowValue The values of the overflow to set.
-   * @return {Promise<string>} A promise which resolves to the original overflow of the document.
-   */
-  static setBodyOverflow(executor, overflowValue) {
-    const script = JS_GET_SET_OVERFLOW_STR('document.body', overflowValue || 'undefined');
-
-    return executor.executeScript(script).catch(err => {
-      throw new EyesError('Failed to set body overflow', err);
-    });
+    }
   }
 
   /**
    * Hides the scrollbars of the current context's document element.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {number} stabilizationTimeout The amount of time to wait for the "hide scrollbars" action to take effect
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {number} stabilizationTimeout - The amount of time to wait for the "hide scrollbars" action to take effect
    *   (Milliseconds). Zero/negative values are ignored.
    * @param {WebElement} [scrollbarsRoot]
-   * @return {Promise<string>} The previous value of the overflow property (could be {@code null}).
+   * @return {Promise<string>} - The previous value of the overflow property (could be {@code null}).
    */
   static async hideScrollbars(executor, stabilizationTimeout, scrollbarsRoot) {
     const result = await EyesJsBrowserUtils.setOverflow(executor, 'hidden', scrollbarsRoot);
@@ -154,8 +124,8 @@ class EyesJsBrowserUtils {
   /**
    * Gets the current scroll position.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<Location>} The current scroll position of the current frame.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<Location>} - The current scroll position of the current frame.
    */
   static async getCurrentScrollPosition(executor) {
     const result = await executor.executeScript(JS_GET_CURRENT_SCROLL_POSITION);
@@ -165,9 +135,9 @@ class EyesJsBrowserUtils {
   /**
    * Sets the scroll position of the current frame.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {Location} location Location to scroll to
-   * @return {Promise<void>} A promise which resolves after the action is performed and timeout passed.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {Location} location - Location to scroll to
+   * @return {Promise} - A promise which resolves after the action is performed and timeout passed.
    */
   static setCurrentScrollPosition(executor, location) {
     return executor.executeScript(`window.scrollTo(${location.getX()}, ${location.getY()})`);
@@ -176,8 +146,8 @@ class EyesJsBrowserUtils {
   /**
    * Scrolls current frame to its bottom right.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<void>} A promise which resolves after the action is performed and timeout passed.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise} - A promise which resolves after the action is performed and timeout passed.
    */
   static scrollToBottomRight(executor) {
     return executor.executeScript(JS_SCROLL_TO_BOTTOM_RIGHT);
@@ -186,8 +156,8 @@ class EyesJsBrowserUtils {
   /**
    * Get the entire page size.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<RectangleSize>} A promise which resolves to an object containing the width/height of the page.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<RectangleSize>} - A promise which resolves to an object containing the width/height of the page.
    */
   static async getCurrentFrameContentEntireSize(executor) {
     // IMPORTANT: Notice there's a major difference between scrollWidth and scrollHeight.
@@ -204,8 +174,8 @@ class EyesJsBrowserUtils {
   /**
    * Get the entire page size.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<RectangleSize>} A promise which resolves to an object containing the width/height of the page.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<RectangleSize>} - A promise which resolves to an object containing the width/height of the page.
    */
   static async getOverflowAwareContentEntireSize(executor) {
     try {
@@ -219,8 +189,8 @@ class EyesJsBrowserUtils {
   /**
    * Tries to get the viewport size using Javascript. If fails, gets the entire browser window size!
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<RectangleSize>} The viewport size.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<RectangleSize>} - The viewport size.
    */
   static async getViewportSize(executor) {
     const result = await executor.executeScript(JS_GET_VIEWPORT_SIZE);
@@ -230,8 +200,8 @@ class EyesJsBrowserUtils {
   /**
    * Gets the device pixel ratio.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<number>} A promise which resolves to the device pixel ratio (float type).
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<number>} - A promise which resolves to the device pixel ratio (float type).
    */
   static async getDevicePixelRatio(executor) {
     const result = await executor.executeScript('return window.devicePixelRatio');
@@ -241,8 +211,8 @@ class EyesJsBrowserUtils {
   /**
    * Get the current transform of page.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @return {Promise<Map<string, string>>} A promise which resolves to the current transform value.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @return {Promise<Map<string, string>>} - A promise which resolves to the current transform value.
    */
   static getCurrentTransform(executor) {
     let script = 'return { ';
@@ -256,10 +226,10 @@ class EyesJsBrowserUtils {
   /**
    * Sets transforms for document.documentElement according to the given map of style keys and values.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {Map<string, string>} transforms The transforms to set. Keys are used as style keys and values are the
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {Map<string, string>} transforms - The transforms to set. Keys are used as style keys and values are the
    *   values for those styles.
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   static setTransforms(executor, transforms) {
     let script = '';
@@ -274,9 +244,9 @@ class EyesJsBrowserUtils {
   /**
    * Set the given transform to document.documentElement for all style keys defined in {@link JS_TRANSFORM_KEYS}
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {string} transform The transform to set.
-   * @return {Promise<void>} A promise which resolves to the previous transform once the updated transform is set.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {string} transform - The transform to set.
+   * @return {Promise} - A promise which resolves to the previous transform once the updated transform is set.
    */
   static setTransform(executor, transform) {
     if (!transform) {
@@ -294,9 +264,9 @@ class EyesJsBrowserUtils {
   /**
    * Translates the current documentElement to the given position.
    *
-   * @param {EyesJsExecutor} executor The executor to use.
-   * @param {Location} position The position to translate to.
-   * @return {Promise<void>} A promise which resolves to the previous transform when the scroll is executed.
+   * @param {EyesJsExecutor} executor - The executor to use.
+   * @param {Location} position - The position to translate to.
+   * @return {Promise} - A promise which resolves to the previous transform when the scroll is executed.
    */
   static translateTo(executor, position) {
     return EyesJsBrowserUtils.setTransform(executor, `translate(-${position.getX()}px, -${position.getY()}px)`);

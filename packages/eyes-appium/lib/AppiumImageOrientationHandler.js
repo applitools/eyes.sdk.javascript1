@@ -5,6 +5,9 @@ const { ImageOrientationHandler, EyesDriverOperationError } = require('@applitoo
 
 const { EyesAppiumUtils } = require('./EyesAppiumUtils');
 
+/**
+ * @ignore
+ */
 class AppiumImageOrientationHandler extends ImageOrientationHandler {
   /**
    * @inheritDoc

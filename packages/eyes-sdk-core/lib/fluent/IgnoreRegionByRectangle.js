@@ -2,6 +2,9 @@
 
 const { GetRegion } = require('./GetRegion');
 
+/**
+ * @ignore
+ */
 class IgnoreRegionByRectangle extends GetRegion {
   /**
    * @param {Region} region

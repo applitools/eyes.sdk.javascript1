@@ -7,6 +7,8 @@ const DUMMY_URL_PATTERN = /^(?:\w+:)?\/\/(\S+)$/;
 
 /**
  * Collection of utility methods.
+ *
+ * @ignore
  */
 class TypeUtils {
   /**
@@ -137,8 +139,8 @@ class TypeUtils {
   /**
    * Checks if `keys` is a direct property(ies) of `object`.
    *
-   * @param {object} object The object to query.
-   * @param {string|string[]} keys The key(s) to check.
+   * @param {object} object - The object to query.
+   * @param {string|string[]} keys - The key(s) to check.
    */
   static has(object, keys) {
     if (object == null) {
@@ -161,8 +163,8 @@ class TypeUtils {
   /**
    * Checks if `methods` is a method(s) of `object`.
    *
-   * @param {object} object The object to query.
-   * @param {string|string[]} methods The methods(s) to check.
+   * @param {object} object - The object to query.
+   * @param {string|string[]} methods - The methods(s) to check.
    */
   static hasMethod(object, methods) {
     if (object == null) {

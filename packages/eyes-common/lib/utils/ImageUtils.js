@@ -9,13 +9,15 @@ const QUARTER_OF_CIRCLE_DEGREES = 90;
 
 /**
  * Provide means of image manipulations.
+ *
+ * @ignore
  */
 class ImageUtils {
   /**
    * Processes a PNG buffer - returns it as parsed Image.
    *
-   * @param {Buffer} buffer Original image as PNG Buffer
-   * @return {Promise<png.Image|Image>} Decoded png image with byte buffer
+   * @param {Buffer} buffer - Original image as PNG Buffer
+   * @return {Promise<png.Image|Image>} - Decoded png image with byte buffer
    */
   static parseImage(buffer) {
     return new Promise(resolve => {
@@ -30,8 +32,8 @@ class ImageUtils {
   /**
    * Repacks a parsed Image to a PNG buffer.
    *
-   * @param {png.Image|Image} image Parsed image as returned from parseImage
-   * @return {Promise<Buffer>} PNG buffer which can be written to file or base64 string
+   * @param {png.Image|Image} image - Parsed image as returned from parseImage
+   * @return {Promise<Buffer>} - PNG buffer which can be written to file or base64 string
    */
   static packImage(image) {
     return new Promise(resolve => {
@@ -46,8 +48,8 @@ class ImageUtils {
   /**
    * Create a new empty image of given size
    *
-   * @param width
-   * @param height
+   * @param {number} width
+   * @param {number} height
    * @return {png.Image|Image}
    */
   static createImage(width, height) {
@@ -59,7 +61,7 @@ class ImageUtils {
    * Scaled a parsed image by a given factor.
    *
    * @param {png.Image|Image} image - will be modified
-   * @param {number} scaleRatio factor to multiply the image dimensions by (lower than 1 for scale down)
+   * @param {number} scaleRatio - factor to multiply the image dimensions by (lower than 1 for scale down)
    * @return {Promise<png.Image|Image>}
    */
   static scaleImage(image, scaleRatio) {
@@ -79,8 +81,8 @@ class ImageUtils {
    * Resize a parsed image by a given dimensions.
    *
    * @param {png.Image|Image} image - will be modified
-   * @param {number} targetWidth The width to resize the image to
-   * @param {number} targetHeight The height to resize the image to
+   * @param {number} targetWidth - The width to resize the image to
+   * @param {number} targetHeight - The height to resize the image to
    * @return {Promise<png.Image|Image>}
    */
   static resizeImage(image, targetWidth, targetHeight) {
@@ -291,7 +293,7 @@ class ImageUtils {
    * Crops a parsed image - the image is changed
    *
    * @param {png.Image|Image} image
-   * @param {Region} region Region to crop
+   * @param {Region} region - Region to crop
    * @return {Promise<png.Image|Image>}
    */
   static cropImage(image, region) {
@@ -337,8 +339,8 @@ class ImageUtils {
   /**
    * Rotates an image clockwise by a number of degrees rounded to the nearest 90 degrees.
    *
-   * @param {png.Image|Image} image A parsed image, the image will be changed
-   * @param {number} degrees The number of degrees to rotate the image by
+   * @param {png.Image|Image} image - A parsed image, the image will be changed
+   * @param {number} degrees - The number of degrees to rotate the image by
    * @return {Promise<png.Image|Image>}
    */
   static async rotateImage(image, degrees) {
@@ -377,11 +379,11 @@ class ImageUtils {
   /**
    * Copies pixels from the source image to the destination image.
    *
-   * @param {png.Image|Image} dstImage The destination image.
-   * @param {{x: number, y: number}} dstPosition The pixel which is the starting point to copy to.
-   * @param {png.Image|Image} srcImage The source image.
-   * @param {{x: number, y: number}} srcPosition The pixel from which to start copying.
-   * @param {{width: number, height: number}} size The region to be copied.
+   * @param {png.Image|Image} dstImage - The destination image.
+   * @param {{x: number, y: number}} dstPosition - The pixel which is the starting point to copy to.
+   * @param {png.Image|Image} srcImage - The source image.
+   * @param {{x: number, y: number}} srcPosition - The pixel from which to start copying.
+   * @param {{width: number, height: number}} size - The region to be copied.
    */
   static copyPixels(dstImage, dstPosition, srcImage, srcPosition, size) {
     let y, dstY, srcY, x, dstX, srcX, dstIndex, srcIndex;

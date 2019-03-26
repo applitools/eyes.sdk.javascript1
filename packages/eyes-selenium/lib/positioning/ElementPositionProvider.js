@@ -1,6 +1,6 @@
 'use strict';
 
-const { ArgumentGuard, RectangleSize, Location } = require('@applitools/eyes-common');
+const { ArgumentGuard, Location } = require('@applitools/eyes-common');
 const { PositionProvider } = require('@applitools/eyes-sdk-core');
 
 const { ElementPositionMemento } = require('./ElementPositionMemento');
@@ -8,13 +8,15 @@ const { EyesWebElement } = require('../wrappers/EyesWebElement');
 
 class ElementPositionProvider extends PositionProvider {
   /**
-   * @param {Logger} logger A Logger instance.
+   * @param {Logger} logger
    * @param {EyesWebDriver} driver
    * @param {EyesWebElement} element
    */
   constructor(logger, driver, element) {
     super();
+
     ArgumentGuard.notNull(logger, 'logger');
+    ArgumentGuard.notNull(driver, 'driver');
     ArgumentGuard.notNull(element, 'element');
 
     this._logger = logger;
@@ -28,10 +30,8 @@ class ElementPositionProvider extends PositionProvider {
    */
   async getCurrentPosition() {
     this._logger.verbose('getCurrentScrollPosition()');
-    const scrollLeftValue = await this._element.getScrollLeft();
-    const scrollTopValue = await this._element.getScrollTop();
-    const location = new Location(scrollLeftValue, scrollTopValue);
-    this._logger.verbose(`Current position: ${location}`);
+    const location = await this._element.getScrollLocation();
+    this._logger.verbose('Current position:', location);
     return location;
   }
 
@@ -39,21 +39,20 @@ class ElementPositionProvider extends PositionProvider {
    * @inheritDoc
    */
   async setPosition(location) {
-    this._logger.verbose(`Scrolling element to: ${location}`);
-    await this._element.scrollTo(location);
-    this._logger.verbose('Done scrolling element!');
+    this._logger.verbose('Scrolling element to:', location);
+    const result = await this._element.scrollTo(location);
+    this._logger.verbose('Done scrolling element! result:', result);
+    return result;
   }
 
   /**
    * @inheritDoc
    */
   async getEntireSize() {
-    this._logger.verbose('ElementPositionProvider - getEntireSize()');
-    const scrollWidthValue = await this._element.getScrollWidth();
-    const scrollHeightValue = await this._element.getScrollHeight();
-    const size = new RectangleSize(scrollWidthValue, scrollHeightValue);
-    this._logger.verbose(`ElementPositionProvider - Entire size: ${size}`);
-    return size;
+    this._logger.verbose('enter');
+    const scrollSize = await this._element.getScrollSize();
+    this._logger.verbose('Entire size:', scrollSize);
+    return scrollSize;
   }
 
   /**
@@ -68,12 +67,20 @@ class ElementPositionProvider extends PositionProvider {
   // noinspection JSCheckFunctionSignatures
   /**
    * @inheritDoc
-   * @param {ElementPositionMemento} state The initial state of position
-   * @return {Promise<void>}
+   * @param {ElementPositionMemento} state - The initial state of position
+   * @return {Promise}
    */
   async restoreState(state) {
-    await this.setPosition(new Location(state.getX(), state.getY()));
+    const newLocation = new Location(state.getX(), state.getY());
+    await this.setPosition(newLocation);
     this._logger.verbose('Position restored.');
+  }
+
+  /**
+   * @return {WebElement}
+   */
+  getScrolledElement() {
+    return this._element;
   }
 }
 

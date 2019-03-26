@@ -121,7 +121,7 @@ class ImagesCheckSettings extends CheckSettings {
 
   /**
    * @param {RectangleSize} imageSize
-   * @return {this} This instance of the settings object.
+   * @return {this} - This instance of the settings object.
    */
   imageSize(imageSize) {
     this._imageSize = new RectangleSize(imageSize);
@@ -138,7 +138,7 @@ class ImagesCheckSettings extends CheckSettings {
 
   /**
    * @param {string} domString
-   * @return {this} This instance of the settings object.
+   * @return {this} - This instance of the settings object.
    */
   withDom(domString) {
     this._sendDom = true;
@@ -155,8 +155,8 @@ class ImagesCheckSettings extends CheckSettings {
   }
 
   /**
-   * @param {Location|{x: number, y: number}} location
-   * @return {this} This instance of the settings object.
+   * @param {Location|LocationObject} location
+   * @return {this} - This instance of the settings object.
    */
   withLocation(location) {
     this._imageLocation = new Location(location);
@@ -173,7 +173,7 @@ class ImagesCheckSettings extends CheckSettings {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {boolean} [ignoreMismatch=true] True if the server should ignore a negative result for the visual validation.
+   * @param {boolean} [ignoreMismatch=true] - True if the server should ignore a negative result for the visual validation.
    *  Default value is `false`, but if you call to .ignoreMismatch() without arguments it will set value to `true`.
    * @return {this}
    */
@@ -191,7 +191,7 @@ class ImagesCheckSettings extends CheckSettings {
   }
 
   /**
-   * @param {Region|RegionObject} region The region to validate.
+   * @param {Region|RegionObject} region - The region to validate.
    * @return {this}
    */
   region(region) {

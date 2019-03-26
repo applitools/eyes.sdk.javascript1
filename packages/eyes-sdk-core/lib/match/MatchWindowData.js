@@ -4,19 +4,21 @@ const { GeneralUtils, ArgumentGuard } = require('@applitools/eyes-common');
 
 /**
  * Encapsulates the "Options" section of the MatchExpectedOutput body data.
+ *
+ * @ignore
  */
 class Options {
   /**
-   * @param {string} name The tag of the window to be matched.
-   * @param {Trigger[]} userInputs A list of triggers between the previous matchWindow call and the current matchWindow
+   * @param {string} name - The tag of the window to be matched.
+   * @param {Trigger[]} userInputs - A list of triggers between the previous matchWindow call and the current matchWindow
    *   call. Can be array of size 0, but MUST NOT be null.
-   * @param {boolean} ignoreMismatch Tells the server whether or not to store a mismatch for the current window as
+   * @param {boolean} ignoreMismatch - Tells the server whether or not to store a mismatch for the current window as
    *   window in the session.
-   * @param {boolean} ignoreMatch Tells the server whether or not to store a match for the current window as window in
+   * @param {boolean} ignoreMatch - Tells the server whether or not to store a match for the current window as window in
    *   the session.
-   * @param {boolean} forceMismatch Forces the server to skip the comparison process and mark the current window as a
+   * @param {boolean} forceMismatch - Forces the server to skip the comparison process and mark the current window as a
    *   mismatch.
-   * @param {boolean} forceMatch Forces the server to skip the comparison process and mark the current window as a
+   * @param {boolean} forceMatch - Forces the server to skip the comparison process and mark the current window as a
    *   match.
    * @param {ImageMatchSettings} imageMatchSettings
    */
@@ -112,10 +114,10 @@ class Options {
  */
 class MatchWindowData {
   /**
-   * @param {Trigger[]} userInputs A list of triggers between the previous matchWindow call and the current matchWindow
+   * @param {Trigger[]} userInputs - A list of triggers between the previous matchWindow call and the current matchWindow
    *   call. Can be array of size 0, but MUST NOT be null.
-   * @param {AppOutput} appOutput The appOutput for the current matchWindow call.
-   * @param {string} tag The tag of the window to be matched.
+   * @param {AppOutput} appOutput - The appOutput for the current matchWindow call.
+   * @param {string} tag - The tag of the window to be matched.
    * @param {boolean} [ignoreMismatch]
    * @param {Options} [options]
    */

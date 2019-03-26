@@ -5,23 +5,20 @@ const { getProcessPageAndSerializeScript } = require('@applitools/dom-snapshot')
 const { ArgumentGuard, TypeUtils } = require('@applitools/eyes-common');
 
 const {
-  EyesBase,
-  RectangleSize,
   TestFailedError,
   TestResultsFormatter,
   CorsIframeHandle,
   CorsIframeHandler,
-  Configuration,
 } = require('@applitools/eyes-sdk-core');
 
-const { EyesWebDriver } = require('./wrappers/EyesWebDriver');
-const { EyesSeleniumUtils } = require('./EyesSeleniumUtils');
+const { VisualGridRunner } = require('./visualgrid/VisualGridRunner');
 const { BrowserType } = require('./config/BrowserType');
-const { SeleniumConfiguration } = require('./config/SeleniumConfiguration');
+const { Eyes } = require('./Eyes');
 
-const VERSION = require('../package.json').version;
-
-class EyesVisualGrid extends EyesBase {
+/**
+ * @ignore
+ */
+class EyesVisualGrid extends Eyes {
   /** @var {Logger} EyesVisualGrid#_logger */
   /** @var {SeleniumConfiguration} EyesVisualGrid#_configuration */
   /** @var {ImageMatchSettings} EyesVisualGrid#_defaultMatchSettings */
@@ -29,96 +26,80 @@ class EyesVisualGrid extends EyesBase {
   /**
    * Creates a new (possibly disabled) Eyes instance that interacts with the Eyes Server at the specified url.
    *
-   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] The Eyes server URL.
-   * @param {boolean} [isDisabled=false] Set to true to disable Applitools Eyes and use the webdriver directly.
+   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] - The Eyes server URL.
+   * @param {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
+   * @param {VisualGridRunner} [visualGridRunner] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
    */
-  constructor(serverUrl, isDisabled) {
-    super(serverUrl, isDisabled, new SeleniumConfiguration());
+  constructor(serverUrl, isDisabled, visualGridRunner = new VisualGridRunner()) {
+    super(serverUrl, isDisabled, true);
 
-    /** @type {boolean} */ this._isOpen = false;
-    /** @type {boolean} */ this._isVisualGrid = true;
-    /** @type {EyesJsExecutor} */ this._jsExecutor = undefined;
-    /** @type {CorsIframeHandle} */ this._corsIframeHandle = CorsIframeHandle.BLANK;
+    /** @type {VisualGridRunner} */ this._visualGridRunner = visualGridRunner;
+
     /** @type {string} */ this._processPageAndSerializeScript = undefined;
-
-    this._checkWindowCommand = undefined;
-    this._closeCommand = undefined;
+    /** @function */ this._checkWindowCommand = undefined;
+    /** @function */ this._closeCommand = undefined;
   }
 
   /**
-   * @signature `open(driver, configuration)`
-   * @signature `open(driver, appName, testName, ?viewportSize, ?configuration)`
-   *
-   * @param {WebDriver|ThenableWebDriver} driver The web driver that controls the browser hosting the application under test.
-   * @param {SeleniumConfiguration|string} optArg1 The Configuration for the test or the name of the application under the test.
-   * @param {string} [optArg2] The test name.
-   * @param {RectangleSize|RectangleSizeObject} [optArg3] The required browser's viewport size
-   *   (i.e., the visible part of the document's body) or to use the current window's viewport.
-   * @param {SeleniumConfiguration} [optArg4] The Configuration for the test
-   * @return {Promise<EyesWebDriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   * @inheritDoc
    */
-  async open(driver, optArg1, optArg2, optArg3, optArg4) {
+  async open(driver, appName, testName, viewportSize, sessionType) {
     ArgumentGuard.notNull(driver, 'driver');
 
-    let configuration;
-    if (optArg1 instanceof Configuration) {
-      configuration = optArg1;
-    } else {
-      this._configuration.setAppName(optArg1);
-      this._configuration.setTestName(optArg2);
-      this._configuration.setViewportSize(optArg3);
-      configuration = optArg4;
-    }
+    // noinspection NonBlockStatementBodyJS
+    if (appName) this._configuration.appName = appName;
+    // noinspection NonBlockStatementBodyJS
+    if (testName) this._configuration.testName = testName;
+    // noinspection NonBlockStatementBodyJS
+    if (viewportSize) this._configuration.viewportSize = viewportSize;
+    // noinspection NonBlockStatementBodyJS
+    if (sessionType) this._configuration.sessionType = sessionType;
 
-    if (configuration) {
-      const newConfiguration = (configuration instanceof SeleniumConfiguration) ? configuration : SeleniumConfiguration.fromObject(configuration);
-      this._configuration.mergeConfig(newConfiguration);
-    }
-
-    if (this._configuration.getBrowsersInfo().length === 0 && this._configuration.getViewportSize()) {
-      const viewportSize = this._configuration.getViewportSize();
-      this._configuration.addBrowser(viewportSize.getWidth(), viewportSize.getHeight(), BrowserType.CHROME);
-    }
+    // noinspection NonBlockStatementBodyJS
+    if (this._visualGridRunner.concurrentSessions) this._configuration.concurrentSessions = this._visualGridRunner.concurrentSessions;
 
     await this._initDriver(driver);
 
     const { openEyes } = makeVisualGridClient({
-      apiKey: this._configuration.getApiKey(),
-      showLogs: this._configuration.getShowLogs(),
-      saveDebugData: this._configuration.getSaveDebugData(),
-      proxy: this._configuration.getProxy(),
-      serverUrl: this._configuration.getServerUrl(),
-      renderConcurrencyFactor: this._configuration.getConcurrentSessions(),
+      logger: this._logger,
+      apiKey: this._configuration.apiKey,
+      showLogs: this._configuration.showLogs,
+      saveDebugData: this._configuration.saveDebugData,
+      proxy: this._configuration.proxy,
+      serverUrl: this._configuration.serverUrl,
+      renderConcurrencyFactor: this._configuration.concurrentSessions,
     });
 
     this._processPageAndSerializeScript = await getProcessPageAndSerializeScript();
 
-    if (this._configuration.getViewportSize()) {
-      await this.setViewportSize(this._configuration.getViewportSize());
+    if (this._configuration.viewportSize) {
+      await this.setViewportSize(this._configuration.viewportSize);
+
+      if (this._configuration.browsersInfo.length === 0) {
+        this._configuration.addBrowser(this._configuration.viewportSize.getWidth(), this._configuration.viewportSize.getHeight(), BrowserType.CHROME);
+      }
     }
 
     const { checkWindow, close } = await openEyes({
-      logger: this._logger,
-
-      appName: this._configuration.getAppName(),
-      testName: this._configuration.getTestName(),
-      browser: this._configuration.getBrowsersInfo(),
-      properties: this._configuration.getProperties(),
-      batchName: this._configuration.getBatch() && this._configuration.getBatch().getName(),
-      batchId: this._configuration.getBatch() && this._configuration.getBatch().getId(),
-      baselineBranchName: this._configuration.getBaselineBranchName(),
-      baselineEnvName: this._configuration.getBaselineEnvName(),
-      baselineName: this._configuration.getBaselineEnvName(),
-      envName: this._configuration.getEnvironmentName(),
-      branchName: this._configuration.getBranchName(),
-      saveFailedTests: this._configuration.getSaveFailedTests(),
-      saveNewTests: this._configuration.getSaveNewTests(),
-      compareWithParentBranch: this._configuration.getCompareWithParentBranch(),
-      ignoreBaseline: this._configuration.getIgnoreBaseline(),
-      parentBranchName: this._configuration.getParentBranchName(),
-      agentId: this._configuration.getAgentId(),
-      isDisabled: this._configuration.getIsDisabled(),
-      matchTimeout: this._configuration.getMatchTimeout(),
+      appName: this._configuration.appName,
+      testName: this._configuration.testName,
+      browser: this._configuration.browsersInfo,
+      properties: this._configuration.properties,
+      batchName: this._configuration.batch && this._configuration.batch.getName(),
+      batchId: this._configuration.batch && this._configuration.batch.getId(),
+      baselineBranchName: this._configuration.baselineBranchName,
+      baselineEnvName: this._configuration.baselineEnvName,
+      baselineName: this._configuration.baselineEnvName,
+      envName: this._configuration.environmentName,
+      branchName: this._configuration.branchName,
+      saveFailedTests: this._configuration.saveFailedTests,
+      saveNewTests: this._configuration.saveNewTests,
+      compareWithParentBranch: this._configuration.compareWithParentBranch,
+      ignoreBaseline: this._configuration.ignoreBaseline,
+      parentBranchName: this._configuration.parentBranchName,
+      agentId: this._configuration.agentId,
+      isDisabled: this._configuration.isDisabled,
+      matchTimeout: this._configuration.matchTimeout,
 
       ignoreCaret: this._defaultMatchSettings.getIgnoreCaret(),
       matchLevel: this._defaultMatchSettings.getMatchLevel(),
@@ -138,22 +119,6 @@ class EyesVisualGrid extends EyesBase {
     this._isOpen = true;
 
     return this._driver;
-  }
-
-  /**
-   * @private
-   * @param {WebDriver} webDriver
-   */
-  async _initDriver(webDriver) {
-    if (TypeUtils.hasMethod(webDriver, ['executeScript', 'executeAsyncScript'])) {
-      this._jsExecutor = webDriver;
-    }
-
-    if (webDriver instanceof EyesWebDriver) {
-      this._driver = webDriver;
-    } else {
-      this._driver = new EyesWebDriver(this._logger, this, webDriver);
-    }
   }
 
   /**
@@ -183,24 +148,17 @@ class EyesVisualGrid extends EyesBase {
 
   // noinspection JSMethodCanBeStatic
   /**
-   * @return {Promise<TestResults>}
+   * @return {Promise<?TestResults>}
    */
   async abortIfNotClosed() {
     return null; // TODO - implement?
   }
 
   /**
-   * @return {boolean}
-   */
-  getIsOpen() {
-    return this._isOpen;
-  }
-
-  /**
    * @param {boolean} [throwEx]
-   * @return {Promise<(TestResults|Error)[]>}
+   * @return {Promise<TestResults[]|Error[]>}
    */
-  async closeAndReturnResults(throwEx = true) {
+  async closeAndReturnResults(throwEx = false) {
     try {
       return await this._closeCommand(throwEx);
     } finally {
@@ -210,7 +168,7 @@ class EyesVisualGrid extends EyesBase {
 
   /**
    * @param {boolean} [throwEx]
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async closeAndPrintResults(throwEx = true) {
     const results = await this.closeAndReturnResults(throwEx);
@@ -220,24 +178,23 @@ class EyesVisualGrid extends EyesBase {
     console.log(testResultsFormatter.asFormatterString());
   }
 
-  getEyesRunner() {
+  /**
+   * @return {object}
+   */
+  getRunner() {
     const runner = {};
-    runner.getAllResults = async () => {
-      return await this.closeAndReturnResults();
+    /**
+     * @param {boolean} [throwEx=true]
+     * @return {Promise<TestResults[]|Error[]>}
+     */
+    runner.getAllResults = async (throwEx = false) => {
+      return await this.closeAndReturnResults(throwEx);
     };
     return runner;
   }
 
   /**
-   * @return {boolean}
-   */
-  isEyesClosed() {
-    return this._isOpen;
-  }
-
-  /**
-   * @param {string} name
-   * @param {SeleniumCheckSettings} checkSettings
+   * @inheritDoc
    */
   async check(name, checkSettings) {
     ArgumentGuard.notNull(checkSettings, 'checkSettings');
@@ -254,7 +211,7 @@ class EyesVisualGrid extends EyesBase {
     }
 
     const domCaptureScript = `var callback = arguments[arguments.length - 1]; return (${this._processPageAndSerializeScript})().then(JSON.stringify).then(callback, function(err) {callback(err.stack || err.toString())})`;
-    const results = await this._jsExecutor.executeAsyncScript(domCaptureScript);
+    const results = await this._driver.executeAsyncScript(domCaptureScript);
     const { cdt, url: pageUrl, blobs, resourceUrls, frames } = JSON.parse(results);
 
     if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
@@ -285,86 +242,6 @@ class EyesVisualGrid extends EyesBase {
       sendDom: checkSettings.getSendDom() ? checkSettings.getSendDom() : this.getSendDom(),
       matchLevel: checkSettings.getMatchLevel() ? checkSettings.getMatchLevel() : this.getMatchLevel(),
     });
-  }
-
-  /**
-   * @return {Promise<RectangleSize>}
-   */
-  async getViewportSize() {
-    return this._configuration.getViewportSize();
-  }
-
-  /**
-   * @param {RectangleSize} viewportSize
-   */
-  async setViewportSize(viewportSize) {
-    ArgumentGuard.notNull(viewportSize, 'viewportSize');
-    viewportSize = new RectangleSize(viewportSize);
-    this._configuration.setViewportSize(viewportSize);
-
-    if (this._driver) {
-      const originalFrame = this._driver.getFrameChain();
-      await this._driver.switchTo().defaultContent();
-
-      try {
-        await EyesSeleniumUtils.setViewportSize(this._logger, this._driver, viewportSize);
-      } catch (err) {
-        await this._driver.switchTo().frames(originalFrame); // Just in case the user catches that error
-        throw new TestFailedError('Failed to set the viewport size', err);
-      }
-
-      await this._driver.switchTo().frames(originalFrame);
-    }
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @return {boolean}
-   */
-  isVisualGrid() {
-    return this._isVisualGrid;
-  }
-
-  /**
-   * @param {CorsIframeHandle} corsIframeHandle
-   */
-  setCorsIframeHandle(corsIframeHandle) {
-    this._corsIframeHandle = corsIframeHandle;
-  }
-
-  /**
-   * @return {CorsIframeHandle}
-   */
-  getCorsIframeHandle() {
-    return this._corsIframeHandle;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getBaseAgentId() {
-    return `eyes-selenium/${VERSION}`;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  async getInferredEnvironment() {
-    return undefined;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  async getScreenshot() {
-    return undefined;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  async getTitle() {
-    return undefined;
   }
 }
 

@@ -3,6 +3,9 @@
 const { Location, CoordinatesType } = require('@applitools/eyes-common');
 const { GetFloatingRegion, FloatingMatchSettings } = require('@applitools/eyes-sdk-core');
 
+/**
+ * @ignore
+ */
 class FloatingRegionBySelector extends GetFloatingRegion {
   /**
    * @param {By} regionSelector

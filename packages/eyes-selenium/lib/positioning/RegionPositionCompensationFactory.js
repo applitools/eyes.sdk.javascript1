@@ -6,6 +6,9 @@ const { NullRegionPositionCompensation } = require('@applitools/eyes-sdk-core');
 const { FirefoxRegionPositionCompensation } = require('./FirefoxRegionPositionCompensation');
 const { SafariRegionPositionCompensation } = require('./SafariRegionPositionCompensation');
 
+/**
+ * @ignore
+ */
 class RegionPositionCompensationFactory {
   /**
    * @param {UserAgent} userAgent

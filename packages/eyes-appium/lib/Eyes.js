@@ -1,7 +1,7 @@
 'use strict';
 
 const { ContextBasedScaleProviderFactory } = require('@applitools/eyes-sdk-core');
-const { Eyes: EyesSelenium, EyesSeleniumUtils } = require('@applitools/eyes-selenium');
+const { EyesSelenium, EyesSeleniumUtils } = require('@applitools/eyes-selenium');
 
 const { AppiumImageOrientationHandler } = require('./AppiumImageOrientationHandler');
 const { AppiumJavascriptHandler } = require('./AppiumJavascriptHandler');
@@ -58,7 +58,7 @@ class Eyes extends EyesSelenium {
 
       if (EyesAppiumUtils.isMobileDeviceFromCaps(capabilities)) {
         let platformName = null;
-        this._logger.log('Mobile device detected! Checking device type..');
+        this._logger.log('Mobile device detected! Checking device type...');
         if (EyesAppiumUtils.isAndroidFromCaps(capabilities)) {
           this._logger.log('Android detected.');
           platformName = 'Android';

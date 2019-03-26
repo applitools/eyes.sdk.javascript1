@@ -7,15 +7,15 @@ const { Location } = require('./Location');
 const { CoordinatesType } = require('./CoordinatesType');
 
 /**
- * @typedef {{left: number, top: number, width: number, height: number, coordinatesType?: CoordinatesType}} RegionObject
+ * @typedef {{left: number, top: number, width: number, height: number, coordinatesType: ?CoordinatesType}} RegionObject
  */
 
 // noinspection FunctionWithMultipleLoopsJS
 /**
  * @private
- * @param {Region} containerRegion The region to divide into sub-regions.
- * @param {RectangleSize} subRegionSize The maximum size of each sub-region.
- * @return {Region[]} The sub-regions composing the current region. If subRegionSize is equal or greater than
+ * @param {Region} containerRegion - The region to divide into sub-regions.
+ * @param {RectangleSize} subRegionSize - The maximum size of each sub-region.
+ * @return {Region[]} - The sub-regions composing the current region. If subRegionSize is equal or greater than
  *   the current region, only a single region is returned.
  */
 const getSubRegionsWithFixedSize = (containerRegion, subRegionSize) => {
@@ -71,9 +71,9 @@ const getSubRegionsWithFixedSize = (containerRegion, subRegionSize) => {
 // noinspection FunctionWithMultipleLoopsJS
 /**
  * @private
- * @param {Region} containerRegion The region to divide into sub-regions.
- * @param {RectangleSize} maxSubRegionSize The maximum size of each sub-region (some regions might be smaller).
- * @return {Region[]} The sub-regions composing the current region. If maxSubRegionSize is equal or greater than
+ * @param {Region} containerRegion - The region to divide into sub-regions.
+ * @param {RectangleSize} maxSubRegionSize - The maximum size of each sub-region (some regions might be smaller).
+ * @return {Region[]} - The sub-regions composing the current region. If maxSubRegionSize is equal or greater than
  *   the current region, only a single region is returned.
  */
 const getSubRegionsWithVaryingSize = (containerRegion, maxSubRegionSize) => {
@@ -120,33 +120,44 @@ class Region {
    * Creates a Region instance.
    *
    * @signature `new Region(region)`
-   * @signature `new Region(location, size, ?coordinatesType)`
-   * @signature `new Region(left, top, width, height, ?coordinatesType)`
-   * @signature `new Region({left: number, top: number, width: number, height: number, coordinatesType?: string})`
+   * @sigparam {Region} region - The region instance to clone from.
    *
-   * @param {Region|Location|RegionObject|number} varArg Region object ir the left offset of this region.
-   * @param {RectangleSize|number} [optTop] The top offset of this region.
-   * @param {CoordinatesType|number} [optWidth] The width of the region.
-   * @param {number} [optHeight] The height of the region.
-   * @param {CoordinatesType} [optCoordinatesType=SCREENSHOT_AS_IS] The coordinatesType of the region.
+   * @signature `new Region(object)`
+   * @sigparam {{left: number, top: number, width: number, height: number}} object - The region object to clone from.
+   *
+   * @signature `new Region(location, size)`
+   * @sigparam {Location} location - The region location to use.
+   * @sigparam {RectangleSize} size - The region size to use.
+   *
+   * @signature `new Region(left, top, width, height)`
+   * @sigparam {number} left - The region left offset.
+   * @sigparam {number} top - The region top offset.
+   * @sigparam {number} width - The region width.
+   * @sigparam {number} height - The region height.
+   *
+   * @param {Region|RegionObject|Location|number} varArg1 - The Region (or object) to clone from, the Location of new region or the left offset of new region.
+   * @param {RectangleSize|number} [varArg2] - The Region size or the top offset of new region.
+   * @param {CoordinatesType|number} [varArg3] - The width of new region.
+   * @param {number} [varArg4] - The height of new region.
+   * @param {CoordinatesType} [varArg5] - The coordinatesType of new region (protected argument).
    */
-  constructor(varArg, optTop, optWidth, optHeight, optCoordinatesType) {
+  constructor(varArg1, varArg2, varArg3, varArg4, varArg5) {
     if (arguments.length === 2 || arguments.length === 3) {
       // eslint-disable-next-line max-len
-      return new Region({ left: varArg.getX(), top: varArg.getY(), width: optTop.getWidth(), height: optTop.getHeight(), coordinatesType: optWidth });
+      return new Region({ left: varArg1.getX(), top: varArg1.getY(), width: varArg2.getWidth(), height: varArg2.getHeight(), coordinatesType: varArg3 });
     }
 
     if (arguments.length === 4 || arguments.length === 5) {
       // eslint-disable-next-line max-len
-      return new Region({ left: varArg, top: optTop, width: optWidth, height: optHeight, coordinatesType: optCoordinatesType });
+      return new Region({ left: varArg1, top: varArg2, width: varArg3, height: varArg4, coordinatesType: varArg5 });
     }
 
-    if (varArg instanceof Region) {
+    if (varArg1 instanceof Region) {
       // eslint-disable-next-line max-len
-      return new Region({ left: varArg.getLeft(), top: varArg.getTop(), width: varArg.getWidth(), height: varArg.getHeight(), coordinatesType: varArg.getCoordinatesType() });
+      return new Region({ left: varArg1.getLeft(), top: varArg1.getTop(), width: varArg1.getWidth(), height: varArg1.getHeight(), coordinatesType: varArg1.getCoordinatesType() });
     }
 
-    const { left, top, width, height, coordinatesType } = varArg;
+    const { left, top, width, height, coordinatesType } = varArg1;
     ArgumentGuard.isNumber(left, 'left');
     ArgumentGuard.isNumber(top, 'top');
     ArgumentGuard.greaterThanOrEqualToZero(width, 'width', true);
@@ -170,7 +181,7 @@ class Region {
   }
 
   /**
-   * @return {number} The region's left offset.
+   * @return {number} - The region's left offset.
    */
   getLeft() {
     return this._left;
@@ -185,7 +196,7 @@ class Region {
   }
 
   /**
-   * @return {number} The region's top offset.
+   * @return {number} - The region's top offset.
    */
   getTop() {
     return this._top;
@@ -200,21 +211,21 @@ class Region {
   }
 
   /**
-   * @return {number} The region's right offset.
+   * @return {number} - The region's right offset.
    */
   getRight() {
     return this._left + this._width;
   }
 
   /**
-   * @return {number} The region's bottom offset.
+   * @return {number} - The region's bottom offset.
    */
   getBottom() {
     return this._top + this._height;
   }
 
   /**
-   * @return {number} The region's width.
+   * @return {number} - The region's width.
    */
   getWidth() {
     return this._width;
@@ -229,7 +240,7 @@ class Region {
   }
 
   /**
-   * @return {number} The region's height.
+   * @return {number} - The region's height.
    */
   getHeight() {
     return this._height;
@@ -244,7 +255,7 @@ class Region {
   }
 
   /**
-   * @return {CoordinatesType} The region's coordinatesType.
+   * @return {CoordinatesType} - The region's coordinatesType.
    */
   getCoordinatesType() {
     return this._coordinatesType;
@@ -259,7 +270,7 @@ class Region {
   }
 
   /**
-   * @return {Location} The (top,left) position of the current region.
+   * @return {Location} - The (top,left) position of the current region.
    */
   getLocation() {
     return new Location({ x: this._left, y: this._top });
@@ -268,7 +279,7 @@ class Region {
   /**
    * Set the (top,left) position of the current region
    *
-   * @param {Location} location The (top,left) position to set.
+   * @param {Location} location - The (top,left) position to set.
    */
   setLocation(location) {
     ArgumentGuard.notNull(location, 'location');
@@ -277,7 +288,7 @@ class Region {
   }
 
   /**
-   * @return {RectangleSize} The size of the region.
+   * @return {RectangleSize} - The size of the region.
    */
   getSize() {
     return new RectangleSize({ width: this._width, height: this._height });
@@ -286,7 +297,7 @@ class Region {
   /**
    * Set the (width,height) size of the current region
    *
-   * @param {RectangleSize} size The updated size of the region.
+   * @param {RectangleSize} size - The updated size of the region.
    */
   setSize(size) {
     ArgumentGuard.notNull(size, 'size');
@@ -297,8 +308,8 @@ class Region {
   /**
    * Indicates whether some other Region is "equal to" this one.
    *
-   * @param {object|Region} obj The reference object with which to compare.
-   * @return {boolean} {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   * @param {object|Region} obj - The reference object with which to compare.
+   * @return {boolean} - A {@code true} if this object is the same as the obj argument; {@code false} otherwise.
    */
   equals(obj) {
     if (typeof obj !== typeof this || !(obj instanceof Region)) {
@@ -315,7 +326,7 @@ class Region {
   }
 
   /**
-   * @return {boolean} {@code true} if the region is empty; {@code false} otherwise.
+   * @return {boolean} - A {@code true} if the region is empty; {@code false} otherwise.
    */
   isEmpty() {
     // noinspection OverlyComplexBooleanExpressionJS
@@ -328,7 +339,7 @@ class Region {
   }
 
   /**
-   * @return {boolean} {@code true} if the region's size is 0, false otherwise.
+   * @return {boolean} - A {@code true} if the region's size is 0, false otherwise.
    */
   isSizeEmpty() {
     return this.getWidth() <= 0 || this.getHeight() <= 0;
@@ -337,9 +348,9 @@ class Region {
   /**
    * Get a Region translated by the specified amount.
    *
-   * @param {number} dx The amount to offset the x-coordinate.
-   * @param {number} dy The amount to offset the y-coordinate.
-   * @return {Region} A region with an offset location.
+   * @param {number} dx - The amount to offset the x-coordinate.
+   * @param {number} dy - The amount to offset the y-coordinate.
+   * @return {Region} - A region with an offset location.
    */
   offset(dx, dy) {
     return new Region(this.getLocation().offset(dx, dy), this.getSize(), this.getCoordinatesType());
@@ -359,8 +370,8 @@ class Region {
    * Get a region which is a scaled version of the current region.
    * IMPORTANT: This also scales the LOCATION(!!) of the region (not just its size).
    *
-   * @param {number} scaleRatio The ratio by which to scale the results.
-   * @return {Region} A new region which is a scaled version of the current region.
+   * @param {number} scaleRatio - The ratio by which to scale the results.
+   * @return {Region} - A new region which is a scaled version of the current region.
    */
   scale(scaleRatio) {
     return new Region(
@@ -373,11 +384,11 @@ class Region {
   /**
    * Returns a list of sub-regions which compose the current region.
    *
-   * @param {RectangleSize} subRegionSize The default sub-region size to use.
-   * @param {boolean} [isFixedSize=false] If {@code false}, then sub-regions might have a size which is smaller then
+   * @param {RectangleSize} subRegionSize - The default sub-region size to use.
+   * @param {boolean} [isFixedSize=false] - If {@code false}, then sub-regions might have a size which is smaller then
    *   {@code subRegionSize} (thus there will be no overlap of regions). Otherwise, all sub-regions will have the same
    *   size, but sub-regions might overlap.
-   * @return {Region[]} The sub-regions composing the current region. If {@code subRegionSize} is equal or
+   * @return {Region[]} - The sub-regions composing the current region. If {@code subRegionSize} is equal or
    *   greater than the current region, only a single region is returned.
    */
   getSubRegions(subRegionSize, isFixedSize = false) {
@@ -391,9 +402,9 @@ class Region {
   /**
    * Check if a specified region is contained within the another region or location.
    *
-   * @param {Region|Location} locationOrRegion The region or location to check if it is contained within the current
+   * @param {Region|Location} locationOrRegion - The region or location to check if it is contained within the current
    *   region.
-   * @return {boolean} True if the region is contained within given object, false otherwise.
+   * @return {boolean} - True if the region is contained within given object, false otherwise.
    */
   contains(locationOrRegion) {
     if (locationOrRegion instanceof Location) {
@@ -422,8 +433,8 @@ class Region {
   /**
    * Check if a region is intersected with the current region.
    *
-   * @param {Region} other The region to check intersection with.
-   * @return {boolean} True if the regions are intersected, false otherwise.
+   * @param {Region} other - The region to check intersection with.
+   * @return {boolean} - True if the regions are intersected, false otherwise.
    */
   isIntersected(other) {
     const right = this._left + this._width;
@@ -444,7 +455,7 @@ class Region {
   /**
    * Replaces this region with the intersection of itself and {@code other}
    *
-   * @param {Region} other The region with which to intersect.
+   * @param {Region} other - The region with which to intersect.
    */
   intersect(other) {
     if (!this.isIntersected(other)) {

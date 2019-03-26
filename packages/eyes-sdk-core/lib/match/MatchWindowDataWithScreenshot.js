@@ -5,6 +5,8 @@ const { GeneralUtils } = require('@applitools/eyes-common');
 /**
  * A container for a MatchWindowData along with the screenshot used for creating it. (We specifically avoid inheritance
  * so we don't have to deal with serialization issues).
+ *
+ * @ignore
  */
 class MatchWindowDataWithScreenshot {
   /**

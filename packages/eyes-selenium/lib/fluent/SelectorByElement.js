@@ -4,6 +4,9 @@ const { GetSelector } = require('@applitools/eyes-sdk-core');
 
 const EYES_SELECTOR_TAG = 'data-eyes-selector';
 
+/**
+ * @ignore
+ */
 class SelectorByElement extends GetSelector {
   /**
    * @param {WebElement} webElement

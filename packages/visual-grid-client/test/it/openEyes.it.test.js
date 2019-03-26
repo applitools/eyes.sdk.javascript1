@@ -7,6 +7,7 @@ const FakeRunningRender = require('../util/FakeRunningRender');
 const createFakeWrapper = require('../util/createFakeWrapper');
 const testServer = require('../util/testServer');
 const {loadJsonFixture, loadFixtureBuffer} = require('../util/loadFixture');
+const {failMsg} = require('../../src/sdk/waitForRenderedStatus');
 const {promisify: p} = require('util');
 const nock = require('nock');
 const psetTimeout = p(setTimeout);
@@ -979,7 +980,7 @@ describe('openEyes', () => {
 
       const [err] = await presult(close());
       expect(err[0]).to.be.an.instanceOf(Error);
-      expect(err[0].message).to.equal('failed to render screenshot');
+      expect(err[0].message).to.have.string(failMsg());
     });
 
     it.skip('resolves render job when error in happens while in getRenderStatus (but not because of that specific render)', async () => {
@@ -1011,7 +1012,7 @@ describe('openEyes', () => {
     checkWindow({resourceUrls: [], cdt: [], url: 'bla', tag: 'good1'});
 
     const [err3] = await presult(close());
-    expect(err3[0].message).to.equal('failed to render screenshot');
+    expect(err3[0].message).to.have.string(failMsg());
   });
 
   it('handles render status timeout when second checkWindow starts BEFORE timeout of previous checkWindow', async () => {
@@ -1038,7 +1039,7 @@ describe('openEyes', () => {
     checkWindow({resourceUrls: [], cdt: [], url: 'bla', tag: 'good1'});
     await psetTimeout(200);
     const [err3] = await presult(close());
-    expect(err3[0].message).to.equal('failed to render screenshot');
+    expect(err3[0].message).have.string(failMsg());
   });
 
   it('sets configuration on wrappers', () => {
@@ -1521,6 +1522,28 @@ describe('openEyes', () => {
     ]);
   });
 
+  it('handles useDom and enablePatterns', async () => {
+    const {checkWindow, close} = await openEyes({
+      wrappers: [wrapper],
+      appName,
+    });
+    checkWindow({
+      url: '',
+      cdt: [],
+      useDom: true,
+      enablePatterns: false,
+    });
+    checkWindow({
+      url: '',
+      cdt: [],
+    });
+    const [results] = await close();
+    expect(results[0].__checkSettings.getUseDom()).to.be.true;
+    expect(results[0].__checkSettings.getEnablePatterns()).to.be.false;
+    expect(results[1].__checkSettings.getUseDom()).to.be.undefined;
+    expect(results[1].__checkSettings.getEnablePatterns()).to.be.undefined;
+  });
+
   it('handles abort', async () => {
     const wrapper1 = createFakeWrapper(baseUrl);
     const wrapper2 = createFakeWrapper(baseUrl);
@@ -1741,5 +1764,141 @@ describe('openEyes', () => {
     await psetTimeout(0);
     checkWindow({tag: 3, cdt: [], url: ''});
     await close();
+  });
+
+  it('sets useDom & enablePatterns in makeRenderingGridClient', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      renderWrapper: wrapper,
+      useDom: true,
+      enablePatterns: true,
+    }).openEyes;
+    const {close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    });
+
+    expect(wrapper.getUseDom()).to.be.true;
+    expect(wrapper.getEnablePatterns()).to.be.true;
+    await close();
+  });
+
+  it('has correct default value for useDom & enablePatterns', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      renderWrapper: wrapper,
+    }).openEyes;
+    const {close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    });
+
+    expect(wrapper.getUseDom()).to.be.undefined;
+    expect(wrapper.getEnablePatterns()).to.be.undefined;
+    await close();
+  });
+
+  it('has correct values for useDom & enablePatterns', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      renderWrapper: wrapper,
+      useDom: false,
+      enablePatterns: false,
+    }).openEyes;
+    const {close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    });
+
+    expect(wrapper.getUseDom()).to.be.false;
+    expect(wrapper.getEnablePatterns()).to.be.false;
+    await close();
+  });
+
+  it('openEyes overrides useDom & enablePatterns', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      renderWrapper: wrapper,
+      useDom: false,
+      enablePatterns: false,
+    }).openEyes;
+    const {close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+      useDom: true,
+      enablePatterns: true,
+    });
+
+    expect(wrapper.getUseDom()).to.be.true;
+    expect(wrapper.getEnablePatterns()).to.be.true;
+    await close();
+  });
+
+  it('checkWindow overrides openEyes useDom & enablePatterns', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: true,
+      renderWrapper: wrapper,
+      useDom: false,
+      enablePatterns: false,
+    }).openEyes;
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+      useDom: false,
+      enablePatterns: false,
+    });
+
+    let done;
+    const donePromise = new Promise(res => {
+      done = res;
+      setTimeout(done, 1000);
+    });
+    wrapper.on('checkWindowEnd', done);
+
+    await checkWindow({tag: 'good1', cdt: [], url: '', useDom: true, enablePatterns: true});
+    await donePromise;
+    const results = await close();
+    expect(results[0][0].__checkSettings.getUseDom()).to.be.true;
+    expect(results[0][0].__checkSettings.getEnablePatterns()).to.be.true;
+  });
+
+  it('checkWindow overrides openEyes useDom & enablePatterns with false', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      showLogs: true,
+      renderWrapper: wrapper,
+      useDom: true,
+      enablePatterns: true,
+    }).openEyes;
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+      useDom: true,
+      enablePatterns: true,
+    });
+
+    let done;
+    const donePromise = new Promise(res => {
+      done = res;
+      setTimeout(done, 1000);
+    });
+    wrapper.on('checkWindowEnd', done);
+
+    await checkWindow({tag: 'good1', cdt: [], url: '', useDom: false, enablePatterns: false});
+    await donePromise;
+    const results = await close();
+    expect(results[0][0].__checkSettings.getUseDom()).to.be.false;
+    expect(results[0][0].__checkSettings.getEnablePatterns()).to.be.false;
   });
 });

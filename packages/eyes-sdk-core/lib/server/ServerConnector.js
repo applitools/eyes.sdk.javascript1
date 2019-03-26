@@ -173,8 +173,8 @@ async function sendLongRequest(self, name, options = {}) {
  * Creates a bytes representation of the given JSON.
  *
  * @private
- * @param {object} jsonData The data from for which to create the bytes representation.
- * @return {Buffer} a buffer of bytes which represents the stringified JSON, prefixed with size.
+ * @param {object} jsonData - The data from for which to create the bytes representation.
+ * @return {Buffer} - a buffer of bytes which represents the stringified JSON, prefixed with size.
  */
 const createDataBytes = jsonData => {
   const dataStr = JSON.stringify(jsonData);
@@ -229,19 +229,19 @@ class ServerConnector {
     }
 
     if (isIncludeApiKey) {
-      options.params.apiKey = this._configuration.getApiKey();
+      options.params.apiKey = this._configuration.apiKey;
     }
 
-    if (TypeUtils.isNotNull(this._configuration.getRemoveSession())) {
-      options.params.removeSession = this._configuration.getRemoveSession();
+    if (TypeUtils.isNotNull(this._configuration.removeSession)) {
+      options.params.removeSession = this._configuration.removeSession;
     }
 
-    if (TypeUtils.isNotNull(this._configuration.getConnectionTimeout())) {
-      options.timeout = this._configuration.getConnectionTimeout();
+    if (TypeUtils.isNotNull(this._configuration.connectionTimeout)) {
+      options.timeout = this._configuration.connectionTimeout;
     }
 
-    if (TypeUtils.isNotNull(this._configuration.getProxy())) {
-      options.proxy = this._configuration.getProxy().toProxyObject();
+    if (TypeUtils.isNotNull(this._configuration.proxy)) {
+      options.proxy = this._configuration.proxy.toProxyObject();
 
       // TODO: remove hot-fix when axios release official fix
       if (options.proxy.protocol === 'http:') {
@@ -267,168 +267,12 @@ class ServerConnector {
     this._renderingInfo = renderingInfo;
   }
 
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the current rendering server URL used by the client.
-   *
-   * @deprecated use {@link #setRenderingInfo(renderingInfo)} instead
-   * @param serverUrl {string} The URI of the rendering server.
-   */
-  setRenderingServerUrl(serverUrl) {
-    ArgumentGuard.notNull(serverUrl, 'serverUrl');
-
-    if (!this._renderingInfo) {
-      this._renderingInfo = new RenderingInfo();
-    }
-
-    this._renderingInfo.setServiceUrl(serverUrl);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated use {@link #getRenderingInfo()} instead
-   * @return {string} The URI of the rendering server.
-   */
-  getRenderingServerUrl() {
-    return this._renderingInfo ? this._renderingInfo.getServiceUrl() : undefined;
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the API key of your applitools Eyes account.
-   *
-   * @deprecated use {@link #setRenderingInfo(renderingInfo)} instead
-   * @param {string} authToken The api key to set.
-   * @return {RenderingInfo}
-   */
-  setRenderingAuthToken(authToken) {
-    ArgumentGuard.notNull(authToken, 'authToken');
-
-    if (!this._renderingInfo) {
-      this._renderingInfo = new RenderingInfo();
-    }
-
-    this._renderingInfo.setAccessToken(authToken);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated use {@link #getRenderingInfo()} instead
-   * @return {string} The currently set API key or {@code null} if no key is set.
-   */
-  getRenderingAuthToken() {
-    return this._renderingInfo ? this._renderingInfo.getAccessToken() : undefined;
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the current server URL used by the rest client.
-   *
-   * @deprecated
-   * @param serverUrl {string} The URI of the rest server.
-   */
-  setServerUrl(serverUrl) {
-    this._configuration.setServerUrl(serverUrl);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated
-   * @return {string} The URI of the eyes server.
-   */
-  getServerUrl() {
-    return this._configuration.getServerUrl();
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the API key of your applitools Eyes account.
-   *
-   * @deprecated
-   * @param {string} apiKey The api key to set.
-   */
-  setApiKey(apiKey) {
-    this._configuration.setApiKey(apiKey);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated
-   * @return {string} The currently set API key or {@code null} if no key is set.
-   */
-  getApiKey() {
-    return this._configuration.getApiKey();
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the proxy settings to be used by the rest client.
-   *
-   * @deprecated
-   * @param {ProxySettings|string|boolean} varArg The ProxySettings object or proxy url to be used.
-   *  Use {@code false} to disable proxy (even if it set via env variables). Use {@code null} to reset proxy settings.
-   * @param {string} [username]
-   * @param {string} [password]
-   */
-  setProxy(varArg, username, password) {
-    this._configuration.setProxy(varArg, username, password);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated
-   * @return {ProxySettings} The current proxy settings, or {@code null} if no proxy is set.
-   */
-  getProxy() {
-    return this._configuration.getProxy();
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Whether sessions are removed immediately after they are finished.
-   *
-   * @deprecated
-   * @param {boolean} removeSession
-   */
-  setRemoveSession(removeSession) {
-    this._configuration.setRemoveSession(removeSession);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated
-   * @return {boolean} Whether sessions are removed immediately after they are finished.
-   */
-  getRemoveSession() {
-    return this._configuration.getRemoveSession();
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * Sets the connect and read timeouts for web requests.
-   *
-   * @deprecated
-   * @param {number} timeout Connect/Read timeout in milliseconds. 0 equals infinity.
-   */
-  setTimeout(timeout) {
-    this._configuration.setConnectionTimeout(timeout);
-  }
-
-  // noinspection JSUnusedGlobalSymbols
-  /**
-   * @deprecated
-   * @return {number} The timeout for web requests (in milliseconds).
-   */
-  getTimeout() {
-    return this._configuration.getConnectionTimeout();
-  }
-
   /**
    * Starts a new running session in the agent. Based on the given parameters, this running session will either be
    * linked to an existing session, or to a completely new session.
    *
-   * @param {SessionStartInfo} sessionStartInfo The start parameters for the session.
-   * @return {Promise<RunningSession>} RunningSession object which represents the current running session
+   * @param {SessionStartInfo} sessionStartInfo - The start parameters for the session.
+   * @return {Promise<RunningSession>} - RunningSession object which represents the current running session
    */
   async startSession(sessionStartInfo) {
     ArgumentGuard.notNull(sessionStartInfo, 'sessionStartInfo');
@@ -436,7 +280,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running'),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/running'),
       data: {
         startInfo: sessionStartInfo,
       },
@@ -457,10 +301,10 @@ class ServerConnector {
   /**
    * Stops the running session.
    *
-   * @param {RunningSession} runningSession The running session to be stopped.
+   * @param {RunningSession} runningSession - The running session to be stopped.
    * @param {boolean} isAborted
    * @param {boolean} save
-   * @return {Promise<TestResults>} TestResults object for the stopped running session
+   * @return {Promise<TestResults>} - TestResults object for the stopped running session
    */
   async stopSession(runningSession, isAborted, save) {
     ArgumentGuard.notNull(runningSession, 'runningSession');
@@ -469,7 +313,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'DELETE',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running', runningSession.getId()),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/running', runningSession.getId()),
       params: {
         aborted: isAborted,
         updateBaseline: save,
@@ -490,8 +334,8 @@ class ServerConnector {
   /**
    * Deletes the given test result
    *
-   * @param {TestResults} testResults The session to delete by test results.
-   * @return {Promise<void>}
+   * @param {TestResults} testResults - The session to delete by test results.
+   * @return {Promise}
    */
   async deleteSession(testResults) {
     ArgumentGuard.notNull(testResults, 'testResults');
@@ -499,7 +343,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'DELETE',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/batches/', testResults.getBatchId(), '/', testResults.getId()),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/batches/', testResults.getBatchId(), '/', testResults.getId()),
       params: {
         accessToken: testResults.getSecretToken(),
       },
@@ -518,9 +362,9 @@ class ServerConnector {
   /**
    * Matches the current window (held by the WebDriver) to the expected window.
    *
-   * @param {RunningSession} runningSession The current agent's running session.
-   * @param {MatchWindowData} matchWindowData Encapsulation of a capture taken from the application.
-   * @return {Promise<MatchResult>} The results of the window matching.
+   * @param {RunningSession} runningSession - The current agent's running session.
+   * @param {MatchWindowData} matchWindowData - Encapsulation of a capture taken from the application.
+   * @return {Promise<MatchResult>} - The results of the window matching.
    */
   async matchWindow(runningSession, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession');
@@ -529,7 +373,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running', runningSession.getId()),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/running', runningSession.getId()),
       data: matchWindowData,
     });
 
@@ -557,8 +401,8 @@ class ServerConnector {
   /**
    * Matches the current window in single request.
    *
-   * @param {MatchSingleWindowData} matchSingleWindowData Encapsulation of a capture taken from the application.
-   * @return {Promise<TestResults>} The results of the window matching.
+   * @param {MatchSingleWindowData} matchSingleWindowData - Encapsulation of a capture taken from the application.
+   * @return {Promise<TestResults>} - The results of the window matching.
    */
   async matchSingleWindow(matchSingleWindowData) {
     ArgumentGuard.notNull(matchSingleWindowData, 'matchSingleWindowData');
@@ -566,7 +410,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH),
       data: matchSingleWindowData,
     });
 
@@ -595,10 +439,10 @@ class ServerConnector {
   /**
    * Replaces an actual image in the current running session.
    *
-   * @param {RunningSession} runningSession The current agent's running session.
-   * @param {number} stepIndex The zero based index of the step in which to replace the actual image.
-   * @param {MatchWindowData} matchWindowData Encapsulation of a capture taken from the application.
-   * @return {Promise<MatchResult>} The results of the window matching.
+   * @param {RunningSession} runningSession - The current agent's running session.
+   * @param {number} stepIndex - The zero based index of the step in which to replace the actual image.
+   * @param {MatchWindowData} matchWindowData - Encapsulation of a capture taken from the application.
+   * @return {Promise<MatchResult>} - The results of the window matching.
    */
   async replaceWindow(runningSession, stepIndex, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession');
@@ -607,7 +451,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'PUT',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running', runningSession.getId(), stepIndex),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/running', runningSession.getId(), stepIndex),
       headers: {
         'Content-Type': 'application/octet-stream',
       },
@@ -629,14 +473,14 @@ class ServerConnector {
   /**
    * Initiate a rendering using RenderingGrid API
    *
-   * @return {Promise<RenderingInfo>} The results of the render request
+   * @return {Promise<RenderingInfo>} - The results of the render request
    */
   async renderInfo() {
     this._logger.verbose('ServerConnector.renderInfo called.');
 
     const options = this._createHttpOptions({
       method: 'GET',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/renderinfo'),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/renderinfo'),
     });
 
     const response = await sendRequest(this, 'renderInfo', options);
@@ -653,8 +497,8 @@ class ServerConnector {
   /**
    * Initiate a rendering using RenderingGrid API
    *
-   * @param {RenderRequest[]|RenderRequest} renderRequest The current agent's running session.
-   * @return {Promise<RunningRender[]|RunningRender>} The results of the render request
+   * @param {RenderRequest[]|RenderRequest} renderRequest - The current agent's running session.
+   * @return {Promise<RunningRender[]|RunningRender>} - The results of the render request
    */
   async render(renderRequest) {
     ArgumentGuard.notNull(renderRequest, 'renderRequest');
@@ -689,9 +533,9 @@ class ServerConnector {
   /**
    * Check if resource exists on the server
    *
-   * @param {RunningRender} runningRender The running render (for second request only)
-   * @param {RGridResource} resource The resource to use
-   * @return {Promise<boolean>} Whether resource exists on the server or not
+   * @param {RunningRender} runningRender - The running render (for second request only)
+   * @param {RGridResource} resource - The resource to use
+   * @return {Promise<boolean>} - Whether resource exists on the server or not
    */
   async renderCheckResource(runningRender, resource) {
     ArgumentGuard.notNull(runningRender, 'runningRender');
@@ -723,9 +567,9 @@ class ServerConnector {
   /**
    * Upload resource to the server
    *
-   * @param {RunningRender} runningRender The running render (for second request only)
-   * @param {RGridResource} resource The resource to upload
-   * @return {Promise<boolean>} True if resource was uploaded
+   * @param {RunningRender} runningRender - The running render (for second request only)
+   * @param {RGridResource} resource - The resource to upload
+   * @return {Promise<boolean>} - True if resource was uploaded
    */
   async renderPutResource(runningRender, resource) {
     ArgumentGuard.notNull(runningRender, 'runningRender');
@@ -760,9 +604,9 @@ class ServerConnector {
   /**
    * Get the rendering status for current render
    *
-   * @param {RunningRender} runningRender The running render
-   * @param {boolean} [delayBeforeRequest=false] If {@code true}, then the request will be delayed
-   * @return {Promise<RenderStatusResults>} The render's status
+   * @param {RunningRender} runningRender - The running render
+   * @param {boolean} [delayBeforeRequest=false] - If {@code true}, then the request will be delayed
+   * @return {Promise<RenderStatusResults>} - The render's status
    */
   renderStatus(runningRender, delayBeforeRequest = false) {
     return this.renderStatusById(runningRender.getRenderId(), delayBeforeRequest);
@@ -771,9 +615,9 @@ class ServerConnector {
   /**
    * Get the rendering status for current render
    *
-   * @param {string[]|string} renderId The running renderId
-   * @param {boolean} [delayBeforeRequest=false] If {@code true}, then the request will be delayed
-   * @return {Promise<RenderStatusResults[]|RenderStatusResults>} The render's status
+   * @param {string[]|string} renderId - The running renderId
+   * @param {boolean} [delayBeforeRequest=false] - If {@code true}, then the request will be delayed
+   * @return {Promise<RenderStatusResults[]|RenderStatusResults>} - The render's status
    */
   async renderStatusById(renderId, delayBeforeRequest = false) {
     ArgumentGuard.notNull(renderId, 'renderId');
@@ -819,7 +663,7 @@ class ServerConnector {
 
     const options = this._createHttpOptions({
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running/data'),
+      url: GeneralUtils.urlConcat(this._configuration.serverUrl, EYES_API_PATH, '/running/data'),
       headers: {
         'Content-Type': 'application/octet-stream',
       },

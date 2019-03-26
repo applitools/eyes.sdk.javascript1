@@ -6,7 +6,7 @@ const { ScaleProvider } = require('./ScaleProvider');
 
 class FixedScaleProvider extends ScaleProvider {
   /**
-   * @param {number} scaleRatio The scale ratio to use.
+   * @param {number} scaleRatio - The scale ratio to use.
    */
   constructor(scaleRatio) {
     super();
@@ -16,7 +16,7 @@ class FixedScaleProvider extends ScaleProvider {
   }
 
   /**
-   * @return {number} The ratio by which an image will be scaled.
+   * @return {number} - The ratio by which an image will be scaled.
    */
   getScaleRatio() {
     return this._scaleRatio;

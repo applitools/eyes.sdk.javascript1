@@ -12,6 +12,9 @@ class AppEnvironment {
    * @param {string} [os]
    * @param {string} [hostingApp]
    * @param {RectangleSize} [displaySize]
+   * @param {string} [deviceInfo]
+   * @param {string} [osInfo]
+   * @param {string} [hostingAppInfo]
    */
   constructor({ os, hostingApp, displaySize, deviceInfo, osInfo, hostingAppInfo } = {}) {
     if (displaySize && !(displaySize instanceof RectangleSize)) {

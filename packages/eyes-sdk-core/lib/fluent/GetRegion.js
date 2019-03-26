@@ -3,6 +3,7 @@
 /* eslint-disable no-unused-vars */
 
 /**
+ * @ignore
  * @abstract
  */
 class GetRegion {

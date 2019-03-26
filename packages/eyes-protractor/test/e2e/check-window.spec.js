@@ -5,26 +5,26 @@ const { Target } = require('@applitools/eyes-selenium');
 const { Eyes } = require('../../index');
 
 let eyes = null;
-describe('Eyes.Protractor.JavaScript - check window', () => {
+describe('Eyes.Protractor.JavaScript - check window', function () {
   beforeAll(function () {
     eyes = new Eyes();
     eyes.setLogHandler(new ConsoleLogHandler(true));
     eyes.setHideScrollbars(true);
   });
 
-  it('test check window methods', function () {
-    return eyes.open(browser, global.appName, global.testName, new RectangleSize(800, 560)).then(() => {
-      browser.get('https://astappiev.github.io/test-html-pages/');
+  it('test check window methods', async function () {
+    await eyes.open(browser, global.appName, global.testName, new RectangleSize(800, 560));
 
-      eyes.check('Partial window', Target.window());
+    await browser.get('https://astappiev.github.io/test-html-pages/');
 
-      eyes.check('Entire window', Target.window().fully());
+    await eyes.check('Partial window', Target.window());
 
-      return eyes.close();
-    });
+    await eyes.check('Entire window', Target.window().fully());
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return eyes.abortIfNotClosed();
+  afterEach(async function () {
+    await eyes.abortIfNotClosed();
   });
 });

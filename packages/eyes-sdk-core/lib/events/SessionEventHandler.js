@@ -10,12 +10,14 @@
 class SessionEventHandler {
   /**
    * Called when the data gathering for creating a session phase had started.
+   *
    * @return {Promise}
    */
   initStarted() {}
 
   /**
    * Called when the data gathering phase had ended.
+   *
    * @return {Promise}
    */
   initEnded() {}
@@ -23,13 +25,14 @@ class SessionEventHandler {
   /**
    * Called when setting the size of the application window is about to start.
    *
-   * @param {RectangleSize} sizeToSet an object with 'width' and 'height' properties.
+   * @param {RectangleSize} sizeToSet - an object with 'width' and 'height' properties.
    * @return {Promise}
    */
   setSizeWillStart(sizeToSet) {}
 
   /**
    * Called 'set size' operation has ended (either failed/success).
+   *
    * @return {Promise}
    */
   setSizeEnded() {}
@@ -37,7 +40,7 @@ class SessionEventHandler {
   /**
    * Called after a session had started.
    *
-   * @param {string} autSessionId The AUT session ID.
+   * @param {string} autSessionId - The AUT session ID.
    * @return {Promise}
    */
   testStarted(autSessionId) {}
@@ -45,8 +48,8 @@ class SessionEventHandler {
   /**
    * Called after a session had ended.
    *
-   * @param {string} autSessionId The AUT session ID.
-   * @param {TestResults} testResults The test results.
+   * @param {string} autSessionId - The AUT session ID.
+   * @param {TestResults} testResults - The test results.
    * @return {Promise}
    */
   testEnded(autSessionId, testResults) {}
@@ -54,8 +57,8 @@ class SessionEventHandler {
   /**
    * Called before a new validation will be started.
    *
-   * @param {string} autSessionId The AUT session ID.
-   * @param {ValidationInfo} validationInfo The validation parameters.
+   * @param {string} autSessionId - The AUT session ID.
+   * @param {ValidationInfo} validationInfo - The validation parameters.
    * @return {Promise}
    */
   validationWillStart(autSessionId, validationInfo) {}
@@ -63,9 +66,9 @@ class SessionEventHandler {
   /**
    * Called when a validation had ended.
    *
-   * @param {string} autSessionId The AUT session ID.
-   * @param {number} validationId The ID of the validation which had ended.
-   * @param {ValidationResult} validationResult The validation results.
+   * @param {string} autSessionId - The AUT session ID.
+   * @param {number} validationId - The ID of the validation which had ended.
+   * @param {ValidationResult} validationResult - The validation results.
    * @return {Promise}
    */
   validationEnded(autSessionId, validationId, validationResult) {}

@@ -8,7 +8,7 @@ const { PropertyHandler } = require('./PropertyHandler');
 class ReadOnlyPropertyHandler extends PropertyHandler {
   /**
    * @param {Logger} [logger]
-   * @param {object} [obj] The object to set.
+   * @param {object} [obj] - The object to set.
    */
   constructor(logger, obj) {
     super();

@@ -5,14 +5,18 @@ const { URL } = require('url');
 const { ArgumentGuard } = require('../utils/ArgumentGuard');
 
 /**
+ * @typedef {{url: string, username: (string|undefined), password: (string|undefined)}} ProxySettingsObject
+ */
+
+/**
  * Encapsulates settings for sending Eyes communication via proxy.
  */
 class ProxySettings {
   /**
    *
-   * @param {string|boolean} uri The proxy's URI or {@code false} to completely disable proxy.
-   * @param {string} [username] The username to be sent to the proxy.
-   * @param {string} [password] The password to be sent to the proxy.
+   * @param {string|boolean} uri - The proxy's URI or {@code false} to completely disable proxy.
+   * @param {string} [username] - The username to be sent to the proxy.
+   * @param {string} [password] - The password to be sent to the proxy.
    */
   constructor(uri, username, password) {
     ArgumentGuard.notNull(uri, 'uri');

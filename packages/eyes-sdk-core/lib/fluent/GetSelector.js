@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * @ignore
+ */
 class GetSelector {
   /**
    * @param {string} [selector]

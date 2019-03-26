@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "12.0.2",
+  "version": "12.5.1",
   "description": "",
   "keywords": [
     "applitools",
@@ -30,12 +30,12 @@
     "browser.js"
   ],
   "dependencies": {
-    "@applitools/eyes-common": "^1.3.0",
-    "@applitools/eyes-sdk-core": "^4.8.0",
-    "@applitools/functional-commons": "^1.1.3",
+    "@applitools/eyes-common": "^2.2.1",
+    "@applitools/eyes-sdk-core": "^5.1.1",
+    "@applitools/functional-commons": "^1.1.4",
     "@applitools/http-commons": "^1.2.3",
     "@applitools/isomorphic-fetch": "^3.0.0",
-    "cssom": "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8",
+    "cssom": "^0.3.6",
     "he": "^1.2.0",
     "lodash.mapkeys": "^4.6.0",
     "lodash.mapvalues": "^4.6.0",
@@ -44,7 +44,7 @@
     "throat": "^4.1.0"
   },
   "devDependencies": {
-    "@applitools/dom-snapshot": "^1.0.6",
+    "@applitools/dom-snapshot": "^1.0.7",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.3",
@@ -65,8 +65,7 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
     "build:browser": "cd test/fixtures/test-app && npm i && npm run build",
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
-    "test": "npm run build:browser && npm run test:mocha && npm run lint",
-    "lint": "eslint \"**/*.js\""
+    "test": "npm run build:browser && npm run test:mocha"
   },
   "license": "MIT",
   "engines": {

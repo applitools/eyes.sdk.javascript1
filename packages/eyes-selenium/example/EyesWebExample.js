@@ -2,12 +2,12 @@
 
 require('chromedriver'); // eslint-disable-line node/no-unpublished-require
 const { Builder, Capabilities, By } = require('selenium-webdriver');
-const { ConsoleLogHandler } = require('@applitools/eyes-sdk-core');
-const { Eyes, Target } = require('../index'); // should be replaced to '@applitools/eyes-selenium'
+const { Eyes, Target, ConsoleLogHandler } = require('../index'); // should be replaced to '@applitools/eyes-selenium'
 
 (async () => {
   // Open a Chrome browser.
   const driver = new Builder()
+    // .usingServer('http://localhost:4444/wd/hub')
     .withCapabilities(Capabilities.chrome())
     .build();
 

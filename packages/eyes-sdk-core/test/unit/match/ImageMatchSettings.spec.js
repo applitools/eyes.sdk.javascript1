@@ -28,5 +28,12 @@ describe('ImageMatchSettings', () => {
         '"coordinatesType":"SCREENSHOT_AS_IS"}],"layout":[],"strict":[],"content":[],"floating":[]}';
       assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!');
     });
+
+    it('with modified useDom and enablePatterns', () => {
+      const ims = new ImageMatchSettings({ useDom: true, enablePatterns: false });
+      const expectedSerialization = '{"matchLevel":"Strict","useDom":true,"enablePatterns":false,' +
+        '"ignore":[],"layout":[],"strict":[],"content":[],"floating":[]}';
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!');
+    });
   });
 });

@@ -6,34 +6,50 @@ const { TypeUtils } = require('../utils/TypeUtils');
 const { DateTimeUtils } = require('../utils/DateTimeUtils');
 
 /**
+ * @typedef {{id: (string|undefined), name: (string|undefined), startedAt: (Date|string|undefined)}} BatchInfoObject
+ */
+
+/**
  * A batch of tests.
  */
 class BatchInfo {
   /**
    * Creates a new BatchInfo instance.
+   * Alternatively, batch can be set via global variables `APPLITOOLS_BATCH_ID`, `APPLITOOLS_BATCH_NAME`.
+   *
+   * @signature `new BatchInfo()`
    *
    * @signature `new BatchInfo(batchInfo)`
-   * @signature `new BatchInfo(name, startedAt?, id?)`
-   * @signature `new BatchInfo({id: string, name: string, startedAt: Date|string})`
+   * @sigparam {BatchInfo} batchInfo - The BatchInfo instance to clone from.
    *
-   * @param {BatchInfo|{id?: string, name?: string, startedAt?: Date|string}|string} [varArg] BatchInfo or the name of
-   *   this batch.
-   * @param {string} [optStartedAt] Batch start time, defaults to the current time.
-   * @param {string} [optId] ID of the batch, should be generated using GeneralUtils.guid().
+   * @signature `new BatchInfo(object)`
+   * @sigparam {{id: (string|undefined), name: (string|undefined), startedAt: (Date|string|undefined)}} object - The batch object to clone from.
+   *
+   * @signature `new BatchInfo(name, startedAt, id)`
+   * @sigparam {string} name - Name of batch or {@code null} if anonymous.
+   * @sigparam {Date|string} [startedAt] - Batch start time, defaults to the current time.
+   * @sigparam {string} [id] - The ID of the existing batch, used to clone batch.
+   *
+   * @param {BatchInfo|BatchInfoObject|string} [varArg1] - The BatchInfo (or object) to clone from or the name of new batch.
+   *   If no arguments given, new BatchInfo will be created with default or environment settings.
+   * @param {string} [varArg2] - Batch start time, defaults to the current time.
+   * @param {string} [varArg3] - ID of the batch, defaults is generated using GeneralUtils.guid().
    */
-  constructor(varArg = {}, optStartedAt, optId) {
-    if (varArg instanceof BatchInfo) {
-      return new BatchInfo({ id: varArg.getId(), name: varArg.getName(), startedAt: varArg.getStartedAt() });
+  constructor(varArg1, varArg2, varArg3) {
+    if (varArg1 instanceof BatchInfo) {
+      return new BatchInfo({ id: varArg1.getId(), name: varArg1.getName(), startedAt: varArg1.getStartedAt() });
     }
 
-    if (TypeUtils.isString(varArg)) {
-      return new BatchInfo({ id: optId, name: varArg, startedAt: optStartedAt });
+    if (TypeUtils.isString(varArg1)) {
+      return new BatchInfo({ id: varArg3, name: varArg1, startedAt: varArg2 });
     }
 
-    const { id, name } = varArg;
-    let { startedAt } = varArg;
+    let { id, name, startedAt } = varArg1 || {};
+    ArgumentGuard.isString(id, 'batchId', false);
+    ArgumentGuard.isString(name, 'batchName', false);
 
     if (startedAt && !(startedAt instanceof Date)) {
+      ArgumentGuard.isString(startedAt, 'startedAt', false);
       startedAt = DateTimeUtils.fromISO8601DateTime(startedAt);
     }
 
@@ -43,7 +59,7 @@ class BatchInfo {
   }
 
   /**
-   * @return {string} The id of the current batch.
+   * @return {string} - The id of the current batch.
    */
   getId() {
     return this._id;
@@ -54,7 +70,7 @@ class BatchInfo {
    * Sets a unique identifier for the batch. Sessions with batch info which includes the same ID will be grouped
    * together.
    *
-   * @param {string} value The batch's ID
+   * @param {string} value - The batch's ID
    */
   setId(value) {
     ArgumentGuard.notNullOrEmpty(value, 'id');
@@ -63,7 +79,7 @@ class BatchInfo {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return The name of the batch or {@code null} if anonymous.
+   * @return {string} - The name of the batch or {@code null} if anonymous.
    */
   getName() {
     return this._name;
@@ -71,7 +87,7 @@ class BatchInfo {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {Date} The batch start date
+   * @return {Date} - The batch start date
    */
   getStartedAt() {
     return this._startedAt;

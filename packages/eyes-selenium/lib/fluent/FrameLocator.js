@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * @ignore
+ */
 class FrameLocator {
   constructor() {
     /** @type {WebElement} */
@@ -10,6 +13,10 @@ class FrameLocator {
     this._frameNameOrId = undefined;
     /** @type {number} */
     this._frameIndex = undefined;
+    /** @type {By} */
+    this._scrollRootSelector = undefined;
+    /** @type {WebElement} */
+    this._scrollRootElement = undefined;
   }
 
   /**
@@ -20,6 +27,13 @@ class FrameLocator {
   }
 
   /**
+   * @param {number} frameIndex
+   */
+  setFrameIndex(frameIndex) {
+    this._frameIndex = frameIndex;
+  }
+
+  /**
    * @return {string}
    */
   getFrameNameOrId() {
@@ -27,10 +41,24 @@ class FrameLocator {
   }
 
   /**
+   * @param {string} frameNameOrId
+   */
+  setFrameNameOrId(frameNameOrId) {
+    this._frameNameOrId = frameNameOrId;
+  }
+
+  /**
    * @return {By}
    */
   getFrameSelector() {
     return this._frameSelector;
+  }
+
+  /**
+   * @param {By} frameSelector
+   */
+  setFrameSelector(frameSelector) {
+    this._frameSelector = frameSelector;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -42,31 +70,40 @@ class FrameLocator {
   }
 
   /**
-   * @param frameSelector
-   */
-  setFrameSelector(frameSelector) {
-    this._frameSelector = frameSelector;
-  }
-
-  /**
-   * @param frameNameOrId
-   */
-  setFrameNameOrId(frameNameOrId) {
-    this._frameNameOrId = frameNameOrId;
-  }
-
-  /**
-   * @param frameIndex
-   */
-  setFrameIndex(frameIndex) {
-    this._frameIndex = frameIndex;
-  }
-
-  /**
-   * @param frameElement
+   * @param {WebElement} frameElement
    */
   setFrameElement(frameElement) {
     this._frameElement = frameElement;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {WebElement}
+   */
+  getScrollRootElement() {
+    return this._scrollRootElement;
+  }
+
+  /**
+   * @param {WebElement} scrollRootElement
+   */
+  setScrollRootElement(scrollRootElement) {
+    this._scrollRootElement = scrollRootElement;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {By}
+   */
+  getScrollRootSelector() {
+    return this._scrollRootSelector;
+  }
+
+  /**
+   * @param {By} scrollRootSelector
+   */
+  setScrollRootSelector(scrollRootSelector) {
+    this._scrollRootSelector = scrollRootSelector;
   }
 }
 

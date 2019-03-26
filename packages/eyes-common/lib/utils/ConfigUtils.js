@@ -4,15 +4,15 @@ const cosmiconfig = require('cosmiconfig');
 
 const { Logger } = require('../logging/Logger');
 
-const { APPLITOOLS_SHOW_LOGS } = process.env; // TODO when switching to DEBUG sometime remove this env var
-const logger = new Logger(APPLITOOLS_SHOW_LOGS);
-
-const explorer = cosmiconfig('applitools', {
-  searchPlaces: ['package.json', 'applitools.config.js', 'eyes.config.js', 'eyes.json'],
-});
-
+/**
+ * @ignore
+ */
 class ConfigUtils {
-  static getConfig({ configParams = [], configPath } = {}) {
+  static getConfig({ configParams = [], configPath, logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS) } = {}) {
+    const explorer = cosmiconfig('applitools', {
+      searchPlaces: ['package.json', 'applitools.config.js', 'eyes.config.js', 'eyes.json'],
+    });
+
     let defaultConfig = {};
     try {
       const result = configPath ? explorer.loadSync(configPath) : explorer.searchSync();
@@ -36,7 +36,9 @@ class ConfigUtils {
     }
 
     Object.keys(envConfig).forEach(value => {
-      if (envConfig[value] === undefined) delete envConfig[value];
+      if (envConfig[value] === undefined) {
+        delete envConfig[value];
+      }
     });
 
     return Object.assign({}, defaultConfig, envConfig);

@@ -31,11 +31,11 @@ const rgbaToAbgrColors = (pixels, pixelLength) => {
 /**
  * Computes the width and height of the image data contained in the block at the input column and row.
  *
- * @param {{width: number, height: number}} imageSize The image size in pixels.
- * @param {number} blockSize The block size for which we would like to compute the image data width and height.
- * @param {number} blockColumn The block column index
- * @param {number} blockRow The block row index
- * @return {{width: number, height: number}} The width and height of the image data contained in the block.
+ * @param {{width: number, height: number}} imageSize - The image size in pixels.
+ * @param {number} blockSize - The block size for which we would like to compute the image data width and height.
+ * @param {number} blockColumn - The block column index
+ * @param {number} blockRow - The block row index
+ * @return {{width: number, height: number}} - The width and height of the image data contained in the block.
  */
 const getActualBlockSize = (imageSize, blockSize, blockColumn, blockRow) => {
   const width = Math.min(imageSize.width - (blockColumn * blockSize), blockSize);
@@ -110,11 +110,11 @@ class ImageDeltaCompressor {
   /**
    * Compresses a target image based on a difference from a source image.
    *
-   * @param {Image|png.Image} targetData The image we want to compress.
-   * @param {Buffer} targetBuffer The image we want to compress in its png buffer representation.
-   * @param {Image|png.Image} sourceData The baseline image by which a compression will be performed.
-   * @param {number} [blockSize=10] How many pixels per block.
-   * @return {Buffer} The compression result.
+   * @param {Image|png.Image} targetData - The image we want to compress.
+   * @param {Buffer} targetBuffer - The image we want to compress in its png buffer representation.
+   * @param {Image|png.Image} sourceData - The baseline image by which a compression will be performed.
+   * @param {number} [blockSize=10] - How many pixels per block.
+   * @return {Buffer} - The compression result.
    */
   static compressByRawBlocks(targetData, targetBuffer, sourceData, blockSize = 10) {
     // If there's no image to compare to, or the images are in different

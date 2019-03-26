@@ -3,11 +3,12 @@
 const path = require('path');
 const assert = require('assert');
 
-const { ConfigUtils } = require('../../../index');
+const { ConfigUtils, Logger } = require('../../../index');
 
 describe('ConfigUtils', () => {
   describe('getConfig()', () => {
     let prevEnv;
+    const logger = new Logger();
     const configPath = path.resolve(__dirname, '..', '..', 'fixtures');
 
     function getConfigAtConfigPath(args) {
@@ -41,17 +42,17 @@ describe('ConfigUtils', () => {
     });
 
     it('handles custom configParams', () => {
-      const config = ConfigUtils.getConfig({ configParams: ['bla'] });
+      const config = ConfigUtils.getConfig({ configParams: ['bla'], logger });
       assert.strictEqual(config.bla, undefined);
 
       process.env.APPLITOOLS_BLA = 'aaa';
-      const configWithBla = ConfigUtils.getConfig({ configParams: ['bla'] });
+      const configWithBla = ConfigUtils.getConfig({ configParams: ['bla'], logger });
       delete process.env.APPLITOOLS_BLA;
       assert.strictEqual(configWithBla.bla, 'aaa');
     });
 
     it('handles custom configPath', () => {
-      const config = ConfigUtils.getConfig({ configPath: path.resolve(configPath, 'eyes.json') });
+      const config = ConfigUtils.getConfig({ configPath: path.resolve(configPath, 'eyes.json'), logger });
       const expectedConfig = { saveDebugData: true, apiKey: 'default api key' };
       assert.deepStrictEqual(config, expectedConfig);
     });
@@ -59,7 +60,7 @@ describe('ConfigUtils', () => {
     it('handles boolean config params', () => {
       process.env.APPLITOOLS_BLA1 = 'false';
       process.env.APPLITOOLS_BLA2 = 'true';
-      const configWithBla = ConfigUtils.getConfig({ configParams: ['bla1', 'bla2'] });
+      const configWithBla = ConfigUtils.getConfig({ configParams: ['bla1', 'bla2'], logger });
       assert.strictEqual(configWithBla.bla1, false);
       assert.strictEqual(configWithBla.bla2, true);
     });

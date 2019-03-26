@@ -20,7 +20,7 @@ class RGridResource {
   }
 
   /**
-   * @return {string} The url of the current resource.
+   * @return {string} - The url of the current resource.
    */
   getUrl() {
     return this._url;
@@ -28,7 +28,7 @@ class RGridResource {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {string} value The resource's url
+   * @param {string} value - The resource's url
    */
   setUrl(value) {
     ArgumentGuard.notNull(value, 'url');
@@ -36,14 +36,14 @@ class RGridResource {
   }
 
   /**
-   * @return {string} The contentType of the current resource.
+   * @return {string} - The contentType of the current resource.
    */
   getContentType() {
     return this._contentType;
   }
 
   /**
-   * @param {string} value The resource's contentType
+   * @param {string} value - The resource's contentType
    */
   setContentType(value) {
     ArgumentGuard.notNull(value, 'contentType');
@@ -51,14 +51,14 @@ class RGridResource {
   }
 
   /**
-   * @return {Buffer} The content of the current resource.
+   * @return {Buffer} - The content of the current resource.
    */
   getContent() {
     return this._content;
   }
 
   /**
-   * @param {Buffer} value The resource's content
+   * @param {Buffer} value - The resource's content
    */
   setContent(value) {
     ArgumentGuard.notNull(value, 'content');

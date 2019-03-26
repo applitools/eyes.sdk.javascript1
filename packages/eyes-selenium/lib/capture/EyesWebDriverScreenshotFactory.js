@@ -6,6 +6,8 @@ const { EyesWebDriverScreenshot } = require('./EyesWebDriverScreenshot');
 
 /**
  * Encapsulates the instantiation of an {@link EyesWebDriverScreenshot} .
+ *
+ * @ignore
  */
 class EyesWebDriverScreenshotFactory extends EyesScreenshotFactory {
   /**
@@ -23,7 +25,7 @@ class EyesWebDriverScreenshotFactory extends EyesScreenshotFactory {
    * @inheritDoc
    */
   async makeScreenshot(image) {
-    return EyesWebDriverScreenshot.fromScreenshotType(this._logger, this._driver, image);
+    return await EyesWebDriverScreenshot.fromScreenshotType(this._logger, this._driver, image);
   }
 }
 

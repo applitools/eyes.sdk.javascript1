@@ -1,7 +1,11 @@
 'use strict';
 
+const common = require('@applitools/eyes-common');
+const core = require('@applitools/eyes-sdk-core');
+
 exports.SeleniumConfiguration = require('./lib/config/SeleniumConfiguration').SeleniumConfiguration;
 exports.BrowserType = require('./lib/config/BrowserType').BrowserType;
+exports.DeviceName = require('./lib/config/DeviceName').DeviceName;
 exports.ScreenOrientation = require('./lib/config/ScreenOrientation').ScreenOrientation;
 exports.StitchMode = require('./lib/config/StitchMode').StitchMode;
 
@@ -45,6 +49,8 @@ exports.MoveToRegionVisibilityStrategy = require('./lib/regionVisibility/MoveToR
 exports.NopRegionVisibilityStrategy = require('./lib/regionVisibility/NopRegionVisibilityStrategy').NopRegionVisibilityStrategy;
 exports.RegionVisibilityStrategy = require('./lib/regionVisibility/RegionVisibilityStrategy').RegionVisibilityStrategy;
 
+exports.VisualGridRunner = require('./lib/visualgrid/VisualGridRunner').VisualGridRunner;
+
 exports.EyesTargetLocator = require('./lib/wrappers/EyesTargetLocator').EyesTargetLocator;
 exports.EyesWebDriver = require('./lib/wrappers/EyesWebDriver').EyesWebDriver;
 exports.EyesWebElement = require('./lib/wrappers/EyesWebElement').EyesWebElement;
@@ -56,6 +62,56 @@ exports.ImageOrientationHandler = require('./lib/ImageOrientationHandler').Image
 exports.JavascriptHandler = require('./lib/JavascriptHandler').JavascriptHandler;
 exports.SeleniumJavaScriptExecutor = require('./lib/SeleniumJavaScriptExecutor').SeleniumJavaScriptExecutor;
 
-exports.Eyes = require('./lib/Eyes').Eyes;
+exports.Eyes = require('./lib/EyesFactory').EyesFactory;
 exports.EyesSelenium = require('./lib/EyesSelenium').EyesSelenium;
 exports.EyesVisualGrid = require('./lib/EyesVisualGrid').EyesVisualGrid;
+
+
+// eyes-common
+exports.Configuration = common.Configuration;
+exports.BatchInfo = common.BatchInfo;
+exports.PropertyData = common.PropertyData;
+exports.ProxySettings = common.ProxySettings;
+exports.EyesError = common.EyesError;
+exports.DebugScreenshotsProvider = common.DebugScreenshotsProvider;
+exports.FileDebugScreenshotsProvider = common.FileDebugScreenshotsProvider;
+exports.NullDebugScreenshotProvider = common.NullDebugScreenshotProvider;
+exports.Location = common.Location;
+exports.RectangleSize = common.RectangleSize;
+exports.Region = common.Region;
+exports.MutableImage = common.MutableImage;
+exports.ConsoleLogHandler = common.ConsoleLogHandler;
+exports.FileLogHandler = common.FileLogHandler;
+exports.LogHandler = common.LogHandler;
+exports.NullLogHandler = common.NullLogHandler;
+
+
+// eyes-sdk-core
+exports.ImageProvider = core.ImageProvider;
+exports.CorsIframeHandle = core.CorsIframeHandle;
+exports.CutProvider = core.CutProvider;
+exports.FixedCutProvider = core.FixedCutProvider;
+exports.NullCutProvider = core.NullCutProvider;
+exports.UnscaledFixedCutProvider = core.UnscaledFixedCutProvider;
+exports.RemoteSessionEventHandler = core.RemoteSessionEventHandler;
+exports.SessionEventHandler = core.SessionEventHandler;
+exports.ValidationInfo = core.ValidationInfo;
+exports.ValidationResult = core.ValidationResult;
+exports.CoordinatesTypeConversionError = core.CoordinatesTypeConversionError;
+exports.DiffsFoundError = core.DiffsFoundError;
+exports.NewTestError = core.NewTestError;
+exports.OutOfBoundsError = core.OutOfBoundsError;
+exports.TestFailedError = core.TestFailedError;
+exports.ExactMatchSettings = core.ExactMatchSettings;
+exports.FloatingMatchSettings = core.FloatingMatchSettings;
+exports.ImageMatchSettings = core.ImageMatchSettings;
+exports.MatchLevel = core.MatchLevel;
+exports.MatchResult = core.MatchResult;
+exports.NullRegionProvider = core.NullRegionProvider;
+exports.RegionProvider = core.RegionProvider;
+exports.RunningSession = core.RunningSession;
+exports.SessionType = core.SessionType;
+exports.FailureReports = core.FailureReports;
+exports.TestResults = core.TestResults;
+exports.TestResultsFormatter = core.TestResultsFormatter;
+exports.TestResultsStatus = core.TestResultsStatus;

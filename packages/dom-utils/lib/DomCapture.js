@@ -11,6 +11,9 @@ const DomCaptureReturnType = {
   STRING: 'STRING',
 };
 
+/**
+ * @ignore
+ */
 class DomCapture {
 
   /**
@@ -23,7 +26,7 @@ class DomCapture {
   }
 
   /**
-   * @param {Logger} logger A Logger instance.
+   * @param {Logger} logger - A Logger instance.
    * @param {EyesWebDriver|WebDriver} driver
    * @param {PositionProvider} [positionProvider]
    * @param {DomCaptureReturnType} [returnType]
@@ -66,8 +69,8 @@ class DomCapture {
   }
 
   /**
-   * @param script
-   * @param url
+   * @param {string} script
+   * @param {string} url
    * @return {Promise<{string}>}
    */
   async getFrameDom(script, url) {

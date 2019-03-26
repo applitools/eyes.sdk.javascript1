@@ -3,8 +3,7 @@
 require('chromedriver');
 const { Builder, Capabilities } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
-const { RectangleSize } = require('@applitools/eyes-sdk-core');
-const { Eyes, Target } = require('../../index');
+const { Eyes, Target, RectangleSize } = require('../../index');
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes;
 describe('TestServerConnector', function () {
@@ -28,7 +27,7 @@ describe('TestServerConnector', function () {
 
     const results = await eyes.close();
 
-    await results.delete();
+    await results.deleteSession();
   });
 
   afterEach(async function () {

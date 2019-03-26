@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@2.2.0...@applitools/eyes-common@2.2.1) (2019-03-24)
+
+
+### Bug Fixes
+
+* **eyes-common:** check types of arguments in BatchInfo on create ([e412f47](https://github.com/applitools/eyes.sdk.javascript1/commit/e412f47))
+
+
+
+
+
+# [2.2.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@2.0.1...@applitools/eyes-common@2.2.0) (2019-03-17)
+
+
+### Features
+
+* **eyes-common:** add constructor from object to Configuration ([9085be5](https://github.com/applitools/eyes.sdk.javascript1/commit/9085be5))
+* **eyes-common:** added debug ability to Logger ([128f30f](https://github.com/applitools/eyes.sdk.javascript1/commit/128f30f))
+
+
+
+
+
+## [2.0.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@2.0.0...@applitools/eyes-common@2.0.1) (2019-03-14)
+
+
+### Bug Fixes
+
+* **eyes-common:** fix `set proxy` by string ([adaf19b](https://github.com/applitools/eyes.sdk.javascript1/commit/adaf19b))
+
+
+
+
+
+# [2.0.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@1.3.1...@applitools/eyes-common@2.0.0) (2019-03-13)
+
+
+### Bug Fixes
+
+* **eyes-common:** fix order of arguments when creating `BatchInfo` ([a8793ec](https://github.com/applitools/eyes.sdk.javascript1/commit/a8793ec))
+* **eyes-common:** if circular dependency found on loggin, show warning ([0df6eac](https://github.com/applitools/eyes.sdk.javascript1/commit/0df6eac))
+
+
+### Code Refactoring
+
+* **eyes-common:** remove `sessionId` from LogHandler, refactoring Logger ([ca205df](https://github.com/applitools/eyes.sdk.javascript1/commit/ca205df))
+
+
+### Features
+
+* **eyes-common:** new ability to add timings to logs. Use `setIncludeTime(true)` from `Logger` ([aaca328](https://github.com/applitools/eyes.sdk.javascript1/commit/aaca328))
+* **eyes-config:** add `sendDom` to Configuration ([997df41](https://github.com/applitools/eyes.sdk.javascript1/commit/997df41))
+* remove setProxy, setBatch from Configuration, use objects instead ([c91d4ae](https://github.com/applitools/eyes.sdk.javascript1/commit/c91d4ae))
+* use JS getters/setters for Configuration classes ([c68771e](https://github.com/applitools/eyes.sdk.javascript1/commit/c68771e))
+
+
+### BREAKING CHANGES
+
+* **eyes-common:** `setPrintSessionId` and `setSessionId` are no more available in `LogHandler`. Use `setSessionId` from `Logger` instead.
+
+
+
+
+
+## [1.3.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@1.3.0...@applitools/eyes-common@1.3.1) (2019-02-27)
+
+
+### Bug Fixes
+
+* **eyes-common:** Make appName, testName, viewportSize accept undefined ([ba11581](https://github.com/applitools/eyes.sdk.javascript1/commit/ba11581))
+
+
+
+
+
 # [1.3.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@1.2.4...@applitools/eyes-common@1.3.0) (2019-02-19)
 
 

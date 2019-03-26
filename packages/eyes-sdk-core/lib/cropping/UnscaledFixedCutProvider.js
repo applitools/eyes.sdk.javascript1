@@ -6,10 +6,10 @@ const { CutProvider } = require('./CutProvider');
 
 class UnscaledFixedCutProvider extends CutProvider {
   /**
-   * @param {number} header The header to cut in pixels.
-   * @param {number} footer The footer to cut in pixels.
-   * @param {number} left The left to cut in pixels.
-   * @param {number} right The right to cut in pixels.
+   * @param {number} header - The header to cut in pixels.
+   * @param {number} footer - The footer to cut in pixels.
+   * @param {number} left - The left to cut in pixels.
+   * @param {number} right - The right to cut in pixels.
    */
   constructor(header, footer, left, right) {
     super();

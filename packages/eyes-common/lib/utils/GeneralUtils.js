@@ -1,20 +1,23 @@
 'use strict';
 
 const merge = require('deepmerge');
+// const util = require('util');
 
 const { TypeUtils } = require('./TypeUtils');
 const { DateTimeUtils } = require('./DateTimeUtils');
 
 /**
  * Collection of utility methods.
+ *
+ * @ignore
  */
 class GeneralUtils {
   /**
    * Concatenate the url to the suffixes - making sure there are no double slashes
    *
-   * @param {string} url The left side of the URL.
-   * @param {string...} suffixes The right side.
-   * @return {string} the URL
+   * @param {string} url - The left side of the URL.
+   * @param {...string} suffixes - The right side.
+   * @return {string} - the URL
    */
   static urlConcat(url, ...suffixes) {
     let concatUrl = GeneralUtils.stripTrailingSlash(url);
@@ -45,7 +48,7 @@ class GeneralUtils {
    * Check if an URL is absolute
    *
    * @param {string} url
-   * @return {boolean} the URL
+   * @return {boolean} - the URL
    */
   static isAbsoluteUrl(url) {
     return /^[a-z][a-z0-9+.-]*:/.test(url);
@@ -63,7 +66,13 @@ class GeneralUtils {
       object = GeneralUtils.toPlain(object, exclude);
     }
 
-    return JSON.stringify(object);
+    try {
+      return JSON.stringify(object);
+    } catch (err) {
+      console.warn("Error during writing log:", err); // eslint-disable-line
+      // console.warn(util.inspect(object, {depth: null, colors: true})); // eslint-disable-line
+      return undefined;
+    }
   }
 
   /**
@@ -132,8 +141,8 @@ class GeneralUtils {
   /**
    * Waits a specified amount of time before resolving the returned promise.
    *
-   * @param {number} ms The amount of time to sleep in milliseconds.
-   * @return {Promise<void>} A promise which is resolved when sleep is done.
+   * @param {number} ms - The amount of time to sleep in milliseconds.
+   * @return {Promise} - A promise which is resolved when sleep is done.
    */
   static sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -144,8 +153,8 @@ class GeneralUtils {
    * Convert a Date object to a ISO-8601 date string
    *
    * @deprecated Use {@link DateTimeUtils.toISO8601DateTime} instead
-   * @param {Date} [date] Date which will be converted
-   * @return {string} string formatted as ISO-8601 (yyyy-MM-dd'T'HH:mm:ss'Z')
+   * @param {Date} [date] - Date which will be converted
+   * @return {string} - string formatted as ISO-8601 (yyyy-MM-dd'T'HH:mm:ss'Z')
    */
   static toISO8601DateTime(date) {
     return DateTimeUtils.toISO8601DateTime(date);
@@ -156,8 +165,8 @@ class GeneralUtils {
    * Convert a Date object to a RFC-1123 date string
    *
    * @deprecated Use {@link DateTimeUtils.toRfc1123DateTime} instead
-   * @param {Date} [date] Date which will be converted
-   * @return {string} string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
+   * @param {Date} [date] - Date which will be converted
+   * @return {string} - string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
    */
   static toRfc1123DateTime(date) {
     return DateTimeUtils.toRfc1123DateTime(date);
@@ -168,8 +177,8 @@ class GeneralUtils {
    * Convert a Date object to a RFC-1123 date string
    *
    * @deprecated Use {@link DateTimeUtils.toLogFileDateTime} instead
-   * @param {Date} [date] Date which will be converted
-   * @return {string} string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
+   * @param {Date} [date] - Date which will be converted
+   * @return {string} - string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
    */
   static toLogFileDateTime(date) {
     return DateTimeUtils.toLogFileDateTime(date);
@@ -180,8 +189,8 @@ class GeneralUtils {
    * Creates {@link Date} instance from an ISO 8601 formatted string.
    *
    * @deprecated Use {@link DateTimeUtils.fromISO8601DateTime} instead
-   * @param {string} dateTime An ISO 8601 formatted string.
-   * @return {Date} A {@link Date} instance representing the given date and time.
+   * @param {string} dateTime - An ISO 8601 formatted string.
+   * @return {Date} - A {@link Date} instance representing the given date and time.
    */
   static fromISO8601DateTime(dateTime) {
     return DateTimeUtils.fromISO8601DateTime(dateTime);
@@ -208,7 +217,7 @@ class GeneralUtils {
             }
           }
 
-          return JSON.stringify(arg);
+          return GeneralUtils.toString(arg);
         }
 
         return arg;
@@ -232,8 +241,8 @@ class GeneralUtils {
   /**
    * Cartesian product of arrays
    *
-   * @param {...(Array|Object)} arrays Variable number of arrays of n elements
-   * @return {Array<Array>} Product of arrays as an array of X arrays of N elements,
+   * @param {...(Array|Object)} arrays - Variable number of arrays of n elements
+   * @return {Array<Array>} - Product of arrays as an array of X arrays of N elements,
    *   where X is the product of the input arrays' lengths
    */
   static cartesianProduct(...arrays) {
@@ -246,9 +255,9 @@ class GeneralUtils {
   /**
    * Get a property of the object by a path string
    *
-   * @param {object} object The object to query.
-   * @param {string} path The path of a property (example: "foo.bar.baz" ).
-   * @return {*|undefined} The value of the given property or `undefined` if the property is not exists.
+   * @param {object} object - The object to query.
+   * @param {string} path - The path of a property (example: "foo.bar.baz" ).
+   * @return {*|undefined} - The value of the given property or `undefined` if the property is not exists.
    */
   static getPropertyByPath(object, path) {
     if (!object || !/^([a-zA-Z0-9-_.]+\.)*[a-zA-Z0-9-_.]+$/.test(path)) {

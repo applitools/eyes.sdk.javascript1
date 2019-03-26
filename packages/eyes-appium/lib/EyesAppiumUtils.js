@@ -2,10 +2,13 @@
 
 const { EyesSeleniumUtils } = require('@applitools/eyes-selenium');
 
+/**
+ * @ignore
+ */
 class EyesAppiumUtils extends EyesSeleniumUtils {
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {IWebDriver} driver The driver to test.
+   * @param {IWebDriver} driver - The driver to test.
    * @return {Promise<boolean>} {@code true} if the driver is an Android driver. {@code false} otherwise.
    */
   static async isAndroid(driver) {
@@ -14,7 +17,7 @@ class EyesAppiumUtils extends EyesSeleniumUtils {
   }
 
   /**
-   * @param {Capabilities} capabilities The driver's capabilities.
+   * @param {Capabilities} capabilities - The driver's capabilities.
    * @return {boolean} {@code true} if the driver is an Android driver. {@code false} otherwise.
    */
   static isAndroidFromCaps(capabilities) {
@@ -23,7 +26,7 @@ class EyesAppiumUtils extends EyesSeleniumUtils {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {IWebDriver} driver The driver to test.
+   * @param {IWebDriver} driver - The driver to test.
    * @return {Promise<boolean>} {@code true} if the driver is an Android driver. {@code false} otherwise.
    */
   static async isIOS(driver) {
@@ -32,7 +35,7 @@ class EyesAppiumUtils extends EyesSeleniumUtils {
   }
 
   /**
-   * @param {Capabilities} capabilities The driver's capabilities.
+   * @param {Capabilities} capabilities - The driver's capabilities.
    * @return {boolean} {@code true} if the driver is an Android driver. {@code false} otherwise.
    */
   static isIOSFromCaps(capabilities) {
@@ -41,8 +44,8 @@ class EyesAppiumUtils extends EyesSeleniumUtils {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {IWebDriver} driver The driver to get the platform version from.
-   * @return {Promise<string>} The platform version or {@code null} if it is undefined.
+   * @param {IWebDriver} driver - The driver to get the platform version from.
+   * @return {Promise<string>} - The platform version or {@code null} if it is undefined.
    */
   static async getPlatformVersion(driver) {
     const capabilities = await driver.getCapabilities();
@@ -50,8 +53,8 @@ class EyesAppiumUtils extends EyesSeleniumUtils {
   }
 
   /**
-   * @param {Capabilities} capabilities The driver's capabilities.
-   * @return {string} The platform version or {@code null} if it is undefined.
+   * @param {Capabilities} capabilities - The driver's capabilities.
+   * @return {string} - The platform version or {@code null} if it is undefined.
    */
   static getPlatformVersionFromCaps(capabilities) {
     return capabilities.get('platformVersion');

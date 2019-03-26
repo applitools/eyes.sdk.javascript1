@@ -3,6 +3,9 @@
 const { Location, Region, CoordinatesType } = require('@applitools/eyes-common');
 const { GetRegion } = require('@applitools/eyes-sdk-core');
 
+/**
+ * @ignore
+ */
 class IgnoreRegionByElement extends GetRegion {
   /**
    * @param {WebElement} webElement

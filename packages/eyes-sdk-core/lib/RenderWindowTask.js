@@ -8,10 +8,13 @@ const { RenderStatus } = require('./renderer/RenderStatus');
 
 const DEFAULT_CONCURRENCY_LIMIT = 100;
 
+/**
+ * @ignore
+ */
 class RenderWindowTask {
   /**
-   * @param {Logger} logger A logger instance.
-   * @param {ServerConnector} serverConnector Our gateway to the agent
+   * @param {Logger} logger - A logger instance.
+   * @param {ServerConnector} serverConnector - Our gateway to the agent
    */
   constructor(logger, serverConnector) {
     ArgumentGuard.notNull(logger, 'logger');
@@ -24,7 +27,7 @@ class RenderWindowTask {
   // noinspection JSUnusedGlobalSymbols
   /**
    * @param {RenderRequest} renderRequest
-   * @return {Promise<string>} Rendered image URL
+   * @return {Promise<string>} - Rendered image URL
    */
   async renderWindow(renderRequest) {
     const runningRender = await this.postRender(renderRequest);
@@ -60,7 +63,7 @@ class RenderWindowTask {
   // noinspection JSUnusedGlobalSymbols
   /**
    * @param {RenderRequest} renderRequest
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async checkAndPutResources(renderRequest) {
     const newRender = await this._serverConnector.render(renderRequest);
@@ -92,7 +95,7 @@ class RenderWindowTask {
   // noinspection JSUnusedGlobalSymbols
   /**
    * @param {string[]} renderIds
-   * @param {boolean} [delayBeforeRequest=false] If {@code true}, then the request will be delayed
+   * @param {boolean} [delayBeforeRequest=false] - If {@code true}, then the request will be delayed
    * @return {Promise<RenderStatusResults[]>}
    */
   getRenderStatusBatch(renderIds, delayBeforeRequest) {
@@ -103,7 +106,7 @@ class RenderWindowTask {
    * @param {RGridDom} rGridDom
    * @param {RunningRender} runningRender
    * @param {number} [concurrency]
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async putResources(rGridDom, runningRender, concurrency = DEFAULT_CONCURRENCY_LIMIT) {
     if (runningRender.getNeedMoreDom()) {

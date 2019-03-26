@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.5.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.5.0...@applitools/visual-grid-client@12.5.1) (2019-03-24)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.5.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.3.0...@applitools/visual-grid-client@12.5.0) (2019-03-17)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** update dependencies ([052f440](https://github.com/applitools/eyes.sdk.javascript1/commit/052f440))
+
+
+### Features
+
+* **visual-grid-client:** added debug name space of visual-grid-client ([780ac7d](https://github.com/applitools/eyes.sdk.javascript1/commit/780ac7d))
+
+
+
+
+
+# [12.3.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.2.0...@applitools/visual-grid-client@12.3.0) (2019-03-14)
+
+
+### Features
+
+* **visual-grid-client:** add `logger` to makeRenderingGridClient ([a71484b](https://github.com/applitools/eyes.sdk.javascript1/commit/a71484b))
+
+
+
+
+
+# [12.2.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.1.0...@applitools/visual-grid-client@12.2.0) (2019-03-13)
+
+
+### Features
+
+* **visual-grid-client:** added renderId to failMsg in makeWaitForRenderedStatus. ([cad65de](https://github.com/applitools/eyes.sdk.javascript1/commit/cad65de))
+* **visual-grid-client:** added useDom & enablePatterns to config params ([7535b1d](https://github.com/applitools/eyes.sdk.javascript1/commit/7535b1d))
+* **visual-grid-client:** added useDom & enablePattrens for openEyes ([07a2d51](https://github.com/applitools/eyes.sdk.javascript1/commit/07a2d51))
+
+
+
+
+
+# [12.1.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.0.2...@applitools/visual-grid-client@12.1.0) (2019-02-27)
+
+
+### Features
+
+* **eyes-sdk-core, visua-grid-client:** 🎸 supporting useDom and enablePatterns for match request ([03ae908](https://github.com/applitools/eyes.sdk.javascript1/commit/03ae908))
+
+
+
+
+
 ## [12.0.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.0.1...@applitools/visual-grid-client@12.0.2) (2019-02-25)
 
 

@@ -2,6 +2,9 @@
 
 const { RegionVisibilityStrategy } = require('./RegionVisibilityStrategy');
 
+/**
+ * @ignore
+ */
 class NopRegionVisibilityStrategy extends RegionVisibilityStrategy {
   /**
    * @param {Logger} logger

@@ -5,6 +5,7 @@
 /**
  * Encapsulates the instantiation of an EyesScreenshot object.
  *
+ * @ignore
  * @abstract
  */
 class EyesScreenshotFactory {

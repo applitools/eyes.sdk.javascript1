@@ -6,6 +6,9 @@ const { RegionVisibilityStrategy } = require('./RegionVisibilityStrategy');
 
 const VISIBILITY_OFFSET = 100; // Pixels
 
+/**
+ * @ignore
+ */
 class MoveToRegionVisibilityStrategy extends RegionVisibilityStrategy {
   /**
    * @param {Logger} logger
@@ -22,10 +25,10 @@ class MoveToRegionVisibilityStrategy extends RegionVisibilityStrategy {
    * @inheritDoc
    */
   async moveToRegion(positionProvider, location) {
-    this._logger.verbose('Getting current position state..');
+    this._logger.verbose('Getting current position state...');
 
     this._originalPosition = await positionProvider.getState();
-    this._logger.verbose('Done! Setting position..');
+    this._logger.verbose('Done! Setting position...');
 
     // We set the location to "almost" the location we were asked. This is because sometimes, moving the browser
     // to the specific pixel where the element begins, causes the element to be slightly out of the viewport.

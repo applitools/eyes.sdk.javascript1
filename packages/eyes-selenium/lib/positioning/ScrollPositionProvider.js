@@ -1,58 +1,82 @@
 'use strict';
 
-const { ArgumentGuard, Location } = require('@applitools/eyes-common');
+const { ArgumentGuard, Location, RectangleSize, EyesError } = require('@applitools/eyes-common');
 const { PositionProvider } = require('@applitools/eyes-sdk-core');
 
-const { EyesSeleniumUtils } = require('../EyesSeleniumUtils');
 const { ScrollPositionMemento } = require('./ScrollPositionMemento');
-const { EyesDriverOperationError } = require('../errors/EyesDriverOperationError');
 
 class ScrollPositionProvider extends PositionProvider {
   /**
-   * @param {Logger} logger A Logger instance.
+   * @param {Logger} logger
    * @param {EyesJsExecutor} executor
+   * @param {WebElement} scrollRootElement
    */
-  constructor(logger, executor) {
+  constructor(logger, executor, scrollRootElement) {
     super();
 
     ArgumentGuard.notNull(logger, 'logger');
     ArgumentGuard.notNull(executor, 'executor');
+    ArgumentGuard.notNull(scrollRootElement, 'scrollRootElement');
 
     this._logger = logger;
     this._executor = executor;
+    this._scrollRootElement = scrollRootElement;
 
     this._logger.verbose('creating ScrollPositionProvider');
   }
 
   /**
-   * @inheritDoc
+   * @param {EyesJsExecutor} executor
+   * @param {WebElement} scrollRootElement
+   * @return {Promise<Location>}
    */
-  async getCurrentPosition() {
-    this._logger.verbose('ScrollPositionProvider - getCurrentPosition()');
-
+  static async getCurrentPositionStatic(executor, scrollRootElement) {
     try {
-      const result = await EyesSeleniumUtils.getCurrentScrollPosition(this._executor);
-      this._logger.verbose(`Current position: ${result}`);
-      return result;
+      const script = 'return [arguments[0].scrollLeft, arguments[0].scrollTop];';
+
+      const result = await executor.executeScript(script, scrollRootElement);
+      return new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0);
     } catch (err) {
-      throw new EyesDriverOperationError('Failed to extract current scroll position!', err);
+      throw new EyesError('Could not get scroll position!', err);
     }
   }
 
   /**
    * @inheritDoc
    */
+  async getCurrentPosition() {
+    return await ScrollPositionProvider.getCurrentPositionStatic(this._executor, this._scrollRootElement);
+  }
+
+  /**
+   * @inheritDoc
+   */
   async setPosition(location) {
-    this._logger.verbose(`ScrollPositionProvider - Scrolling to ${location}`);
-    await EyesSeleniumUtils.setCurrentScrollPosition(this._executor, location);
-    this._logger.verbose('ScrollPositionProvider - Done scrolling!');
+    try {
+      this._logger.verbose(`setting position of ${this._scrollRootElement} to ${location}`);
+
+      const script = `arguments[0].scrollLeft=${location.getX()}; arguments[0].scrollTop=${location.getY()};` +
+        'return [arguments[0].scrollLeft, arguments[0].scrollTop];';
+
+      const result = await this._executor.executeScript(script, this._scrollRootElement);
+      return new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0);
+    } catch (err) {
+      throw new EyesError('Could not get scroll position!', err);
+    }
   }
 
   /**
    * @inheritDoc
    */
   async getEntireSize() {
-    const result = await EyesSeleniumUtils.getCurrentFrameContentEntireSize(this._executor);
+    this._logger.verbose(`enter`);
+
+    const script = 'var width = Math.max(arguments[0].clientWidth, arguments[0].scrollWidth);' +
+      'var height = Math.max(arguments[0].clientHeight, arguments[0].scrollHeight);' +
+      'return [width, height];';
+
+    const entireSizeStr = await this._executor.executeScript(script, this._scrollRootElement);
+    const result = new RectangleSize(Math.ceil(entireSizeStr[0]) || 0, Math.ceil(entireSizeStr[1]) || 0);
     this._logger.verbose(`ScrollPositionProvider - Entire size: ${result}`);
     return result;
   }
@@ -69,19 +93,20 @@ class ScrollPositionProvider extends PositionProvider {
   // noinspection JSCheckFunctionSignatures
   /**
    * @inheritDoc
-   * @param {ScrollPositionMemento} state The initial state of position
-   * @return {Promise<void>}
+   * @param {ScrollPositionMemento} state - The initial state of position
+   * @return {Promise}
    */
   async restoreState(state) {
-    await this.setPosition(new Location(state.getX(), state.getY()));
-    this._logger.verbose('Position restored.');
+    const newPosition = new Location(state.getX(), state.getY());
+    await this.setPosition(newPosition);
   }
 
   /**
-   * @return {Promise<void>}
+   * @override
+   * @return {WebElement}
    */
-  async scrollToBottomRight() {
-    return EyesSeleniumUtils.scrollToBottomRight(this._executor);
+  getScrolledElement() {
+    return this._scrollRootElement;
   }
 }
 

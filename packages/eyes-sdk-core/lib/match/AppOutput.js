@@ -2,15 +2,17 @@
 
 /**
  * An application output (title, image, etc).
+ *
+ * @ignore
  */
 class AppOutput {
   /**
-   * @param {string} title The title of the screen of the application being captured.
-   * @param {Buffer} [screenshot] Base64 encoding of the screenshot's bytes (the byte can be in either in compressed
+   * @param {string} title - The title of the screen of the application being captured.
+   * @param {Buffer} [screenshot] - Base64 encoding of the screenshot's bytes (the byte can be in either in compressed
    *   or uncompressed form)
-   * @param {string} [screenshotUrl] The URL that points to the screenshot
-   * @param {string} [domUrl] URL that points to a dom capture of the provided screenshot
-   * @param {Location} [imageLocation] Location of the provided screenshot relative to the logical full-page
+   * @param {string} [screenshotUrl] - The URL that points to the screenshot
+   * @param {string} [domUrl] - URL that points to a dom capture of the provided screenshot
+   * @param {Location} [imageLocation] - Location of the provided screenshot relative to the logical full-page
    *   screenshot (e.g. in checkRegion)
    */
   constructor({ title, screenshot, screenshotUrl, domUrl, imageLocation } = {}) {

@@ -51,7 +51,7 @@ class DebugScreenshotsProvider {
    * @abstract
    * @param {MutableImage} image
    * @param {string} suffix
-   * @return {Promise<void>}
+   * @return {Promise}
    */
   async save(image, suffix) { // eslint-disable-line no-unused-vars
     throw new TypeError('The method is not implemented!');

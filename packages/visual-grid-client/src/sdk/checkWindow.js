@@ -45,6 +45,8 @@ function makeCheckWindow({
     matchLevel = _matchLevel,
     layout,
     strict,
+    useDom,
+    enablePatterns,
   }) {
     const currStepCount = ++stepCounter;
     logger.log(`running checkWindow for test ${testName} step #${currStepCount}`);
@@ -184,6 +186,8 @@ function makeCheckWindow({
         floating: offsetRegions[offsetSelectors.floating],
         layout: noOffsetRegions[noOffsetSelectors.layout],
         strict: noOffsetRegions[noOffsetSelectors.strict],
+        useDom,
+        enablePatterns,
       });
 
       logger.log(`checkWindow waiting for openEyes. test=${testName}, stepCount #${currStepCount}`);

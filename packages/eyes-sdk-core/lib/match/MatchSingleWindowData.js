@@ -6,14 +6,16 @@ const { MatchWindowData, Options } = require('./MatchWindowData');
 
 /**
  * Encapsulates the data to be sent to the agent on a "matchWindow" command.
+ *
+ * @ignore
  */
 class MatchSingleWindowData extends MatchWindowData {
   /**
-   * @param {SessionStartInfo} startInfo The start parameters for the session.
-   * @param {Trigger[]} userInputs A list of triggers between the previous matchWindow call and the current matchWindow
+   * @param {SessionStartInfo} startInfo - The start parameters for the session.
+   * @param {Trigger[]} userInputs - A list of triggers between the previous matchWindow call and the current matchWindow
    *   call. Can be array of size 0, but MUST NOT be null.
-   * @param {AppOutput} appOutput The appOutput for the current matchWindow call.
-   * @param {string} tag The tag of the window to be matched.
+   * @param {AppOutput} appOutput - The appOutput for the current matchWindow call.
+   * @param {string} tag - The tag of the window to be matched.
    * @param {boolean} [ignoreMismatch]
    * @param {Options} [options]
    */

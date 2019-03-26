@@ -18,8 +18,8 @@ class TestResultsFormatter {
   /**
    * Adds an additional results object to the currently stored results list.
    *
-   * @param {TestResults} results A test results returned by a call to `eyes.close' or 'eyes.abortIfNotClosed'.
-   * @return {TestResultsFormatter} The updated 'TestResultsFormatter' instance.
+   * @param {TestResults} results - A test results returned by a call to `eyes.close' or 'eyes.abortIfNotClosed'.
+   * @return {TestResultsFormatter} - The updated 'TestResultsFormatter' instance.
    */
   addTestResults(results) {
     if (results) {
@@ -34,8 +34,8 @@ class TestResultsFormatter {
    * Adds an additional results object to the currently stored results list.
    *
    * @deprecated use {@link #addTestResults(results)} instead
-   * @param {TestResults} results A test results returned by a call to `eyes.close' or 'eyes.abortIfNotClosed'.
-   * @return {TestResultsFormatter} The updated 'TestResultsFormatter' instance.
+   * @param {TestResults} results - A test results returned by a call to `eyes.close' or 'eyes.abortIfNotClosed'.
+   * @return {TestResultsFormatter} - The updated 'TestResultsFormatter' instance.
    */
   addResults(results) {
     return this.addTestResults(results);
@@ -61,9 +61,9 @@ class TestResultsFormatter {
   /**
    * Creates a TAP representation of the tests results list in hierarchic format.
    *
-   * @param {boolean} [includeSubTests=true] If true, steps will be treated as "subtests". Default is true.
-   * @param {boolean} [markNewAsPassed=false] If true, new tests will be treated as "passed". Default is false.
-   * @return {string} A string which is the TAP representation of the results list.
+   * @param {boolean} [includeSubTests=true] - If true, steps will be treated as "subtests". Default is true.
+   * @param {boolean} [markNewAsPassed=false] - If true, new tests will be treated as "passed". Default is false.
+   * @return {string} - A string which is the TAP representation of the results list.
    */
   asFormatterString(includeSubTests = true, markNewAsPassed = false) {
     if (this._resultsList.length === 0) {
@@ -113,9 +113,9 @@ class TestResultsFormatter {
   /**
    * Creates a TAP representation of the tests results list in hierarchic format.
    *
-   * @param {boolean} [includeSubTests=true] If true, steps will be treated as "subtests". Default is true.
-   * @param {boolean} [markNewAsPassed=false] If true, new tests will be treated as "passed". Default is false.
-   * @return {string} A string which is the TAP representation of the results list.
+   * @param {boolean} [includeSubTests=true] - If true, steps will be treated as "subtests". Default is true.
+   * @param {boolean} [markNewAsPassed=false] - If true, new tests will be treated as "passed". Default is false.
+   * @return {string} - A string which is the TAP representation of the results list.
    */
   asHierarchicTAPString(includeSubTests = true, markNewAsPassed = false) {
     if (this._resultsList.length === 0) {
@@ -183,8 +183,8 @@ class TestResultsFormatter {
   /**
    * Creates a TAP representation of the tests results list in which each steps are colored as success/fail.
    *
-   * @param {boolean} [markNewAsPassed=false] If true, new tests will be treated as "passed". Default is false.
-   * @return {string} A string which is the TAP representation of the results list.
+   * @param {boolean} [markNewAsPassed=false] - If true, new tests will be treated as "passed". Default is false.
+   * @return {string} - A string which is the TAP representation of the results list.
    */
   asFlattenedTAPString(markNewAsPassed = false) {
     if (this._resultsList.length === 0) {

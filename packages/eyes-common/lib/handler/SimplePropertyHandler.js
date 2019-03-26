@@ -7,7 +7,7 @@ const { PropertyHandler } = require('./PropertyHandler');
  */
 class SimplePropertyHandler extends PropertyHandler {
   /**
-   * @param {object} [obj] The object to set.
+   * @param {object} [obj] - The object to set.
    */
   constructor(obj) {
     super();

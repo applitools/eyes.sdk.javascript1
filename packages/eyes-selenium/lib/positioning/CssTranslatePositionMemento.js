@@ -4,11 +4,13 @@ const { PositionMemento } = require('@applitools/eyes-sdk-core');
 
 /**
  * Encapsulates state for {@link CssTranslatePositionProvider} instances.
+ *
+ * @ignore
  */
 class CssTranslatePositionMemento extends PositionMemento {
   /**
-   * @param {Map<string, string>} transforms The current transforms. The keys are the style keys from which each of
-   *   the transforms were taken.
+   * @param {String} transforms - The current transforms. The keys are the style keys from which each of the transforms
+   *   were taken.
    * @param {Location} position
    */
   constructor(transforms, position) {
@@ -19,8 +21,8 @@ class CssTranslatePositionMemento extends PositionMemento {
   }
 
   /**
-   * @return {Map<string, string>} The current transforms. The keys are the style keys from which each of the
-   *   transforms were taken.
+   * @return {String} - The current transforms. The keys are the style keys from which each of the transforms
+   *  were taken.
    */
   getTransform() {
     return this._transforms;

@@ -1,7 +1,8 @@
 'use strict';
 
 const { WebElement, By } = require('selenium-webdriver');
-const { TypeUtils, CheckSettings, Region } = require('@applitools/eyes-sdk-core');
+const { TypeUtils, Region } = require('@applitools/eyes-common');
+const { CheckSettings } = require('@applitools/eyes-sdk-core');
 
 const { IgnoreRegionBySelector } = require('./IgnoreRegionBySelector');
 const { IgnoreRegionByElement } = require('./IgnoreRegionByElement');
@@ -26,6 +27,11 @@ class SeleniumCheckSettings extends CheckSettings {
     this._targetElement = null;
     this._frameChain = [];
 
+    /** @type {By} */
+    this._scrollRootSelector = undefined;
+    /** @type {WebElement} */
+    this._scrollRootElement = undefined;
+
     if (region) {
       this.region(region);
     }
@@ -39,6 +45,7 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @package
+   * @ignore
    * @return {?GetSelector}
    */
   getTargetProvider() {
@@ -53,6 +60,7 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @package
+   * @ignore
    * @return {By}
    */
   getTargetSelector() {
@@ -61,6 +69,7 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @package
+   * @ignore
    * @return {WebElement}
    */
   getTargetElement() {
@@ -69,6 +78,7 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @package
+   * @ignore
    * @return {FrameLocator[]}
    */
   getFrameChain() {
@@ -76,7 +86,7 @@ class SeleniumCheckSettings extends CheckSettings {
   }
 
   /**
-   * @param {number|string|By|WebElement|EyesWebElement} frame The frame to switch to.
+   * @param {number|string|By|WebElement|EyesWebElement} frame - The frame to switch to.
    * @return {this}
    */
   frame(frame) {
@@ -98,7 +108,7 @@ class SeleniumCheckSettings extends CheckSettings {
   }
 
   /**
-   * @param {Region|RegionObject|By|WebElement|EyesWebElement|string} region The region to validate.
+   * @param {Region|RegionObject|By|WebElement|EyesWebElement|string} region - The region to validate.
    * @return {this}
    */
   region(region) {
@@ -137,7 +147,8 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @inheritDoc
-   * @param {(By|WebElement|EyesWebElement|GetRegion|Region)...} regions A region to ignore when validating.
+   * @param {...(By|WebElement|EyesWebElement|GetRegion|Region)} regions - A region to ignore when validating.
+   * @return {this}
    */
   ignoreRegions(...regions) {
     // noinspection JSValidateTypes
@@ -146,7 +157,8 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @inheritDoc
-   * @param {(By|WebElement|EyesWebElement|GetRegion|Region)...} regions A region to match using the Layout method.
+   * @param {...(By|WebElement|EyesWebElement|GetRegion|Region)} regions - A region to match using the Layout method.
+   * @return {this}
    */
   layoutRegions(...regions) {
     // noinspection JSValidateTypes
@@ -155,7 +167,8 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @inheritDoc
-   * @param {(By|WebElement|EyesWebElement|GetRegion|Region)...} regions A region to match using the Strict method.
+   * @param {...(By|WebElement|EyesWebElement|GetRegion|Region)} regions - A region to match using the Strict method.
+   * @return {this}
    */
   strictRegions(...regions) {
     // noinspection JSValidateTypes
@@ -164,7 +177,8 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @inheritDoc
-   * @param {(By|WebElement|EyesWebElement|GetRegion|Region)...} regions A region to match using the Content method.
+   * @param {...(By|WebElement|EyesWebElement|GetRegion|Region)} regions - A region to match using the Content method.
+   * @return {this}
    */
   contentRegions(...regions) {
     // noinspection JSValidateTypes
@@ -174,12 +188,13 @@ class SeleniumCheckSettings extends CheckSettings {
   // noinspection JSCheckFunctionSignatures
   /**
    * @inheritDoc
-   * @param {GetFloatingRegion|Region|FloatingMatchSettings|By|WebElement|EyesWebElement} regionOrContainer The content
+   * @param {GetFloatingRegion|Region|FloatingMatchSettings|By|WebElement|EyesWebElement} regionOrContainer - The content
    *   rectangle or region container
-   * @param {number} [maxUpOffset] How much the content can move up.
-   * @param {number} [maxDownOffset] How much the content can move down.
-   * @param {number} [maxLeftOffset] How much the content can move to the left.
-   * @param {number} [maxRightOffset] How much the content can move to the right.
+   * @param {number} [maxUpOffset] - How much the content can move up.
+   * @param {number} [maxDownOffset] - How much the content can move down.
+   * @param {number} [maxLeftOffset] - How much the content can move to the left.
+   * @param {number} [maxRightOffset] - How much the content can move to the right.
+   * @return {this}
    */
   floatingRegion(regionOrContainer, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
     if (EyesWebElement.isLocator(regionOrContainer)) {
@@ -209,15 +224,17 @@ class SeleniumCheckSettings extends CheckSettings {
   // noinspection JSCheckFunctionSignatures
   /**
    * @inheritDoc
-   * @param {number} maxOffset How much each of the content rectangles can move in any direction.
-   * @param {(GetFloatingRegion|Region|By|WebElement|EyesWebElement)...} regionsOrContainers One or more content
+   * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
+   * @param {...(GetFloatingRegion|Region|By|WebElement|EyesWebElement)} regionsOrContainers - One or more content
    *   rectangles or region containers
+   * @return {this}
    */
   floatingRegions(maxOffset, ...regionsOrContainers) {
     return super.floatingRegions(maxOffset, ...regionsOrContainers);
   }
 
   /**
+   * @ignore
    * @return {string}
    */
   getSizeMode() {
@@ -239,18 +256,54 @@ class SeleniumCheckSettings extends CheckSettings {
   }
 
   /**
-   * @param {string} script
+   * @param {By|WebElement|EyesWebElement} element
+   * @return {this}
    */
-  addScriptHook(script) {
-    let scripts = this._scriptHooks.get(BEFORE_CAPTURE_SCREENSHOT);
-    if (scripts == null) {
-      scripts = [];
-      this._scriptHooks.set(BEFORE_CAPTURE_SCREENSHOT, scripts);
+  scrollRootElement(element) {
+    if (EyesWebElement.isLocator(element)) {
+      if (this._frameChain.size() === 0) {
+        this._scrollRootSelector = element;
+      } else {
+        this._frameChain.get(this._frameChain.size() - 1).setScrollRootSelector(element);
+      }
+    } else {
+      if (this._frameChain.size() === 0) {
+        this._scrollRootElement = element;
+      } else {
+        this._frameChain.get(this._frameChain.size() - 1).setScrollRootElement(element);
+      }
     }
-    scripts.add(script);
+
+    return this;
   }
 
   /**
+   * @ignore
+   * @return {WebElement}
+   */
+  getScrollRootElement() {
+    return this._scrollRootElement;
+  }
+
+  /**
+   * @ignore
+   * @return {By}
+   */
+  getScrollRootSelector() {
+    return this._scrollRootSelector;
+  }
+
+  /**
+   * @param {String} hook
+   * @return {this}
+   */
+  webHook(hook) {
+    this._scriptHooks.set(BEFORE_CAPTURE_SCREENSHOT, hook);
+    return this;
+  }
+
+  /**
+   * @ignore
    * @return {Map<string, string>}
    */
   getScriptHooks() {

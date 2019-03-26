@@ -3,9 +3,7 @@
 require('chromedriver');
 const { Builder } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
-const { BatchInfo, Region, CorsIframeHandle } = require('@applitools/eyes-sdk-core');
-const { RectangleSize } = require('@applitools/eyes-common');
-const { Eyes, Target, SeleniumConfiguration, BrowserType } = require('../../index');
+const { Eyes, Target, SeleniumConfiguration, BrowserType, RectangleSize, BatchInfo, Region, CorsIframeHandle } = require('../../index');
 
 let /** @type {WebDriver} */ driver;
 describe('VisualGridSimple', function () {
@@ -24,13 +22,14 @@ describe('VisualGridSimple', function () {
     // eyes.setProxy('http://127.0.0.1:8888');
 
     const configuration = new SeleniumConfiguration();
-    configuration.setTestName('Open Concurrency with Batch 2');
-    configuration.setAppName('RenderingGridIntegration');
+    configuration.testName = 'Open Concurrency with Batch 2';
+    configuration.appName = 'RenderingGridIntegration';
     configuration.addBrowser(800, 600, BrowserType.CHROME);
     configuration.addBrowser(700, 500, BrowserType.CHROME);
     configuration.addBrowser(400, 300, BrowserType.CHROME);
+    eyes.setConfiguration(configuration);
 
-    await eyes.open(driver, configuration);
+    await eyes.open(driver);
 
     await eyes.setViewportSize(new RectangleSize({ width: 800, height: 600 }));
 

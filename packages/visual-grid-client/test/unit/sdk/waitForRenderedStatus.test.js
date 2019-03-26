@@ -75,7 +75,7 @@ describe('waitForRenderedStatus', () => {
     });
     const [err, _status] = await presult(waitForRenderedStatus('render1'));
     expect(err).to.be.an.instanceOf(Error);
-    expect(err.message).to.equal(failMsg);
+    expect(err.message).to.equal(failMsg('render1'));
   });
 
   it('keeps trying if wrapper throws exception (e.g. 500 Internal server error)', async () => {
@@ -90,7 +90,7 @@ describe('waitForRenderedStatus', () => {
     });
     const [err, _statuses] = await presult(waitForRenderedStatus('render1'));
     expect(err).to.be.an.instanceOf(Error);
-    expect(err.message).to.equal(failMsg);
+    expect(err.message).to.equal(failMsg('render1'));
     expect(output).to.contain(
       '[waitForRenderedStatus] error during getRenderStatus for render1: Error: bla[waitForRenderedStatus] error during getRenderStatus for render1: Error: bla',
     );
@@ -108,7 +108,7 @@ describe('waitForRenderedStatus', () => {
     });
     const [err, _status] = await presult(waitForRenderedStatus('render1'));
     expect(err).to.be.an.instanceOf(Error);
-    expect(err.message).to.equal(failMsg);
+    expect(err.message).to.equal(failMsg('render1'));
   });
 
   it('keeps polling on undefined render status', async () => {

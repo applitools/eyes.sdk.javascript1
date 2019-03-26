@@ -5,6 +5,9 @@ const { JavascriptHandler } = require('@applitools/eyes-selenium');
 
 const { AppiumJsCommandExtractor } = require('./AppiumJsCommandExtractor');
 
+/**
+ * @ignore
+ */
 class AppiumJavascriptHandler extends JavascriptHandler {
   /**
    * @param {EyesWebDriver} driver

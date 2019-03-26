@@ -69,9 +69,9 @@ class UserAgent {
   }
 
   /**
-   * @param {string} userAgent User agent string to parse
-   * @param {boolean} unknowns Whether to treat unknown products as {@code UNKNOWN} or throw an exception.
-   * @return {UserAgent} A representation of the user agent string.
+   * @param {string} userAgent - User agent string to parse
+   * @param {boolean} unknowns - Whether to treat unknown products as {@code UNKNOWN} or throw an exception.
+   * @return {UserAgent} - A representation of the user agent string.
    */
   static parseUserAgentString(userAgent, unknowns) {
     ArgumentGuard.notNull(userAgent, 'userAgent');

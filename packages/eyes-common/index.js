@@ -37,6 +37,7 @@ exports.FileLogHandler = require('./lib/logging/FileLogHandler').FileLogHandler;
 exports.Logger = require('./lib/logging/Logger').Logger;
 exports.LogHandler = require('./lib/logging/LogHandler').LogHandler;
 exports.NullLogHandler = require('./lib/logging/NullLogHandler').NullLogHandler;
+exports.DebugLogHandler = require('./lib/logging/DebugLogHandler').DebugLogHandler;
 
 // useragent
 exports.BrowserNames = require('./lib/useragent/BrowserNames').BrowserNames;

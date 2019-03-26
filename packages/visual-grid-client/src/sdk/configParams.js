@@ -28,4 +28,6 @@ module.exports = [
   'ignoreBaseline',
   'serverUrl',
   'concurrency',
+  'useDom',
+  'enablePatterns',
 ];

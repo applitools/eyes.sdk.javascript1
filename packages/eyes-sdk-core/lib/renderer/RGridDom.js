@@ -23,7 +23,7 @@ class RGridDom {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {object} The domNodes of the current page.
+   * @return {object} - The domNodes of the current page.
    */
   getDomNodes() {
     return this._domNodes;
@@ -31,7 +31,7 @@ class RGridDom {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {object} value The page's domNodes
+   * @param {object} value - The page's domNodes
    */
   setDomNodes(value) {
     ArgumentGuard.notNull(value, 'domNodes');
@@ -39,7 +39,7 @@ class RGridDom {
   }
 
   /**
-   * @return {RGridResource[]} The resourceType of the current page
+   * @return {RGridResource[]} - The resourceType of the current page
    */
   getResources() {
     return this._resources;
@@ -47,7 +47,7 @@ class RGridDom {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {RGridResource[]} value The page's resourceType
+   * @param {RGridResource[]} value - The page's resourceType
    */
   setResources(value) {
     ArgumentGuard.notNull(value, 'resources');

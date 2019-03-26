@@ -5,27 +5,35 @@ const stackTrace = require('stack-trace');
 const { ArgumentGuard } = require('../utils/ArgumentGuard');
 const { GeneralUtils } = require('../utils/GeneralUtils');
 const { TypeUtils } = require('../utils/TypeUtils');
+const { DateTimeUtils } = require('../utils/DateTimeUtils');
+const { PerformanceUtils } = require('../utils/PerformanceUtils');
 
-const { ConsoleLogHandler } = require('./ConsoleLogHandler');
 const { NullLogHandler } = require('./NullLogHandler');
+const { ConsoleLogHandler } = require('./ConsoleLogHandler');
+const { DebugLogHandler } = require('./DebugLogHandler');
+
+const timeStorage = PerformanceUtils.start();
 
 /**
- * Write log massages using the provided Log Handler
+ * Write log messages using the provided Log Handler
  */
 class Logger {
   /**
-   * @param {boolean|string} [showLogs] Determines which log handler will be used ConsoleLogHandler (if set to {@code true})
-   *   or NullLogHandler (if not set or set to {@code false})
+   * @param {boolean|string} [showLogs] - Determines which log handler will be used. If set to {@code true}, then
+   *   `ConsoleLogHandler` will be used, if not set or set to {@code false} then `DebugLogHandler` used.
+   * @param {string} [debugAppName] - If using `DebugLogHandler` then this is the debug app name.
    */
-  constructor(showLogs = false) {
+  constructor(showLogs = false, debugAppName) {
     if (TypeUtils.isString(showLogs)) {
       showLogs = (showLogs === 'true');
     }
 
-    ArgumentGuard.isBoolean(showLogs, 'showLogs', false);
+    ArgumentGuard.isBoolean(showLogs, 'showLogs');
+    ArgumentGuard.isString(debugAppName, 'debugAppName', false);
 
-    this._logHandler = showLogs ? new ConsoleLogHandler(true) : new NullLogHandler();
+    this._logHandler = showLogs ? new ConsoleLogHandler(true) : new DebugLogHandler(false, debugAppName);
     this._sessionId = '';
+    this._isIncludeTime = false;
   }
 
   /**
@@ -35,15 +43,23 @@ class Logger {
     this._sessionId = sessionId;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {LogHandler} The currently set log handler.
+   * @param {boolean} isIncludeTime
+   */
+  setIncludeTime(isIncludeTime) {
+    this._isIncludeTime = isIncludeTime;
+  }
+
+  /**
+   * @return {LogHandler} - The currently set log handler.
    */
   getLogHandler() {
     return this._logHandler;
   }
 
   /**
-   * @param {LogHandler} [handler] The log handler to set. If you want a log handler which does nothing, use
+   * @param {LogHandler} [handler] - The log handler to set. If you want a log handler which does nothing, use
    *   {@link NullLogHandler}.
    */
   setLogHandler(handler) {
@@ -56,7 +72,7 @@ class Logger {
    * @param {*} args
    */
   verbose(...args) {
-    this._logHandler.onMessage(true, `[VERBOSE] ${this._getPrefix()}${GeneralUtils.stringify(...args)}`);
+    this._logHandler.onMessage(true, this._getFormattedString('VERBOSE', GeneralUtils.stringify(...args)));
   }
 
   /**
@@ -65,45 +81,61 @@ class Logger {
    * @param {*} args
    */
   log(...args) {
-    this._logHandler.onMessage(false, `[LOG    ] ${this._getPrefix()}${GeneralUtils.stringify(...args)}`);
+    this._logHandler.onMessage(false, this._getFormattedString('LOG    ', GeneralUtils.stringify(...args)));
   }
 
   // noinspection JSMethodCanBeStatic
   /**
    * @private
-   * @return {string} The name of the method which called the logger, if possible, or an empty string.
+   * @return {string} - The name of the method which called the logger, if possible, or an empty string.
    */
-  _getPrefix() {
-    let prefix = `{${this._sessionId}} `;
+  _getFormattedString(logLevel, message) {
+    const dateTime = DateTimeUtils.toISO8601DateTime();
 
+    let elapsedTime = '';
+    if (this._isIncludeTime) {
+      elapsedTime = `${timeStorage.end().time} ms. `;
+      timeStorage.start();
+    }
+
+    return `${dateTime} Eyes: [${logLevel}] {${this._sessionId}} ${this._getMethodName()}${elapsedTime}${message}`;
+  }
+
+  // noinspection JSMethodCanBeStatic
+  /**
+   * @private
+   * @return {string} - The name of the method which called the logger, if possible, or an empty string.
+   */
+  _getMethodName() {
     if (typeof Error.captureStackTrace == 'function') {
       /**
        * @typedef {object} CallSite
-       * @property {function} getTypeName returns the type of this as a string.
-       * @property {function} getFunctionName returns the name of the current function, typically its name property.
-       * @property {function} getMethodName returns the name of the property of this or one of its prototypes that holds
-       *   the current function
-       * @property {function} getFileName if this function was defined in a script returns the name of the script
-       * @property {function} getLineNumber if this function was defined in a script returns the current line number
-       * @property {function} getColumnNumber if this function was defined in a script returns the current column number
-       * @property {function} isNative is this call in native V8 code?
-       *//** @type {CallSite[]} */
+       * @property {function(): string} getTypeName returns the type of this as a string.
+       * @property {function(): string} getFunctionName returns the name of the current function, typically its name property.
+       * @property {function(): string} getMethodName returns the name of the property of this or one of its prototypes that holds the current function
+       * @property {function(): string} getFileName if this function was defined in a script returns the name of the script
+       * @property {function(): number} getLineNumber if this function was defined in a script returns the current line number
+       * @property {function(): number} getColumnNumber if this function was defined in a script returns the current column number
+       * @property {function(): boolean} isNative is this call in native V8 code?
+       */
+      // noinspection JSUnresolvedFunction
+      /** @type {CallSite[]} */
       const trace = stackTrace.get();
 
-      // _getPrefix() <- log()/verbose() <- "actual caller"
-      if (trace && trace.length >= 2) {
-        const className = trace[2].getTypeName();
-        const methodName = trace[2].getMethodName();
+      // _getMethodName() <- _getFormattedString <- log()/verbose() <- "actual caller"
+      if (trace && trace.length >= 3) {
+        const className = trace[3].getTypeName();
+        const methodName = trace[3].getMethodName();
 
-        if (className && methodName) {
-          prefix += `${className}.${methodName}(): `;
+        if (className) {
+          return `${className}.${(methodName || '<init>')}(): `;
         } else {
-          prefix += '(): ';
+          return '(): ';
         }
       }
     }
 
-    return prefix;
+    return '';
   }
 }
 

@@ -20,21 +20,29 @@ node_js:
 - "lts/*"
 - "8"
 
-env:
-  - NPM_TASK=ci:base
-  - NPM_TASK=ci:extended
-
-matrix:
-  exclude:
-    - node_js: "node"
-      env: NPM_TASK=ci:extended
-    - node_js: "8"
-      env: NPM_TASK=ci:extended
-
 cache: npm
 
 install:
   - npm install
 
+stages:
+  - lint
+  - test
+  - "Integration tests"
+  - name: "End-to-end tests"
+    if: branch = master
+
 script:
-  - npm run $NPM_TASK
+  - npm run test:unit
+
+jobs:
+  include:
+    - stage: lint
+      node_js: "lts/*"
+      script: npm run lint
+    - stage: "Integration tests"
+      node_js: "8"
+      script: npm run test:it
+#    - stage: "End-to-end tests"
+#      node_js: "8"
+#      script: npm run test:e2e

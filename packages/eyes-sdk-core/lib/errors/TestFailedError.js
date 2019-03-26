@@ -11,8 +11,8 @@ class TestFailedError extends EyesError {
   /**
    * Creates a new TestFailedError instance.
    *
-   * @param {?TestResults} testResults The results of the current test if available, {@code null} otherwise.
-   * @param {string|SessionStartInfo} messageOrSession The error description or SessionStartInfo with test details.
+   * @param {?TestResults} testResults - The results of the current test if available, {@code null} otherwise.
+   * @param {string|SessionStartInfo} messageOrSession - The error description or SessionStartInfo with test details.
    */
   constructor(testResults, messageOrSession) {
     if (messageOrSession instanceof SessionStartInfo) {
@@ -26,7 +26,7 @@ class TestFailedError extends EyesError {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {TestResults} The failed test results, or {@code null} if the test has not yet ended (e.g., when thrown
+   * @return {TestResults} - The failed test results, or {@code null} if the test has not yet ended (e.g., when thrown
    *   due to {@link FailureReports#IMMEDIATE} settings).
    */
   getTestResults() {

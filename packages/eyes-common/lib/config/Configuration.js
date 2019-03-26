@@ -17,47 +17,75 @@ const DEFAULT_VALUES = {
   saveFailedTests: false,
   saveNewTests: true,
   ignoreBaseline: false,
-  properties: [],
+  sendDom: false,
 };
 
 class Configuration {
   /**
-   * @param {Configuration} [configuration]
+   * @param {Configuration|object} [configuration]
    */
   constructor(configuration) {
-    /** @type {boolean} */ this._showLogs = undefined;
-    /** @type {boolean} */ this._saveDebugData = undefined;
+    /** @type {boolean} */
+    this._showLogs = undefined;
+    /** @type {boolean} */
+    this._saveDebugData = undefined;
 
-    /** @type {string} */ this._appName = undefined;
-    /** @type {string} */ this._testName = undefined;
-    /** @type {boolean} */ this._isDisabled = undefined;
-    /** @type {number} */ this._matchTimeout = undefined;
-    /** @type {SessionType} */ this._sessionType = undefined;
-    /** @type {RectangleSize} */ this._viewportSize = undefined;
-    /** @type {string} */ this._agentId = undefined;
+    /** @type {string} */
+    this._appName = undefined;
+    /** @type {string} */
+    this._testName = undefined;
+    /** @type {boolean} */
+    this._isDisabled = undefined;
+    /** @type {number} */
+    this._matchTimeout = undefined;
+    /** @type {SessionType} */
+    this._sessionType = undefined;
+    /** @type {RectangleSize} */
+    this._viewportSize = undefined;
+    /** @type {string} */
+    this._agentId = undefined;
 
-    /** @type {string} */ this._apiKey = undefined;
-    /** @type {string} */ this._serverUrl = undefined;
-    /** @type {ProxySettings} */ this._proxySettings = undefined;
-    /** @type {number} */ this._connectionTimeout = undefined;
-    /** @type {boolean} */ this._removeSession = undefined;
+    /** @type {string} */
+    this._apiKey = undefined;
+    /** @type {string} */
+    this._serverUrl = undefined;
+    /** @type {ProxySettings} */
+    this._proxySettings = undefined;
+    /** @type {number} */
+    this._connectionTimeout = undefined;
+    /** @type {boolean} */
+    this._removeSession = undefined;
 
-    /** @type {BatchInfo} */ this._batch = undefined;
+    /** @type {BatchInfo} */
+    this._batch = undefined;
 
-    /** @type {PropertyData[]} */ this._properties = undefined;
+    /** @type {PropertyData[]} */
+    this._properties = [];
 
-    /** @type {string} */ this._baselineEnvName = undefined;
-    /** @type {string} */ this._environmentName = undefined;
+    /** @type {string} */
+    this._baselineEnvName = undefined;
+    /** @type {string} */
+    this._environmentName = undefined;
 
-    /** @type {string} */ this._branchName = undefined;
-    /** @type {string} */ this._parentBranchName = undefined;
-    /** @type {string} */ this._baselineBranchName = undefined;
-    /** @type {boolean} */ this._compareWithParentBranch = undefined;
+    /** @type {string} */
+    this._branchName = undefined;
+    /** @type {string} */
+    this._parentBranchName = undefined;
+    /** @type {string} */
+    this._baselineBranchName = undefined;
+    /** @type {boolean} */
+    this._compareWithParentBranch = undefined;
 
-    /** @type {boolean} */ this._saveFailedTests = undefined;
-    /** @type {boolean} */ this._saveNewTests = undefined;
-    /** @type {boolean} */ this._ignoreBaseline = undefined;
-    /** @type {boolean} */ this._saveDiffs = undefined;
+    /** @type {boolean} */
+    this._saveFailedTests = undefined;
+    /** @type {boolean} */
+    this._saveNewTests = undefined;
+    /** @type {boolean} */
+    this._ignoreBaseline = undefined;
+    /** @type {boolean} */
+    this._saveDiffs = undefined;
+    /** @type {boolean} */
+    this._sendDom = undefined;
 
     if (configuration) {
       this.mergeConfig(configuration);
@@ -67,243 +95,234 @@ class Configuration {
   /**
    * @return {boolean}
    */
-  getShowLogs() {
+  get showLogs() {
     return this._showLogs;
   }
 
   /**
-   * @param showLogs {boolean}
+   * @param {boolean} value
    */
-  setShowLogs(showLogs) {
-    ArgumentGuard.isBoolean(showLogs, 'showLogs');
-    this._showLogs = showLogs;
+  set showLogs(value) {
+    ArgumentGuard.isBoolean(value, 'showLogs');
+    this._showLogs = value;
   }
 
   /**
    * @return {boolean}
    */
-  getSaveDebugData() {
+  get saveDebugData() {
     return this._saveDebugData;
   }
 
   /**
-   * @param saveDebugData {boolean}
+   * @param {boolean} value
    */
-  setSaveDebugData(saveDebugData) {
-    ArgumentGuard.isBoolean(saveDebugData, 'saveDebugData');
-    this._saveDebugData = saveDebugData;
+  set saveDebugData(value) {
+    ArgumentGuard.isBoolean(value, 'saveDebugData');
+    this._saveDebugData = value;
   }
 
-  // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The currently set API key or {@code null} if no key is set.
+   * @return {string} - The currently set API key or {@code null} if no key is set.
    */
-  getApiKey() {
+  get apiKey() {
     return TypeUtils.getOrDefault(this._apiKey, process.env.APPLITOOLS_API_KEY);
   }
 
   /**
    * Sets the API key of your applitools Eyes account.
    *
-   * @param apiKey {string} The api key to be used.
+   * @param {string} value - The api key to be used.
    */
-  setApiKey(apiKey) {
-    ArgumentGuard.isString(apiKey, 'apiKey');
-    ArgumentGuard.alphanumeric(apiKey, 'apiKey');
-    this._apiKey = apiKey;
+  set apiKey(value) {
+    ArgumentGuard.isString(value, 'apiKey');
+    ArgumentGuard.alphanumeric(value, 'apiKey');
+    this._apiKey = value;
   }
 
-  // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {string} The URI of the eyes server.
+   * @return {string} - The URI of the eyes server.
    */
-  getServerUrl() {
+  get serverUrl() {
     return TypeUtils.getOrDefault(this._serverUrl, process.env.APPLITOOLS_SERVER_URL || DEFAULT_VALUES.serverUrl);
   }
 
   /**
    * Sets the current server URL used by the rest client.
    *
-   * @param serverUrl {string} The URI of the rest server, or {@code null} to use the default server.
+   * @param {string} value - The URI of the rest server, or {@code null} to use the default server.
    */
-  setServerUrl(serverUrl) {
-    ArgumentGuard.isString(serverUrl, 'serverUrl', false);
-    this._serverUrl = serverUrl;
+  set serverUrl(value) {
+    ArgumentGuard.isString(value, 'serverUrl', false);
+    this._serverUrl = value;
   }
 
   /**
-   * @return {ProxySettings} The current proxy settings, or {@code undefined} if no proxy is set.
+   * @return {ProxySettings} - The current proxy settings, or {@code undefined} if no proxy is set.
    */
-  getProxy() {
+  get proxy() {
     return this._proxySettings;
   }
 
   /**
    * Sets the proxy settings to be used by the rest client.
    *
-   * @param {ProxySettings|string|boolean} varArg The ProxySettings object or proxy url to be used.
-   *  Use {@code false} to disable proxy (even if it set via env variables). Use {@code null} to reset proxy settings.
-   * @param {string} [username]
-   * @param {string} [password]
+   * @param {ProxySettings|ProxySettingsObject|string|boolean} value - The ProxySettings object or proxy url to be used.
+   *   Use {@code false} to disable proxy (even if it set via env variables). Use {@code null} to reset proxy settings.
    */
-  setProxy(varArg, username, password) {
-    if (TypeUtils.isNull(varArg)) {
+  set proxy(value) {
+    // noinspection IfStatementWithTooManyBranchesJS
+    if (TypeUtils.isNull(value)) {
       this._proxySettings = undefined;
-      return;
-    }
-
-    if (varArg === false) {
-      this._proxySettings = new ProxySettings(varArg);
-      return;
-    }
-
-    if (varArg instanceof ProxySettings) {
-      this._proxySettings = varArg;
+    } else if (value === false || TypeUtils.isString(value)) {
+      this._proxySettings = new ProxySettings(value);
+    } else if (value instanceof ProxySettings) {
+      this._proxySettings = value;
     } else {
-      this._proxySettings = new ProxySettings(varArg, username, password);
+      this._proxySettings = new ProxySettings(value.url, value.username, value.password);
     }
   }
 
   /**
-   * @return {number} The timeout for web requests (in milliseconds).
+   * @return {number} - The timeout for web requests (in milliseconds).
    */
-  getConnectionTimeout() {
+  get connectionTimeout() {
     return this._connectionTimeout;
   }
 
   /**
    * Sets the connect and read timeouts for web requests.
    *
-   * @param {number} connectionTimeout Connect/Read timeout in milliseconds. 0 equals infinity.
+   * @param {number} value - Connect/Read timeout in milliseconds. 0 equals infinity.
    */
-  setConnectionTimeout(connectionTimeout) {
-    ArgumentGuard.greaterThanOrEqualToZero(connectionTimeout, 'connectionTimeout', true);
-    this._connectionTimeout = connectionTimeout;
+  set connectionTimeout(value) {
+    ArgumentGuard.greaterThanOrEqualToZero(value, 'connectionTimeout', true);
+    this._connectionTimeout = value;
   }
 
   /**
-   * @return {boolean} Whether sessions are removed immediately after they are finished.
+   * @return {boolean} - Whether sessions are removed immediately after they are finished.
    */
-  getRemoveSession() {
+  get removeSession() {
     return this._removeSession;
   }
 
   /**
    * Whether sessions are removed immediately after they are finished.
    *
-   * @param {boolean} removeSession
+   * @param {boolean} value
    */
-  setRemoveSession(removeSession) {
-    ArgumentGuard.isBoolean(removeSession, 'removeSession');
-    this._removeSession = removeSession;
+  set removeSession(value) {
+    ArgumentGuard.isBoolean(value, 'removeSession');
+    this._removeSession = value;
   }
 
   /**
-   * @return {boolean} The currently compareWithParentBranch value
+   * @return {boolean} - The currently compareWithParentBranch value
    */
-  getCompareWithParentBranch() {
+  get compareWithParentBranch() {
     return TypeUtils.getOrDefault(this._compareWithParentBranch, DEFAULT_VALUES.compareWithParentBranch);
   }
 
   /**
-   * @param {boolean} compareWithParentBranch New compareWithParentBranch value, default is false
+   * @param {boolean} value - New compareWithParentBranch value, default is false
    */
-  setCompareWithParentBranch(compareWithParentBranch) {
-    ArgumentGuard.isBoolean(compareWithParentBranch, 'compareWithParentBranch');
-    this._compareWithParentBranch = compareWithParentBranch;
+  set compareWithParentBranch(value) {
+    ArgumentGuard.isBoolean(value, 'compareWithParentBranch');
+    this._compareWithParentBranch = value;
   }
 
   /**
-   * @return {boolean} The currently ignoreBaseline value
+   * @return {boolean} - The currently ignoreBaseline value
    */
-  getIgnoreBaseline() {
+  get ignoreBaseline() {
     return TypeUtils.getOrDefault(this._ignoreBaseline, DEFAULT_VALUES.ignoreBaseline);
   }
 
   /**
-   * @param {boolean} ignoreBaseline New ignoreBaseline value, default is false
+   * @param {boolean} value - New ignoreBaseline value, default is false
    */
-  setIgnoreBaseline(ignoreBaseline) {
-    ArgumentGuard.isBoolean(ignoreBaseline, 'ignoreBaseline');
-    this._ignoreBaseline = ignoreBaseline;
+  set ignoreBaseline(value) {
+    ArgumentGuard.isBoolean(value, 'ignoreBaseline');
+    this._ignoreBaseline = value;
   }
 
   /**
-   * @return {boolean} True if new tests are saved by default.
+   * @return {boolean} - True if new tests are saved by default.
    */
-  getSaveNewTests() {
+  get saveNewTests() {
     return TypeUtils.getOrDefault(this._saveNewTests, DEFAULT_VALUES.saveNewTests);
   }
 
   /**
    * Used for automatic save of a test run. New tests are automatically saved by default.
    *
-   * @param {boolean} saveNewTests True if new tests should be saved by default. False otherwise.
+   * @param {boolean} value - True if new tests should be saved by default. False otherwise.
    */
-  setSaveNewTests(saveNewTests) {
-    ArgumentGuard.isBoolean(saveNewTests, 'saveNewTests');
-    this._saveNewTests = saveNewTests;
+  set saveNewTests(value) {
+    ArgumentGuard.isBoolean(value, 'saveNewTests');
+    this._saveNewTests = value;
   }
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} True if failed tests are saved by default.
+   * @return {boolean} - True if failed tests are saved by default.
    */
-  getSaveFailedTests() {
+  get saveFailedTests() {
     return TypeUtils.getOrDefault(this._saveFailedTests, DEFAULT_VALUES.saveFailedTests);
   }
 
   /**
    * Set whether or not failed tests are saved by default.
    *
-   * @param {boolean} saveFailedTests True if failed tests should be saved by default, false otherwise.
+   * @param {boolean} value - True if failed tests should be saved by default, false otherwise.
    */
-  setSaveFailedTests(saveFailedTests) {
-    ArgumentGuard.isBoolean(saveFailedTests, 'saveFailedTests');
-    this._saveFailedTests = saveFailedTests;
+  set saveFailedTests(value) {
+    ArgumentGuard.isBoolean(value, 'saveFailedTests');
+    this._saveFailedTests = value;
   }
 
   /**
-   * @return {number} The maximum time in ms {@link #checkWindowBase(RegionProvider, string, boolean, number)} waits
+   * @return {number} - The maximum time in ms {@link #checkWindowBase(RegionProvider, string, boolean, number)} waits
    *   for a match.
    */
-  getMatchTimeout() {
+  get matchTimeout() {
     return TypeUtils.getOrDefault(this._matchTimeout, DEFAULT_VALUES.matchTimeout);
   }
 
   /**
    * Sets the maximum time (in ms) a match operation tries to perform a match.
-   * @param {number} matchTimeout Total number of ms to wait for a match.
+   * @param {number} value - Total number of ms to wait for a match.
    */
-  setMatchTimeout(matchTimeout) {
-    ArgumentGuard.greaterThanOrEqualToZero(matchTimeout, 'matchTimeout', true);
+  set matchTimeout(value) {
+    ArgumentGuard.greaterThanOrEqualToZero(value, 'matchTimeout', true);
 
-    if (matchTimeout !== 0 && MIN_MATCH_TIMEOUT > matchTimeout) {
+    if (value !== 0 && MIN_MATCH_TIMEOUT > value) {
       throw new TypeError(`Match timeout must be set in milliseconds, and must be > ${MIN_MATCH_TIMEOUT}`);
     }
 
-    this._matchTimeout = matchTimeout;
+    this._matchTimeout = value;
   }
 
   /**
-   * @return {boolean} Whether eyes is disabled.
+   * @return {boolean} - Whether eyes is disabled.
    */
-  getIsDisabled() {
+  get isDisabled() {
     return TypeUtils.getOrDefault(this._isDisabled, DEFAULT_VALUES.isDisabled);
   }
 
   /**
-   * @param isDisabled {boolean} If true, all interactions with this API will be silently ignored.
+   * @param {boolean} value - If true, all interactions with this API will be silently ignored.
    */
-  setIsDisabled(isDisabled) {
-    ArgumentGuard.isBoolean(isDisabled, 'isDisabled', false);
-    this._isDisabled = isDisabled;
+  set isDisabled(value) {
+    ArgumentGuard.isBoolean(value, 'isDisabled', false);
+    this._isDisabled = value;
   }
 
   /**
    * @return {BatchInfo}
    */
-  getBatch() {
+  get batch() {
     if (this._batch === undefined) {
       this._batch = new BatchInfo();
     }
@@ -314,230 +333,237 @@ class Configuration {
   /**
    * Sets the batch in which context future tests will run or {@code null} if tests are to run standalone.
    *
-   * @param {BatchInfo|string} batchOrName - the batch name or batch object
-   * @param {string} [batchId] - ID of the batch, should be generated using GeneralUtils.guid()
-   * @param {string} [batchDate] - start date of the batch, can be created as new Date().toUTCString()
+   * @param {BatchInfo|BatchInfoObject} value
    */
-  setBatch(batchOrName, batchId, batchDate) {
-    if (TypeUtils.isNull(batchOrName)) {
-      this._batch = undefined;
-    } else {
-      this._batch = new BatchInfo(batchOrName, batchId, batchDate);
-    }
+  set batch(value) {
+    this._batch = value ? new BatchInfo(value) : undefined;
   }
 
   /**
    * @return {PropertyData[]}
    */
-  getProperties() {
-    return TypeUtils.getOrDefault(this._properties, DEFAULT_VALUES.properties);
+  get properties() {
+    return this._properties;
   }
 
   /**
-   * @param {PropertyData[]} properties
+   * @param {PropertyData[]|PropertyDataObject[]} value
    */
-  setProperties(properties) {
-    ArgumentGuard.isArray(properties, 'properties');
-    this._properties = properties;
+  set properties(value) {
+    ArgumentGuard.isArray(value, 'properties');
+
+    for (const data of value) {
+      this._properties.push(new PropertyData(data));
+    }
   }
 
   /**
    * Adds a property to be sent to the server.
    *
-   * @param {PropertyData|string} propertyOrName The property name or PropertyData object.
-   * @param {string} [propertyValue] The property value.
+   * @param {PropertyData|string} propertyOrName - The property name or PropertyData object.
+   * @param {string} [propertyValue] - The property value.
    */
   addProperty(propertyOrName, propertyValue) {
-    if (!(propertyOrName instanceof PropertyData)) {
-      ArgumentGuard.isString(propertyOrName, 'propertyName');
-      ArgumentGuard.notNull(propertyValue, 'propertyValue');
-      propertyOrName = new PropertyData(propertyOrName, propertyValue);
-    }
-
-    if (this._properties === undefined) {
-      this._properties = [];
-    }
-
-    this._properties.push(propertyOrName);
+    this._properties.push(new PropertyData(propertyOrName, propertyValue));
   }
 
   /**
    * @return {string}
    */
-  getBranchName() {
+  get branchName() {
     return TypeUtils.getOrDefault(this._branchName, process.env.APPLITOOLS_BRANCH);
   }
 
   /**
-   * @param {string} branchName
+   * @param {string} value
    */
-  setBranchName(branchName) {
-    ArgumentGuard.isString(branchName, 'branchName');
-    this._branchName = branchName;
+  set branchName(value) {
+    ArgumentGuard.isString(value, 'branchName');
+    this._branchName = value;
   }
 
   /**
    * @return {string}
    */
-  getAgentId() {
+  get agentId() {
     return this._agentId;
   }
 
   /**
-   * @param {string} agentId
+   * @param {string} value
    */
-  setAgentId(agentId) {
-    ArgumentGuard.isString(agentId, 'agentId');
-    this._agentId = agentId;
+  set agentId(value) {
+    ArgumentGuard.isString(value, 'agentId');
+    this._agentId = value;
   }
 
   /**
    * @return {string}
    */
-  getParentBranchName() {
+  get parentBranchName() {
     return TypeUtils.getOrDefault(this._parentBranchName, process.env.APPLITOOLS_PARENT_BRANCH);
   }
 
   /**
-   * @param {string} parentBranchName
+   * @param {string} value
    */
-  setParentBranchName(parentBranchName) {
-    ArgumentGuard.isString(parentBranchName, 'parentBranchName');
-    this._parentBranchName = parentBranchName;
+  set parentBranchName(value) {
+    ArgumentGuard.isString(value, 'parentBranchName');
+    this._parentBranchName = value;
   }
 
   /**
    * @return {string}
    */
-  getBaselineBranchName() {
+  get baselineBranchName() {
     return TypeUtils.getOrDefault(this._baselineBranchName, process.env.APPLITOOLS_BASELINE_BRANCH);
   }
 
   /**
-   * @param {string} baselineBranchName
+   * @param {string} value
    */
-  setBaselineBranchName(baselineBranchName) {
-    ArgumentGuard.isString(baselineBranchName, 'baselineBranchName');
-    this._baselineBranchName = baselineBranchName;
+  set baselineBranchName(value) {
+    ArgumentGuard.isString(value, 'baselineBranchName');
+    this._baselineBranchName = value;
   }
 
   /**
    * @return {string}
    */
-  getBaselineEnvName() {
+  get baselineEnvName() {
     return this._baselineEnvName;
   }
 
   /**
-   * @param {string} baselineEnvName
+   * @param {string} value
    */
-  setBaselineEnvName(baselineEnvName) {
-    ArgumentGuard.isString(baselineEnvName, 'baselineEnvName');
-    this._baselineEnvName = baselineEnvName;
+  set baselineEnvName(value) {
+    ArgumentGuard.isString(value, 'baselineEnvName', false);
+    this._baselineEnvName = value ? value.trim() : undefined;
   }
 
   /**
    * @return {string}
    */
-  getEnvironmentName() {
+  get environmentName() {
     return this._environmentName;
   }
 
   /**
-   * @param {string} environmentName
+   * @param {string} value
    */
-  setEnvironmentName(environmentName) {
-    ArgumentGuard.isString(environmentName, 'environmentName');
-    this._environmentName = environmentName;
+  set environmentName(value) {
+    ArgumentGuard.isString(value, 'environmentName', false);
+    this._environmentName = value ? value.trim() : undefined;
   }
 
   /**
    * @return {boolean}
    */
-  getSaveDiffs() {
+  get saveDiffs() {
     return this._saveDiffs;
   }
 
   /**
-   * @param {boolean} saveDiffs
+   * @param {boolean} value
    */
-  setSaveDiffs(saveDiffs) {
-    ArgumentGuard.isBoolean(saveDiffs, 'saveDiffs');
-    this._saveDiffs = saveDiffs;
+  set saveDiffs(value) {
+    ArgumentGuard.isBoolean(value, 'saveDiffs');
+    this._saveDiffs = value;
+  }
+
+  /**
+   * @return {boolean}
+   */
+  get sendDom() {
+    return TypeUtils.getOrDefault(this._sendDom, DEFAULT_VALUES.sendDom);
+  }
+
+  /**
+   * @param {boolean} value
+   */
+  set sendDom(value) {
+    ArgumentGuard.isBoolean(value, 'sendDom');
+    this._sendDom = value;
   }
 
   /**
    * @return {string}
    */
-  getAppName() {
+  get appName() {
     return this._appName;
   }
 
   /**
    * The default app name if no current name was provided. If this is {@code null} then there is no default appName.
    *
-   * @param {string} appName
+   * @param {string} value
    */
-  setAppName(appName) {
-    ArgumentGuard.isString(appName, 'appName', false);
-    this._appName = appName;
+  set appName(value) {
+    ArgumentGuard.isString(value, 'appName', false);
+    this._appName = value;
   }
 
   /**
    * @return {string}
    */
-  getTestName() {
+  get testName() {
     return this._testName;
   }
 
   /**
-   * @param {string} testName
+   * @param {string} value
    */
-  setTestName(testName) {
-    ArgumentGuard.isString(testName, 'testName', false);
-    this._testName = testName;
+  set testName(value) {
+    ArgumentGuard.isString(value, 'testName', false);
+    this._testName = value;
   }
 
   /**
    * @return {RectangleSize}
    */
-  getViewportSize() {
+  get viewportSize() {
     return this._viewportSize;
   }
 
   /**
-   * @param {RectangleSize|RectangleSizeObject} viewportSize
+   * @param {RectangleSize|RectangleSizeObject} value
    */
-  setViewportSize(viewportSize) {
-    if (TypeUtils.isNull(viewportSize)) {
+  set viewportSize(value) {
+    if (TypeUtils.isNull(value)) {
       this._viewportSize = undefined;
     } else {
-      this._viewportSize = new RectangleSize(viewportSize);
+      this._viewportSize = new RectangleSize(value);
     }
   }
 
   /**
    * @return {SessionType}
    */
-  getSessionType() {
+  get sessionType() {
     return this._sessionType;
   }
 
   /**
-   * @param {SessionType} sessionType
+   * @param {SessionType} value
    */
-  setSessionType(sessionType) {
-    this._sessionType = sessionType;
+  set sessionType(value) {
+    this._sessionType = value;
   }
 
   /**
-   * @return {Configuration} other
+   * @param {Configuration|object} other
    */
   mergeConfig(other) {
-    ArgumentGuard.isValidType(other, Configuration);
-
     Object.keys(other).forEach(prop => {
-      if (this.hasOwnProperty(prop) && other[prop] !== undefined) {
+      let privateProp = prop;
+      if (prop === 'proxy') {
+        privateProp = '_proxySettings';
+      } else if (!prop.startsWith('_')) {
+        privateProp = `_${prop}`;
+      }
+
+      if (this.hasOwnProperty(privateProp) && other[prop] !== undefined) {
         this[prop] = other[prop];
       }
     });

@@ -8,12 +8,15 @@ const TAP_COMMAND = `${COMMAND_PREFIX}tap`;
 const APPIUM_COORDINATES_DEFAULT = 0.5;
 const APPIUM_TAP_COUNT_DEFAULT = 1;
 
+/**
+ * @ignore
+ */
 class AppiumJsCommandExtractor {
   /**
    * Used for identifying if a javascript script is a command to Appium.
    *
-   * @param {string} script The script to test whether it's an Appium command.
-   * @return {boolean} True if the script is an Appium command, false otherwise.
+   * @param {string} script - The script to test whether it's an Appium command.
+   * @return {boolean} - True if the script is an Appium command, false otherwise.
    */
   static isAppiumJsCommand(script) {
     return script.startsWith(COMMAND_PREFIX);
@@ -22,11 +25,11 @@ class AppiumJsCommandExtractor {
   /**
    * Given a command and its parameters, returns the equivalent trigger.
    *
-   * @param {Map<string, EyesWebElement>} elementsIds A mapping of known elements' IDs to elements.
-   * @param {{width: number, height: number}} viewportSize The dimensions of the current viewport
-   * @param {string} script The Appium command from which the trigger would be extracted
-   * @param {object...} args The trigger's parameters.
-   * @return {Promise<Trigger>} The trigger which represents the given command.
+   * @param {Map<string, EyesWebElement>} elementsIds - A mapping of known elements' IDs to elements.
+   * @param {{width: number, height: number}} viewportSize - The dimensions of the current viewport
+   * @param {string} script - The Appium command from which the trigger would be extracted
+   * @param {...object} args - The trigger's parameters.
+   * @return {Promise<Trigger>} - The trigger which represents the given command.
    */
   static async extractTrigger(elementsIds, viewportSize, script, ...args) {
     if (script === TAP_COMMAND) {

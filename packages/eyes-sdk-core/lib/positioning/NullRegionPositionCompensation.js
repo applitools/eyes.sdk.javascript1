@@ -2,6 +2,9 @@
 
 const { RegionPositionCompensation } = require('./RegionPositionCompensation');
 
+/**
+ * @ignore
+ */
 class NullRegionPositionCompensation extends RegionPositionCompensation {
   /**
    * @inheritDoc

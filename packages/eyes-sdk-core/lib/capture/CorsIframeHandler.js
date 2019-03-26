@@ -24,9 +24,15 @@ const CorsIframeHandle = {
 };
 
 
+/**
+ * @ignore
+ */
 class CorsIframeHandler {
 
-
+  /**
+   * @param {object} json
+   * @param {string} origin
+   */
   static blankCorsIframeSrc(json, origin) {
     if (json.tagName === 'IFRAME') {
       if (json.attributes.src) {
@@ -44,6 +50,11 @@ class CorsIframeHandler {
     }
   }
 
+  /**
+   * @param {object[]} cdt
+   * @param {object[]} frames
+   * @return {object[]}
+   */
   static blankCorsIframeSrcOfCdt(cdt, frames) {
     const frameUrls = new Set(frames.map(frame => frame.srcAttr));
     cdt.map(node => {
@@ -53,14 +64,14 @@ class CorsIframeHandler {
           srcAttr.value = '';
         }
       }
-      return node
+      return node;
     });
 
     frames.forEach(frame => {
       CorsIframeHandler.blankCorsIframeSrcOfCdt(frame.cdt, frame.frames)
     });
 
-    return cdt
+    return cdt;
   }
 }
 

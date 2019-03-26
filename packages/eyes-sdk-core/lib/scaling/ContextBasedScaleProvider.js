@@ -27,10 +27,10 @@ function getScaleRatioToViewport(viewportWidth, imageToScaleWidth, currentScaleR
 class ContextBasedScaleProvider extends ScaleProvider {
   /**
    * @param {Logger} logger
-   * @param {RectangleSize} topLevelContextEntireSize The total size of the top level context. E.g., for selenium this
+   * @param {RectangleSize} topLevelContextEntireSize - The total size of the top level context. E.g., for selenium this
    *   would be the document size of the top level frame.
-   * @param {RectangleSize} viewportSize The viewport size.
-   * @param {number} devicePixelRatio The device pixel ratio of the platform on which the application is running.
+   * @param {RectangleSize} viewportSize - The viewport size.
+   * @param {number} devicePixelRatio - The device pixel ratio of the platform on which the application is running.
    * @param {boolean} isMobileDevice
    */
   constructor(logger, topLevelContextEntireSize, viewportSize, devicePixelRatio, isMobileDevice) {
@@ -54,7 +54,7 @@ class ContextBasedScaleProvider extends ScaleProvider {
 
   /**
    * @inheritDoc
-   * @return {number} The ratio by which an image will be scaled.
+   * @return {number} - The ratio by which an image will be scaled.
    */
   getScaleRatio() {
     ArgumentGuard.isValidState(this._scaleRatio !== UNKNOWN_SCALE_RATIO, 'scaleRatio not defined yet');
@@ -64,7 +64,7 @@ class ContextBasedScaleProvider extends ScaleProvider {
   /**
    * Set the scale ratio based on the given image.
    *
-   * @param {number} imageToScaleWidth The width of the image to scale, used for calculating the scale ratio.
+   * @param {number} imageToScaleWidth - The width of the image to scale, used for calculating the scale ratio.
    */
   updateScaleRatio(imageToScaleWidth) {
     const viewportWidth = this._viewportSize.getWidth();
@@ -81,7 +81,7 @@ class ContextBasedScaleProvider extends ScaleProvider {
       this._logger.verbose('Image is already scaled correctly.');
       this._scaleRatio = 1;
     } else {
-      this._logger.verbose('Calculating the scale ratio..');
+      this._logger.verbose('Calculating the scale ratio...');
       this._scaleRatio = 1 / this._devicePixelRatio;
       if (this._isMobileDevice) {
         this._logger.verbose('Mobile device, so using 2 step calculation for scale ration...');

@@ -11,8 +11,8 @@ const { EyesScreenshot } = require('./EyesScreenshot');
  */
 class EyesSimpleScreenshot extends EyesScreenshot {
   /**
-   * @param {MutableImage} image The screenshot image.
-   * @param {Location} [location] The top/left coordinates of the screenshot in context relative coordinates type.
+   * @param {MutableImage} image - The screenshot image.
+   * @param {Location} [location] - The top/left coordinates of the screenshot in context relative coordinates type.
    */
   constructor(image, location = Location.ZERO) {
     super(image);
@@ -34,9 +34,9 @@ class EyesSimpleScreenshot extends EyesScreenshot {
   /**
    * Get sub screenshot.
    *
-   * @param {Region} region The region for which we should get the sub screenshot.
-   * @param {boolean} throwIfClipped Throw an EyesException if the region is not fully contained in the screenshot.
-   * @return {Promise<EyesScreenshot>} Sub screenshot.
+   * @param {Region} region - The region for which we should get the sub screenshot.
+   * @param {boolean} throwIfClipped - Throw an EyesException if the region is not fully contained in the screenshot.
+   * @return {Promise<EyesScreenshot>} - Sub screenshot.
    */
   async getSubScreenshot(region, throwIfClipped) {
     ArgumentGuard.notNull(region, 'region');
@@ -62,10 +62,10 @@ class EyesSimpleScreenshot extends EyesScreenshot {
   /**
    * Convert the location.
    *
-   * @param {Location} location The location which coordinates needs to be converted.
-   * @param {CoordinatesType} from The current coordinates type for {@code location}.
-   * @param {CoordinatesType} to The target coordinates type for {@code location}.
-   * @return {Location} The converted location.
+   * @param {Location} location - The location which coordinates needs to be converted.
+   * @param {CoordinatesType} from - The current coordinates type for {@code location}.
+   * @param {CoordinatesType} to - The target coordinates type for {@code location}.
+   * @return {Location} - The converted location.
    */
   convertLocation(location, from, to) {
     ArgumentGuard.notNull(location, 'location');
@@ -105,9 +105,9 @@ class EyesSimpleScreenshot extends EyesScreenshot {
   /**
    * Get the location in the screenshot.
    *
-   * @param {Location} location The location as coordinates inside the current frame.
-   * @param {CoordinatesType} coordinatesType The coordinates type of {@code location}.
-   * @return {Location} The location in the screenshot.
+   * @param {Location} location - The location as coordinates inside the current frame.
+   * @param {CoordinatesType} coordinatesType - The coordinates type of {@code location}.
+   * @return {Location} - The location in the screenshot.
    */
   getLocationInScreenshot(location, coordinatesType) {
     ArgumentGuard.notNull(location, 'location');
@@ -125,9 +125,9 @@ class EyesSimpleScreenshot extends EyesScreenshot {
   /**
    * Get the intersected region.
    *
-   * @param {Region} region The region to intersect.
-   * @param {CoordinatesType} resultCoordinatesType The coordinates type of the resulting region.
-   * @return {Region} The region of the intersected region.
+   * @param {Region} region - The region to intersect.
+   * @param {CoordinatesType} resultCoordinatesType - The coordinates type of the resulting region.
+   * @return {Region} - The region of the intersected region.
    */
   getIntersectedRegion(region, resultCoordinatesType) {
     ArgumentGuard.notNull(region, 'region');

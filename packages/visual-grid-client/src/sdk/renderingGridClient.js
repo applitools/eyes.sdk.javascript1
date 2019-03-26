@@ -30,6 +30,7 @@ require('@applitools/isomorphic-fetch');
 // TODO when supporting only Node version >= 8.6.0 then we can use ...config for all the params that are just passed on to makeOpenEyes
 function makeRenderingGridClient({
   renderWrapper, // for tests
+  logger,
   showLogs,
   renderStatusTimeout,
   renderStatusInterval,
@@ -50,6 +51,8 @@ function makeRenderingGridClient({
   isDisabled,
   matchLevel,
   matchTimeout,
+  useDom,
+  enablePatterns,
   parentBranchName,
   branchName,
   proxy,
@@ -70,7 +73,7 @@ function makeRenderingGridClient({
   let renderInfoPromise;
   const eyesTransactionThroat = transactionThroat(openEyesConcurrency);
   const renderThroat = throatPkg(openEyesConcurrency * renderConcurrencyFactor);
-  const logger = new Logger(showLogs);
+  logger = logger || new Logger(showLogs, 'visual-grid-client');
   renderWrapper =
     renderWrapper ||
     createRenderWrapper({
@@ -138,6 +141,8 @@ function makeRenderingGridClient({
     isDisabled,
     matchLevel,
     matchTimeout,
+    useDom,
+    enablePatterns,
     parentBranchName,
     branchName,
     proxy,

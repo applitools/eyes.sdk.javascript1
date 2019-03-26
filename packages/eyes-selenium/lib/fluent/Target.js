@@ -16,8 +16,8 @@ class Target {
   /**
    * Validate region (in current window or frame) using region's rect, element or element's locator
    *
-   * @param {Region|RegionObject|By|WebElement|EyesWebElement} region The region to validate.
-   * @param {number|string|By|WebElement|EyesWebElement} [frame] The element which is the frame to switch to.
+   * @param {Region|RegionObject|By|WebElement|EyesWebElement} region - The region to validate.
+   * @param {number|string|By|WebElement|EyesWebElement} [frame] - The element which is the frame to switch to.
    * @return {SeleniumCheckSettings}
    * @constructor
    */
@@ -28,7 +28,7 @@ class Target {
   /**
    * Validate frame
    *
-   * @param {number|string|By|WebElement|EyesWebElement} frame The element which is the frame to switch to.
+   * @param {number|string|By|WebElement|EyesWebElement} frame - The element which is the frame to switch to.
    * @return {SeleniumCheckSettings}
    * @constructor
    */

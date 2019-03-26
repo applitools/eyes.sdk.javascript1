@@ -6,6 +6,9 @@ const { TakesScreenshotImageProvider } = require('./TakesScreenshotImageProvider
 const { FirefoxScreenshotImageProvider } = require('./FirefoxScreenshotImageProvider');
 const { SafariScreenshotImageProvider } = require('./SafariScreenshotImageProvider');
 
+/**
+ * @ignore
+ */
 class ImageProviderFactory {
   /**
    * @param {UserAgent} userAgent

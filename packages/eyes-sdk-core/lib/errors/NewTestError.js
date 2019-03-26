@@ -10,8 +10,8 @@ class NewTestError extends TestFailedError {
   /**
    * Creates a new NewTestError instance.
    *
-   * @param {TestResults} testResults The results of the current test if available, {@code null} otherwise.
-   * @param {string|SessionStartInfo} messageOrSession The error description or SessionStartInfo with test details.
+   * @param {TestResults} testResults - The results of the current test if available, {@code null} otherwise.
+   * @param {string|SessionStartInfo} messageOrSession - The error description or SessionStartInfo with test details.
    */
   constructor(testResults, messageOrSession) {
     if (messageOrSession instanceof SessionStartInfo) {

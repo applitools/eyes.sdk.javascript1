@@ -3,6 +3,8 @@
 /**
  * A container for a AppOutput along with the screenshot used for creating it.
  * (We specifically avoid inheritance so we don't have to deal with serialization issues).
+ *
+ * @ignore
  */
 class AppOutputWithScreenshot {
   /**

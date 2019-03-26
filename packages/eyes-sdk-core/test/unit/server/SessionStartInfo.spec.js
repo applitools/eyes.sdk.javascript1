@@ -15,7 +15,6 @@ describe('SessionStartInfo', () => {
   it('toJSON()', () => {
     const properties = [];
     properties.push(new PropertyData('property name', 'property value'));
-    properties.push(new PropertyData(null, null));
 
     const batchInfo = new BatchInfo('batch name');
 
@@ -47,7 +46,7 @@ describe('SessionStartInfo', () => {
       '"defaultMatchSettings":{"matchLevel":"Strict","ignore":[],"layout":[],"strict":[],"content":[],"floating":[]},' +
       '"branchName":"some branch name","parentBranchName":"parent branch name","baselineBranchName":"base branch",' +
       '"compareWithParentBranch":false,"ignoreBaseline":false,"saveDiffs":false,"render":false,' +
-      '"properties":[{"name":"property name","value":"property value"},{"name":null,"value":null}]}';
+      '"properties":[{"name":"property name","value":"property value"}]}';
     assert.strictEqual(actualSerialization, expectedSerialization, 'SessionStartInfo serialization does not match!');
   });
 });

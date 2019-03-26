@@ -12,19 +12,17 @@
     "test:it": "lerna run test:it --parallel --no-private --ignore @applitools/dom-utils",
     "test:e2e": "lerna run test:e2e --no-private",
     "test:perf": "lerna run test:perf",
-    "ci:base": "npm run lint && npm run test:unit",
-    "ci:extended": "npm run test:it",
-    "commit": "git-cz"
+    "commit": "npx git-cz"
   },
   "devDependencies": {
-    "eslint": "^5.14.1",
+    "eslint": "^5.15.1",
     "prettier": "^1.16.4",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-mocha-no-only": "^1.1.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
-    "lerna": "^3.13.0",
+    "lerna": "^3.13.1",
     "commitizen": "^3.0.7",
     "cz-conventional-changelog": "^2.1.0"
   },

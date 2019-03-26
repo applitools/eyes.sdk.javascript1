@@ -7,6 +7,11 @@ const { EyesDriverOperationError } = require('./errors/EyesDriverOperationError'
 const { ImageOrientationHandler } = require('./ImageOrientationHandler');
 const { JavascriptHandler } = require('./JavascriptHandler');
 
+const JS_GET_ENTIRE_PAGE_SIZE =
+  "var width = Math.max(arguments[0].clientWidth, arguments[0].scrollWidth);" +
+  "var height = Math.max(arguments[0].clientHeight, arguments[0].scrollHeight);" +
+  "return [width, height];";
+
 let imageOrientationHandler = new class ImageOrientationHandlerImpl extends ImageOrientationHandler {
   /**
    * @inheritDoc
@@ -61,19 +66,19 @@ async function setBrowserSizeLoop(logger, driver, requiredSize, sleep, retriesLe
 
 // noinspection OverlyComplexFunctionJS
 /**
- * @param logger
- * @param driver
- * @param requiredSize
- * @param actualVSize
- * @param browserSize
- * @param widthDiff
- * @param widthStep
- * @param heightDiff
- * @param heightStep
- * @param currWidthChange
- * @param currHeightChange
- * @param retriesLeft
- * @param lastRequiredBrowserSize
+ * @param {Logger} logger
+ * @param {WebDriver} driver
+ * @param {RectangleSize} requiredSize
+ * @param {RectangleSize} actualVSize
+ * @param {RectangleSize} browserSize
+ * @param {number} widthDiff
+ * @param {number} widthStep
+ * @param {number} heightDiff
+ * @param {number} heightStep
+ * @param {number} currWidthChange
+ * @param {number} currHeightChange
+ * @param {number} retriesLeft
+ * @param {RectangleSize} lastRequiredBrowserSize
  * @return {Promise<boolean>}
  */
 async function setViewportSizeLoop(
@@ -146,7 +151,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {IWebDriver} driver The driver for which to check if it represents a mobile device.
+   * @param {IWebDriver} driver - The driver for which to check if it represents a mobile device.
    * @return {Promise<boolean>} {@code true} if the platform running the test is a mobile platform. {@code false}
    *   otherwise.
    */
@@ -156,7 +161,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {Capabilities} capabilities The driver's capabilities.
+   * @param {Capabilities} capabilities - The driver's capabilities.
    * @return {boolean} {@code true} if the platform running the test is a mobile platform. {@code false} otherwise.
    */
   static isMobileDeviceFromCaps(capabilities) {
@@ -165,7 +170,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {IWebDriver} driver The driver for which to check the orientation.
+   * @param {IWebDriver} driver - The driver for which to check the orientation.
    * @return {Promise<boolean>} {@code true} if this is a mobile device and is in landscape orientation. {@code
    *   false} otherwise.
    */
@@ -174,7 +179,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {Capabilities} capabilities The driver's capabilities.
+   * @param {Capabilities} capabilities - The driver's capabilities.
    * @return {boolean} {@code true} if this is a mobile device and is in landscape orientation. {@code false} otherwise.
    */
   static isLandscapeOrientationFromCaps(capabilities) {
@@ -201,16 +206,32 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
 
   /**
    * @param {string} script
-   * @param {object...} args
+   * @param {...object} args
    */
   static handleSpecialCommands(script, ...args) {
     return javascriptHandler.handle(script, ...args);
   }
 
   /**
-   * @param {Logger} logger The logger to use.
-   * @param {EyesWebDriver|WebDriver} driver The web driver to use.
-   * @return {Promise<RectangleSize>} The viewport size of the current context, or the display size if the viewport
+   * Gets entire element size.
+   *
+   * @param {EyesJsExecutor} executor
+   * @param {WebElement} element
+   * @return {RectangleSize} - The entire element size
+   */
+  static async getEntireElementSize(executor, element) {
+    try {
+      const result = await executor.executeScript(JS_GET_ENTIRE_PAGE_SIZE, element);
+      return new RectangleSize(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0);
+    } catch (err) {
+      throw new EyesDriverOperationError("Failed to extract entire size!", err);
+    }
+  }
+
+  /**
+   * @param {Logger} logger - The logger to use.
+   * @param {EyesWebDriver|WebDriver} driver - The web driver to use.
+   * @return {Promise<RectangleSize>} - The viewport size of the current context, or the display size if the viewport
    *   size cannot be retrieved.
    */
   static async getViewportSizeOrDisplaySize(logger, driver) {
@@ -243,9 +264,9 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {Logger} logger The logger to use.
-   * @param {IWebDriver} driver The web driver to use.
-   * @param {RectangleSize} requiredSize The size to set
+   * @param {Logger} logger - The logger to use.
+   * @param {IWebDriver} driver - The web driver to use.
+   * @param {RectangleSize} requiredSize - The size to set
    * @return {Promise<boolean>}
    */
   static setBrowserSize(logger, driver, requiredSize) {
@@ -257,8 +278,8 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   }
 
   /**
-   * @param {Logger} logger The logger to use.
-   * @param {IWebDriver} driver The web driver to use.
+   * @param {Logger} logger - The logger to use.
+   * @param {IWebDriver} driver - The web driver to use.
    * @param {RectangleSize} actualViewportSize
    * @param {RectangleSize} requiredViewportSize
    * @return {Promise<boolean>}
@@ -277,9 +298,9 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
   /**
    * Tries to set the viewport size
    *
-   * @param {Logger} logger The logger to use.
-   * @param {EyesWebDriver|WebDriver} driver The web driver to use.
-   * @param {RectangleSize} requiredSize The viewport size.
+   * @param {Logger} logger - The logger to use.
+   * @param {EyesWebDriver|WebDriver} driver - The web driver to use.
+   * @param {RectangleSize} requiredSize - The viewport size.
    * @return {Promise<boolean>}
    */
   static async setViewportSize(logger, driver, requiredSize) {

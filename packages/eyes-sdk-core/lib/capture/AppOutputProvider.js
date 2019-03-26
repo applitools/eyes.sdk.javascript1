@@ -5,6 +5,7 @@
 /**
  * Encapsulates a callback which returns an application output.
  *
+ * @ignore
  * @abstract
  */
 class AppOutputProvider {

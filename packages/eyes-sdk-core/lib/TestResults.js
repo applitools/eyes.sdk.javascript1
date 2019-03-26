@@ -644,28 +644,28 @@ class TestResults {
   }
 
   /**
-   * @return {boolean} Whether or not this is a new test.
+   * @return {boolean} - Whether or not this is a new test.
    */
   getIsNew() {
     return this._isNew;
   }
 
   /**
-   * @param {boolean} value Whether or not this test has an existing baseline.
+   * @param {boolean} value - Whether or not this test has an existing baseline.
    */
   setIsNew(value) {
     this._isNew = value;
   }
 
   /**
-   * @return {boolean} Whether or not test was automatically saved as a baseline.
+   * @return {boolean} - Whether or not test was automatically saved as a baseline.
    */
   getIsSaved() {
     return this._isSaved;
   }
 
   /**
-   * @param {boolean} value Whether or not test was automatically saved as a baseline.
+   * @param {boolean} value - Whether or not test was automatically saved as a baseline.
    */
   setIsSaved(value) {
     this._isSaved = value;
@@ -752,7 +752,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps.
+   * @return {number} - The total number of test steps.
    */
   getSteps() {
     return this._steps;
@@ -760,7 +760,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of visual checkpoints in the test.
+   * @param {number} value - The number of visual checkpoints in the test.
    */
   setSteps(value) {
     this._steps = value;
@@ -768,7 +768,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that matched the baseline.
+   * @return {number} - The total number of test steps that matched the baseline.
    */
   getMatches() {
     return this._matches;
@@ -776,14 +776,14 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param value {number} The number of visual matches in the test.
+   * @param {number} value - The number of visual matches in the test.
    */
   setMatches(value) {
     this._matches = value;
   }
 
   /**
-   * @return {number} The total number of test steps that did not match the baseline.
+   * @return {number} - The total number of test steps that did not match the baseline.
    */
   getMismatches() {
     return this._mismatches;
@@ -791,14 +791,14 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of mismatches in the test.
+   * @param {number} value - The number of mismatches in the test.
    */
   setMismatches(value) {
     this._mismatches = value;
   }
 
   /**
-   * @return {number} The total number of baseline test steps that were missing in the test.
+   * @return {number} - The total number of baseline test steps that were missing in the test.
    */
   getMissing() {
     return this._missing;
@@ -806,7 +806,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of visual checkpoints that were available in the baseline but were not found
+   * @param {number} value - The number of visual checkpoints that were available in the baseline but were not found
    *   in the current test.
    */
   setMissing(value) {
@@ -815,7 +815,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that exactly matched the baseline.
+   * @return {number} - The total number of test steps that exactly matched the baseline.
    */
   getExactMatches() {
     return this._exactMatches;
@@ -823,7 +823,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of matches performed with match level set to {@link MatchLevel#Exact}
+   * @param {number} value - The number of matches performed with match level set to {@link MatchLevel#Exact}
    */
   setExactMatches(value) {
     this._exactMatches = value;
@@ -831,7 +831,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that strictly matched the baseline.
+   * @return {number} - The total number of test steps that strictly matched the baseline.
    */
   getStrictMatches() {
     return this._strictMatches;
@@ -839,7 +839,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of matches performed with match level set to {@link MatchLevel#Strict}
+   * @param {number} value - The number of matches performed with match level set to {@link MatchLevel#Strict}
    */
   setStrictMatches(value) {
     this._strictMatches = value;
@@ -847,7 +847,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that matched the baseline by content.
+   * @return {number} - The total number of test steps that matched the baseline by content.
    */
   getContentMatches() {
     return this._contentMatches;
@@ -855,7 +855,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of matches performed with match level set to {@link MatchLevel#Content}
+   * @param {number} value - The number of matches performed with match level set to {@link MatchLevel#Content}
    */
   setContentMatches(value) {
     this._contentMatches = value;
@@ -863,7 +863,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that matched the baseline by layout.
+   * @return {number} - The total number of test steps that matched the baseline by layout.
    */
   getLayoutMatches() {
     return this._layoutMatches;
@@ -871,7 +871,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of matches performed with match level set to {@link MatchLevel#Layout}
+   * @param {number} value - The number of matches performed with match level set to {@link MatchLevel#Layout}
    */
   setLayoutMatches(value) {
     this._layoutMatches = value;
@@ -879,7 +879,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {number} The total number of test steps that matched the baseline without performing any comparison.
+   * @return {number} - The total number of test steps that matched the baseline without performing any comparison.
    */
   getNoneMatches() {
     return this._noneMatches;
@@ -887,21 +887,21 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @param {number} value The number of matches performed with match level set to {@link MatchLevel#None}
+   * @param {number} value - The number of matches performed with match level set to {@link MatchLevel#None}
    */
   setNoneMatches(value) {
     this._noneMatches = value;
   }
 
   /**
-   * @return {string} The URL where test results can be viewed.
+   * @return {string} - The URL where test results can be viewed.
    */
   getUrl() {
     return this._url;
   }
 
   /**
-   * @param {string} value The URL of the test results.
+   * @param {string} value - The URL of the test results.
    */
   setUrl(value) {
     this._url = value;
@@ -909,7 +909,7 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {boolean} Whether or not this test passed.
+   * @return {boolean} - Whether or not this test passed.
    */
   isPassed() {
     return this._status === TestResultsStatus.Passed;
@@ -924,9 +924,9 @@ class TestResults {
 
   // noinspection JSUnusedGlobalSymbols
   /**
-   * @return {Promise<void>}
+   * @return {Promise}
    */
-  async delete() {
+  async deleteSession() {
     return this._serverConnector.deleteSession(this);
   }
 

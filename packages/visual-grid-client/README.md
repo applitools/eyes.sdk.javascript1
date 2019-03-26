@@ -84,11 +84,10 @@ defined in the `browser` property of the configuraion.
 
 * If throwEx = true (default) :
     * If all tests defined in the `openEyes` pass then the promise is **resolved** with Array\<TestResults\>.
-    * If there are differences found in some tests defined in `openEyes` then the promise is **rejected** with Array\<DiffsFoundError|TestResults\>. (see 
-        [Applitools Eyes SDK Core](https://www.npmjs.com/package/@applitools/eyes-sdk-core) for `DiffsFoundError`).
-    * If there are any unexpected errors like a network error then the promise is **rejected** with Array\<AnyError|DiffsFoundError|TestResults\>. 
+    * If there are differences found in some tests defined in `openEyes` then the promise is **rejected** with Array\<TestResults\>.
+    * If there are any unexpected errors like a network error then the promise is **rejected** with Array\<Error|TestResults\>.
 * If throwEx = false :
-    * The promise is **resolved** with Array\<TestResults|DiffsFoundError|AnyOtherError\>.
+    * The promise is always **resolved** with Array\<TestResults|Error\>.
 
 ### The CDT format
 

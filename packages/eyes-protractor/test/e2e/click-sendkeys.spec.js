@@ -5,29 +5,29 @@ const { Target } = require('@applitools/eyes-selenium');
 const { Eyes } = require('../../index');
 
 let eyes = null;
-describe('Eyes.Protractor.JavaScript - click-sendkeys', () => {
+describe('Eyes.Protractor.JavaScript - click-sendkeys', function () {
   beforeAll(function () {
     eyes = new Eyes();
     eyes.setLogHandler(new ConsoleLogHandler(true));
   });
 
-  it('test click and sendKeys methods methods', function () {
-    return eyes.open(browser, global.appName, global.testName, new RectangleSize(800, 560)).then(() => {
-      browser.get('https://astappiev.github.io/test-html-pages/');
+  it('test click and sendKeys methods methods', async function () {
+    await eyes.open(browser, global.appName, global.testName, new RectangleSize(800, 560));
 
-      eyes.check('Entire window', Target.window().fully());
+    await browser.get('https://astappiev.github.io/test-html-pages/');
 
-      element(by.name('name')).sendKeys('Test User');
-      element(by.name('email')).sendKeys('username@example.com');
-      element(by.id('submit-form')).click();
+    await eyes.check('Entire window', Target.window().fully());
 
-      eyes.check('After submit form', Target.window().fully());
+    await element(by.name('name')).sendKeys('Test User');
+    await element(by.name('email')).sendKeys('username@example.com');
+    await element(by.id('submit-form')).click();
 
-      return eyes.close();
-    });
+    await eyes.check('After submit form', Target.window().fully());
+
+    await eyes.close();
   });
 
-  afterEach(function () {
-    return eyes.abortIfNotClosed();
+  afterEach(async function () {
+    await eyes.abortIfNotClosed();
   });
 });

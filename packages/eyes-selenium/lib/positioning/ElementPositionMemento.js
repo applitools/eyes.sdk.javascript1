@@ -5,10 +5,12 @@ const { PositionMemento } = require('@applitools/eyes-sdk-core');
 
 /**
  * Encapsulates state for {@link ElementPositionProvider} instances.
+ *
+ * @ignore
  */
 class ElementPositionMemento extends PositionMemento {
   /**
-   * @param {Location} position The current location to be saved.
+   * @param {Location} position - The current location to be saved.
    */
   constructor(position) {
     super();

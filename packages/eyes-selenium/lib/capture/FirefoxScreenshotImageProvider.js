@@ -9,6 +9,8 @@ const { EyesWebDriverScreenshot } = require('./EyesWebDriverScreenshot');
  * This class is needed because in certain versions of firefox, a frame screenshot only brings the frame viewport.
  * To solve this issue, we create an image with the full size of the browser viewport and place the frame image on it
  * in the appropriate place.
+ *
+ * @ignore
  */
 class FirefoxScreenshotImageProvider extends ImageProvider {
   /**

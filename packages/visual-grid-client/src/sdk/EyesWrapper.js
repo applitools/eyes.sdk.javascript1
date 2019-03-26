@@ -52,8 +52,8 @@ class EyesWrapper extends EyesBase {
   /**
    * Create a screenshot of a page on RenderingGrid server
    *
-   * @param {RenderRequest[]} renderRequests The requests to be sent to the rendering grid
-   * @return {Promise.<String[]>} The results of the render
+   * @param {RenderRequest[]} renderRequests - The requests to be sent to the rendering grid
+   * @return {Promise.<String[]>} - The results of the render
    */
   renderBatch(renderRequests) {
     return this._serverConnector.render(renderRequests);

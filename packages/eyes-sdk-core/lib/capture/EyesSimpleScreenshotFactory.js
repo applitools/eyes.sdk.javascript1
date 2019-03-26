@@ -5,6 +5,8 @@ const { EyesSimpleScreenshot } = require('./EyesSimpleScreenshot');
 
 /**
  * Encapsulates the instantiation of an EyesSimpleScreenshot.
+ *
+ * @ignore
  */
 class EyesSimpleScreenshotFactory extends EyesScreenshotFactory {
   // noinspection JSMethodCanBeStatic

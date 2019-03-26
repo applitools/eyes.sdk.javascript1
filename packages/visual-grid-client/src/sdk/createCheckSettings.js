@@ -7,7 +7,7 @@ const {
   FloatingRegionByRectangle,
 } = require('@applitools/eyes-sdk-core');
 
-function createCheckSettings({ignore, floating, layout, strict}) {
+function createCheckSettings({ignore, floating, layout, strict, useDom, enablePatterns}) {
   const checkSettings = new CheckSettings(0);
   setEachRegion(ignore, checkSettings.ignoreRegions.bind(checkSettings));
   setEachRegion(layout, checkSettings.layoutRegions.bind(checkSettings));
@@ -28,6 +28,12 @@ function createCheckSettings({ignore, floating, layout, strict}) {
         );
       }
     }
+  }
+  if (useDom !== undefined) {
+    checkSettings.useDom(useDom);
+  }
+  if (enablePatterns !== undefined) {
+    checkSettings.enablePatterns(enablePatterns);
   }
 
   return checkSettings;

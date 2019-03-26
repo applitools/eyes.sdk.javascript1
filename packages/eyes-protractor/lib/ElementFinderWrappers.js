@@ -13,8 +13,8 @@ const ELEMENT_ARRAY_FINDER_TO_ELEMENT_FINDER_FUNCTIONS = ['get', 'first', 'last'
  * Mixin methods from one object into another.
  * Follow the prototype chain and apply form root to current - but skip the top (object)
  *
- * @param {object} to The object to which methods will be added
- * @param {object} from The object from which methods will be copied
+ * @param {object} to - The object to which methods will be added
+ * @param {object} from - The object from which methods will be copied
  */
 function mixin(to, from) {
   let index;

@@ -3,8 +3,8 @@
 require('chromedriver');
 const assert = require('assert');
 const { Builder } = require('selenium-webdriver');
-const { ConsoleLogHandler, PerformanceUtils } = require('@applitools/eyes-common');
-const { Eyes, Target } = require('../../index');
+const { PerformanceUtils } = require('@applitools/eyes-common');
+const { Eyes, Target, ConsoleLogHandler } = require('../../index');
 
 describe('MochaPerformanceTest', function () {
   let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes;

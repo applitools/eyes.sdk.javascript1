@@ -1,6 +1,9 @@
 'use strict';
 
+const { By } = require('selenium-webdriver');
 const { ArgumentGuard } = require('@applitools/eyes-common');
+const { ScrollPositionMemento } = require('../positioning/ScrollPositionMemento');
+const { ScrollPositionProvider } = require('../positioning/ScrollPositionProvider');
 
 /**
  * Encapsulates a frame/iframe. This is a generic type class, and it's actual type is determined by the reference used
@@ -8,33 +11,35 @@ const { ArgumentGuard } = require('@applitools/eyes-common');
  */
 class Frame {
   /**
-   * @param {Logger} logger A Logger instance.
-   * @param {WebElement} reference The web element for the frame, used as a reference to switch into the frame.
-   * @param {Location} location The location of the frame within the current frame.
-   * @param {RectangleSize} size The frame element size (i.e., the size of the frame on the screen, not the internal
-   *   document size).
-   * @param {RectangleSize} innerSize The frame element inner size (i.e., the size of the frame actual size, without
+   * @param {Logger} logger - A Logger instance.
+   * @param {WebElement} reference - The web element for the frame, used as a reference to switch into the frame.
+   * @param {Location} location - The location of the frame within the current frame.
+   * @param {RectangleSize} outerSize - The frame element size (i.e., the size of the frame on the screen, not the
+   *   internal document size).
+   * @param {RectangleSize} innerSize - The frame element inner size (i.e., the size of the frame actual size, without
    *   borders).
-   * @param {Location} originalLocation The scroll location of the frame.
-   * @param {string} originalOverflow The original overflow value of the frame.
+   * @param {Location} originalLocation - The scroll location of the frame.
+   * @param {string} jsExecutor - The Javascript Executor to use. Usually that will be the WebDriver.
    */
-  constructor(logger, reference, location, size, innerSize, originalLocation, originalOverflow) {
+  constructor(logger, reference, location, outerSize, innerSize, originalLocation, jsExecutor) {
     ArgumentGuard.notNull(logger, 'logger');
     ArgumentGuard.notNull(reference, 'reference');
     ArgumentGuard.notNull(location, 'location');
-    ArgumentGuard.notNull(size, 'size');
+    ArgumentGuard.notNull(outerSize, 'outerSize');
     ArgumentGuard.notNull(innerSize, 'innerSize');
     ArgumentGuard.notNull(originalLocation, 'originalLocation');
+    ArgumentGuard.notNull(jsExecutor, 'jsExecutor');
 
-    logger.verbose(`Frame(logger, reference, ${location}, ${size}, ${innerSize})`);
+    logger.verbose(`Frame(logger, reference, ${location}, ${outerSize}, ${innerSize}, ${originalLocation})`);
 
     this._logger = logger;
     this._reference = reference;
     this._location = location;
-    this._size = size;
+    this._outerSize = outerSize;
     this._innerSize = innerSize;
     this._originalLocation = originalLocation;
-    this._originalOverflow = originalOverflow;
+    this._positionMemento = new ScrollPositionMemento(originalLocation);
+    this._jsExecutor = jsExecutor;
   }
 
   /**
@@ -54,8 +59,8 @@ class Frame {
   /**
    * @return {RectangleSize}
    */
-  getSize() {
-    return this._size;
+  getOuterSize() {
+    return this._outerSize;
   }
 
   /**
@@ -73,10 +78,62 @@ class Frame {
   }
 
   /**
-   * @return {string}
+   * @return {WebElement}
    */
-  getOriginalOverflow() {
-    return this._originalOverflow;
+  getScrollRootElement() {
+    return this._scrollRootElement;
+  }
+
+  /**
+   * @param {WebElement} scrollRootElement
+   */
+  setScrollRootElement(scrollRootElement) {
+    this._scrollRootElement = scrollRootElement;
+  }
+
+  /**
+   * @param {WebDriver} driver
+   * @return {Promise}
+   */
+  async hideScrollbars(driver) {
+    const scrollRootElement = await this._getScrollRootElement(driver);
+    this._logger.verbose("hiding scrollbars of element:", scrollRootElement);
+    this._originalOverflow = await this._jsExecutor.executeScript("var origOF = arguments[0].style.overflow; arguments[0].style.overflow='hidden'; return origOF;", scrollRootElement);
+  }
+
+  /**
+   * @param {WebDriver} driver
+   * @return {Promise}
+   */
+  async returnToOriginalOverflow(driver) {
+    const scrollRootElement = await this._getScrollRootElement(driver);
+    this._logger.verbose("returning overflow of element to its original value: " + scrollRootElement);
+    await this._jsExecutor.executeScript(`arguments[0].style.overflow='${this._originalOverflow}';`, scrollRootElement);
+  }
+
+  /**
+   * @param {WebDriver} driver
+   * @return {Promise}
+   */
+  async returnToOriginalPosition(driver) {
+    const scrollRootElement = await this._getScrollRootElement(driver);
+    const positionProvider = new ScrollPositionProvider(this._logger, this._jsExecutor, scrollRootElement);
+    await positionProvider.restoreState(this._positionMemento);
+  }
+
+  /**
+   * @private
+   * @param {WebDriver} driver
+   * @return {Promise<WebElement>}
+   */
+  async _getScrollRootElement(driver) {
+    let scrollRootElement = this.getScrollRootElement();
+    if (!scrollRootElement) {
+      this._logger.verbose("no scroll root element. selecting default.");
+      scrollRootElement = await driver.findElement(By.css("html"));
+    }
+
+    return scrollRootElement;
   }
 }
 

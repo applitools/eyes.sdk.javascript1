@@ -5,12 +5,6 @@ const { LogHandler } = require('./LogHandler');
 /**
  * Ignores all log messages.
  */
-class NullLogHandler extends LogHandler {
-  open() {}
-
-  close() {}
-
-  onMessage(verbose, logString) {} // eslint-disable-line no-unused-vars
-}
+class NullLogHandler extends LogHandler {}
 
 exports.NullLogHandler = NullLogHandler;
