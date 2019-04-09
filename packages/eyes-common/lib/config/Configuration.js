@@ -397,10 +397,16 @@ class Configuration {
     }
     return this;
   }
-
+ 
   /**
    * Adds a property to be sent to the server.
-   *
+   * @signature `addProperty(property)`
+   * @sigparam {PropertyData|PropertyDataObject} property - The name and value are taken from the object passed
+   * 
+   * @signature`addProperty(propertyName, propertyValue)`
+   * @sigparam {string} propertyName - The name of the property
+   * @sigparam {string} propertyValue - The value of the property
+   * 
    * @param {PropertyData|string} propertyOrName - The property name or PropertyData object.
    * @param {string} [propertyValue] - The property value.
    * @return {this}

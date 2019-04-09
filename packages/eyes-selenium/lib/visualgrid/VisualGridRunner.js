@@ -2,7 +2,7 @@
 
 class VisualGridRunner {
   // noinspection JSAnnotator
-  /***
+  /**
    * @param {number} [concurrentSessions]
    */
   constructor(concurrentSessions) {
