@@ -392,7 +392,7 @@ class Configuration {
 
   /**
    * @signature `setProperties(propertyList)`
-   * @sigparam {PropertyData} propertyList - A list of name and value pairs
+   * @sigparam {PropertyData[]} propertyList - A list of name and value pairs
    *
    * @param {PropertyData[]|PropertyDataObject[]} value
    * @return {this}
