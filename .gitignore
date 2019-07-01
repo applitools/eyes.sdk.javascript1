@@ -20,3 +20,4 @@ node_modules
 .eslintcache
 *.swp
 *~
+yarn.lock
