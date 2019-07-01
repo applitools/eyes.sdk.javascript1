@@ -18,6 +18,10 @@ describe('Eyes', function () {
     assert.ok(eyes instanceof EyesVisualGrid);
   });
 
+  it('should create an Eyes instance through fromBrowserInfo', () => {
+    assert.doesNotThrow(() => { Eyes.fromBrowserInfo(); });
+  });
+
   it('set configuration from object', async function () {
     const eyes = new Eyes(new VisualGridRunner());
     const date = new Date();
