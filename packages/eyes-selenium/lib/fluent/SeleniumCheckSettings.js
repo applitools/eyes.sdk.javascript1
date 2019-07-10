@@ -40,7 +40,7 @@ class SeleniumCheckSettings extends CheckSettings {
       this.frame(frame);
     }
 
-    /** @type {Object.<string, string>} */ this._scriptHooks = {};
+    /** @type {Object<string, string>} */ this._scriptHooks = {};
   }
 
   /**
@@ -313,7 +313,7 @@ class SeleniumCheckSettings extends CheckSettings {
 
   /**
    * @ignore
-   * @return {Object.<string, string>}
+   * @return {Object<string, string>}
    */
   getScriptHooks() {
     return this._scriptHooks;
