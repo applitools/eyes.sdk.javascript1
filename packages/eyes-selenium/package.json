@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-selenium",
-  "version": "4.19.0",
+  "version": "4.22.2",
   "description": "Applitools Eyes SDK for Selenium WebDriver",
   "keywords": [
     "eyes-selenium",
@@ -36,22 +36,22 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/dom-snapshot": "^1.1.9",
-    "@applitools/dom-utils": "^4.6.18",
-    "@applitools/eyes-common": "^3.7.0",
-    "@applitools/eyes-sdk-core": "^5.9.0",
-    "@applitools/visual-grid-client": "^12.11.0"
+    "@applitools/dom-snapshot": "^1.2.24",
+    "@applitools/dom-utils": "^4.6.21",
+    "@applitools/eyes-common": "^3.7.2",
+    "@applitools/eyes-sdk-core": "^5.11.1",
+    "@applitools/visual-grid-client": "^12.16.3"
   },
   "devDependencies": {
     "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",
     "chai": "^4.2.0",
-    "chromedriver": "^74.0.0",
+    "chromedriver": "^75.0.0",
     "mocha": "^6.1.4",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "selenium-webdriver": "^4.0.0-alpha.3"
   },
   "peerDependencies": {
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "selenium-webdriver": "^4.0.0-alpha.3"
   },
   "scripts": {
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",

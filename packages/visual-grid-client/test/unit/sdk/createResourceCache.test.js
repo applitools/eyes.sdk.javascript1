@@ -49,6 +49,20 @@ describe('createResourceCache', () => {
     });
   });
 
+  it('does not go into infinite loop', () => {
+    cache.setValue('a', 'aaa');
+    cache.setValue('b', 'bbb');
+    cache.setValue('c', 'ccc');
+    cache.setDependencies('a', ['b']);
+    cache.setDependencies('b', ['c']);
+    cache.setDependencies('c', ['a']);
+    expect(cache.getWithDependencies('a')).to.eql({
+      a: 'aaa',
+      b: 'bbb',
+      c: 'ccc',
+    });
+  });
+
   it('getWithDependencies returns undefined if no value for entry', () => {
     cache.setDependencies('kaka', ['a', 'b']);
     cache.setValue('a', 'aaa');

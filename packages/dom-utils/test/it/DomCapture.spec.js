@@ -80,19 +80,19 @@ describe('DomCapture', function () {
 
   beforeEach(async function () {
     driver = await new Builder().forBrowser('chrome').setChromeOptions(new ChromeOptions().headless()).build();
-    // TODO: remove once selenium SDK 4 is fixed
-    // the command is not exists in selenium js sdk, we should define it manually
-    driver.getExecutor().defineCommand('switchToFrameParent', 'POST', '/session/:sessionId/frame/parent');
+
     if (!driver.findElementByXPath) {
       driver.findElementByXPath = xPath => {
         return driver.findElement(By.xpath(xPath));
       };
     }
+
     if (!driver.url) {
       driver.url = url => {
         return driver.get(url);
       };
     }
+
     await driver.manage().window().setRect({ x: 0, y: 0, width: 800, height: 600 });
   });
 

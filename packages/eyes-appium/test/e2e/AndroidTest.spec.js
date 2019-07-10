@@ -59,7 +59,7 @@ describe('AndroidTest', function () {
         eyes.check('Initial view', Target.region(By.css('body')).fully(fully));
         return eyes.close();
       }).then(() => {
-        eyes.abortIfNotClosed();
+        eyes.abort();
 
         return driver.quit();
       });

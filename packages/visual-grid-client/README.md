@@ -58,9 +58,10 @@ defined in the `browser` property of the configuraion.
 * `url`: the URL appearing in the address bar of the browser. All relative URLs in the CDT will be relative to it.
 * `cdt`: the HTML and set and resources, in the `x-applitools-html/cdt` format (see below).
   you can use `domNodesToCdt` to create a CDT from a `document`.
-* `sizeMode`: the target of the rendering. Can be one of `viewport`, `full-page`, `selector`, `region`
-* `selector`: if the `sizeMode` is selector, this is the selector we are targetting.
-* `region`: if the `sizeMode` is region, this is the region we are targetting.
+* `target`: the target of the rendering. Can be one of `window`, `region`
+* `fully`: set wehn `target` is `window`, if `fully` is `true` then snapshot is full page, if `fully` is `false` then snapshot is viewport.
+* `selector`: if the `target` is `region`, this is the selector we are targetting.
+* `region`: if the `target` is `region`, this is the region we are targetting.
   This is an object with `x`, `y`, `width`, `height` properties.
 * `ignore`: TBD
 * `floating`: TBD
@@ -183,7 +184,8 @@ describe('visual-grid-client test', function() {
     }));
     checkWindow({
       tag: 'first test',
-      sizeMode: 'viewport',
+      target: 'region',
+      fully: false,
       url,
       cdt,
       resourceUrls,

@@ -50,6 +50,6 @@ const { Eyes, Target, ConsoleLogHandler, RectangleSize, Region } = require('../i
     await driver.quit();
 
     // If the test was aborted before eyes.close was called ends the test as aborted.
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   }
 })();

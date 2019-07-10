@@ -1,47 +1,41 @@
 'use strict';
-const {
-  parse,
-  CSSImportRule,
-  CSSStyleRule,
-  CSSFontFaceRule,
-  CSSSupportsRule,
-  CSSMediaRule,
-} = require('cssom');
-const getUrlFromCssText = require('./getUrlFromCssText');
-const absolutizeUrl = require('./absolutizeUrl');
 
-function extractResourcesFromStyleSheet(styleSheet) {
-  const resourceUrls = [...styleSheet.cssRules].reduce((acc, rule) => {
-    if (rule instanceof CSSImportRule) {
-      return acc.concat(rule.href);
-    } else if (rule instanceof CSSFontFaceRule) {
-      return acc.concat(getUrlFromCssText(rule.style.getPropertyValue('src')));
-    } else if (rule instanceof CSSSupportsRule || rule instanceof CSSMediaRule) {
-      return acc.concat(extractResourcesFromStyleSheet(rule));
-    } else if (rule instanceof CSSStyleRule) {
-      for (let i = 0, ii = rule.style.length; i < ii; i++) {
-        const urls = getUrlFromCssText(rule.style.getPropertyValue(rule.style[i]));
-        urls.length && (acc = acc.concat(urls));
-      }
-    }
-    return acc;
-  }, []);
-  return [...new Set(resourceUrls)];
-}
+const absolutizeUrl = require('./absolutizeUrl');
+const {toUriEncoding, toUnAnchoredUri} = require('@applitools/dom-snapshot');
+const valueParser = require('postcss-value-parser');
 
 function makeExtractCssResources(logger) {
   return function extractCssResources(cssText, absoluteUrl) {
-    let styleSheet;
-
+    const urls = [];
+    const parsedValue = valueParser(cssText);
     try {
-      styleSheet = parse(cssText);
-    } catch (ex) {
-      logger.log(ex);
-      return [];
+      parsedValue.walk((node, i, nodes) => {
+        const nUrls = nodeUrls(node, i, nodes);
+        nUrls && urls.push(...nUrls);
+      });
+    } catch (e) {
+      logger.log(`could not parse css ${absoluteUrl}`, e);
     }
-
-    return extractResourcesFromStyleSheet(styleSheet).map(url => absolutizeUrl(url, absoluteUrl));
+    return [...new Set(urls)]
+      .map(toUriEncoding)
+      .map(toUnAnchoredUri)
+      .map(url => absolutizeUrl(url, absoluteUrl));
   };
+}
+
+function nodeUrls(node, i, nodes) {
+  if (node.type === 'function' && node.value === 'url' && node.nodes && node.nodes.length == 1) {
+    return [node.nodes[0].value];
+  } else if (
+    node.type === 'word' &&
+    node.value === '@import' &&
+    nodes[i + 2] &&
+    nodes[i + 2].type === 'string'
+  ) {
+    return [nodes[i + 2].value];
+  } else if (node.type === 'function' && node.value.includes('image-set') && node.nodes) {
+    return node.nodes.filter(n => n.type === 'string').map(n => n.value);
+  }
 }
 
 module.exports = makeExtractCssResources;

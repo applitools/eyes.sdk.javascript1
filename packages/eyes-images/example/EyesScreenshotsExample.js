@@ -1,8 +1,7 @@
 'use strict';
 
 const axios = require('axios'); // eslint-disable-line node/no-unpublished-require
-const { ConsoleLogHandler, RectangleSize } = require('@applitools/eyes-sdk-core');
-const { Eyes, Target } = require('../index'); // should be replaced to '@applitools/eyes-images'
+const { Eyes, Target, ConsoleLogHandler, RectangleSize } = require('../index'); // should be replaced to '@applitools/eyes-images'
 
 (async () => {
   // Initialize the eyes SDK and set your private API key.
@@ -27,6 +26,6 @@ const { Eyes, Target } = require('../index'); // should be replaced to '@applito
     await eyes.close();
   } finally {
     // If the test was aborted before eyes.close was called ends the test as aborted.
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   }
 })();

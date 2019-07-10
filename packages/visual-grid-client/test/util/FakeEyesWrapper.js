@@ -196,7 +196,7 @@ class FakeEyesWrapper extends EventEmitter {
     return this.results;
   }
 
-  async abortIfNotClosed() {
+  async abort() {
     this.emit('aborted');
     this.aborted = !this.closed;
   }

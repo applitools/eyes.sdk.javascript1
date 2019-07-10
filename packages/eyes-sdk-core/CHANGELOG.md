@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.11.0...@applitools/eyes-sdk-core@5.11.1) (2019-07-02)
+
+**Note:** Version bump only for package @applitools/eyes-sdk-core
+
+
+
+
+
+# [5.11.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.10.0...@applitools/eyes-sdk-core@5.11.0) (2019-06-30)
+
+
+### Features
+
+* add source (current url) to MatchWindowData.Options ([1989824](https://github.com/applitools/eyes.sdk.javascript1/commit/1989824))
+
+
+
+
+
+# [5.10.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.9.3...@applitools/eyes-sdk-core@5.10.0) (2019-06-24)
+
+
+### Features
+
+* **eyes-sdk-core:** added renderId to MatchWindowData ([db05cbf](https://github.com/applitools/eyes.sdk.javascript1/commit/db05cbf))
+* **eyes-sdk-core:** remove `isSaved` property of TestResults ([fd9cf90](https://github.com/applitools/eyes.sdk.javascript1/commit/fd9cf90))
+
+
+
+
+
+## [5.9.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.9.2...@applitools/eyes-sdk-core@5.9.3) (2019-06-19)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core:** remove serverConnector from output of TestResults ([a6fd38b](https://github.com/applitools/eyes.sdk.javascript1/commit/a6fd38b))
+
+
+
+
+
+## [5.9.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.9.1...@applitools/eyes-sdk-core@5.9.2) (2019-06-19)
+
+**Note:** Version bump only for package @applitools/eyes-sdk-core
+
+
+
+
+
+## [5.9.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.9.0...@applitools/eyes-sdk-core@5.9.1) (2019-06-17)
+
+**Note:** Version bump only for package @applitools/eyes-sdk-core
+
+
+
+
+
 # [5.9.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.8.1...@applitools/eyes-sdk-core@5.9.0) (2019-06-03)
 
 

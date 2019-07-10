@@ -66,7 +66,7 @@ describe('VisualGridCheckFluent', function () {
   // });
 
   afterEach(async function () {
-    return eyes.abortIfNotClosed();
+    return eyes.abort();
   });
 
   after(function () {

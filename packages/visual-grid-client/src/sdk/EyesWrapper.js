@@ -23,7 +23,7 @@ class EyesWrapper extends EyesBase {
       this._configuration.mergeConfig(this.getAssumedConfiguration());
       await this._ensureRunningSession();
     }
-    await this.abortIfNotClosed();
+    await this.abort();
   }
 
   setAssumedConfiguration(configuration) {
@@ -84,12 +84,12 @@ class EyesWrapper extends EyesBase {
     return this._serverConnector.renderStatusById(renderId);
   }
 
-  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {
+  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, source}) {
     const regionProvider = new NullRegionProvider();
     this.screenshotUrl = screenshotUrl;
     this.domUrl = domUrl;
     this.imageLocation = imageLocation;
-    return this.checkWindowBase(regionProvider, tag, false, checkSettings);
+    return this.checkWindowBase(regionProvider, tag, false, checkSettings, source);
   }
 
   async getScreenshot() {

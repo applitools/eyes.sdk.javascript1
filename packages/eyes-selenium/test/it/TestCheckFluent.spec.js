@@ -133,7 +133,7 @@ describe('TestCheckFluent', function () {
   });
 
   afterEach(async function () {
-    return eyes.abortIfNotClosed();
+    return eyes.abort();
   });
 
   after(function () {

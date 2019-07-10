@@ -38,7 +38,7 @@ describe('EyesSelenium', function () {
   });
 
   afterEach(async function () {
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   });
 
   after(async function () {

@@ -1,6 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
+const assert = require('assert');
 const { Configuration } = require('../../index');
 
 describe('Configuration', () => {
@@ -51,5 +52,22 @@ describe('Configuration', () => {
     expect(cfg._browsersInfo[0].name).to.equal(config.browsersInfo[0].name);
     expect(cfg._browsersInfo[1].name).to.equal(config.browsersInfo[1].name);
     expect(cfg._browsersInfo[2].deviceName).to.equal(config.browsersInfo[2].deviceName);
+  });
+
+  it('test return type', () => {
+    let config = new Configuration();
+    assert.ok(config instanceof Configuration);
+
+    // use method from eyes-selenium/lib/config/Configuration
+    config = config.setWaitBeforeScreenshots(24062019);
+    assert.ok(config instanceof Configuration); // check that type is not changed
+
+    // use method from eyes-common/lib/config/Configuration
+    config = config.setHostApp('demo');
+    assert.ok(config instanceof Configuration); // check that type is not changed
+
+    // check that we still have access to methods
+    assert.strictEqual(config.getHostApp(), 'demo');
+    assert.strictEqual(config.getWaitBeforeScreenshots(), 24062019);
   });
 });

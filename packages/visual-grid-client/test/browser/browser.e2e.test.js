@@ -26,6 +26,7 @@ describe('browser visual grid', () => {
 
     browser = await puppeteer.launch({
       args: ['--disable-web-security'],
+      headless: true,
     });
     page = await browser.newPage();
 
@@ -35,6 +36,7 @@ describe('browser visual grid', () => {
   after(async () => {
     await closeServer();
     await browser.close();
+    // await new Promise(r => setTimeout(r, 100000));
   });
 
   it('passes with correct screenshot', async () => {

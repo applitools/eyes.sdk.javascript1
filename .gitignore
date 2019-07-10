@@ -10,9 +10,12 @@ logs
 *.code-workspace
 .history
 
+# Dependency trees
+yarn.lock
+package-lock.json
+
 # Dependency directory
 node_modules
-/packages/*/package-lock.json
 /packages/visual-grid-client/test/fixtures/test-app/dist/*
 
 # Other

@@ -32,6 +32,6 @@ describe('TestServerConnector', function () {
 
   afterEach(async function () {
     await driver.quit();
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   });
 });

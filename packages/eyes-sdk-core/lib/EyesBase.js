@@ -424,7 +424,6 @@ class EyesBase extends EyesAbstract {
       // Session was started, call the server to end the session.
       const results = await this._serverConnector.stopSession(this._runningSession, false, save);
       results.setIsNew(isNewSession);
-      results.setIsSaved(save);
       results.setUrl(sessionResultsUrl);
 
       // for backwards compatibility with outdated servers
@@ -483,12 +482,22 @@ class EyesBase extends EyesAbstract {
   /**
    * If a test is running, aborts it. Otherwise, does nothing.
    *
+   * @alias abort
    * @return {Promise<?TestResults>} - A promise which resolves to the test results.
    */
   async abortIfNotClosed() {
+    return this.abort();
+  }
+
+  /**
+   * If a test is running, aborts it. Otherwise, does nothing.
+   *
+   * @return {Promise<?TestResults>} - A promise which resolves to the test results.
+   */
+  async abort() {
     try {
       if (this._configuration.getIsDisabled()) {
-        this._logger.verbose('Eyes abortIfNotClosed ignored. (disabled)');
+        this._logger.verbose('Eyes abort ignored. (disabled)');
         return null;
       }
 
@@ -544,10 +553,11 @@ class EyesBase extends EyesAbstract {
    * @param {string} [tag=''] - An optional tag to be associated with the snapshot.
    * @param {boolean} [ignoreMismatch=false] - Whether to ignore this check if a mismatch is found.
    * @param {CheckSettings} [checkSettings] - The settings to use.
+   * @param {string} [source] - The tested source page.
    * @return {Promise<MatchResult>} - The result of matching the output with the expected output.
    * @throws DiffsFoundError - Thrown if a mismatch is detected and immediate failure reports are enabled.
    */
-  async checkWindowBase(regionProvider, tag = '', ignoreMismatch = false, checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT)) {
+  async checkWindowBase(regionProvider, tag = '', ignoreMismatch = false, checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT), source) {
     if (this._configuration.getIsDisabled()) {
       this._logger.verbose('Ignored');
       const result = new MatchResult();
@@ -568,7 +578,7 @@ class EyesBase extends EyesAbstract {
 
     await this.beforeMatchWindow();
     await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo);
-    const matchResult = await EyesBase.matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, this);
+    const matchResult = await EyesBase.matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, this, undefined, source);
     await this.afterMatchWindow();
 
     this._logger.verbose('MatchWindow Done!');
@@ -743,9 +753,10 @@ class EyesBase extends EyesAbstract {
    * @param {CheckSettings} checkSettings
    * @param {EyesBase} self
    * @param {boolean} [skipStartingSession=false]
+   * @param {string} [source]
    * @return {Promise<MatchResult>}
    */
-  static async matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, self, skipStartingSession = false) {
+  static async matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, self, skipStartingSession = false, source) {
     let retryTimeout = -1;
 
     if (checkSettings) {
@@ -764,7 +775,7 @@ class EyesBase extends EyesAbstract {
 
     return self._matchWindowTask.matchWindow(
       self.getUserInputs(), region, tag, self._shouldMatchWindowRunOnceOnTimeout,
-      ignoreMismatch, checkSettings, retryTimeout
+      ignoreMismatch, checkSettings, retryTimeout, source
     );
   }
 
@@ -942,7 +953,7 @@ class EyesBase extends EyesAbstract {
    */
   async _validateSessionOpen() {
     if (this._isOpen) {
-      await this.abortIfNotClosed();
+      await this.abort();
       const errMsg = 'A test is already running';
       this._logger.log(errMsg);
       throw new Error(errMsg);

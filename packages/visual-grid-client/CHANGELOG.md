@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.16.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.16.1...@applitools/visual-grid-client@12.16.3) (2019-07-03)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** removed handle debug data stuff that break nrowsers ([f3c0126](https://github.com/applitools/eyes.sdk.javascript1/commit/f3c0126))
+
+
+
+
+
+## [12.16.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.16.0...@applitools/visual-grid-client@12.16.1) (2019-07-02)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.16.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.15.0...@applitools/visual-grid-client@12.16.0) (2019-06-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** updated ds - fixed no stylesheet ([03f9509](https://github.com/applitools/eyes.sdk.javascript1/commit/03f9509))
+
+
+### Features
+
+* add source (current url) to MatchWindowData.Options ([1989824](https://github.com/applitools/eyes.sdk.javascript1/commit/1989824))
+
+
+
+
+
+# [12.15.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.14.0...@applitools/visual-grid-client@12.15.0) (2019-06-26)
+
+
+### Features
+
+* **visual-grid-client:** updated ds to remove ? at end of resource URIs ([e2548bc](https://github.com/applitools/eyes.sdk.javascript1/commit/e2548bc))
+* **visual-grid-client:** updated ds to support shadow dom resource fetching ([4f87ca3](https://github.com/applitools/eyes.sdk.javascript1/commit/4f87ca3))
+
+
+
+
+
+# [12.14.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.13.1...@applitools/visual-grid-client@12.14.0) (2019-06-24)
+
+
+### Features
+
+* **visual-grid-client:** set `renderId` for checkWindow requests ([05f2e45](https://github.com/applitools/eyes.sdk.javascript1/commit/05f2e45))
+
+
+
+
+
+## [12.13.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.13.0...@applitools/visual-grid-client@12.13.1) (2019-06-19)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.13.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.11.8...@applitools/visual-grid-client@12.13.0) (2019-06-19)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** 12.11.9 ([69c238a](https://github.com/applitools/eyes.sdk.javascript1/commit/69c238a))
+* **visual-grid-client:** fix spread operator on object ([0b1da8a](https://github.com/applitools/eyes.sdk.javascript1/commit/0b1da8a))
+* **visual-grid-client:** removing anchors from resourc urls ([c43d471](https://github.com/applitools/eyes.sdk.javascript1/commit/c43d471))
+* **visual-grid-client:** supporting css uri encoding ([c11a1cd](https://github.com/applitools/eyes.sdk.javascript1/commit/c11a1cd))
+
+
+### Features
+
+* **visual-grid-client:** supporting target instead of sizeMode ([ab9bdc4](https://github.com/applitools/eyes.sdk.javascript1/commit/ab9bdc4))
+
+
+
+
+
+## [12.11.8](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.11.0...@applitools/visual-grid-client@12.11.8) (2019-06-17)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added batchSequeneceName to config params ([33c0e8c](https://github.com/applitools/eyes.sdk.javascript1/commit/33c0e8c))
+* **visual-grid-client:** setting userAgent to renderWrapper ([6c576f2](https://github.com/applitools/eyes.sdk.javascript1/commit/6c576f2))
+* **visual-grid-client:** small fixes ([a2820a7](https://github.com/applitools/eyes.sdk.javascript1/commit/a2820a7))
+* **visual-grid-client:** using postcss-value-parser tokenizer for extractCssRources ([4b68720](https://github.com/applitools/eyes.sdk.javascript1/commit/4b68720))
+
+
+
+
+
 # [12.11.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.10.1...@applitools/visual-grid-client@12.11.0) (2019-06-03)
 
 

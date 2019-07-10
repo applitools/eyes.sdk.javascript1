@@ -175,7 +175,7 @@ class TestSetup {
     } catch (err) {
       console.log(err.stack); // eslint-disable-line no-console
     } finally {
-      await this._eyes.abortIfNotClosed();
+      await this._eyes.abort();
       if (this._driver) {
         await this._driver.quit();
       }

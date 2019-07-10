@@ -25,6 +25,6 @@ describe('Eyes.Protractor.JavaScript - check window', function () {
   });
 
   afterEach(async function () {
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   });
 });

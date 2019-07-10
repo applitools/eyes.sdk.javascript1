@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.11.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.17...@applitools/eyes-images@4.11.0) (2019-07-03)
+
+
+### Features
+
+* **eyes-images:** add exports of eyes-common and eyes-sdk-core classes ([72fe6bc](https://github.com/applitools/eyes.sdk.javascript1/commit/72fe6bc))
+
+
+
+
+
+## [4.10.17](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.16...@applitools/eyes-images@4.10.17) (2019-07-02)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.10.16](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.15...@applitools/eyes-images@4.10.16) (2019-06-30)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.10.15](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.14...@applitools/eyes-images@4.10.15) (2019-06-24)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.10.14](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.13...@applitools/eyes-images@4.10.14) (2019-06-19)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.10.13](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.12...@applitools/eyes-images@4.10.13) (2019-06-19)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.10.12](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.11...@applitools/eyes-images@4.10.12) (2019-06-17)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
 ## [4.10.11](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.10.10...@applitools/eyes-images@4.10.11) (2019-06-03)
 
 

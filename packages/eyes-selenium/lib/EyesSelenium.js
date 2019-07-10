@@ -26,6 +26,7 @@ const {
   MatchResult,
 } = require('@applitools/eyes-sdk-core');
 
+const { ClassicRunner } = require('./runner/ClassicRunner');
 const { StitchMode } = require('./config/StitchMode');
 const { ImageProviderFactory } = require('./capture/ImageProviderFactory');
 const { EyesWebDriverScreenshotFactory } = require('./capture/EyesWebDriverScreenshotFactory');
@@ -54,9 +55,10 @@ class EyesSelenium extends Eyes {
    *
    * @param {string} [serverUrl] - The Eyes server URL.
    * @param {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
+   * @param {ClassicRunner} [runner] - Set shared ClassicRunner if you want to group results.
    */
-  constructor(serverUrl, isDisabled) {
-    super(serverUrl, isDisabled);
+  constructor(serverUrl, isDisabled, runner = new ClassicRunner()) {
+    super(serverUrl, isDisabled, runner);
 
     /** @type {boolean} */
     this._checkFrameOrElement = false;
@@ -205,7 +207,8 @@ class EyesSelenium extends Eyes {
       this._logger.verbose("have target region");
       originalFC = await this._tryHideScrollbars();
       this._imageLocation = targetRegion.getLocation();
-      result = await this.checkWindowBase(new RegionProvider(targetRegion), name, false, checkSettings);
+      const source = await this._driver.getCurrentUrl();
+      result = await this.checkWindowBase(new RegionProvider(targetRegion), name, false, checkSettings, source);
     } else if (checkSettings) {
       let targetElement = checkSettings.getTargetElement();
 
@@ -241,7 +244,8 @@ class EyesSelenium extends Eyes {
         const scrollRootElement = await this.getScrollRootElement();
         this._currentFramePositionProvider = this._createPositionProvider(scrollRootElement);
         // }
-        result = await this.checkWindowBase(new NullRegionProvider(), name, false, checkSettings);
+        const source = await this._driver.getCurrentUrl();
+        result = await this.checkWindowBase(new NullRegionProvider(), name, false, checkSettings, source);
         await switchTo.frames(this._originalFC);
       }
     }
@@ -409,7 +413,8 @@ class EyesSelenium extends Eyes {
       }
     };
 
-    const result = await this.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings);
+    const source = await this._driver.getCurrentUrl();
+    const result = await this.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings, source);
     this._checkFrameOrElement = false;
     return result;
   }
@@ -467,6 +472,9 @@ class EyesSelenium extends Eyes {
       } else {
         if (frame != null) {
           scrollRootElement = await frame.getForceScrollRootElement(this._driver);
+        }
+        if (scrollRootElement == null) {
+          scrollRootElement = this._driver.findElement(By.tagName("html"));
         }
       }
       this._logger.verbose("scrollRootElement:", scrollRootElement);
@@ -581,7 +589,8 @@ class EyesSelenium extends Eyes {
       }
     };
 
-    const result = await this.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings);
+    const source = await this._driver.getCurrentUrl();
+    const result = await this.checkWindowBase(new RegionProviderImpl(), name, false, checkSettings, source);
     this._logger.verbose('Done! trying to scroll back to original position...');
     return result;
   }
@@ -639,7 +648,8 @@ class EyesSelenium extends Eyes {
       }
 
       this._imageLocation = this._regionToCheck.getLocation();
-      result = await this.checkWindowBase(new NullRegionProvider(), name, false, checkSettings);
+      const source = await this._driver.getCurrentUrl();
+      result = await this.checkWindowBase(new NullRegionProvider(), name, false, checkSettings, source);
     } finally {
       if (originalOverflow) {
         await eyesElement.setOverflow(originalOverflow);
@@ -713,6 +723,20 @@ class EyesSelenium extends Eyes {
       false,
       this._scaleProviderHandler
     );
+  }
+
+  /**
+   * @param {boolean} [throwEx]
+   * @return {Promise<TestResults>}
+   */
+  async close(throwEx = true) {
+    const results = await super.close(throwEx);
+
+    if (this._runner) {
+      this._runner._allTestResult.push(results);
+    }
+
+    return results;
   }
 
   /**

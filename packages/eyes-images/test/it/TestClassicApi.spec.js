@@ -1,8 +1,8 @@
 'use strict';
 
-const { ConsoleLogHandler, Region, Location, FileUtils, MutableImage } = require('@applitools/eyes-common');
-const { MouseTrigger, ImageProvider } = require('@applitools/eyes-sdk-core');
-const { Eyes } = require('../../index');
+const { FileUtils } = require('@applitools/eyes-common');
+const { MouseTrigger } = require('@applitools/eyes-sdk-core');
+const { Eyes, ImageProvider, ConsoleLogHandler, Region, Location, MutableImage } = require('../../index');
 
 let /** @type {Eyes} */ eyes;
 describe('EyesImages.TestClassicApi', function () {
@@ -53,6 +53,6 @@ describe('EyesImages.TestClassicApi', function () {
   });
 
   afterEach(async function () {
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   });
 });

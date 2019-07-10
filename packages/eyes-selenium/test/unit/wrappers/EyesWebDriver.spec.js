@@ -25,6 +25,6 @@ describe('EyesWebDriver', function () {
     assert.strictEqual(await element.getText(), 'Click me!');
 
     await driver.quit();
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   });
 });

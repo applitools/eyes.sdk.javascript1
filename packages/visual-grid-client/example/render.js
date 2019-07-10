@@ -18,7 +18,7 @@ const debug = require('debug')('eyes:render');
 
   const {openEyes} = makeVisualGridClient({
     apiKey: process.env.APPLITOOLS_API_KEY,
-    showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+    showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
     proxy: process.env.APPLITOOLS_PROXY,
   });
 
@@ -40,7 +40,7 @@ const debug = require('debug')('eyes:render');
 
   debug('navigation done');
 
-  // await _delay(1000);
+  await _delay(2000);
   const frame = await page.evaluate(processPageAndSerialize);
 
   debug('processPage done');

@@ -75,7 +75,7 @@ async function handleBrowserDebugData({frame, metaData = {}, dirPath = DIR_NAME,
   }
 
   function fileValue(resource) {
-    if (resource.type.includes('text')) {
+    if (resource.type && resource.type.includes('text')) {
       return resource.value.toString();
     } else {
       return resource.value;

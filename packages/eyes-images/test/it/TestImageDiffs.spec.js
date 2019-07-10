@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-const { ConsoleLogHandler, TestResultsStatus } = require('@applitools/eyes-sdk-core');
-const { Eyes } = require('../../index');
+const { GeneralUtils } = require('@applitools/eyes-common');
+const { Eyes, ConsoleLogHandler, TestResultsStatus } = require('../../index');
 
 let /** @type {Eyes} */ eyes;
 describe('EyesImages.TestImageDiffs', function () {
@@ -15,7 +15,7 @@ describe('EyesImages.TestImageDiffs', function () {
   });
 
   it('ShouldDetectDiffs', async function () {
-    const testName = `${this.test.title}_${Math.random().toString(36).substring(2, 12)}`;
+    const testName = `${this.test.title}_${GeneralUtils.randomAlphanumeric()}`;
     const image1 = `${__dirname}/../fixtures/image1.png`;
     const image2 = `${__dirname}/../fixtures/image2.png`;
 

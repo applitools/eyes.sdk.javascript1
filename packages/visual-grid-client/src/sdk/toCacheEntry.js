@@ -1,5 +1,5 @@
 'use strict';
-const isCss = require('./isCss');
+const resourceType = require('./resourceType');
 
 function toCacheEntry(rGridResource) {
   const contentType = rGridResource.getContentType();
@@ -7,7 +7,7 @@ function toCacheEntry(rGridResource) {
     url: rGridResource.getUrl(),
     type: contentType,
     hash: rGridResource.getSha256Hash(),
-    content: isCss(contentType) ? rGridResource.getContent() : undefined,
+    content: resourceType(contentType) ? rGridResource.getContent() : undefined,
   };
 }
 

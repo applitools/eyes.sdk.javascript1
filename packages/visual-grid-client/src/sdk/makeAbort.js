@@ -17,7 +17,7 @@ function makeAbort({
   return async () => {
     testController.setIsAbortedByUser();
     return waitAndResolveTests(async testIndex => {
-      const [closeErr, closeResult] = await presult(wrappers[testIndex].abortIfNotClosed());
+      const [closeErr, closeResult] = await presult(wrappers[testIndex].abort());
       resolveTests[testIndex]();
       if (closeErr) {
         throw closeErr;

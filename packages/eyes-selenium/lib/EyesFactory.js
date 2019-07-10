@@ -3,7 +3,8 @@
 const { TypeUtils } = require('@applitools/eyes-common');
 const { CorsIframeHandle } = require('@applitools/eyes-sdk-core');
 
-const { VisualGridRunner } = require('./visualgrid/VisualGridRunner');
+const { VisualGridRunner } = require('./runner/VisualGridRunner');
+const { EyesRunner } = require('./runner/EyesRunner');
 const { EyesSelenium } = require('./EyesSelenium');
 const { EyesVisualGrid } = require('./EyesVisualGrid');
 const { Configuration } = require('./config/Configuration');
@@ -16,36 +17,38 @@ class EyesFactory {
   /**
    * Creates a new (possibly disabled) Eyes instance that interacts with the Eyes Server at the specified url.
    *
-   * @param {string|boolean|VisualGridRunner} [serverUrl] - The Eyes server URL or set {@code true} if you want to use VisualGrid service (instead of 3rd argument).
+   * @param {string|EyesRunner} [serverUrl] - The Eyes server URL or {@code EyesRunner} to use.
    * @param {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the webdriver directly.
-   * @param {boolean} [isVisualGrid=false] - Set {@code true} if you want to use VisualGrid service.
+   * @param {EyesRunner} [runner] - Set {@code EyesRunner} to use, default is ClassicRunner.
    * @return {Eyes}
    */
-  constructor(serverUrl, isDisabled, isVisualGrid) {
-    let visualGridRunner;
-    if (serverUrl instanceof VisualGridRunner) {
-      isVisualGrid = true;
-      visualGridRunner = serverUrl;
-      serverUrl = undefined;
-    } else if (TypeUtils.isBoolean(serverUrl)) {
-      isVisualGrid = serverUrl;
+  constructor(serverUrl, isDisabled, runner) {
+    if (serverUrl instanceof EyesRunner) {
+      runner = serverUrl;
       serverUrl = undefined;
     }
 
-    if (isVisualGrid === true) {
-      return new EyesVisualGrid(serverUrl, isDisabled, visualGridRunner);
+    if (runner && runner instanceof VisualGridRunner) {
+      return new EyesVisualGrid(serverUrl, isDisabled, runner);
     }
 
-    return new EyesSelenium(serverUrl, isDisabled);
+    return new EyesSelenium(serverUrl, isDisabled, runner);
   }
 
   /**
    * For Selenium IDE initialization
+   *
    * @private
+   * @param {string} [serverUrl] - The Eyes server URL.
+   * @param {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the webdriver directly.
+   * @param {object} [config] - Additional configuration object.
    */
   static fromBrowserInfo(serverUrl, isDisabled, config = {}) {
-    const eyes = new EyesFactory(serverUrl, isDisabled, !!config.browser);
+    let eyes;
+
     if (config.browser) {
+      eyes = new EyesVisualGrid(serverUrl, isDisabled);
+
       const cfg = new Configuration();
       const browsers = Array.isArray(config.browser) ? config.browser : [config.browser];
       browsers.forEach(browser => {
@@ -57,6 +60,8 @@ class EyesFactory {
         }
       });
       eyes.setConfiguration(cfg);
+    } else {
+      eyes = new EyesSelenium(serverUrl, isDisabled);
     }
 
     eyes._corsIframeHandle = CorsIframeHandle.BLANK;

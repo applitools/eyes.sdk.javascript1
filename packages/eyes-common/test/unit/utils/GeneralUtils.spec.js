@@ -68,6 +68,29 @@ describe('GeneralUtils', () => {
     });
   });
 
+  describe('randomAlphanumeric()', () => {
+    it('should return a string of default size', () => {
+      const randId = GeneralUtils.randomAlphanumeric();
+
+      assert.strictEqual(randId.length, 8);
+      assert.ok(randId.match("^[A-z0-9]+$"));
+    });
+
+    it('should return a string of size 4', () => {
+      const randId = GeneralUtils.randomAlphanumeric(4);
+
+      assert.strictEqual(randId.length, 4);
+      assert.ok(randId.match("^[A-z0-9]+$"));
+    });
+
+    it('should return a string of size 40', () => {
+      const randId = GeneralUtils.randomAlphanumeric(40);
+
+      assert.strictEqual(randId.length, 40);
+      assert.ok(randId.match("^[A-z0-9]+$"));
+    });
+  });
+
   describe('stringify()', () => {
     it('should return the same args for non-objects', () => {
       assert.strictEqual(GeneralUtils.stringify(4), '4');

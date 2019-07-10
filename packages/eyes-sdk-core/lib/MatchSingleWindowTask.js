@@ -35,13 +35,14 @@ class MatchSingleWindowTask extends MatchWindowTask {
    * @param {Trigger[]} userInputs - The user inputs related to the current appOutput.
    * @param {AppOutputWithScreenshot} appOutput - The application output to be matched.
    * @param {string} name - Optional tag to be associated with the match (can be {@code null}).
+   * @param {string} renderId - Optional render ID to be associated with the match (can be {@code null}).
    * @param {boolean} ignoreMismatch - Whether to instruct the server to ignore the match attempt in case of a mismatch.
    * @param {ImageMatchSettings} imageMatchSettings - The settings to use.
    * @return {Promise<TestResults>} - The match result.
    */
-  async performMatch(userInputs, appOutput, name, ignoreMismatch, imageMatchSettings) {
+  async performMatch(userInputs, appOutput, name, renderId, ignoreMismatch, imageMatchSettings) {
     // Prepare match model.
-    const options = new Options({ name, userInputs, ignoreMismatch, ignoreMatch: false, forceMismatch: false, forceMatch: false, imageMatchSettings });
+    const options = new Options({ name, renderId, userInputs, ignoreMismatch, ignoreMatch: false, forceMismatch: false, forceMatch: false, imageMatchSettings });
     const data = new MatchSingleWindowData({ startInfo: this._startInfo, userInputs, appOutput: appOutput.getAppOutput(), tag: name, ignoreMismatch, options });
     data.setRemoveSessionIfMatching(ignoreMismatch);
     data.setUpdateBaselineIfNew(this._saveNewTests);

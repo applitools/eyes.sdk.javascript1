@@ -83,6 +83,7 @@ function makeRenderingGridClient({
       logHandler: logger.getLogHandler(),
       serverUrl,
       proxy,
+      agentId,
     });
   const {
     doGetRenderInfo,

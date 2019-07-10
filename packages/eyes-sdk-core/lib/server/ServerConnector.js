@@ -253,6 +253,8 @@ class ServerConnector {
       options.proxy = this._configuration.getProxy().toProxyObject();
     }
 
+    options.maxContentLength =  20 * 1024 * 1024;
+
     return options;
   }
 

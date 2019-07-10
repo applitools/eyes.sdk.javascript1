@@ -1,18 +1,16 @@
 'use strict';
 
+const { EyesRunner } = require('./EyesRunner');
 const { TestResultSummary } = require('./TestResultSummary');
 
-class VisualGridRunner {
-  // this class is just a mock for compatibility with Java
-
+class VisualGridRunner extends EyesRunner {
   /**
    * @param {number} [concurrentSessions]
    */
   constructor(concurrentSessions) {
-    this._concurrentSessions = concurrentSessions;
+    super();
 
-    /** @type {EyesVisualGrid[]} */
-    this._eyesInstances = [];
+    this._concurrentSessions = concurrentSessions;
   }
 
   /**
@@ -23,12 +21,12 @@ class VisualGridRunner {
   }
 
   /**
-   * @param {boolean} [throwEx=true]
+   * @param {boolean} [shouldThrowException=true]
    * @return {Promise<TestResultSummary>}
    */
-  async getAllTestResults(throwEx = true) {
+  async getAllTestResults(shouldThrowException = true) {
     if (this._eyesInstances.length === 1) {
-      return this._eyesInstances[0].closeAndReturnResults(throwEx);
+      return this._eyesInstances[0].closeAndReturnResults(shouldThrowException);
     } else if (this._eyesInstances.length > 1) {
       const resultsPromise = [];
       const allResults = [];
@@ -42,7 +40,7 @@ class VisualGridRunner {
         allResults.push(...result.getAllResults());
       }
 
-      if (throwEx === true) {
+      if (shouldThrowException === true) {
         for (const result of allResults) {
           if (result.getException()) {
             throw result.getException();

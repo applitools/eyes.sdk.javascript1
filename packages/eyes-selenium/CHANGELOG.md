@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.22.1...@applitools/eyes-selenium@4.22.2) (2019-07-03)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.22.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.22.0...@applitools/eyes-selenium@4.22.1) (2019-07-02)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** fix fromBrowserInfo without arguments ([227c5a3](https://github.com/applitools/eyes.sdk.javascript1/commit/227c5a3)), closes [#81](https://github.com/applitools/eyes.sdk.javascript1/issues/81)
+
+
+
+
+
+# [4.22.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.21.0...@applitools/eyes-selenium@4.22.0) (2019-06-30)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** scriptHooks were not sent correctly ([494a0e6](https://github.com/applitools/eyes.sdk.javascript1/commit/494a0e6))
+
+
+### Features
+
+* add source (current url) to MatchWindowData.Options ([1989824](https://github.com/applitools/eyes.sdk.javascript1/commit/1989824))
+
+
+
+
+
+# [4.21.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.20.4...@applitools/eyes-selenium@4.21.0) (2019-06-26)
+
+
+### Features
+
+* **eyes-selenium:** updated ds to support shadow dom resource fetching ([ffb4afc](https://github.com/applitools/eyes.sdk.javascript1/commit/ffb4afc))
+
+
+
+
+
+## [4.20.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.20.3...@applitools/eyes-selenium@4.20.4) (2019-06-24)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.20.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.20.2...@applitools/eyes-selenium@4.20.3) (2019-06-19)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** use `html` as default scrollRootElement (2) ([31c1fe0](https://github.com/applitools/eyes.sdk.javascript1/commit/31c1fe0))
+
+
+
+
+
+## [4.20.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.20.1...@applitools/eyes-selenium@4.20.2) (2019-06-19)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** use `html` as default scrollRootElement ([3295cd4](https://github.com/applitools/eyes.sdk.javascript1/commit/3295cd4))
+
+
+
+
+
+## [4.20.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.20.0...@applitools/eyes-selenium@4.20.1) (2019-06-19)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+# [4.20.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.19.0...@applitools/eyes-selenium@4.20.0) (2019-06-17)
+
+
+### Features
+
+* **eyes-selenium:** add ClassicRunner to allow to collect results from multiple selenium tests ([5a217dd](https://github.com/applitools/eyes.sdk.javascript1/commit/5a217dd))
+
+
+
+
+
 # [4.19.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.18.1...@applitools/eyes-selenium@4.19.0) (2019-06-03)
 
 

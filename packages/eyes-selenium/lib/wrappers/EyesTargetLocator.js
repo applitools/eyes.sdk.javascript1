@@ -38,10 +38,6 @@ class EyesTargetLocator extends TargetLocator {
 
     /** @type {ScrollPositionMemento} */
     this._defaultContentPositionMemento = undefined;
-
-    // TODO: remove once selenium SDK 4 is fixed
-    // the command is not exists in selenium js sdk, we should define it manually
-    this._driver.getExecutor().defineCommand(Name.SWITCH_TO_FRAME_PARENT, 'POST', '/session/:sessionId/frame/parent');
   }
 
   // noinspection JSCheckFunctionSignatures

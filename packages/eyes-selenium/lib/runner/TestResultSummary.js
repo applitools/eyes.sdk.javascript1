@@ -1,11 +1,13 @@
 'use strict';
 
 const { ArgumentGuard, TypeUtils, GeneralUtils } = require('@applitools/eyes-common');
-const { TestFailedError } = require('@applitools/eyes-sdk-core');
-const { TestResultsStatus } = require('@applitools/eyes-sdk-core');
+const { TestFailedError, TestResultsStatus } = require('@applitools/eyes-sdk-core');
 
 const { TestResultContainer } = require('./TestResultContainer');
 
+/**
+ * @implements {Iterable<TestResultContainer>}
+ */
 class TestResultSummary {
   /**
    * @param {(TestResults|Error|TestResultContainer)[]} allResults
@@ -61,6 +63,13 @@ class TestResultSummary {
         this._mismatches += testResults.getMismatches();
       }
     }
+  }
+
+  /**
+   * @return {IterableIterator<TestResultContainer>} Iterator to go over the TestResultContainers in the chain.
+   */
+  [Symbol.iterator]() {
+    return this._allResults.values();
   }
 
   /**

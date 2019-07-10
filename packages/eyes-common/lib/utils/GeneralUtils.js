@@ -7,6 +7,7 @@ const { TypeUtils } = require('./TypeUtils');
 const { DateTimeUtils } = require('./DateTimeUtils');
 
 const ENV_PREFIXES = ['APPLITOOLS_', 'bamboo_APPLITOOLS_'];
+const ALPHANUMERIC_MASK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 /**
  * Collection of utility methods.
@@ -138,6 +139,19 @@ class GeneralUtils {
       const v = c === 'x' ? r : (r & 0x3) | 0x8; // eslint-disable-line no-bitwise
       return v.toString(16);
     });
+  }
+
+  /**
+   * Generate random alphanumeric sequence
+   *
+   * @return {string}
+   */
+  static randomAlphanumeric(length = 8) {
+    let res = '';
+    for (let i = 0; i < length; i++) {
+      res += ALPHANUMERIC_MASK.charAt(Math.floor(Math.random() * ALPHANUMERIC_MASK.length));
+    }
+    return res;
   }
 
   /**

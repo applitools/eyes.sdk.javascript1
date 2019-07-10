@@ -2,8 +2,9 @@
 const mapValues = require('lodash.mapvalues');
 const {RGridResource} = require('@applitools/eyes-sdk-core');
 const {URL} = require('url');
-const isCss = require('./isCss');
+const resourceType = require('./resourceType');
 const toCacheEntry = require('./toCacheEntry');
+const extractSvgResources = require('./extractSvgResources');
 
 function assignContentfulResources(obj1, obj2) {
   for (const p in obj2) {
@@ -82,8 +83,12 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
 
     async function getDependantResources({url, type, value}) {
       let dependentResources, fetchedResources;
-      if (isCss(type)) {
+      const rType = resourceType(type);
+      if (rType === 'CSS') {
         dependentResources = extractCssResources(value.toString(), url);
+        fetchedResources = await getOrFetchResources(dependentResources);
+      } else if (rType === 'SVG') {
+        dependentResources = extractSvgResources(value.toString(), url);
         fetchedResources = await getOrFetchResources(dependentResources);
       }
       return {dependentResources, fetchedResources};

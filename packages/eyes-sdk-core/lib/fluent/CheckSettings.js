@@ -32,6 +32,8 @@ class CheckSettings {
     this._ignoreCaret = false;
     /** @type {boolean} */
     this._stitchContent = false;
+    /** @type {string} */
+    this._renderId = undefined;
 
     this._timeout = timeout;
     this._targetRegion = region ? new Region(region) : undefined;
@@ -82,6 +84,27 @@ class CheckSettings {
    */
   getSendDom() {
     return this._sendDom;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Set the render ID of the screenshot.
+   *
+   * @package
+   * @param {string} renderId - The render ID to use.
+   * @return {this} - This instance of the settings object.
+   */
+  renderId(renderId) {
+    this._renderId = renderId;
+    return this;
+  }
+
+  /**
+   * @ignore
+   * @return {string}
+   */
+  getRenderId() {
+    return this._renderId;
   }
 
   // noinspection JSUnusedGlobalSymbols

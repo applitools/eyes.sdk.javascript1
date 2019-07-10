@@ -10,9 +10,10 @@ const createResourceCache = require('../../../src/sdk/createResourceCache');
 const testServer = require('../../util/testServer');
 const testLogger = require('../../util/testLogger');
 const {loadFixtureBuffer} = require('../../util/loadFixture');
-const isCss = require('../../../src/sdk/isCss');
+const resourceType = require('../../../src/sdk/resourceType');
 const toRGridResource = require('../../util/toRGridResource');
 const getTestCssResources = require('../../util/getTestCssResources');
+const getTestSvgResources = require('../../util/getTestSvgResources');
 require('@applitools/isomorphic-fetch');
 
 describe('getAllResources', () => {
@@ -70,6 +71,38 @@ describe('getAllResources', () => {
       const resources = await getAllResources({resourceUrls: [jpgUrl, cssUrl, jsonUrl, jsUrl]});
       expect(resources).to.eql(expected);
     } catch (ex) {
+      throw ex;
+    } finally {
+      await closeServer();
+    }
+  });
+
+  it('works for svg urls', async () => {
+    const server = await testServer();
+    const baseUrl = `http://localhost:${server.port}`;
+    closeServer = server.close;
+
+    const file1 = 'basic.svg';
+    const file2 = 'basic2.svg';
+    const svg1Url = `${baseUrl}/${file1}`;
+    const svg2Url = `${baseUrl}/${file2}`;
+    const svg1Content = loadFixtureBuffer(file1);
+    const svg2Content = loadFixtureBuffer(file2);
+
+    const expected = Object.assign(getTestSvgResources(baseUrl), {
+      [svg1Url]: toRGridResource({url: svg1Url, type: 'image/svg+xml', value: svg1Content}),
+      [svg2Url]: toRGridResource({
+        url: svg2Url,
+        type: 'image/svg+xml',
+        value: svg2Content,
+      }),
+    });
+
+    try {
+      const resources = await getAllResources({resourceUrls: [svg1Url, svg2Url]});
+      expect(resources).to.eql(expected);
+    } catch (ex) {
+      console.log(ex);
       throw ex;
     } finally {
       await closeServer();
@@ -204,25 +237,32 @@ describe('getAllResources', () => {
       {
         [cssUrl]: {type: cssType, value: cssContent},
         [importedUrl]: {type: cssType, value: importedContent},
-        [fontZillaUrl]: {type: fontType, value: fontZillaContent},
         [importedNestedUrl]: {
           type: cssType,
           value: importedNestedContent,
         },
         [fontShadowUrl]: {type: fontType, value: fontShadowContent},
-        [jpgUrl3]: {type: jpgType, value: jpgContent3},
         [jpgUrl1]: {type: jpgType, value: jpgContent1},
         [jpgUrl2]: {type: jpgType, value: jpgContent2},
+        [jpgUrl3]: {type: jpgType, value: jpgContent3},
+        [fontZillaUrl]: {type: fontType, value: fontZillaContent},
       },
       (o, url) => {
         const rGridResource = toRGridResource({type: o.type, value: o.value, url});
-        if (!isCss(rGridResource.getContentType())) rGridResource._content = undefined; // yuck! but this is the symmetrical yuck of getAllResources::fromCacheToRGridResource since we save resource in cache without content, but with SHA256
+        if (resourceType(rGridResource.getContentType()) !== 'CSS') {
+          rGridResource._content = undefined; // yuck! but this is the symmetrical yuck of getAllResources::fromCacheToRGridResource since we save resource in cache without content, but with SHA256
+        }
         return rGridResource;
       },
     );
 
     const resourcesFromCache = await getAllResources({resourceUrls: [cssUrl]});
-    expect(resourcesFromCache).to.eql(expected);
+    try {
+      expect(resourcesFromCache).to.eql(expected);
+    } catch (ex) {
+      console.log(ex);
+      throw ex;
+    }
   });
 
   it("doesn't crash with unsupported protocols", async () => {

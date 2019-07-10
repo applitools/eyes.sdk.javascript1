@@ -8,7 +8,6 @@ const saveData = require('../troubleshoot/saveData');
 const createRenderRequests = require('./createRenderRequests');
 const createCheckSettings = require('./createCheckSettings');
 const calculateMatchRegions = require('./calculateMatchRegions');
-const handleBrowserDebugData = require('../troubleshoot/handleBrowserDebugData');
 
 function makeCheckWindow({
   testController,
@@ -35,6 +34,8 @@ function makeCheckWindow({
     url,
     cdt,
     tag,
+    target = 'window',
+    fully = true,
     sizeMode = 'full-page',
     selector,
     region,
@@ -48,18 +49,32 @@ function makeCheckWindow({
     useDom,
     enablePatterns,
     ignoreDisplacements,
+    source,
   }) {
+    if (target === 'window' && !fully) {
+      sizeMode = 'viewport';
+    } else if (target === 'region' && selector) {
+      sizeMode = 'selector';
+    } else if (target === 'region' && region) {
+      sizeMode = 'region';
+    }
+
     const currStepCount = ++stepCounter;
     logger.log(`running checkWindow for test ${testName} step #${currStepCount}`);
     if (testController.shouldStopAllTests()) {
       logger.log('aborting checkWindow synchronously');
       return;
     }
-    handleBrowserDebugData({
-      frame: {resourceUrls, resourceContents, frames, cdt},
-      metaData: {agentId: wrappers[0].getBaseAgentId()},
-      logger,
-    });
+
+    if (typeof window === 'undefined') {
+      const handleBrowserDebugData = require('../troubleshoot/handleBrowserDebugData');
+      handleBrowserDebugData({
+        frame: {resourceUrls, resourceContents, frames, cdt},
+        metaData: {agentId: wrappers[0].getBaseAgentId()},
+        logger,
+      });
+    }
+
     const getResourcesPromise = createRGridDOMAndGetResourceMapping({
       resourceUrls,
       resourceContents,
@@ -116,9 +131,9 @@ function makeCheckWindow({
       const renderId = renderIds[index];
 
       logger.log(
-        `render request complete for ${renderId}. test=${testName} stepCount #${currStepCount} tag=${tag} sizeMode=${sizeMode} browser: ${JSON.stringify(
-          browsers[index],
-        )}`,
+        `render request complete for ${renderId}. test=${testName} stepCount #${currStepCount} tag=${tag} target=${target} fully=${fully} region=${JSON.stringify(
+          region,
+        )} selector=${JSON.stringify(selector)} browser: ${JSON.stringify(browsers[index])}`,
       );
 
       const [renderStatusErr, renderStatusResult] = await presult(
@@ -196,6 +211,7 @@ function makeCheckWindow({
         useDom,
         enablePatterns,
         ignoreDisplacements,
+        renderId,
       });
 
       logger.log(`checkWindow waiting for openEyes. test=${testName}, stepCount #${currStepCount}`);
@@ -218,6 +234,7 @@ function makeCheckWindow({
         domUrl: domLocation,
         checkSettings,
         imageLocation,
+        source,
       });
 
       wrapper.setMatchLevel(origMatchLevel); // origMatchLevel cannot be undefined because eyes-sdk-core sets the default to MatchLevel.Strict

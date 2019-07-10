@@ -157,10 +157,9 @@ function makeOpenEyes({
 
     const createRGridDOMAndGetResourceMapping = userAgent
       ? async args =>
-          _createRGridDOMAndGetResourceMapping({
-            fetchOptions: {headers: {'User-Agent': userAgent}},
-            ...args,
-          })
+          _createRGridDOMAndGetResourceMapping(
+            Object.assign({fetchOptions: {headers: {'User-Agent': userAgent}}}, args),
+          )
       : _createRGridDOMAndGetResourceMapping;
 
     const checkWindow = makeCheckWindow({

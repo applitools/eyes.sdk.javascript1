@@ -44,6 +44,6 @@ const { Eyes, Target, ConsoleLogHandler, BatchInfo } = require('../index'); // s
     await driver.quit();
 
     // If the test was aborted before eyes.close was called ends the test as aborted.
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
   }
 })();

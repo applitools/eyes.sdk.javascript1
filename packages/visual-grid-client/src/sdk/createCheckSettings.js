@@ -10,6 +10,7 @@ function createCheckSettings({
   useDom,
   enablePatterns,
   ignoreDisplacements,
+  renderId,
 }) {
   const checkSettings = new CheckSettings(0);
   setEachRegion(ignore, checkSettings.ignoreRegions.bind(checkSettings));
@@ -40,6 +41,9 @@ function createCheckSettings({
   }
   if (ignoreDisplacements !== undefined) {
     checkSettings.ignoreDisplacements(ignoreDisplacements);
+  }
+  if (renderId !== undefined) {
+    checkSettings.renderId(renderId);
   }
 
   return checkSettings;

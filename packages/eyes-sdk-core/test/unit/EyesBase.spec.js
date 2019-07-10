@@ -30,6 +30,12 @@ describe('EyesBase', () => {
       assert.strictEqual(typeof batch.getSequenceName(), 'undefined');
     });
 
+    it('should thrown an error because of wrong arguments order', () => {
+      assert.throws(() => {
+        eyes.setBatch(new Date(), "my batch");
+      });
+    });
+
     it('should create batch with name, id', () => {
       eyes.setBatch('batch name', 'fake batch id');
 

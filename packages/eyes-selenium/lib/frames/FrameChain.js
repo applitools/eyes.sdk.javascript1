@@ -138,7 +138,7 @@ class FrameChain {
   }
 
   /**
-   * @return Iterator<Frame> iterator to go over the frames in the chain.
+   * @return {IterableIterator<Frame>} iterator to go over the frames in the chain.
    */
   [Symbol.iterator]() {
     // noinspection JSValidateTypes

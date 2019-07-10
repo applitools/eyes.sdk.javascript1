@@ -18,6 +18,16 @@ describe('Eyes', function () {
     assert.ok(eyes instanceof EyesVisualGrid);
   });
 
+  it('should create an EyesSelenium instance through fromBrowserInfo', () => {
+    const eyes = Eyes.fromBrowserInfo();
+    assert.ok(eyes instanceof EyesSelenium);
+  });
+
+  it('should create an EyesVisualGrid instance through fromBrowserInfo', () => {
+    const eyes = Eyes.fromBrowserInfo(undefined, undefined, {browser: [{name: 'iPhone 4', width: 400, height: 600}]});
+    assert.ok(eyes instanceof EyesVisualGrid);
+  });
+
   it('set configuration from object', async function () {
     const eyes = new Eyes(new VisualGridRunner());
     const date = new Date();

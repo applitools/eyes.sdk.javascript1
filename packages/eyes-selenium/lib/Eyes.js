@@ -18,6 +18,7 @@ const {
 } = require('@applitools/eyes-sdk-core');
 
 const { Configuration } = require('./config/Configuration');
+const { ClassicRunner } = require('./runner/ClassicRunner');
 const { FrameChain } = require('./frames/FrameChain');
 const { EyesSeleniumUtils } = require('./EyesSeleniumUtils');
 const { ImageRotation } = require('./positioning/ImageRotation');
@@ -45,22 +46,19 @@ class Eyes extends EyesBase {
    *
    * @signature `new Eyes()`
    *
-   * @signature `new Eyes(isVisualGrid)`
-   * @sigparam {boolean} [isVisualGrid=false] - Set {@code true} if you want to use VisualGrid service.
+   * @signature `new Eyes(runner)`
+   * @sigparam {EyesRunner} [runner] - Set {@code EyesRunner} to use, default is ClassicRunner.
    *
-   * @signature `new Eyes(eyesRunner)`
-   * @sigparam {VisualGridRunner} [eyesRunner] - Set VisualGridRunner if you want to use VisualGrid service.
-   *
-   * @signature `new Eyes(serverUrl, isDisabled, isVisualGrid)`
+   * @signature `new Eyes(serverUrl, isDisabled)`
    * @sigparam {string} [serverUrl] - The Eyes server URL.
    * @sigparam {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
-   * @sigparam {boolean} [isVisualGrid=false] - Set {@code true} if you want to use VisualGrid service.
+   * @sigparam {EyesRunner} [runner=false] - Set {@code EyesRunner} to use, default is ClassicRunner.
    *
-   * @param {string|boolean|VisualGridRunner} [serverUrl] - The Eyes server URL or set {@code true} if you want to use VisualGrid service.
+   * @param {string|boolean|EyesRunner} [serverUrl] - The Eyes server URL or set {@code true} if you want to use VisualGrid service.
    * @param {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the webdriver directly.
-   * @param {boolean} [isVisualGrid=false] - Set {@code true} if you want to use VisualGrid service.
+   * @param {EyesRunner} [runner=false] - Set {@code EyesRunner} to use, default is ClassicRunner.
    */
-  constructor(serverUrl, isDisabled, isVisualGrid = false) {
+  constructor(serverUrl, isDisabled, runner = new ClassicRunner()) {
     if (new.target === Eyes) {
       throw new TypeError("Cannot construct `Eyes` instances directly. " +
         "Please use `EyesSelenium`, `EyesVisualGrid` or `EyesFactory` instead.");
@@ -68,7 +66,8 @@ class Eyes extends EyesBase {
 
     super(serverUrl, isDisabled, new Configuration());
 
-    this.setIsVisualGrid(isVisualGrid);
+    /** @type {EyesRunner} */ this._runner = runner;
+    this._runner._eyesInstances.push(this);
 
     /** @type {EyesWebDriver} */
     this._driver = undefined;
@@ -259,7 +258,7 @@ class Eyes extends EyesBase {
    *   {@link #checkElement(By, number, string)} on the region.
    * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
-  async checkRegionBy(by, tag, matchTimeout, stitchContent) {
+  async checkRegionBy(by, tag, matchTimeout, stitchContent = false) {
     return this.check(tag, Target.region(by).timeout(matchTimeout).stitchContent(stitchContent));
   }
 
@@ -277,7 +276,7 @@ class Eyes extends EyesBase {
    *   {@link #checkElement(By, number, string)} on the region.
    * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
-  async checkRegionInFrame(frameNameOrId, locator, matchTimeout, tag, stitchContent) {
+  async checkRegionInFrame(frameNameOrId, locator, matchTimeout, tag, stitchContent = false) {
     return this.check(tag, Target.region(locator, frameNameOrId).timeout(matchTimeout).stitchContent(stitchContent));
   }
 
@@ -570,6 +569,13 @@ class Eyes extends EyesBase {
    */
   getDriver() {
     return this._driver;
+  }
+
+  /**
+   * @return {EyesRunner}
+   */
+  getRunner() {
+    return this._runner;
   }
 
   // noinspection JSUnusedGlobalSymbols

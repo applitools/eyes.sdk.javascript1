@@ -117,10 +117,11 @@ function openWrappers({wrappers, browsers, appName, testName, eyesTransactionThr
     );
 }
 
-function createRenderWrapper({serverUrl, apiKey, logHandler, proxy}) {
+function createRenderWrapper({serverUrl, apiKey, logHandler, proxy, agentId}) {
   const wrapper = new EyesWrapper({apiKey, logHandler});
   serverUrl !== undefined && wrapper.setServerUrl(serverUrl);
   proxy !== undefined && wrapper.setProxy(proxy);
+  agentId !== undefined && wrapper.setBaseAgentId(agentId);
   return wrapper;
 }
 

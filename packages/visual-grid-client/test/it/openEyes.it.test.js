@@ -55,6 +55,7 @@ describe('openEyes', () => {
       apiKey,
       renderWrapper: wrapper,
       fetchResourceTimeout: 2000,
+      // logger: console,
     }).openEyes;
 
     nock(wrapper.baseUrl)
@@ -132,7 +133,7 @@ describe('openEyes', () => {
     expect(wrapper.getBatch().getId()).to.equal(batchId);
   });
 
-  it('renders the correct sizeMode', async () => {
+  it('renders the correct target', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       browser: {width: 320, height: 480},
@@ -145,7 +146,7 @@ describe('openEyes', () => {
       resourceUrls,
       cdt,
       tag: 'good1',
-      sizeMode: 'some size mode',
+      target: 'some target',
       url: `${baseUrl}/test.html`,
     });
     expect((await close())[0].map(r => r.getAsExpected())).to.eql([true]);
@@ -212,23 +213,28 @@ describe('openEyes', () => {
     expect((await close())[0].map(r => r.getAsExpected())).to.eql([true]);
   });
 
-  it('handles "selector" sizeMode', async () => {
+  it('handles "selector" region', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
     });
 
-    checkWindow({cdt: [], url: 'some url', selector: 'some selector'});
+    checkWindow({cdt: [], url: 'some url', selector: '.some selector'});
     expect((await close())[0].map(r => r.getAsExpected())).to.eql([true]);
   });
 
-  it('handles "region" sizeMode', async () => {
+  it('handles "region" target', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
     });
 
-    checkWindow({cdt: [], url: 'some url', region: {width: 1, height: 2, left: 3, top: 4}});
+    checkWindow({
+      cdt: [],
+      url: 'some url',
+      region: {width: 1, height: 2, left: 3, top: 4},
+      target: 'region',
+    });
     expect((await close())[0].map(r => r.getAsExpected())).to.eql([true]);
   });
 
@@ -760,17 +766,17 @@ describe('openEyes', () => {
         wrappers: [wrapper],
         appName,
       });
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], target: null, sizeMode: null});
       await psetTimeout(0);
       expect(renderCount).to.equal(1);
       expect(renderStatusCount).to.equal(0); // still batching initial renderIds for /render-status request
 
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], target: null, sizeMode: null});
       await psetTimeout(0);
       expect(renderCount).to.equal(2);
       expect(renderStatusCount).to.equal(0); // still batching initial renderIds for /render-status request
 
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], target: null, sizeMode: null});
       await psetTimeout(0);
       expect(renderCount).to.equal(2); // concurrency is blocking this render
       expect(renderStatusCount).to.equal(0); // still batching initial renderIds for /render-status request
@@ -801,9 +807,9 @@ describe('openEyes', () => {
         appName,
       });
 
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
       const expected1 = renderCount;
       runningStatuses[0] = RenderStatus.RENDERED;
@@ -831,16 +837,16 @@ describe('openEyes', () => {
         appName,
       });
 
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
 
-      checkWindow2({url: '', cdt: [], sizeMode: null});
+      checkWindow2({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
 
-      checkWindow({url: '', cdt: [], sizeMode: null});
+      checkWindow({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
 
-      checkWindow2({url: '', cdt: [], sizeMode: null});
+      checkWindow2({url: '', cdt: [], sizeMode: null, target: null});
       await psetTimeout(0);
 
       const expected1 = renderCount;
@@ -1258,7 +1264,7 @@ describe('openEyes', () => {
     ]);
   });
 
-  it('handles ignore, layout and strict regions with selector, when sizeMode===selector', async () => {
+  it('handles ignore, layout and strict regions with selector, when target=region and selector', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1278,7 +1284,7 @@ describe('openEyes', () => {
       url: '',
       // resourceUrls: [],
       cdt: [],
-      sizeMode: 'selector',
+      target: 'region',
       selector,
       ignore: [ignoreRegion, ignoreSelector],
       layout: [layoutRegion, layoutSelector],
@@ -1322,7 +1328,7 @@ describe('openEyes', () => {
     ]);
   });
 
-  it('handles ignore, layout and strict regions with selector and floating regions with selector, when sizeMode===selector', async () => {
+  it('handles ignore, layout and strict regions with selector and floating regions with selector, when target=region and selector', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1363,7 +1369,7 @@ describe('openEyes', () => {
       url: '',
       // resourceUrls: [],
       cdt: [],
-      sizeMode: 'selector',
+      target: 'region',
       selector,
       ignore: [ignoreRegion, ignoreSelector],
       layout: [layoutRegion, layoutSelector],
