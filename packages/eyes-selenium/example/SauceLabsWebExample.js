@@ -10,14 +10,14 @@ const { Eyes, Target, ConsoleLogHandler, StitchMode } = require('../index'); // 
     .withCapabilities({
       browserName: 'internet explorer',
       browserVersion: '11.285',
-      platformName: "windows 10",
+      platformName: 'windows 10',
       'sauce:options': {
         public: 'private',
         videoUploadOnPass: true,
         recordScreenshots: true,
         seleniumVersion: '3.11.0',
         iedriverVersion: '3.12.0',
-        screenResolution: "2560x1600",
+        screenResolution: '2560x1600',
         username: process.env.SAUCE_USERNAME,
         accessKey: process.env.SAUCE_ACCESS_KEY,
       },
@@ -37,7 +37,7 @@ const { Eyes, Target, ConsoleLogHandler, StitchMode } = require('../index'); // 
 
   try {
     // Start the test and set the browser's viewport size to 800x600.
-    await eyes.open(driver, 'Eyes Examples', 'SauceLabs Example', {width: 800, height: 600});
+    await eyes.open(driver, 'Eyes Examples', 'SauceLabs Example', { width: 800, height: 600 });
 
     // Navigate the browser to the "hello world!" web-site.
     await driver.get('https://google.com/ncr');

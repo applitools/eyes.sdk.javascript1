@@ -14,7 +14,7 @@ function initializeEyes(runner) {
   // configuration.setProxy('http://localhost:8888');
   configuration.setAppName('VisualGridRunner');
   configuration.setTestName('Test VGRunner');
-  configuration.setBatch(new BatchInfo("VGRunner batch"));
+  configuration.setBatch(new BatchInfo('VGRunner batch'));
   configuration.addBrowser(800, 600, BrowserType.CHROME);
   configuration.addBrowser(700, 500, BrowserType.CHROME);
   configuration.addBrowser(1200, 800, BrowserType.FIREFOX);
@@ -36,7 +36,7 @@ async function runTest(url, runner) {
   try {
     await webDriver.get(url);
     await eyes.open(webDriver);
-    await eyes.check('Main Page ' + url, Target.window());
+    await eyes.check(`Main Page ${url}`, Target.window());
     await eyes.closeAsync();
   } finally {
     await webDriver.quit();

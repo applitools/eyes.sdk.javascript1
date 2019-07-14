@@ -90,7 +90,7 @@ class MatchWindowTask {
   async _collectRegions(regionProviders, screenshot) {
     const eyes = this._eyes;
     const regionsPromises = [];
-    regionProviders.forEach(regionProvider => {
+    regionProviders.forEach((regionProvider) => {
       try {
         regionsPromises.push(regionProvider.getRegion(eyes, screenshot));
       } catch (e) {

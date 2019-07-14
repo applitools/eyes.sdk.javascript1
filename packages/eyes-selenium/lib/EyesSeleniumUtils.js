@@ -8,9 +8,9 @@ const { ImageOrientationHandler } = require('./ImageOrientationHandler');
 const { JavascriptHandler } = require('./JavascriptHandler');
 
 const JS_GET_ENTIRE_PAGE_SIZE =
-  "var width = Math.max(arguments[0].clientWidth, arguments[0].scrollWidth);" +
-  "var height = Math.max(arguments[0].clientHeight, arguments[0].scrollHeight);" +
-  "return [width, height];";
+  'var width = Math.max(arguments[0].clientWidth, arguments[0].scrollWidth);' +
+  'var height = Math.max(arguments[0].clientHeight, arguments[0].scrollHeight);' +
+  'return [width, height];';
 
 let imageOrientationHandler = new class ImageOrientationHandlerImpl extends ImageOrientationHandler {
   /**
@@ -224,7 +224,7 @@ class EyesSeleniumUtils extends EyesJsBrowserUtils {
       const result = await executor.executeScript(JS_GET_ENTIRE_PAGE_SIZE, element);
       return new RectangleSize(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0);
     } catch (err) {
-      throw new EyesDriverOperationError("Failed to extract entire size!", err);
+      throw new EyesDriverOperationError('Failed to extract entire size!', err);
     }
   }
 

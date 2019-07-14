@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-protractor@4.7.26...@applitools/eyes-protractor@4.8.0) (2019-07-10)
+
+
+### Features
+
+* rename abortIfNotClosed to abort (old name saved as an alias) ([b09eba1](https://github.com/applitools/eyes.sdk.javascript1/commit/b09eba1))
+
+
+
+
+
 ## [4.7.26](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-protractor@4.7.25...@applitools/eyes-protractor@4.7.26) (2019-07-03)
 
 **Note:** Version bump only for package @applitools/eyes-protractor

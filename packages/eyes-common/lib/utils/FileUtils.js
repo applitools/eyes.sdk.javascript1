@@ -13,7 +13,7 @@ class FileUtils {
    */
   static writeFromBuffer(imageBuffer, filename) {
     return new Promise((resolve, reject) => {
-      fs.writeFile(filename, imageBuffer, err => {
+      fs.writeFile(filename, imageBuffer, (err) => {
         if (err) {
           return reject(err);
         }

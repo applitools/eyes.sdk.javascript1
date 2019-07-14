@@ -1,6 +1,6 @@
 'use strict';
 
-const {URL} = require('url');
+const { URL } = require('url');
 
 const {
   Logger,
@@ -60,8 +60,8 @@ class Eyes extends EyesBase {
    */
   constructor(serverUrl, isDisabled, runner = new ClassicRunner()) {
     if (new.target === Eyes) {
-      throw new TypeError("Cannot construct `Eyes` instances directly. " +
-        "Please use `EyesSelenium`, `EyesVisualGrid` or `EyesFactory` instead.");
+      throw new TypeError('Cannot construct `Eyes` instances directly. ' +
+        'Please use `EyesSelenium`, `EyesVisualGrid` or `EyesFactory` instead.');
     }
 
     super(serverUrl, isDisabled, new Configuration());
@@ -562,7 +562,7 @@ class Eyes extends EyesBase {
     return this._driver.getSessionId();
   }
 
-  /*------------------------- Getters/Setters -------------------------*/
+  /* ------------ Getters/Setters ------------ */
 
   /**
    * @return {?EyesWebDriver}
@@ -752,7 +752,7 @@ class Eyes extends EyesBase {
     return this._corsIframeHandle;
   }
 
-  /*------------------------- Getters/Setters from Configuration -------------------------*/
+  /* ------------ Getters/Setters from Configuration ------------ */
 
   // noinspection JSUnusedGlobalSymbols
   /**

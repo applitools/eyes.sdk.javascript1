@@ -4,7 +4,7 @@ const assert = require('assert');
 const { MatchSingleWindowTask, CheckSettings, ImageMatchSettings } = require('../../index');
 
 describe('MatchSingleWindowTask', () => {
-  const eyes = {getDefaultMatchSettings: () => new ImageMatchSettings({ useDom: true, enablePatterns: false })};
+  const eyes = { getDefaultMatchSettings: () => new ImageMatchSettings({ useDom: true, enablePatterns: false }) };
   const task = new MatchSingleWindowTask(true, true, true, eyes, true, true, true);
 
   describe('createImageMatchSettings', () => {

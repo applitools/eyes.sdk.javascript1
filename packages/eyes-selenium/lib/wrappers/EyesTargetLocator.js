@@ -113,7 +113,7 @@ class EyesTargetLocator extends TargetLocator {
     }
 
     /** @type {WebElement} */
-    let frameElement = varArg;
+    const frameElement = varArg;
     this._logger.verbose('Probably, WebElement');
     this._logger.verbose('Making preparations...');
     await this.willSwitchToFrame(frameElement);
@@ -283,7 +283,7 @@ class EyesTargetLocator extends TargetLocator {
    * @return {Promise}
    */
   async resetScroll() {
-    this._logger.verbose("enter");
+    this._logger.verbose('enter');
     if (this._defaultContentPositionMemento != null) {
       const scrollRootElement = await this._driver.getEyes().getCurrentFrameScrollRootElement();
       const scrollProvider = new ScrollPositionProvider(this._logger, this._jsExecutor, scrollRootElement);
@@ -307,7 +307,7 @@ class EyesTargetLocator extends TargetLocator {
     const sizeAndBorders = await eyesFrame.getSizeAndBorders();
 
     const contentLocation = new Location(rect.x + sizeAndBorders.left, rect.y + sizeAndBorders.top);
-    const originalLocation = await ScrollPositionProvider.getCurrentPositionStatic(this._jsExecutor, this._driver.findElement(By.css("html")));
+    const originalLocation = await ScrollPositionProvider.getCurrentPositionStatic(this._jsExecutor, this._driver.findElement(By.css('html')));
 
     const frame = new Frame(this._logger, targetFrame, contentLocation, new RectangleSize(rect), new RectangleSize(sizeAndBorders), originalLocation, this._driver);
     this._driver.getFrameChain().push(frame);

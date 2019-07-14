@@ -32,7 +32,7 @@ describe('EyesBase', () => {
 
     it('should thrown an error because of wrong arguments order', () => {
       assert.throws(() => {
-        eyes.setBatch(new Date(), "my batch");
+        eyes.setBatch(new Date(), 'my batch');
       });
     });
 

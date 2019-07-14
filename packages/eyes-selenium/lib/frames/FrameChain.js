@@ -99,7 +99,7 @@ class FrameChain {
   getCurrentFrameOffset() {
     let result = new Location(Location.ZERO);
 
-    this._frames.forEach(frame => {
+    this._frames.forEach((frame) => {
       result = result.offsetByLocation(frame.getLocation());
     });
 

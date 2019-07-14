@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.12.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.11.1...@applitools/eyes-sdk-core@5.12.0) (2019-07-10)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core:** throw error if visual-grid can't find region selector ([eac6334](https://github.com/applitools/eyes.sdk.javascript1/commit/eac6334))
+
+
+### Features
+
+* rename abortIfNotClosed to abort (old name saved as an alias) ([b09eba1](https://github.com/applitools/eyes.sdk.javascript1/commit/b09eba1))
+
+
+
+
+
 ## [5.11.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.11.0...@applitools/eyes-sdk-core@5.11.1) (2019-07-02)
 
 **Note:** Version bump only for package @applitools/eyes-sdk-core

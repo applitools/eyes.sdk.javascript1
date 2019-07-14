@@ -90,8 +90,8 @@ class Frame {
    */
   async getForceScrollRootElement(driver) {
     if (!this._scrollRootElement) {
-      this._logger.verbose("no scroll root element. selecting default.");
-      this._scrollRootElement = await driver.findElement(By.css("html"));
+      this._logger.verbose('no scroll root element. selecting default.');
+      this._scrollRootElement = await driver.findElement(By.css('html'));
     }
 
     return this._scrollRootElement;
@@ -110,7 +110,7 @@ class Frame {
    */
   async hideScrollbars(driver) {
     const scrollRootElement = await this.getForceScrollRootElement(driver);
-    this._logger.verbose("hiding scrollbars of element:", scrollRootElement);
+    this._logger.verbose('hiding scrollbars of element:', scrollRootElement);
     this._originalOverflow = await this._jsExecutor.executeScript("var origOF = arguments[0].style.overflow; arguments[0].style.overflow='hidden'; return origOF;", scrollRootElement);
   }
 
@@ -120,7 +120,7 @@ class Frame {
    */
   async returnToOriginalOverflow(driver) {
     const scrollRootElement = await this.getForceScrollRootElement(driver);
-    this._logger.verbose("returning overflow of element to its original value: " + scrollRootElement);
+    this._logger.verbose('returning overflow of element to its original value:', scrollRootElement);
     await this._jsExecutor.executeScript(`arguments[0].style.overflow='${this._originalOverflow}';`, scrollRootElement);
   }
 

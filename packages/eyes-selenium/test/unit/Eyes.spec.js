@@ -5,7 +5,6 @@ const assert = require('assert');
 const { Eyes, VisualGridRunner, EyesSelenium, EyesVisualGrid, Configuration, StitchMode, RectangleSize, ProxySettings, BatchInfo, PropertyData } = require('../../index');
 
 describe('Eyes', function () {
-
   it('should create EyesSelenium by default', async function () {
     const eyes = new Eyes();
     assert.ok(!eyes.isVisualGrid());
@@ -24,7 +23,7 @@ describe('Eyes', function () {
   });
 
   it('should create an EyesVisualGrid instance through fromBrowserInfo', () => {
-    const eyes = Eyes.fromBrowserInfo(undefined, undefined, {browser: [{name: 'iPhone 4', width: 400, height: 600}]});
+    const eyes = Eyes.fromBrowserInfo(undefined, undefined, { browser: [{ name: 'iPhone 4', width: 400, height: 600 }] });
     assert.ok(eyes instanceof EyesVisualGrid);
   });
 

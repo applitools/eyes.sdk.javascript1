@@ -14,7 +14,7 @@ function initializeEyes(runner) {
   // configuration.setProxy('http://localhost:8888');
   configuration.setAppName('ClassicRunner');
   configuration.setTestName('Test ClassicRunner');
-  configuration.setBatch(new BatchInfo("ClassicRunner batch"));
+  configuration.setBatch(new BatchInfo('ClassicRunner batch'));
 
   eyes.setConfiguration(configuration);
   return eyes;
@@ -31,7 +31,7 @@ async function runTest(url, runner) {
   try {
     await webDriver.get(url);
     await eyes.open(webDriver);
-    await eyes.check('Main Page ' + url, Target.window());
+    await eyes.check(`Main Page ${url}`, Target.window());
     await eyes.closeAsync();
   } finally {
     await webDriver.quit();

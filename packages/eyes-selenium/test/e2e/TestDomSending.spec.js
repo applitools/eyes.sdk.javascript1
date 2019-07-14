@@ -9,7 +9,7 @@ let /** @type {Eyes} */ eyes, /** @type {EyesWebDriver} */ driver;
 const testedPageUrl = 'http://applitools.github.io/demo/TestPages/DomTest/dom_capture.html';
 
 const dataProvider = TestsDataProvider.dp();
-dataProvider.forEach(row => {
+dataProvider.forEach((row) => {
   const testSetup = new TestSetup('TestDomSending', 'Eyes Selenium SDK - Dom Sending', testedPageUrl);
   testSetup.setData(...row, false);
 

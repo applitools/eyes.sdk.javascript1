@@ -21,7 +21,7 @@ exports.config = {
     // we need this to get appName and testName and pass them to eyes.open in beforeEach
     jasmine.getEnv()
       .addReporter({
-        specStarted: result => {
+        specStarted: (result) => {
           global.testName = result.description;
           global.appName = result.fullName.replace(` ${result.description}`, '');
         },

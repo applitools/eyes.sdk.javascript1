@@ -24,7 +24,7 @@ describe('IOSTest', function () {
     [false, true]
   ));
 
-  dataProvider.forEach(row => {
+  dataProvider.forEach((row) => {
     const [deviceName, deviceOrientation, platformVersion, fully] = row;
 
     let testName = `${deviceName} ${platformVersion} ${deviceOrientation}`;
@@ -60,7 +60,7 @@ describe('IOSTest', function () {
       eyes.addProperty('Orientation', deviceOrientation);
       eyes.addProperty('Stitched', fully ? 'True' : 'False');
 
-      return eyes.open(driver, 'Eyes Selenium SDK - iOS Safari Cropping', testName).then(driver => {
+      return eyes.open(driver, 'Eyes Selenium SDK - iOS Safari Cropping', testName).then((driver) => {
         driver.get('https://www.applitools.com/customers');
 
         eyes.check('Initial view', Target.region(By.css('body')).fully(fully));

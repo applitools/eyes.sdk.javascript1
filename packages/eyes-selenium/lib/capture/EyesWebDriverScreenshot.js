@@ -152,10 +152,9 @@ class EyesWebDriverScreenshot extends EyesScreenshot {
     if (this._frameChain.size() === 0) {
       defaultContentScrollPosition = await this._getCurrentFrameScrollRootElement(jsExecutor);
     } else {
-      let originalFC = new FrameChain(this._logger, this._frameChain);
-
-      let switchTo = this._driver.switchTo();
-      let currentFC = this._driver.getEyes().getOriginalFC();
+      const originalFC = new FrameChain(this._logger, this._frameChain);
+      const switchTo = this._driver.switchTo();
+      const currentFC = this._driver.getEyes().getOriginalFC();
       await switchTo.frames(currentFC);
       defaultContentScrollPosition = await this._getCurrentFrameScrollRootElement(jsExecutor);
       await switchTo.frames(originalFC);

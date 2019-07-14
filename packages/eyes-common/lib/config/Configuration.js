@@ -856,7 +856,7 @@ class Configuration {
    * @param {Configuration|object} other
    */
   mergeConfig(other) {
-    Object.keys(other).forEach(prop => {
+    Object.keys(other).forEach((prop) => {
       let privateProp = prop;
       if (prop === 'proxy') {
         privateProp = '_proxySettings';
@@ -864,9 +864,9 @@ class Configuration {
         privateProp = `_${prop}`;
       }
 
-      if (this.hasOwnProperty(privateProp) && other[prop] !== undefined) {
+      if (Object.prototype.hasOwnProperty.call(this, privateProp) && other[prop] !== undefined) {
         const publicProp = prop.startsWith('_') ? prop.slice(1) : prop;
-        const setterName = 'set' + publicProp.charAt(0).toUpperCase() + publicProp.slice(1);
+        const setterName = `set${publicProp.charAt(0).toUpperCase()}${publicProp.slice(1)}`;
         if (typeof this[setterName] === 'function') {
           this[setterName](other[prop]);
         } else {

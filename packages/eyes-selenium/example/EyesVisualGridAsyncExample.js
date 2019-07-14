@@ -31,7 +31,7 @@ function initializeEyes(runner) {
   configuration.setTestName('My first Javascript test!');
 
   // Set a batch name so all the different browser and mobile combinations are part of the same batch
-  configuration.setBatch(new BatchInfo("VIP Browser combo batch"));
+  configuration.setBatch(new BatchInfo('VIP Browser combo batch'));
 
   // Add Chrome browsers with different Viewports
   configuration.addBrowser(800, 600, BrowserType.CHROME);
@@ -50,7 +50,7 @@ function initializeEyes(runner) {
 }
 
 async function runTest(url, runner) {
-  //Initialize Eyes with Visual Grid Runner
+  // Initialize Eyes with Visual Grid Runner
   const eyes = initializeEyes(runner);
 
   // Create a new Webdriver
@@ -66,7 +66,7 @@ async function runTest(url, runner) {
     await eyes.open(webDriver);
 
     // Check the page
-    await eyes.check('Main Page ' + url, Target.window());
+    await eyes.check(`Main Page ${url}`, Target.window());
 
     // Close eyes asynchronously
     await eyes.closeAsync();

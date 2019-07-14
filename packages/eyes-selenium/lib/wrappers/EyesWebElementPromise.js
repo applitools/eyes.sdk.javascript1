@@ -23,9 +23,7 @@ class EyesWebElementPromise extends EyesWebElement {
    * @param {*} locator
    */
   constructor(logger, driver, webElement, locator) {
-    const wrapper = webElement.then(element => {
-      return new EyesWebElement(logger, driver, element);
-    });
+    const wrapper = webElement.then(element => new EyesWebElement(logger, driver, element));
 
     super(logger, driver, webElement);
 

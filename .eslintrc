@@ -2,28 +2,24 @@
   "root": true,
   "extends": [
     "airbnb-base",
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:node/recommended-script"
   ],
   "env": {
     "es6": true,
     "node": true,
     "mocha": true,
-    "jest": true
+    "jest": true,
+    "protractor": true
   },
   "parserOptions": {
     "ecmaVersion": 8,
     "sourceType": "script"
   },
   "plugins": [
-    "node",
     "mocha-no-only"
   ],
   "rules": {
-    "semi": ["error", "always"],
-    "strict": ["error", "global"],
+    "prefer-const": ["error", {"destructuring": "all"}],
     "one-var": ["error", {"initialized": "never"}],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
@@ -32,32 +28,20 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "arrow-parens": ["error", "as-needed"],
-    "no-use-before-define": ["error", {"classes": false}],
-    "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
-    "consistent-return": ["warn"],
-    "max-len": ["off", 120],
     "no-unused-vars": ["warn", {"varsIgnorePattern": "^_", "args": "all", "argsIgnorePattern": "^_"}],
     "no-param-reassign": ["off"],
-    "global-require": ["warn"],
-    "prefer-destructuring": ["warn"],
-    "prefer-arrow-callback": ["warn", {"allowUnboundThis": false}],
-    "object-curly-newline": ["off"],
     "no-underscore-dangle": ["off"],
-    "one-var-declaration-per-line": ["off"],
+    "object-curly-newline": ["off"],
     "class-methods-use-this": ["off"],
     "operator-linebreak": ["off"],
-    "no-continue": ["off"],
     "no-await-in-loop": ["off"],
-    "no-process-exit": "off",
-    "no-const-assign": "warn",
-    "no-this-before-super": "warn",
-    "no-undef": "warn",
-    "no-unreachable": "warn",
-    "constructor-super": "warn",
-    "valid-typeof": "warn",
-    "mocha-no-only/mocha-no-only": "error",
-//    "node/exports-style": ["error", "module.exports"],
+    "one-var-declaration-per-line": ["error", "initializations"],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}],
+
+    // can be fixed later
+    "max-len": ["off", 120],
+    "no-use-before-define": ["error", { "functions": true, "classes": false, "variables": true }],
+    "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
     "no-restricted-syntax": [
       "error",
       {
@@ -73,8 +57,19 @@
         "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
       }
     ],
-    "implicit-arrow-linebreak": ["off"],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}]
+
+    // mocha-no-only
+    "mocha-no-only/mocha-no-only": "error",
+
+    // node
+    "node/exports-style": ["error", "exports"],
+    "node/prefer-global/buffer": ["error", "always"],
+    "node/prefer-global/console": ["error", "always"],
+    "node/prefer-global/process": ["error", "always"],
+    "node/prefer-global/text-decoder": ["error", "never"],
+    "node/prefer-global/text-encoder": ["error", "never"],
+    "node/prefer-global/url-search-params": ["error", "never"],
+    "node/prefer-global/url": ["error", "never"]
   },
   "overrides": [{
     "files": ["**/test/**/*.js", "**/*.spec.js"],

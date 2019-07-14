@@ -5,7 +5,7 @@ const { getProcessPageAndPollScript } = require('@applitools/dom-snapshot');
 const { ArgumentGuard, TypeUtils, GeneralUtils } = require('@applitools/eyes-common');
 const { CorsIframeHandle, CorsIframeHandler } = require('@applitools/eyes-sdk-core');
 
-const { TestResultSummary } = require('./runner/TestResultSummary');
+const { TestResultsSummary } = require('./runner/TestResultsSummary');
 const { VisualGridRunner } = require('./runner/VisualGridRunner');
 const { BrowserType } = require('./config/BrowserType');
 const { Eyes } = require('./Eyes');
@@ -124,15 +124,13 @@ class EyesVisualGrid extends Eyes {
 
     this._isOpen = true;
     this._checkWindowCommand = checkWindow;
-    this._closeCommand = async () => {
-      return close(true).catch(err => {
-        if (Array.isArray(err)) {
-          return err;
-        }
+    this._closeCommand = async () => close(true).catch((err) => {
+      if (Array.isArray(err)) {
+        return err;
+      }
 
-        throw err;
-      });
-    };
+      throw err;
+    });
 
     return this._driver;
   }
@@ -140,23 +138,23 @@ class EyesVisualGrid extends Eyes {
   /**
    * @package
    * @param {boolean} [throwEx=true]
-   * @return {Promise<TestResultSummary>}
+   * @return {Promise<TestResultsSummary>}
    */
   async closeAndReturnResults(throwEx = true) {
     try {
-      let resultsPromise = this._closePromise || this._closeCommand();
+      const resultsPromise = this._closePromise || this._closeCommand();
       const res = await resultsPromise;
-      const testResultSummary = new TestResultSummary(res);
+      const testResultsSummary = new TestResultsSummary(res);
 
       if (throwEx === true) {
-        for (const result of testResultSummary.getAllResults()) {
+        for (const result of testResultsSummary.getAllResults()) {
           if (result.getException()) {
             throw result.getException();
           }
         }
       }
 
-      return testResultSummary;
+      return testResultsSummary;
     } finally {
       this._isOpen = false;
       this._closePromise = undefined;
@@ -211,7 +209,7 @@ class EyesVisualGrid extends Eyes {
       const resultAsString = await driver.executeScript(`${processResourcesScript} return __processPageAndPoll();`);
       scriptResponse = JSON.parse(resultAsString);
     } catch (err) {
-      logger.log("Failed to execute script to capture DOM:", err);
+      logger.log('Failed to execute script to capture DOM:', err);
     }
 
     if ((Date.now() - startTime) >= CAPTURE_DOM_TIMEOUT_MS) {
@@ -219,7 +217,7 @@ class EyesVisualGrid extends Eyes {
     } else if (scriptResponse.status === 'SUCCESS') {
       return scriptResponse.value;
     } else if (scriptResponse.status === 'ERROR') {
-      throw new Error('Failed to capture DOM: ' + scriptResponse.error);
+      throw new Error(`Failed to capture DOM: ${scriptResponse.error}`);
     }
 
     await GeneralUtils.sleep(200);
@@ -247,7 +245,7 @@ class EyesVisualGrid extends Eyes {
     try {
       pageDomResults = await EyesVisualGrid._capturePageDom(this._driver, this._logger, this._processResourcesScript);
     } catch (e) {
-      throw new Error('Failed to extract DOM from the page: ' + e.toString());
+      throw new Error(`Failed to extract DOM from the page: ${e.toString()}`);
     }
 
     const { cdt, url: pageUrl, blobs, resourceUrls, frames } = pageDomResults;
@@ -258,7 +256,7 @@ class EyesVisualGrid extends Eyes {
 
     const resourceContents = this._blobsToResourceContents(blobs);
     if (frames && frames.length > 0) {
-      for (let i = 0; i < frames.length; ++i) {
+      for (let i = 0; i < frames.length; i += 1) {
         frames[i].resourceContents = this._blobsToResourceContents(frames[i].blobs);
         delete frames[i].blobs;
       }

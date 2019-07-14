@@ -9,7 +9,7 @@ let /** @type {Eyes} */ eyes, /** @type {EyesWebDriver} */ driver;
 const testedPageUrl = 'http://applitools.github.io/demo/TestPages/WixLikeTestPage/index.html';
 
 const dataProvider = TestsDataProvider.dp();
-dataProvider.forEach(row => {
+dataProvider.forEach((row) => {
   const testSetup = new TestSetup('TestSpecialCases', 'Eyes Selenium SDK - Special Cases', testedPageUrl);
   testSetup.setData(...row, false);
 

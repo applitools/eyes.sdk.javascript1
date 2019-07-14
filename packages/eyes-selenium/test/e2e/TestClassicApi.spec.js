@@ -8,7 +8,7 @@ let /** @type {Eyes} */ eyes, /** @type {EyesWebDriver} */ driver;
 const testedPageUrl = 'http://applitools.github.io/demo/TestPages/FramesTestPage/';
 
 const dataProvider = TestsDataProvider.dp();
-dataProvider.forEach(row => {
+dataProvider.forEach((row) => {
   const testSetup = new TestSetup('TestClassicApi', 'Eyes Selenium SDK - Classic API', testedPageUrl);
   testSetup.setData(...row, false);
 

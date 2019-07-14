@@ -180,7 +180,7 @@ class RenderRequest {
    */
   toJSON() {
     const resources = {};
-    this.getResources().forEach(resource => {
+    this.getResources().forEach((resource) => {
       resources[resource.getUrl()] = resource.getHashAsObject();
     });
 

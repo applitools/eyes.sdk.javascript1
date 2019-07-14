@@ -345,7 +345,7 @@ class CheckSettings {
       throw new TypeError('ignoreRegions method called without arguments!');
     }
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this._ignoreRegions.push(this._regionToRegionProvider(region));
     });
 
@@ -363,7 +363,7 @@ class CheckSettings {
       throw new TypeError('layoutRegions method called without arguments!');
     }
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this._layoutRegions.push(this._regionToRegionProvider(region));
     });
 
@@ -381,7 +381,7 @@ class CheckSettings {
       throw new TypeError('strictRegions method called without arguments!');
     }
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this._strictRegions.push(this._regionToRegionProvider(region));
     });
 
@@ -399,7 +399,7 @@ class CheckSettings {
       throw new TypeError('contentRegions method called without arguments!');
     }
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this._contentRegions.push(this._regionToRegionProvider(region));
     });
 
@@ -460,7 +460,7 @@ class CheckSettings {
       throw new TypeError('floatings method called without arguments!');
     }
 
-    regionsOrContainers.forEach(region => {
+    regionsOrContainers.forEach((region) => {
       this.floatingRegion(region, maxOffset, maxOffset, maxOffset, maxOffset);
     });
 

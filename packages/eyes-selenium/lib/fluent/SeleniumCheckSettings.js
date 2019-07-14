@@ -51,7 +51,9 @@ class SeleniumCheckSettings extends CheckSettings {
   getTargetProvider() {
     if (this._targetSelector) {
       return new SelectorByLocator(this._targetSelector);
-    } else if (this._targetElement) {
+    }
+
+    if (this._targetElement) {
       return new SelectorByElement(this._targetElement);
     }
 
@@ -266,12 +268,10 @@ class SeleniumCheckSettings extends CheckSettings {
       } else {
         this._frameChain.get(this._frameChain.size() - 1).setScrollRootSelector(element);
       }
+    } else if (this._frameChain.size() === 0) {
+      this._scrollRootElement = element;
     } else {
-      if (this._frameChain.size() === 0) {
-        this._scrollRootElement = element;
-      } else {
-        this._frameChain.get(this._frameChain.size() - 1).setScrollRootElement(element);
-      }
+      this._frameChain.get(this._frameChain.size() - 1).setScrollRootElement(element);
     }
 
     return this;

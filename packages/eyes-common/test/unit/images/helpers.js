@@ -15,7 +15,7 @@ const colors = {
 };
 
 const invColors = {};
-Object.keys(colors).forEach(key => { invColors[colors[key]] = key; });
+Object.keys(colors).forEach((key) => { invColors[colors[key]] = key; });
 
 const getResourcePath = fileName => path.resolve(__dirname, '..', '..', '..', 'test', 'fixtures', fileName);
 
@@ -46,7 +46,7 @@ const makeImageMock = (...args) => {
 };
 
 // Helps to debug image data
-const imageMock2String = imageMock => {
+const imageMock2String = (imageMock) => {
   const { width, height } = imageMock;
 
   const lines = [];

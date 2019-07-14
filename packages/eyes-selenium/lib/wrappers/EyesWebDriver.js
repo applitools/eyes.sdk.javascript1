@@ -223,7 +223,7 @@ class EyesWebDriver extends IWebDriver {
    */
   async findElements(locator) {
     const elements = await this._driver.findElements(locator);
-    return elements.map(element => {
+    return elements.map((element) => {
       element = new EyesWebElement(this._logger, this, element);
       // For Remote web elements, we can keep the IDs
       this._elementsIds.set(element.getId(), element);
@@ -534,7 +534,7 @@ class EyesWebDriver extends IWebDriver {
     if (rotation) {
       degrees = rotation.getRotation();
     } else {
-      logger.verbose("Trying to automatically normalize rotation...");
+      logger.verbose('Trying to automatically normalize rotation...');
       degrees = await EyesSeleniumUtils.tryAutomaticRotation(logger, driver, image);
     }
 

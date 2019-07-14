@@ -22,7 +22,7 @@ class RenderStatusResults {
     }
 
     if (selectorRegions && selectorRegions.length > 0 && !(selectorRegions[0] instanceof Region)) {
-      selectorRegions = selectorRegions.map(region => {
+      selectorRegions = selectorRegions.map((region) => {
         if (region.error) {
           throw new EyesError(region.error);
         }

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.22.2...@applitools/eyes-selenium@4.23.0) (2019-07-10)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** default value for stitchContent when using classic methods ([1208446](https://github.com/applitools/eyes.sdk.javascript1/commit/1208446))
+* **eyes-selenium:** rename TestResultSummary to TestResultsSummary ([a6ad7b7](https://github.com/applitools/eyes.sdk.javascript1/commit/a6ad7b7))
+
+
+### Features
+
+* **eyes-selenium:** implement Iterable for TestResultSummary ([2e86506](https://github.com/applitools/eyes.sdk.javascript1/commit/2e86506))
+* rename abortIfNotClosed to abort (old name saved as an alias) ([b09eba1](https://github.com/applitools/eyes.sdk.javascript1/commit/b09eba1))
+
+
+
+
+
 ## [4.22.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.22.1...@applitools/eyes-selenium@4.22.2) (2019-07-03)
 
 **Note:** Version bump only for package @applitools/eyes-selenium

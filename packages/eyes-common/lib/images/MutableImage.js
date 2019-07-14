@@ -43,7 +43,7 @@ async function packImage(mutableImage) {
  * @private
  * @param {MutableImage} that - The context of the current instance of MutableImage
  */
-const retrieveImageSize = that => {
+const retrieveImageSize = (that) => {
   if (that._isParsed || (that._width && that._height)) {
     return;
   }

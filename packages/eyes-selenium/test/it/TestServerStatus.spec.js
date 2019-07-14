@@ -22,7 +22,7 @@ describe('TestServerStatus', function () {
 
     eyes = new Eyes();
     appName = this.test.parent.title;
-    testName = 'TestSessionSummary_' + GeneralUtils.guid();
+    testName = `TestSessionSummary_${GeneralUtils.guid()}`;
     viewportSize = new RectangleSize(800, 600);
 
     await driver.get('https://applitools.com/helloworld');

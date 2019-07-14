@@ -45,7 +45,7 @@ class ScrollPositionProvider extends PositionProvider {
    * @inheritDoc
    */
   async getCurrentPosition() {
-    return await ScrollPositionProvider.getCurrentPositionStatic(this._executor, this._scrollRootElement);
+    return ScrollPositionProvider.getCurrentPositionStatic(this._executor, this._scrollRootElement);
   }
 
   /**
@@ -69,7 +69,7 @@ class ScrollPositionProvider extends PositionProvider {
    * @inheritDoc
    */
   async getEntireSize() {
-    this._logger.verbose(`enter`);
+    this._logger.verbose('enter');
 
     const script = 'var width = Math.max(arguments[0].clientWidth, arguments[0].scrollWidth);' +
       'var height = Math.max(arguments[0].clientHeight, arguments[0].scrollHeight);' +

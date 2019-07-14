@@ -26,9 +26,10 @@ describe('RenderStatusResults', () => {
     assert.throws(() => {
       const results = new RenderStatusResults({
         selectorRegions: [
-          {error: 'an error'},
+          { error: 'an error' },
         ],
       });
+      console.log(results);
     });
   });
 

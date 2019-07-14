@@ -20,7 +20,7 @@ class ImageUtils {
    * @return {Promise<png.Image|Image>} - Decoded png image with byte buffer
    */
   static parseImage(buffer) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       // pass the file to PNG using read stream
       const imageReadableStream = new ReadableBufferStream(buffer, undefined);
       const image = new png.Image({ filterType: 4 });
@@ -36,7 +36,7 @@ class ImageUtils {
    * @return {Promise<Buffer>} - PNG buffer which can be written to file or base64 string
    */
   static packImage(image) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       // Write back to a temp png file
       const imageWritableStream = new WritableBufferStream();
       // noinspection JSUnresolvedFunction
@@ -66,7 +66,7 @@ class ImageUtils {
    */
   static scaleImage(image, scaleRatio) {
     if (scaleRatio === 1) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve(image);
       });
     }
@@ -86,7 +86,7 @@ class ImageUtils {
    * @return {Promise<png.Image|Image>}
    */
   static resizeImage(image, targetWidth, targetHeight) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const dst = {
         data: Buffer.alloc(targetWidth * targetHeight * 4),
         width: targetWidth,

@@ -83,7 +83,7 @@ class RGridDom {
     if (!this._contentAsCdt) {
       const resources = {};
 
-      this._resources.forEach(resource => {
+      this._resources.forEach((resource) => {
         resources[resource.getUrl()] = resource.getHashAsObject();
       });
 

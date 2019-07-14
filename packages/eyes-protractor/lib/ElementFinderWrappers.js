@@ -26,7 +26,7 @@ function mixin(to, from) {
   }
 
   for (index = protos.length - 2; index >= 0; index -= 1) {
-    protos[index].forEach(method => {
+    protos[index].forEach((method) => {
       if (!to[method] && typeof from[method] === 'function' && method !== 'constructor') {
         to[method] = (...args) => from[method](...args);
       }
@@ -55,11 +55,11 @@ class ElementFinderWrapper extends EyesWebElement {
     this._eyesDriver = eyesDriver;
     this._finder = finder;
 
-    ELEMENT_FINDER_TO_ELEMENT_FINDER_FUNCTIONS.forEach(fnName => {
+    ELEMENT_FINDER_TO_ELEMENT_FINDER_FUNCTIONS.forEach((fnName) => {
       this[fnName] = (...args) => new ElementFinderWrapper(this._logger, this._eyesDriver, this._finder[fnName](...args));
     });
 
-    ELEMENT_FINDER_TO_ELEMENT_ARRAY_FINDER_FUNCTIONS.forEach(fnName => {
+    ELEMENT_FINDER_TO_ELEMENT_ARRAY_FINDER_FUNCTIONS.forEach((fnName) => {
       this[fnName] = (...args) => new ElementArrayFinderWrapper(this._logger, this._eyesDriver, this._finder[fnName](...args));
     });
   }
@@ -90,15 +90,15 @@ class ElementArrayFinderWrapper {
     this._arrayFinder = arrayFinder;
 
     // Wrap the functions that return objects that require pre-wrapping
-    ELEMENT_ARRAY_FINDER_TO_ELEMENT_FINDER_FUNCTIONS.forEach(fnName => {
+    ELEMENT_ARRAY_FINDER_TO_ELEMENT_FINDER_FUNCTIONS.forEach((fnName) => {
       this[fnName] = (...args) => new ElementFinderWrapper(this._logger, this._eyesDriver, this._arrayFinder[fnName](...args));
     });
 
     // Patch this internal function.
     const originalFn = this._arrayFinder.asElementFinders_;
-    this._arrayFinder.asElementFinders_ = () => originalFn.apply(this._arrayFinder).then(arr => {
+    this._arrayFinder.asElementFinders_ = () => originalFn.apply(this._arrayFinder).then((arr) => {
       const list = [];
-      arr.forEach(finder => {
+      arr.forEach((finder) => {
         list.push(new ElementFinderWrapper(this._logger, this._eyesDriver, finder));
       });
       return list;

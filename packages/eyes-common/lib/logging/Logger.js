@@ -118,7 +118,7 @@ class Logger {
    * @return {string} - The name of the method which called the logger, if possible, or an empty string.
    */
   _getMethodName() {
-    if (typeof Error.captureStackTrace == 'function') {
+    if (typeof Error.captureStackTrace === 'function') {
       /**
        * @typedef {object} CallSite
        * @property {function(): string} getTypeName returns the type of this as a string.
@@ -137,12 +137,7 @@ class Logger {
       if (trace && trace.length >= 3) {
         const className = trace[3].getTypeName();
         const methodName = trace[3].getMethodName();
-
-        if (className) {
-          return `${className}.${(methodName || '<init>')}(): `;
-        } else {
-          return '(): ';
-        }
+        return className ? `${className}.${(methodName || '<init>')}(): ` : '(): ';
       }
     }
 

@@ -168,7 +168,7 @@ class Configuration extends CommonConfiguration {
     return this;
   }
 
-  /*----------- Visual Grid properties -----------*/
+  /* ------------ Visual Grid properties ------------ */
 
   /**
    * @return {number}

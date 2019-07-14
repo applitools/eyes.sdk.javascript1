@@ -28,7 +28,6 @@ const CorsIframeHandle = {
  * @ignore
  */
 class CorsIframeHandler {
-
   /**
    * @param {object} json
    * @param {string} origin
@@ -44,7 +43,7 @@ class CorsIframeHandler {
     }
 
     if (json.childNodes) {
-      for(const child of json.childNodes) {
+      for (const child of json.childNodes) {
         CorsIframeHandler.blankCorsIframeSrc(child, origin);
       }
     }
@@ -57,7 +56,7 @@ class CorsIframeHandler {
    */
   static blankCorsIframeSrcOfCdt(cdt, frames) {
     const frameUrls = new Set(frames.map(frame => frame.srcAttr));
-    cdt.map(node => {
+    cdt.map((node) => {
       if (node.nodeName === 'IFRAME') {
         const srcAttr = node.attributes.find(attr => attr.name === 'src');
         if (srcAttr && !frameUrls.has(srcAttr.value)) {
@@ -67,7 +66,7 @@ class CorsIframeHandler {
       return node;
     });
 
-    frames.forEach(frame => {
+    frames.forEach((frame) => {
       CorsIframeHandler.blankCorsIframeSrcOfCdt(frame.cdt, frame.frames);
     });
 

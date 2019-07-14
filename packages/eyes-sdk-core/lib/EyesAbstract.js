@@ -138,8 +138,8 @@ class EyesAbstract {
     } else {
       this._configuration.setProxy({
         url: varArg,
-        username: username,
-        password: password,
+        username,
+        password,
       });
     }
   }
@@ -416,7 +416,7 @@ class EyesAbstract {
       this._configuration.setBatch({
         id: batchId,
         name: batchOrName,
-        startedAt: startedAt,
+        startedAt,
       });
     } else {
       this._configuration.setBatch(batchOrName);

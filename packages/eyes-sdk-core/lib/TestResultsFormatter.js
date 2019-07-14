@@ -136,22 +136,19 @@ class TestResultsFormatter {
 
       if (currentResult.isPassed()) {
         tapString += `${OK} ${tapIndex} - [PASSED TEST] ${name}\n`;
+      } else if (currentResult.getIsNew()) { // Test did not pass (might also be a new test).
+        // New test
+        const newResult = markNewAsPassed ? OK : NOT_OK;
+        tapString += `${newResult} ${tapIndex} - [NEW TEST] ${name}\n`;
       } else {
-        // Test did not pass (might also be a new test).
-        if (currentResult.getIsNew()) {
-          // New test
-          const newResult = markNewAsPassed ? OK : NOT_OK;
-          tapString += `${newResult} ${tapIndex} - [NEW TEST] ${name}\n`;
+        // Failed / Aborted test.
+        tapString += `${NOT_OK} ${tapIndex} - `;
+        if (currentResult.getIsAborted()) {
+          tapString += `[ABORTED TEST] ${name}\n`;
         } else {
-          // Failed / Aborted test.
-          tapString += `${NOT_OK} ${tapIndex} - `;
-          if (currentResult.getIsAborted()) {
-            tapString += `[ABORTED TEST] ${name}\n`;
-          } else {
-            tapString += `[FAILED TEST] ${name}\n`;
-          }
-          tapString += `#\tMismatches: ${currentResult.getMismatches()}\n`;
+          tapString += `[FAILED TEST] ${name}\n`;
         }
+        tapString += `#\tMismatches: ${currentResult.getMismatches()}\n`;
       }
 
       const url = currentResult.getAppUrls() && currentResult.getAppUrls().getSession() ?
@@ -203,22 +200,19 @@ class TestResultsFormatter {
 
       if (currentResult.isPassed()) {
         tapString += `# ${OK} ${tapIndex} - [PASSED TEST] ${name}\n`;
+      } else if (currentResult.getIsNew()) { // Test did not pass (might also be a new test).
+        // New test
+        const newResult = markNewAsPassed ? OK : NOT_OK;
+        tapString += `# ${newResult} ${tapIndex} - [NEW TEST] ${name}\n`;
       } else {
-        // Test did not pass (might also be a new test).
-        if (currentResult.getIsNew()) {
-          // New test
-          const newResult = markNewAsPassed ? OK : NOT_OK;
-          tapString += `# ${newResult} ${tapIndex} - [NEW TEST] ${name}\n`;
+        // Failed / Aborted test.
+        tapString += `# ${NOT_OK} ${tapIndex} - `;
+        if (currentResult.getIsAborted()) {
+          tapString += `[ABORTED TEST] ${name}\n`;
         } else {
-          // Failed / Aborted test.
-          tapString += `# ${NOT_OK} ${tapIndex} - `;
-          if (currentResult.getIsAborted()) {
-            tapString += `[ABORTED TEST] ${name}\n`;
-          } else {
-            tapString += `[FAILED TEST] ${name}\n`;
-          }
-          tapString += `#\tMismatches: ${currentResult.getMismatches()}\n`;
+          tapString += `[FAILED TEST] ${name}\n`;
         }
+        tapString += `#\tMismatches: ${currentResult.getMismatches()}\n`;
       }
 
       const url = currentResult.getAppUrls() && currentResult.getAppUrls().getSession() ?

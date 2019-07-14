@@ -39,7 +39,7 @@ class TestsDataProvider {
       safariOptions,
     ], platforms));
 
-    return permutations.filter(perm => {
+    return permutations.filter((perm) => {
       const [caps, platf] = perm;
 
       const browser = caps.getBrowserName().toUpperCase().trim();

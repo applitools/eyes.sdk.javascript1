@@ -15,7 +15,6 @@ const DomCaptureReturnType = {
  * @ignore
  */
 class DomCapture {
-
   /**
    * @param {Logger} logger
    * @param {EyesWebDriver|WebDriver} driver
@@ -58,7 +57,7 @@ class DomCapture {
   async getWindowDom() {
     const captureDomScript = await getCaptureDomScript();
 
-    let asyncCaptureDomScript =
+    const asyncCaptureDomScript =
       `var callback = arguments[arguments.length - 1];
       (${captureDomScript})().then(res => {
         return callback(res)
@@ -74,11 +73,11 @@ class DomCapture {
    * @return {Promise<{string}>}
    */
   async getFrameDom(script, url) {
-    let domSnapshotRaw = await this._driver.executeAsyncScript(script);
+    const domSnapshotRaw = await this._driver.executeAsyncScript(script);
 
     const domSnapshotRawArr = domSnapshotRaw ? domSnapshotRaw.split('\n') : [];
 
-    if (domSnapshotRawArr.length === 0 ) {
+    if (domSnapshotRawArr.length === 0) {
       return {};
     }
 
@@ -87,43 +86,41 @@ class DomCapture {
     const iframeEndIndex = domSnapshotRawArr.indexOf(separatorJson.separator, cssEndIndex + 1);
     let domSnapshot = domSnapshotRawArr[iframeEndIndex + 1];
 
-    let cssArr = [];
-    for (let i = 1; i < cssEndIndex; i++) {
+    const cssArr = [];
+    for (let i = 1; i < cssEndIndex; i += 1) {
       cssArr.push(domSnapshotRawArr[i]);
     }
 
     const cssPromises = [];
     for (const cssHref of cssArr) {
-      if (!cssHref) {
-        continue;
+      if (cssHref) {
+        cssPromises.push(this._downloadCss(url, cssHref));
       }
-      cssPromises.push(this._downloadCss(url, cssHref));
     }
 
     const cssResArr = await Promise.all(cssPromises);
-    
+
     for (const cssRes of cssResArr) {
       domSnapshot = domSnapshot.replace(`"${separatorJson.cssStartToken}${cssRes.href}${separatorJson.cssEndToken}"`, cssRes.css);
     }
 
-    let iframeArr = [];
-    for (let i = cssEndIndex + 1; i < iframeEndIndex; i++) {
+    const iframeArr = [];
+    for (let i = cssEndIndex + 1; i < iframeEndIndex; i += 1) {
       iframeArr.push(domSnapshotRawArr[i]);
     }
 
     for (const iframeXpath of iframeArr) {
-      if (!iframeXpath) {
-        continue;
+      if (iframeXpath) {
+        const framesCount = await this._switchToFrame(iframeXpath);
+        let domIFrame;
+        try {
+          domIFrame = await this.getFrameDom(script, url);
+        } catch (ignored) {
+          domIFrame = {};
+        }
+        await this._switchToParentFrame(framesCount);
+        domSnapshot = domSnapshot.replace(`"${separatorJson.iframeStartToken}${iframeXpath}${separatorJson.iframeEndToken}"`, domIFrame);
       }
-      const framesCount = await this._switchToFrame(iframeXpath);
-      let domIFrame;
-      try {
-        domIFrame = await this.getFrameDom(script, url);
-      } catch (ignored) {
-        domIFrame = {};
-      }
-      await this._switchToParentFrame(framesCount);
-      domSnapshot = domSnapshot.replace(`"${separatorJson.iframeStartToken}${iframeXpath}${separatorJson.iframeEndToken}"`, domIFrame);
     }
 
     return domSnapshot;
@@ -143,7 +140,7 @@ class DomCapture {
     for (const xpath of xpaths) {
       const iframeEl = await this._driver.findElementByXPath(`/${xpath}`);
       await this._driver.switchTo().frame(iframeEl);
-      framesCount = framesCount + 1;
+      framesCount += 1;
     }
 
     return framesCount;
@@ -181,14 +178,14 @@ class DomCapture {
       const response = await axios(absHref);
       const css = response.data;
       this._logger.verbose(`downloading CSS in length of ${css.length} chars took ${timeStart.end().summary}`);
-      return {'href': absHref, 'css': css};
+      return { href: absHref, css };
     } catch (ex) {
       this._logger.verbose(ex.toString());
       retriesCount -= 1;
       if (retriesCount > 0) {
         return this._downloadCss(baseUri, href, retriesCount);
       }
-      return {'href': href, 'css': ''};
+      return { href, css: '' };
     }
   }
 

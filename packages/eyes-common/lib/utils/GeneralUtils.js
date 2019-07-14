@@ -93,7 +93,7 @@ class GeneralUtils {
     }
 
     const plainObject = {};
-    Object.keys(object).forEach(objectKey => {
+    Object.keys(object).forEach((objectKey) => {
       let publicKey = objectKey.replace('_', '');
       if (rename[publicKey]) {
         publicKey = rename[publicKey];
@@ -132,7 +132,7 @@ class GeneralUtils {
    * @return {string}
    */
   static guid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       // noinspection MagicNumberJS, NonShortCircuitBooleanExpressionJS
       const r = (Math.random() * 16) | 0; // eslint-disable-line no-bitwise
       // noinspection MagicNumberJS, NonShortCircuitBooleanExpressionJS
@@ -148,7 +148,7 @@ class GeneralUtils {
    */
   static randomAlphanumeric(length = 8) {
     let res = '';
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i += 1) {
       res += ALPHANUMERIC_MASK.charAt(Math.floor(Math.random() * ALPHANUMERIC_MASK.length));
     }
     return res;
@@ -220,7 +220,7 @@ class GeneralUtils {
    */
   static stringify(...args) {
     return args
-      .map(arg => {
+      .map((arg) => {
         if (arg != null && typeof arg === 'object') {
           if (arg.constructor !== Object) {
             // Not plain object
@@ -281,7 +281,7 @@ class GeneralUtils {
     }
 
     let val = object;
-    for (let key of path.split('.')) {
+    for (const key of path.split('.')) {
       val = typeof val === 'object' ? val[key] : undefined;
       if (val === undefined) {
         return undefined;

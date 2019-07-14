@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.17.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.16.3...@applitools/visual-grid-client@12.17.0) (2019-07-10)
+
+
+### Features
+
+* rename abortIfNotClosed to abort (old name saved as an alias) ([b09eba1](https://github.com/applitools/eyes.sdk.javascript1/commit/b09eba1))
+* **visual-grid-client:** updated ds to support canvas ([c3f5585](https://github.com/applitools/eyes.sdk.javascript1/commit/c3f5585))
+
+
+
+
+
 ## [12.16.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.16.1...@applitools/visual-grid-client@12.16.3) (2019-07-03)
 
 

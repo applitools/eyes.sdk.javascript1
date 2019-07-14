@@ -52,7 +52,7 @@ exports.RegionVisibilityStrategy = require('./lib/regionVisibility/RegionVisibil
 exports.ClassicRunner = require('./lib/runner/ClassicRunner').ClassicRunner;
 exports.VisualGridRunner = require('./lib/runner/VisualGridRunner').VisualGridRunner;
 exports.TestResultContainer = require('./lib/runner/TestResultContainer').TestResultContainer;
-exports.TestResultSummary = require('./lib/runner/TestResultSummary').TestResultSummary;
+exports.TestResultsSummary = require('./lib/runner/TestResultsSummary').TestResultsSummary;
 
 exports.EyesTargetLocator = require('./lib/wrappers/EyesTargetLocator').EyesTargetLocator;
 exports.EyesWebDriver = require('./lib/wrappers/EyesWebDriver').EyesWebDriver;

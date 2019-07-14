@@ -645,8 +645,9 @@ class EyesBase extends EyesAbstract {
     const outputProvider = new AppOutputProvider();
     // A callback which will call getAppOutput
     // noinspection AnonymousFunctionJS
-    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
-      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal);
+    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) => (
+      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
+    );
 
     this._shouldMatchWindowRunOnceOnTimeout = true;
     this._matchWindowTask = new MatchSingleWindowTask(
@@ -900,7 +901,7 @@ class EyesBase extends EyesAbstract {
    */
   async _ensureRunningSession() {
     if (this._runningSession) {
-      this._logger.verbose("session already running.");
+      this._logger.verbose('session already running.');
       return;
     }
 
@@ -912,8 +913,9 @@ class EyesBase extends EyesAbstract {
     // noinspection JSClosureCompilerSyntax
     const outputProvider = new AppOutputProvider();
     // A callback which will call getAppOutput
-    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
-      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal);
+    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) => (
+      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
+    );
 
     this._matchWindowTask = new MatchWindowTask(
       this._logger,

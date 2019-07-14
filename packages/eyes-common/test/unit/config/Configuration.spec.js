@@ -101,34 +101,34 @@ describe('Configuration', () => {
       configuration.setIgnoreDisplacements(true);
 
       assert.deepStrictEqual(configuration.toJSON().defaultMatchSettings, {
-        "matchLevel": "Content",
-        "enablePatterns": true,
-        "ignoreDisplacements": true,
-        "ignoreCaret": false,
-        "useDom": true,
-        "ignore": [],
-        "content": [],
-        "layout": [],
-        "strict": [],
-        "floating": [],
-        "exact": undefined,
+        matchLevel: 'Content',
+        enablePatterns: true,
+        ignoreDisplacements: true,
+        ignoreCaret: false,
+        useDom: true,
+        ignore: [],
+        content: [],
+        layout: [],
+        strict: [],
+        floating: [],
+        exact: undefined,
       });
     });
 
     it('from object', () => {
       const configuration = new Configuration();
       configuration.setDefaultMatchSettings({
-        "matchLevel": "Content",
-        "enablePatterns": true,
-        "ignoreDisplacements": true,
-        "ignoreCaret": false,
-        "useDom": true,
-        "ignore": [],
-        "content": [],
-        "layout": [],
-        "strict": [],
-        "floating": [],
-        "exact": undefined,
+        matchLevel: 'Content',
+        enablePatterns: true,
+        ignoreDisplacements: true,
+        ignoreCaret: false,
+        useDom: true,
+        ignore: [],
+        content: [],
+        layout: [],
+        strict: [],
+        floating: [],
+        exact: undefined,
       });
 
       assert.strictEqual(configuration.getMatchLevel(), MatchLevel.Content);

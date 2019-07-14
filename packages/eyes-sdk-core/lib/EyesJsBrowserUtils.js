@@ -87,13 +87,13 @@ class EyesJsBrowserUtils {
    * @return {Promise<string>} - The previous value of overflow (could be {@code null} if undefined).
    */
   static async setOverflow(executor, value, rootElement) {
-    ArgumentGuard.notNull(executor, "executor");
-    ArgumentGuard.notNull(rootElement, "rootElement");
+    ArgumentGuard.notNull(executor, 'executor');
+    ArgumentGuard.notNull(rootElement, 'rootElement');
 
     const script = `var el = arguments[0]; var origOverflow = el.style.overflow; var newOverflow = '${value}'; ` +
-      `el.style.overflow = newOverflow; ` +
-      `if (newOverflow.toUpperCase() === 'HIDDEN' && origOverflow.toUpperCase() !== 'HIDDEN') { el.setAttribute('data-applitools-original-overflow', origOverflow); } ` +
-      `return origOverflow;`;
+      'el.style.overflow = newOverflow; ' +
+      'if (newOverflow.toUpperCase() === \'HIDDEN\' && origOverflow.toUpperCase() !== \'HIDDEN\') { el.setAttribute(\'data-applitools-original-overflow\', origOverflow); } ' +
+      'return origOverflow;';
 
     try {
       const result = await executor.executeScript(script, rootElement);
@@ -233,7 +233,7 @@ class EyesJsBrowserUtils {
    */
   static setTransforms(executor, transforms) {
     let script = '';
-    Object.keys(transforms).forEach(key => {
+    Object.keys(transforms).forEach((key) => {
       if (Object.prototype.hasOwnProperty.call(transforms, key)) {
         script += `document.documentElement.style['${key}'] = '${transforms[key]}';`;
       }

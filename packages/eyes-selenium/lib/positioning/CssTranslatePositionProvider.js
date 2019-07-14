@@ -62,7 +62,7 @@ class CssTranslatePositionProvider extends PositionProvider {
    */
   async getEntireSize() {
     const entireSize = await EyesSeleniumUtils.getEntireElementSize(this._executor, this._scrollRootElement);
-    this._logger.verbose(`CssTranslatePositionProvider - Entire size:`, entireSize);
+    this._logger.verbose('CssTranslatePositionProvider - Entire size:', entireSize);
     return entireSize;
   }
 
@@ -83,9 +83,9 @@ class CssTranslatePositionProvider extends PositionProvider {
    * @return {Promise}
    */
   async restoreState(state) {
-    const script = `var originalTransform = arguments[0].style.transform;` +
+    const script = 'var originalTransform = arguments[0].style.transform;' +
       `arguments[0].style.transform = '${state.getTransform()}';` +
-      `return originalTransform;`;
+      'return originalTransform;';
 
     await this._executor.executeScript(script, this._scrollRootElement);
     this._logger.verbose('Transform (position) restored.');

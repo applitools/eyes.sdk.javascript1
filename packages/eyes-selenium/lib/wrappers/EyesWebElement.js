@@ -14,35 +14,35 @@ const JS_GET_COMPUTED_STYLE_FN = 'function getCmpStyle(el, p) { return window.ge
  * @param {string} styleProp
  * @return {string}
  */
-const JS_GET_COMPUTED_STYLE_FORMATTED_STR = styleProp => JS_GET_COMPUTED_STYLE_FN +
-  `return getCmpStyle(arguments[0], '${styleProp}');`;
+const JS_GET_COMPUTED_STYLE_FORMATTED_STR = styleProp => `${JS_GET_COMPUTED_STYLE_FN
+}return getCmpStyle(arguments[0], '${styleProp}');`;
 
 const JS_GET_SCROLL_LOCATION = 'return [arguments[0].scrollLeft, arguments[0].scrollTop];';
 
 const JS_GET_OVERFLOW = 'return arguments[0].style.overflow;';
 
 const JS_GET_BORDER_WIDTHS_ARR =
-  "var retVal = retVal || [];" +
-  "if (window.getComputedStyle) { " +
-  "var computedStyle = window.getComputedStyle(elem, null);" +
-  "retVal.push(computedStyle.getPropertyValue('border-left-width'));" +
-  "retVal.push(computedStyle.getPropertyValue('border-top-width'));" +
-  "retVal.push(computedStyle.getPropertyValue('border-right-width')); " +
-  "retVal.push(computedStyle.getPropertyValue('border-bottom-width'));" +
-  "} else if (elem.currentStyle) { " +
-  "retVal.push(elem.currentStyle['border-left-width']);" +
-  "retVal.push(elem.currentStyle['border-top-width']);" +
-  "retVal.push(elem.currentStyle['border-right-width']);" +
-  "retVal.push(elem.currentStyle['border-bottom-width']);" +
-  "} else { " +
-  "retVal.push(0,0,0,0);" +
-  "}";
+  'var retVal = retVal || [];' +
+  'if (window.getComputedStyle) { ' +
+  'var computedStyle = window.getComputedStyle(elem, null);' +
+  'retVal.push(computedStyle.getPropertyValue("border-left-width"));' +
+  'retVal.push(computedStyle.getPropertyValue("border-top-width"));' +
+  'retVal.push(computedStyle.getPropertyValue("border-right-width")); ' +
+  'retVal.push(computedStyle.getPropertyValue("border-bottom-width"));' +
+  '} else if (elem.currentStyle) { ' +
+  'retVal.push(elem.currentStyle["border-left-width"]);' +
+  'retVal.push(elem.currentStyle["border-top-width"]);' +
+  'retVal.push(elem.currentStyle["border-right-width"]);' +
+  'retVal.push(elem.currentStyle["border-bottom-width"]);' +
+  '} else { ' +
+  'retVal.push(0,0,0,0);' +
+  '}';
 
 const JS_GET_SIZE_AND_BORDER_WIDTHS =
-  "var elem = arguments[0]; " +
-  "var retVal = [elem.clientWidth, elem.clientHeight]; " +
-  JS_GET_BORDER_WIDTHS_ARR +
-  "return retVal;";
+  `${'var elem = arguments[0]; ' +
+  'var retVal = [elem.clientWidth, elem.clientHeight]; '}${
+    JS_GET_BORDER_WIDTHS_ARR
+  }return retVal;`;
 
 /**
  * Wraps a Selenium Web Element.
@@ -266,10 +266,10 @@ class EyesWebElement extends WebElement {
     return {
       width: Math.ceil(result[0]),
       height: Math.ceil(result[1]),
-      left: Math.ceil(result[2].replace("px", "")),
-      top: Math.ceil(result[2].replace("px", "")),
-      right: Math.ceil(result[3].replace("px", "")),
-      bottom: Math.ceil(result[5].replace("px", "")),
+      left: Math.ceil(result[2].replace('px', '')),
+      top: Math.ceil(result[2].replace('px', '')),
+      right: Math.ceil(result[3].replace('px', '')),
+      bottom: Math.ceil(result[5].replace('px', '')),
     };
   }
 
@@ -282,7 +282,7 @@ class EyesWebElement extends WebElement {
   scrollTo(location) {
     try {
       const script = `arguments[0].scrollLeft = ${location.getX()}; arguments[0].scrollTop = ${location.getY()};` +
-        "return [arguments[0].scrollLeft, arguments[0].scrollTop];";
+        'return [arguments[0].scrollLeft, arguments[0].scrollTop];';
 
       const position = this.executeScript(script);
       return new Location(Math.ceil(position[0]) || 0, Math.ceil(position[1]) || 0);

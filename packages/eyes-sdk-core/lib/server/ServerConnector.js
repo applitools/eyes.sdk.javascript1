@@ -185,7 +185,7 @@ async function sendLongRequest(self, name, options = {}) {
  * @param {object} jsonData - The data from for which to create the bytes representation.
  * @return {Buffer} - a buffer of bytes which represents the stringified JSON, prefixed with size.
  */
-const createDataBytes = jsonData => {
+const createDataBytes = (jsonData) => {
   const dataStr = JSON.stringify(jsonData);
   const dataLen = Buffer.byteLength(dataStr, 'utf8');
 
@@ -231,10 +231,8 @@ class ServerConnector {
     let options = requestOptions;
     if (isMergeDefaultOptions) {
       options = GeneralUtils.mergeDeep(this._httpOptions, options);
-    } else {
-      if (options.params === undefined) {
-        options.params = {};
-      }
+    } else if (options.params === undefined) {
+      options.params = {};
     }
 
     if (isIncludeApiKey) {
@@ -253,7 +251,7 @@ class ServerConnector {
       options.proxy = this._configuration.getProxy().toProxyObject();
     }
 
-    options.maxContentLength =  20 * 1024 * 1024;
+    options.maxContentLength = 20 * 1024 * 1024;
 
     return options;
   }
