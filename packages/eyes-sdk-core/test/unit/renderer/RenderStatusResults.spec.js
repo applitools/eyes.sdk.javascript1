@@ -22,17 +22,6 @@ describe('RenderStatusResults', () => {
     assert.strictEqual(results.getStatus(), undefined);
   });
 
-  it('constructor with region error', () => {
-    assert.throws(() => {
-      const results = new RenderStatusResults({
-        selectorRegions: [
-          { error: 'an error' },
-        ],
-      });
-      console.log(results);
-    });
-  });
-
   it('constructor with object', () => {
     const status = 'some status';
     const error = 'some error';

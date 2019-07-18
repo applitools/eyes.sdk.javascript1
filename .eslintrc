@@ -28,7 +28,7 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "no-unused-vars": ["warn", {"varsIgnorePattern": "^_", "args": "all", "argsIgnorePattern": "^_"}],
+    "no-unused-vars": ["warn", {"vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_"}],
     "no-param-reassign": ["off"],
     "no-underscore-dangle": ["off"],
     "object-curly-newline": ["off"],
@@ -72,7 +72,7 @@
     "node/prefer-global/url": ["error", "never"]
   },
   "overrides": [{
-    "files": ["**/test/**/*.js", "**/*.spec.js"],
+    "files": ["**/example/**/*.js", "**/test/**/*.js", "**/*.spec.js"],
     "rules": {
       "prefer-arrow-callback": ["off"],
       "func-names": ["off"],

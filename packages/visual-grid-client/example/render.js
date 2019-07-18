@@ -57,6 +57,10 @@ const debug = require('debug')('eyes:render');
 
   debug('decoding done');
 
+  frame.ignore = [
+    {selector: '.some-div-to-ignore'},
+    {selector: 'body > div > div:nth-child(1) > div.fancy.title.primary'},
+  ];
   checkWindow(frame);
   const results = await close(false);
   if (results.some(r => r instanceof Error)) {

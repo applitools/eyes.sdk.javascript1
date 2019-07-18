@@ -1,12 +1,18 @@
 'use strict';
 
+const { GetSelector } = require('./GetSelector');
+
 /* eslint-disable no-unused-vars */
 
 /**
  * @ignore
  * @abstract
  */
-class GetRegion {
+class GetRegion extends GetSelector {
+  constructor() {
+    super(undefined);
+  }
+
   // noinspection JSMethodCanBeStatic
   /**
    * @param {EyesBase} eyesBase

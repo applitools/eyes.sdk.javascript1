@@ -142,7 +142,7 @@ class FrameChain {
    */
   [Symbol.iterator]() {
     // noinspection JSValidateTypes
-    return this._frames.values();
+    return this._frames[Symbol.iterator]();
   }
 
   /**

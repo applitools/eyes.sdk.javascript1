@@ -1,6 +1,6 @@
 'use strict';
 
-const { GeneralUtils, RectangleSize, Region, EyesError } = require('@applitools/eyes-common');
+const { GeneralUtils, RectangleSize, Region } = require('@applitools/eyes-common');
 
 /**
  * Encapsulates data for the render currently running in the client.
@@ -22,18 +22,13 @@ class RenderStatusResults {
     }
 
     if (selectorRegions && selectorRegions.length > 0 && !(selectorRegions[0] instanceof Region)) {
-      selectorRegions = selectorRegions.map((region) => {
-        if (region.error) {
-          throw new EyesError(region.error);
-        }
-
-        return new Region({
-          left: region.x,
-          top: region.y,
-          width: region.width,
-          height: region.height,
-        });
-      });
+      selectorRegions = selectorRegions.map(region => new Region({
+        left: region.x,
+        top: region.y,
+        width: region.width,
+        height: region.height,
+        error: region.error,
+      }));
     }
 
     this._status = status;

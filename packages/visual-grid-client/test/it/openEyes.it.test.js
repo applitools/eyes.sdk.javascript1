@@ -1549,8 +1549,8 @@ describe('openEyes', () => {
 
     checkWindow({url: '', cdt: []});
     const [[results]] = await close();
-    expect(wrapper.viewportSize).to.eql(FakeEyesWrapper.devices['iPhone 4']);
-    expect(wrapper.deviceInfo).to.equal(`${deviceName} (Chrome emulation)`);
+    expect(wrapper.getViewportSize()).to.eql(FakeEyesWrapper.devices['iPhone 4']);
+    expect(wrapper.getDeviceInfo()).to.equal(`${deviceName} (Chrome emulation)`);
     expect(results.getAsExpected()).to.equal(true);
   });
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.8.0...@applitools/eyes-common@3.8.1) (2019-07-16)
+
+
+### Bug Fixes
+
+* ignore regions using visual grid by selector (possibly invalid) ([f5adaa1](https://github.com/applitools/eyes.sdk.javascript1/commit/f5adaa1))
+* save errors of regions and log warnings instead of throwing errors ([1f362d9](https://github.com/applitools/eyes.sdk.javascript1/commit/1f362d9))
+
+
+
+
+
 # [3.8.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.7.2...@applitools/eyes-common@3.8.0) (2019-07-10)
 
 

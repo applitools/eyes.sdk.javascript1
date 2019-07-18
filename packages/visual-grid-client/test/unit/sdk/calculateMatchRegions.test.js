@@ -40,7 +40,7 @@ describe('calculateMatchRegions', () => {
         offsetSelectors: [undefined],
       }),
     ).to.eql({
-      noOffsetRegions: [ignore, undefined, undefined],
+      noOffsetRegions: [[ignore], undefined, undefined],
       offsetRegions: [undefined],
     });
   });
@@ -54,7 +54,7 @@ describe('calculateMatchRegions', () => {
         offsetSelectors: [undefined],
       }),
     ).to.eql({
-      noOffsetRegions: [ignore, undefined, layout],
+      noOffsetRegions: [[ignore], undefined, [layout]],
       offsetRegions: [undefined],
     });
   });
@@ -68,7 +68,7 @@ describe('calculateMatchRegions', () => {
       }),
     ).to.eql({
       noOffsetRegions: [undefined, undefined, undefined],
-      offsetRegions: [floating],
+      offsetRegions: [[floating]],
     });
   });
 
@@ -82,7 +82,7 @@ describe('calculateMatchRegions', () => {
       }),
     ).to.eql({
       noOffsetRegions: [undefined, undefined, undefined],
-      offsetRegions: [whatever, floating],
+      offsetRegions: [[whatever], [floating]],
     });
   });
 
@@ -94,7 +94,7 @@ describe('calculateMatchRegions', () => {
         offsetSelectors: [undefined],
       }),
     ).to.eql({
-      noOffsetRegions: [undefined, layout, undefined],
+      noOffsetRegions: [undefined, [layout], undefined],
       offsetRegions: [undefined],
     });
   });
@@ -110,6 +110,7 @@ describe('calculateMatchRegions', () => {
       {toJSON: () => 'ddd'},
       {toJSON: () => 'eee'},
     ];
+    selectorRegions.forEach(r => (r.getError = () => {}));
     expect(
       calculateMatchRegions({
         noOffsetSelectors: [ignore, layout, strict],
@@ -133,6 +134,7 @@ describe('calculateMatchRegions', () => {
       Object.assign(x, offset(i)),
     );
     const selectorRegions = [{toJSON: () => ({bla: 'aaa'})}, {toJSON: () => ({kuku: 'bbb'})}];
+    selectorRegions.forEach(r => (r.getError = () => {}));
     expect(
       calculateMatchRegions({
         offsetSelectors: [floating],
@@ -155,6 +157,7 @@ describe('calculateMatchRegions', () => {
       {getLeft: () => 1, getTop: () => 2, getWidth: () => 4, getHeight: () => 4},
       {getLeft: () => 1, getTop: () => 2, getWidth: () => 5, getHeight: () => 4},
     ];
+    selectorRegions.forEach(r => r && (r.getError = () => {}));
     const imageLocationRegion = {getLeft: () => 1, getTop: () => 2};
 
     expect(
@@ -205,6 +208,7 @@ describe('calculateMatchRegions', () => {
       {getLeft: () => 2, getTop: () => 2, getWidth: () => 3, getHeight: () => 4},
       {getLeft: () => 0, getTop: () => 2, getWidth: () => 3, getHeight: () => 4},
     ];
+    selectorRegions.forEach(r => r && (r.getError = () => {}));
     const imageLocationRegion = {getLeft: () => 3, getTop: () => 4};
 
     expect(
@@ -257,6 +261,7 @@ describe('calculateMatchRegions', () => {
       {toJSON: () => 'eee'},
       {toJSON: () => 'fff'},
     ];
+    selectorRegions.forEach(r => (r.getError = () => {}));
 
     expect(
       calculateMatchRegions({
@@ -296,6 +301,7 @@ describe('calculateMatchRegions', () => {
       {toJSON: () => ({ccc: 'fff'})},
       {toJSON: () => ({ddd: 'ggg'})},
     ];
+    selectorRegions.forEach(r => (r.getError = () => {}));
 
     expect(
       calculateMatchRegions({

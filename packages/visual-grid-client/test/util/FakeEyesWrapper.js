@@ -335,6 +335,14 @@ class FakeEyesWrapper extends EventEmitter {
     return this.useDom;
   }
 
+  getDeviceInfo() {
+    return this.deviceInfo;
+  }
+
+  getViewportSize() {
+    return this.viewportSize;
+  }
+
   setEnablePatterns(enablePatterns) {
     this.enablePatterns = enablePatterns;
   }

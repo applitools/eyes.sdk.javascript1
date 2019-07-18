@@ -71,7 +71,7 @@ class TestResultsSummary {
    * @return {IterableIterator<TestResultContainer>} Iterator to go over the TestResultContainers in the chain.
    */
   [Symbol.iterator]() {
-    return this._allResults.values();
+    return this._allResults[Symbol.iterator]();
   }
 
   /**

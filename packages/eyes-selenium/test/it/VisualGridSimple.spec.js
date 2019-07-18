@@ -42,6 +42,18 @@ describe('VisualGridSimple', function () {
     await eyes.close();
   });
 
+  it('TestWithInvalidResources', async function () {
+    await driver.get('https://astappiev.github.io/test-html-pages/index-invalid-resource.html');
+
+    const eyes = new Eyes(new VisualGridRunner());
+
+    await eyes.open(driver, 'Applitools Eyes JavaScript SDK', this.test.title, { width: 800, height: 600 });
+
+    await eyes.check('window', Target.window());
+
+    await eyes.close();
+  });
+
   after(async function () {
     if (driver != null) {
       await driver.quit();

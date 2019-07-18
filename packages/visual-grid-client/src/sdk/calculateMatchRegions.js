@@ -7,7 +7,9 @@ function calculateMatchRegions({
   imageLocationRegion,
 }) {
   let selectorRegionIndex = imageLocationRegion ? 1 : 0;
-  const noOffsetRegions = noOffsetSelectors.map(selection => mapSelectionToRegions(selection));
+  const noOffsetRegions = noOffsetSelectors.map(selection =>
+    mapSelectionToRegions(selection, false),
+  );
   const offsetRegions = offsetSelectors.map(selection => mapSelectionToRegions(selection, true));
 
   return {
@@ -16,17 +18,30 @@ function calculateMatchRegions({
   };
 
   function mapSelectionToRegions(selection, addOffset) {
-    const selectorObjToRegionWithOffset = selectorObjToRegion.bind(null, addOffset);
-    return selection
-      ? Array.isArray(selection)
-        ? selection.map(selectorObjToRegionWithOffset)
-        : selectorObjToRegionWithOffset(selection)
-      : selection;
+    if (selection) {
+      const regionObjects = Array.isArray(selection) ? selection : [selection];
+
+      let region;
+      const regions = [];
+      for (const regionObj of regionObjects) {
+        region = selectorObjToRegion(regionObj, addOffset);
+        if (region) {
+          regions.push(region);
+        }
+      }
+      return regions.length === 0 ? undefined : regions;
+    }
+
+    return selection;
   }
 
-  function selectorObjToRegion(addOffset, selectorObj) {
+  function selectorObjToRegion(selectorObj, addOffset) {
     if (selectorObj.selector) {
       const selectorRegion = selectorRegions[selectorRegionIndex++];
+      if (selectorRegion.getError()) {
+        return null;
+      }
+
       let ret = imageLocationRegion
         ? {
             width: selectorRegion.getWidth(),

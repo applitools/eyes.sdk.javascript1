@@ -49,7 +49,7 @@ class Eyes extends EyesBase {
    * @signature `new Eyes(runner)`
    * @sigparam {EyesRunner} [runner] - Set {@code EyesRunner} to use, default is ClassicRunner.
    *
-   * @signature `new Eyes(serverUrl, isDisabled)`
+   * @signature `new Eyes(serverUrl, isDisabled, runner)`
    * @sigparam {string} [serverUrl] - The Eyes server URL.
    * @sigparam {boolean} [isDisabled=false] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
    * @sigparam {EyesRunner} [runner=false] - Set {@code EyesRunner} to use, default is ClassicRunner.

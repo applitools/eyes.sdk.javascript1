@@ -3,7 +3,7 @@
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
 const { getProcessPageAndPollScript } = require('@applitools/dom-snapshot');
 const { ArgumentGuard, TypeUtils, GeneralUtils } = require('@applitools/eyes-common');
-const { CorsIframeHandle, CorsIframeHandler } = require('@applitools/eyes-sdk-core');
+const { CorsIframeHandle, CorsIframeHandler, IgnoreRegionByRectangle } = require('@applitools/eyes-sdk-core');
 
 const { TestResultsSummary } = require('./runner/TestResultsSummary');
 const { VisualGridRunner } = require('./runner/VisualGridRunner');
@@ -89,7 +89,7 @@ class EyesVisualGrid extends Eyes {
       await this.setViewportSize(this._configuration.getViewportSize());
 
       if (this._configuration.getBrowsersInfo().length === 0) {
-        this._configuration.addBrowser(this._configuration.viewportSize.getWidth(), this._configuration.viewportSize.getHeight(), BrowserType.CHROME);
+        this._configuration.addBrowser(this._configuration.getViewportSize().getWidth(), this._configuration.getViewportSize().getHeight(), BrowserType.CHROME);
       }
     }
 
@@ -265,6 +265,8 @@ class EyesVisualGrid extends Eyes {
     this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`);
 
     const source = await this._driver.getCurrentUrl();
+    const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions());
+
     await this._checkWindowCommand({
       resourceUrls,
       resourceContents,
@@ -276,7 +278,7 @@ class EyesVisualGrid extends Eyes {
       selector: targetSelector,
       region: checkSettings.getTargetRegion(),
       scriptHooks: checkSettings.getScriptHooks(),
-      ignore: checkSettings.getIgnoreRegions(),
+      ignore: ignoreRegions,
       floating: checkSettings.getFloatingRegions(),
       sendDom: checkSettings.getSendDom() ? checkSettings.getSendDom() : this.getSendDom(),
       matchLevel: checkSettings.getMatchLevel() ? checkSettings.getMatchLevel() : this.getMatchLevel(),
@@ -295,6 +297,31 @@ class EyesVisualGrid extends Eyes {
       type,
       value: Buffer.from(value, 'base64'),
     }));
+  }
+
+  /**
+   * @private
+   * @param {GetRegion[]} regions
+   * @return {{type: string, url: string, value: Buffer}[]}
+   */
+  async _prepareRegions(regions) {
+    if (regions && regions.length > 0) {
+      const newRegions = [];
+
+      for (const region of regions) {
+        if (region instanceof IgnoreRegionByRectangle) {
+          const plainRegion = (await region.getRegion(this, undefined)).toJSON();
+          newRegions.push(plainRegion);
+        } else {
+          const selector = await region.getSelector(this);
+          newRegions.push({ selector });
+        }
+      }
+
+      return newRegions;
+    }
+
+    return regions;
   }
 }
 
