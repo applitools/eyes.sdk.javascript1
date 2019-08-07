@@ -241,7 +241,7 @@ describe('openEyes', () => {
   it('renders the correct browser', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
-      browser: {width: 320, height: 480, name: 'ucbrowser'},
+      browser: {width: 320, height: 480, name: 'firefox'},
       url: `${baseUrl}/test.html`,
       appName,
     });
@@ -256,7 +256,51 @@ describe('openEyes', () => {
       url: `${baseUrl}/test.html`,
     });
     await close();
-    expect(await wrapper.getInferredEnvironment()).to.equal('useragent:ucbrowser');
+    expect(await wrapper.getInferredEnvironment()).to.equal('useragent:firefox');
+  });
+
+  it('throws error on invalid browser name', async () => {
+    const [err] = await presult(
+      openEyes({
+        wrappers: [wrapper],
+        browser: {width: 320, height: 480, name: 'firefox222'},
+        url: `${baseUrl}/test.html`,
+        appName,
+      }),
+    );
+    expect(err.message).to.equal(
+      `browser name should be one of the following 'chrome', 'firefox', 'ie10', 'ie11' or 'edge' but recieved 'firefox222'.`,
+    );
+  });
+
+  it('throws error on browser with no size', async () => {
+    const [err] = await presult(
+      openEyes({
+        wrappers: [wrapper],
+        browser: {width: 320, name: 'firefox'},
+        url: `${baseUrl}/test.html`,
+        appName,
+      }),
+    );
+    expect(err.message).to.equal(
+      `browser 'firefox' should include 'height' and 'width' parameters.`,
+    );
+  });
+
+  it('doesnt throw when browser is emulated', async () => {
+    const [err] = await presult(
+      openEyes({
+        wrappers: [wrapper],
+        browser: {
+          deviceName: 'iPhone X',
+          screenOrientation: 'landscape',
+          name: 'chrome',
+        },
+        url: `${baseUrl}/test.html`,
+        appName,
+      }),
+    );
+    expect(err).to.equal(undefined);
   });
 
   it('openEyes handles error during getRenderInfo', async () => {

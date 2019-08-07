@@ -4,7 +4,7 @@ const {describe, it, beforeEach} = require('mocha');
 const {expect} = require('chai');
 const mapValues = require('lodash.mapvalues');
 const makeGetAllResources = require('../../../src/sdk/getAllResources');
-const makeExtractCssResources = require('../../../src/sdk/extractCssResources');
+const extractCssResources = require('../../../src/sdk/extractCssResources');
 const makeFetchResource = require('../../../src/sdk/fetchResource');
 const createResourceCache = require('../../../src/sdk/createResourceCache');
 const testServer = require('../../util/testServer');
@@ -21,7 +21,6 @@ describe('getAllResources', () => {
   let getAllResources, resourceCache;
 
   beforeEach(() => {
-    const extractCssResources = makeExtractCssResources(testLogger);
     const fetchResource = makeFetchResource({
       logger: testLogger,
       fetchCache: createResourceCache(),
@@ -84,10 +83,13 @@ describe('getAllResources', () => {
 
     const file1 = 'basic.svg';
     const file2 = 'basic2.svg';
+    const file3 = 'with-style.svg';
     const svg1Url = `${baseUrl}/${file1}`;
     const svg2Url = `${baseUrl}/${file2}`;
+    const svg3Url = `${baseUrl}/${file3}`;
     const svg1Content = loadFixtureBuffer(file1);
     const svg2Content = loadFixtureBuffer(file2);
+    const svg3Content = loadFixtureBuffer(file3);
 
     const expected = Object.assign(getTestSvgResources(baseUrl), {
       [svg1Url]: toRGridResource({url: svg1Url, type: 'image/svg+xml', value: svg1Content}),
@@ -96,10 +98,15 @@ describe('getAllResources', () => {
         type: 'image/svg+xml',
         value: svg2Content,
       }),
+      [svg3Url]: toRGridResource({
+        url: svg3Url,
+        type: 'image/svg+xml',
+        value: svg3Content,
+      }),
     });
 
     try {
-      const resources = await getAllResources({resourceUrls: [svg1Url, svg2Url]});
+      const resources = await getAllResources({resourceUrls: [svg1Url, svg2Url, svg3Url]});
       expect(resources).to.eql(expected);
     } catch (ex) {
       console.log(ex);
@@ -129,7 +136,6 @@ describe('getAllResources', () => {
   it('fetches with fetchOptions', async () => {
     let actualOptions;
     const fetchResource = async (_url, options) => (actualOptions = options);
-    const extractCssResources = makeExtractCssResources(testLogger);
     resourceCache = createResourceCache();
     getAllResources = makeGetAllResources({
       resourceCache,
@@ -412,8 +418,6 @@ describe('getAllResources', () => {
 
   it("doesn't fail when fetchResource fails", async () => {
     let output = '';
-
-    const extractCssResources = makeExtractCssResources(testLogger);
     const fetchResource = makeFetchResource({
       logger: testLogger,
       fetchCache: createResourceCache(),

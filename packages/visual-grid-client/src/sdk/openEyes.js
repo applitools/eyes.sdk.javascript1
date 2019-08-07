@@ -100,6 +100,12 @@ function makeOpenEyes({
     }
 
     const browsers = Array.isArray(browser) ? browser : [browser];
+    const browserErr = browsers.map(getBrowserError).find(Boolean);
+    if (browserErr) {
+      console.log('\x1b[31m', `\nInvalid browser: ${browserErr}\n`);
+      throw new Error(browserErr);
+    }
+
     wrappers =
       wrappers ||
       initWrappers({count: browsers.length, apiKey, logHandler: logger.getLogHandler()});
@@ -215,6 +221,18 @@ function makeOpenEyes({
       return async () => {
         logger.log(`${name}: isDisabled=true, skipping checks`);
       };
+    }
+
+    function getBrowserError(browser) {
+      if (
+        browser.name &&
+        !['firefox', 'ie10', 'ie11', 'edge', 'chrome', 'ie'].includes(browser.name)
+      ) {
+        return `browser name should be one of the following 'chrome', 'firefox', 'ie10', 'ie11' or 'edge' but recieved '${browser.name}'.`;
+      }
+      if (browser.name && !browser.deviceName && (!browser.height || !browser.width)) {
+        return `browser '${browser.name}' should include 'height' and 'width' parameters.`;
+      }
     }
   };
 }

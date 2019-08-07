@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.12.1...@applitools/eyes-sdk-core@5.12.2) (2019-07-29)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core:** limit size of resources send to VisualGrid ([f26876c](https://github.com/applitools/eyes.sdk.javascript1/commit/f26876c))
+
+
+
+
+
 ## [5.12.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.12.0...@applitools/eyes-sdk-core@5.12.1) (2019-07-16)
 
 

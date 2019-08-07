@@ -5,7 +5,7 @@ const {expect} = require('chai');
 const makeCreateRGridDOMAndGetResourceMapping = require('../../../src/sdk/createRGridDOMAndGetResourceMapping');
 const makeGetAllResources = require('../../../src/sdk/getAllResources');
 const createResourceCache = require('../../../src/sdk/createResourceCache');
-const makeExtractCssResources = require('../../../src/sdk/extractCssResources');
+const extractCssResources = require('../../../src/sdk/extractCssResources');
 const makeFetchResource = require('../../../src/sdk/fetchResource');
 const testLogger = require('../../util/testLogger');
 const testServer = require('../../util/testServer');
@@ -30,9 +30,9 @@ describe('createRGridDOMAndGetResourceMapping', () => {
   beforeEach(() => {
     const getAllResources = makeGetAllResources({
       resourceCache: createResourceCache(),
-      extractCssResources: makeExtractCssResources(testLogger),
       fetchResource: makeFetchResource({logger: testLogger, fetch}),
       fetchCache: createResourceCache(),
+      extractCssResources,
       logger: console,
     });
     fut = makeCreateRGridDOMAndGetResourceMapping({getAllResources});

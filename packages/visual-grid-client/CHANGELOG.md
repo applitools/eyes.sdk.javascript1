@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.19.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.18.1...@applitools/visual-grid-client@12.19.0) (2019-07-29)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** better render ([1b3070d](https://github.com/applitools/eyes.sdk.javascript1/commit/1b3070d))
+
+
+### Features
+
+* **visual-grid-client:** gaurding against no browser size ([e395d24](https://github.com/applitools/eyes.sdk.javascript1/commit/e395d24))
+
+
+
+
+
 ## [12.18.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.18.0...@applitools/visual-grid-client@12.18.1) (2019-07-16)
 
 **Note:** Version bump only for package @applitools/visual-grid-client

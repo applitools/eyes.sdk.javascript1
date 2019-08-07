@@ -4,6 +4,8 @@ const crypto = require('crypto');
 
 const { GeneralUtils, ArgumentGuard } = require('@applitools/eyes-common');
 
+const VISUAL_GRID_MAX_BUFFER_SIZE = 15 * 1000000;
+
 class RGridResource {
   /**
    * @param {string} [url]
@@ -63,6 +65,11 @@ class RGridResource {
   setContent(value) {
     ArgumentGuard.notNull(value, 'content');
     this._content = value;
+    this._sha256hash = undefined;
+
+    if (value.length > VISUAL_GRID_MAX_BUFFER_SIZE) {
+      this._content = value.slice(0, VISUAL_GRID_MAX_BUFFER_SIZE - 100000);
+    }
   }
 
   getSha256Hash() {

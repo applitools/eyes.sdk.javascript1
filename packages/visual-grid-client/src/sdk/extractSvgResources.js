@@ -1,17 +1,35 @@
 'use strict';
 
-const {DOMParser} = require('xmldom');
 const {makeExtractResourcesFromSvg, toUnAnchoredUri} = require('@applitools/dom-snapshot');
-const absolutizeUrl = require('./absolutizeUrl');
+const extractCssResources = require('./extractCssResources');
+const flat = require('./flat');
 
-const parser = new DOMParser();
+let parser;
+if (typeof DOMParser !== 'function') {
+  const {JSDOM} = eval('require')('jsdom');
+  parser = {parseFromString: str => new JSDOM(str).window.document};
+} else {
+  // in browser
+  /* eslint-disable-next-line no-undef */
+  parser = new DOMParser();
+}
+
 const decoder = {decode: buff => buff};
-const extractResources = makeExtractResourcesFromSvg({parser, decoder});
+const doExtractSvgResources = makeExtractResourcesFromSvg({
+  parser,
+  decoder,
+  extractResourceUrlsFromStyleTags,
+});
 
-function extractSvgResources(value, absoluteUrl) {
-  return extractResources(value)
-    .map(toUnAnchoredUri)
-    .map(url => absolutizeUrl(url, absoluteUrl));
+function extractSvgResources(value) {
+  return doExtractSvgResources(value).map(toUnAnchoredUri);
+}
+
+function extractResourceUrlsFromStyleTags(doc) {
+  const urls = [...doc.querySelectorAll('style')].map(
+    s => s.textContent && extractCssResources(s.textContent),
+  );
+  return flat(urls).filter(Boolean);
 }
 
 module.exports = extractSvgResources;

@@ -1,2 +1,4 @@
 test/fixtures/test-app/dist
 node_modules
+.debug
+.vscode

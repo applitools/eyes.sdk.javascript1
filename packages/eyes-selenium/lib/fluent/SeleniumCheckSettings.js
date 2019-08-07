@@ -263,15 +263,15 @@ class SeleniumCheckSettings extends CheckSettings {
    */
   scrollRootElement(element) {
     if (EyesWebElement.isLocator(element)) {
-      if (this._frameChain.size() === 0) {
+      if (this._frameChain.length === 0) {
         this._scrollRootSelector = element;
       } else {
-        this._frameChain.get(this._frameChain.size() - 1).setScrollRootSelector(element);
+        this._frameChain[this._frameChain.length - 1].setScrollRootSelector(element);
       }
-    } else if (this._frameChain.size() === 0) {
+    } else if (this._frameChain.length === 0) {
       this._scrollRootElement = element;
     } else {
-      this._frameChain.get(this._frameChain.size() - 1).setScrollRootElement(element);
+      this._frameChain[this._frameChain.length - 1].setScrollRootElement(element);
     }
 
     return this;

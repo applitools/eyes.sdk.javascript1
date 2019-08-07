@@ -5,7 +5,7 @@ const {Logger} = require('@applitools/eyes-common');
 
 const throatPkg = require('throat');
 const makeGetAllResources = require('./getAllResources');
-const makeExtractCssResources = require('./extractCssResources');
+const extractCssResources = require('./extractCssResources');
 const makeFetchResource = require('./fetchResource');
 const createResourceCache = require('./createResourceCache');
 const makeWaitForRenderedStatus = require('./waitForRenderedStatus');
@@ -94,7 +94,6 @@ function makeRenderingGridClient({
   } = getRenderMethods(renderWrapper);
   const resourceCache = createResourceCache();
   const fetchCache = createResourceCache();
-  const extractCssResources = makeExtractCssResources(logger);
 
   const fetchWithTimeout = (url, opt) =>
     ptimeoutWithError(fetch(url, opt), fetchResourceTimeout, 'fetche timed out');

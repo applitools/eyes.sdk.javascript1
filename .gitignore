@@ -16,10 +16,11 @@ package-lock.json
 
 # Dependency directory
 node_modules
-/packages/visual-grid-client/test/fixtures/test-app/dist/*
 
 # Other
 .DS_STORE
 .eslintcache
 *.swp
 *~
+/packages/visual-grid-client/test/fixtures/test-app/dist/*
+packages/visual-grid-client/test/fixtures/src/*

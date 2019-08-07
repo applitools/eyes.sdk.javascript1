@@ -1,6 +1,6 @@
 {
   "name": "@applitools/dom-utils",
-  "version": "4.6.23",
+  "version": "4.6.24",
   "description": "Applitools DOM Utils is a shared utility package",
   "keywords": [
     "dom-utils",
@@ -25,12 +25,12 @@
   "main": "./index.js",
   "dependencies": {
     "@applitools/dom-capture": "^7.0.15",
-    "@applitools/eyes-common": "^3.8.1",
+    "@applitools/eyes-common": "^3.8.2",
     "axios": "^0.19.0"
   },
   "devDependencies": {
-    "chromedriver": "^75.0.0",
-    "mocha": "^6.1.4",
+    "chromedriver": "^75.1.0",
+    "mocha": "^6.2.0",
     "selenium-webdriver": "^4.0.0-alpha.4"
   },
   "scripts": {
