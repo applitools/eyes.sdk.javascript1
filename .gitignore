@@ -24,3 +24,5 @@ node_modules
 *~
 /packages/visual-grid-client/test/fixtures/test-app/dist/*
 packages/visual-grid-client/test/fixtures/src/*
+
+.applitools
