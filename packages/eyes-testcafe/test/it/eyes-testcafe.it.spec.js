@@ -13,10 +13,15 @@ describe('Eyes TestCafe it', () => {
     global.document = {
       title: 'Eyes TestCafe it',
     };
+
+    global.navigator = {
+      userAgent: 'Mozilla/5.0 (Linux; Android 5.0; SAMSUNG SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/2.1 Chrome/34.0.1847.76 Mobile Safari/537.36',
+    };
   });
 
   after(() => {
     delete global.document;
+    delete global.navigator;
   });
 
   it('works', async () => {

@@ -32,6 +32,7 @@ class Eyes extends EyesBase {
     this._t = t;
 
     this._getTitleClientFunction = ClientFunction(() => document.title).with({ boundTestRun: this._t }); /* globals document */
+    this._getUserAgentClientFunction = ClientFunction(() => navigator.userAgent).with({ boundTestRun: this._t }); /* globals navigator */
   }
 
   /**
@@ -112,8 +113,7 @@ class Eyes extends EyesBase {
    */
   async getInferredEnvironment() {
     try {
-      // TODO get user agent from test cafe
-      const userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36';
+      const userAgent = await this._getUserAgentClientFunction();
       return `useragent:${userAgent}`;
     } catch (ignored) {
       return undefined;
