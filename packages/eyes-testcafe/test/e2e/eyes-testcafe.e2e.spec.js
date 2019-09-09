@@ -6,16 +6,25 @@ const createTestCafe = require('testcafe');
 const path = require('path');
 
 describe('Eyes TestCafe e2e', () => {
-  it('works', async () => {
-    const testCafe = await createTestCafe('localhost', 1337);
-    try {
-      const runner = testCafe.createRunner();
-      runner.screenshots('logs/');
+  let testCafe, runner;
 
-      const failedCount = await runner.src(path.resolve(__dirname, 'testcafe/*.testcafe.js')).browsers('chrome:headless').run();
-      expect(failedCount).to.equal(0);
-    } finally {
-      await testCafe.close();
-    }
+  beforeEach(async () => {
+    testCafe = await createTestCafe('localhost', 1337);
+    runner = testCafe.createRunner();
+    runner.screenshots('logs/').browsers('chrome:headless');
+  });
+
+  afterEach(async () => {
+    await testCafe.close();
+  });
+
+  it('should match viewport screenshot', async () => {
+    const failedCount = await runner.src(path.resolve(__dirname, 'testcafe/helloworld-viewport.testcafe.js')).run();
+    expect(failedCount).to.equal(0);
+  });
+
+  it('should match region screenshot', async () => {
+    const failedCount = await runner.src(path.resolve(__dirname, 'testcafe/helloworld-region.testcafe.js')).run();
+    expect(failedCount).to.equal(0);
   });
 });

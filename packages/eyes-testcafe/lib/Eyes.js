@@ -15,8 +15,9 @@ const {
 const {
   EyesBase,
   MatchResult,
+  RegionProvider,
   NullRegionProvider,
-  EyesScreenshot,
+  EyesSimpleScreenshot,
 } = require('@applitools/eyes-sdk-core');
 
 const testcafe = require('testcafe');
@@ -33,6 +34,7 @@ class Eyes extends EyesBase {
 
     this._getTitleClientFunction = ClientFunction(() => document.title).with({ boundTestRun: this._t }); /* globals document */
     this._getUserAgentClientFunction = ClientFunction(() => navigator.userAgent).with({ boundTestRun: this._t }); /* globals navigator */
+    this._getCurrentUrlClientFunction = ClientFunction(() => window.location.href).with({ boundTestRun: this._t }); /* globals window */
   }
 
   /**
@@ -72,8 +74,11 @@ class Eyes extends EyesBase {
 
     this._logger.verbose(`check(${checkSettings}) - begin`);
 
-    const source = ''; // TODO get current url from test cafe
-    const result = await this.checkWindowBase(new NullRegionProvider(), name, false, checkSettings, source);
+    const targetRegion = checkSettings.getTargetRegion();
+    const regionProvider = targetRegion ? new RegionProvider(targetRegion) : new NullRegionProvider();
+    // const regionProvider = new RegionProvider(targetRegion || Region.EMPTY); // better
+    const source = await this._getCurrentUrlClientFunction();
+    const result = await this.checkWindowBase(regionProvider, name, false, checkSettings, source);
 
     // TODO stuff ?
 
@@ -133,7 +138,7 @@ class Eyes extends EyesBase {
     try {
       const buff = fs.readFileSync(screenshotPath);
       const mutableImage = new MutableImage(buff);
-      return new EyesScreenshot(mutableImage);
+      return new EyesSimpleScreenshot(mutableImage);
     } finally {
       const screenshotFolder = path.dirname(screenshotPath);
       rmrf.sync(screenshotFolder);
