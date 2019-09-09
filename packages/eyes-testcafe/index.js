@@ -4,6 +4,7 @@ const common = require('@applitools/eyes-common');
 const core = require('@applitools/eyes-sdk-core');
 
 exports.Eyes = require('./lib/Eyes').Eyes;
+exports.Target = require('./lib/fluent/Target').Target;
 
 
 // eyes-common

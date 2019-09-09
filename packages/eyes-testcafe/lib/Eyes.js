@@ -15,12 +15,11 @@ const {
 const {
   EyesBase,
   MatchResult,
-  RegionProvider,
-  NullRegionProvider,
   EyesSimpleScreenshot,
 } = require('@applitools/eyes-sdk-core');
 
 const testcafe = require('testcafe');
+const getRegionProvider = require('./positioning/getRegionProvider');
 
 const VERSION = require('../package.json').version;
 
@@ -74,9 +73,7 @@ class Eyes extends EyesBase {
 
     this._logger.verbose(`check(${checkSettings}) - begin`);
 
-    const targetRegion = checkSettings.getTargetRegion();
-    const regionProvider = targetRegion ? new RegionProvider(targetRegion) : new NullRegionProvider();
-    // const regionProvider = new RegionProvider(targetRegion || Region.EMPTY); // better
+    const regionProvider = getRegionProvider({ checkSettings, t: this._t });
     const source = await this._getCurrentUrlClientFunction();
     const result = await this.checkWindowBase(regionProvider, name, false, checkSettings, source);
 

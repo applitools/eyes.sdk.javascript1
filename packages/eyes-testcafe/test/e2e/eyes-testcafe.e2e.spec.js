@@ -27,4 +27,9 @@ describe('Eyes TestCafe e2e', () => {
     const failedCount = await runner.src(path.resolve(__dirname, 'testcafe/helloworld-region.testcafe.js')).run();
     expect(failedCount).to.equal(0);
   });
+
+  it('should match element screenshot', async () => {
+    const failedCount = await runner.src(path.resolve(__dirname, 'testcafe/helloworld-element.testcafe.js')).run();
+    expect(failedCount).to.equal(0);
+  });
 });
