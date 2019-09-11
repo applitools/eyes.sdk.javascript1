@@ -3,9 +3,7 @@
 const path = require('path');
 const { describe, it } = require('mocha');
 const { expect } = require('chai');
-const { CheckSettings } = require('@applitools/eyes-sdk-core');
-const { Configuration } = require('@applitools/eyes-common');
-const { Eyes, TestResultsStatus } = require('../../');
+const { Eyes, TestResultsStatus, Target, Configuration } = require('../../');
 const { makeFakeT, makeFakeTestCafe } = require('../util/fake-testcafe');
 
 describe('Eyes TestCafe it', () => {
@@ -30,7 +28,7 @@ describe('Eyes TestCafe it', () => {
     const configuration = new Configuration({ showLogs: !!process.env.APPLITOOLS_SHOW_LOGS, viewportSize: { width: 800, height: 600 } });
     const eyes = new Eyes({ t, configuration, ClientFunction });
     await eyes.open('TestCafe app', 'TestCafe Eyes it helloworld');
-    await eyes.check('TestCafe helloworld', new CheckSettings());
+    await eyes.check('TestCafe helloworld', Target.window());
     const testResults = await eyes.close();
     expect(testResults.getStatus()).to.equal(TestResultsStatus.Passed);
   });

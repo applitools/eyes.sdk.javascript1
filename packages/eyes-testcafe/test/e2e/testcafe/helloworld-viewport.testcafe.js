@@ -6,8 +6,6 @@ const { Configuration } = require('@applitools/eyes-common');
 const { Eyes, Target } = require('../../../');
 
 fixture`Hello world`.page`https://applitools.com/helloworld`; // eslint-disable-line no-unused-expressions
-// .afterEach(async () => eyes.close())
-// .after(async () => eyes.waitForResults(true));
 
 test('helloworld viewport', async (t) => {
   const configuration = new Configuration({ showLogs: !!process.env.APPLITOOLS_SHOW_LOGS, viewportSize: { width: 800, height: 600 } });

@@ -8,6 +8,7 @@ exports.Target = require('./lib/fluent/Target').Target;
 
 
 // eyes-common
+exports.Configuration = common.Configuration;
 exports.EyesError = common.EyesError;
 exports.PropertyData = common.PropertyData;
 exports.ProxySettings = common.ProxySettings;
