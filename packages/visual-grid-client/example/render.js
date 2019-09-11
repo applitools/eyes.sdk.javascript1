@@ -2,7 +2,8 @@
 
 const puppeteer = require('puppeteer');
 const {makeVisualGridClient} = require('../src/visual-grid-client');
-const {getProcessPageAndSerializeScript} = require('@applitools/dom-snapshot');
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot');
+const {Logger} = require('@applitools/eyes-common');
 const {delay: _delay} = require('@applitools/functional-commons');
 const debug = require('debug')('eyes:render');
 
@@ -18,7 +19,7 @@ const debug = require('debug')('eyes:render');
 
   const {openEyes} = makeVisualGridClient({
     apiKey: process.env.APPLITOOLS_API_KEY,
-    showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
+    logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS, 'eyes:vgc'),
     proxy: process.env.APPLITOOLS_PROXY,
   });
 
@@ -33,7 +34,7 @@ const debug = require('debug')('eyes:render');
 
   const browser = await puppeteer.launch({headless: true});
   const page = await browser.newPage();
-  const processPageAndSerialize = `(${await getProcessPageAndSerializeScript()})()`;
+  const processPageAndSerialize = `(${await getProcessPageAndSerialize()})()`;
 
   await page.setViewport({width: 1024, height: 768});
   await page.goto(website);

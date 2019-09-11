@@ -40,6 +40,7 @@ function makeOpenEyes({
   compareWithParentBranch: _compareWithParentBranch,
   ignoreBaseline: _ignoreBaseline,
   userAgent: _userAgent,
+  referrer: _referrer,
   createRGridDOMAndGetResourceMapping: _createRGridDOMAndGetResourceMapping,
   apiKey,
   proxy,
@@ -59,6 +60,7 @@ function makeOpenEyes({
     displayName,
     wrappers,
     userAgent = _userAgent,
+    referrer = _referrer,
     appName = _appName,
     browser = _browser,
     saveDebugData = _saveDebugData,
@@ -165,12 +167,11 @@ function makeOpenEyes({
     let checkWindowPromises = wrappers.map(() => Promise.resolve());
     const testController = makeTestContorler({testName, numOfTests: wrappers.length, logger});
 
-    const createRGridDOMAndGetResourceMapping = userAgent
-      ? async args =>
-          _createRGridDOMAndGetResourceMapping(
-            Object.assign({fetchOptions: {headers: {'User-Agent': userAgent}}}, args),
-          )
-      : _createRGridDOMAndGetResourceMapping;
+    const headers = {'User-Agent': userAgent, Referer: referrer};
+    const createRGridDOMAndGetResourceMapping =
+      headers['User-Agent'] || headers['Referer']
+        ? arg => _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, arg))
+        : _createRGridDOMAndGetResourceMapping;
 
     const checkWindow = makeCheckWindow({
       testController,

@@ -1,6 +1,6 @@
 'use strict';
 
-const {getProcessPageAndPollScript} = require('@applitools/dom-snapshot');
+const {getProcessPageAndSerializePoll} = require('@applitools/dom-snapshot');
 const {GeneralUtils} = require('@applitools/eyes-common');
 
 const PULL_TIMEOUT = 200; // ms
@@ -9,7 +9,7 @@ const CAPTURE_DOM_TIMEOUT_MS = 5 * 60 * 1000; // 5 min
 let captureScript;
 async function getScript() {
   if (!captureScript) {
-    const processPageAndPollScript = await getProcessPageAndPollScript();
+    const processPageAndPollScript = await getProcessPageAndSerializePoll();
     captureScript = `${processPageAndPollScript} return __processPageAndPoll();`;
   }
 
