@@ -95,13 +95,13 @@ describe('createRGridDOMAndGetResourceMapping', () => {
         {
           url: testUrl,
           cdt: testCdt,
-          resourceUrls: ['test.css'],
+          resourceUrls: [`${baseUrl}/test.css`],
           resourceContents: {},
         },
         {
           url: innerFrameUrl,
           cdt: innerFrameCdt,
-          resourceUrls: [imgName],
+          resourceUrls: [imgUrl],
           resourceContents: {},
         },
       ],

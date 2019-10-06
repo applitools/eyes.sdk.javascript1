@@ -19,6 +19,10 @@
     "mocha-no-only"
   ],
   "rules": {
+    "strict": ["error", "safe"],
+    "arrow-parens": ["error", "as-needed", {"requireForBlockBody": true}],
+    "max-classes-per-file": ["off"],
+    "prefer-object-spread": ["off"],
     "prefer-const": ["error", {"destructuring": "all"}],
     "one-var": ["error", {"initialized": "never"}],
     "comma-dangle": ["error", {

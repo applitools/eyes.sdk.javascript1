@@ -17,7 +17,7 @@ class GetRegion extends GetSelector {
   /**
    * @param {EyesBase} eyesBase
    * @param {EyesScreenshot} screenshot
-   * @return {Promise<Region>}
+   * @return {Promise<Region[]>}
    */
   async getRegion(eyesBase, screenshot) {
     throw new TypeError('The method is not implemented!');

@@ -593,6 +593,20 @@ class EyesAbstract {
   }
 
   /**
+   * @param {string} displayName - The display name of the currently running test.
+   */
+  setDisplayName(displayName) {
+    this._configuration.setDisplayName(displayName);
+  }
+
+  /**
+   * @return {?string} - The display name of the currently running test.
+   */
+  getDisplayName() {
+    return this._configuration.getDisplayName();
+  }
+
+  /**
    * @return {ImageMatchSettings} - The match settings used for the session.
    */
   getDefaultMatchSettings() {

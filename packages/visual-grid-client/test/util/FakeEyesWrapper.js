@@ -1,6 +1,7 @@
 'use strict';
 const {
   MatchResult,
+  TestResults,
   RenderStatusResults,
   RenderStatus,
   Location,
@@ -30,6 +31,8 @@ const selectorsToLocations = {
   sel4: {x: 200, y: 201, width: 202, height: 203},
   sel5: {x: 300, y: 301, width: 302, height: 303},
   sel6: {x: 400, y: 401, width: 402, height: 403},
+  sel7: {x: 500, y: 501, width: 502, height: 503},
+  sel8: {x: 600, y: 601, width: 602, height: 603},
 };
 
 class FakeEyesWrapper extends EventEmitter {
@@ -40,6 +43,7 @@ class FakeEyesWrapper extends EventEmitter {
     goodResources = [],
     closeErr = false,
     failRender,
+    batchId = '1',
   }) {
     super();
     this._logger = {
@@ -51,11 +55,14 @@ class FakeEyesWrapper extends EventEmitter {
     this.goodResources = goodResources;
     this.goodTags = goodTags;
     this.batch;
+    this.batchId = batchId;
     this.baseUrl = 'http://fake';
     this.resultsRoute = '/results_url';
     this.matchLevel = 'Strict';
+    this.accessibilityLevel = 'None';
     this.closeErr = closeErr;
     this.failRender = failRender;
+    this._serverConnector = {deleteBatchSessions: () => {}};
   }
 
   async open(_appName, _testName, _viewportSize) {
@@ -193,7 +200,7 @@ class FakeEyesWrapper extends EventEmitter {
     this.emit('closed');
     this.closed = !this.aborted;
     if (this.closeErr || this.results.find(r => !r.getAsExpected())) throw new Error('mismatch');
-    return this.results;
+    return this.resultsToTestResults(this.results);
   }
 
   async abort() {
@@ -204,6 +211,20 @@ class FakeEyesWrapper extends EventEmitter {
   async ensureAborted() {}
 
   setAssumedConfiguration() {}
+
+  resultsToTestResults(results) {
+    const steps = Array.from(new Array(results.length).map(() => ({})));
+    const tr = new TestResults({stepsInfo: steps});
+    const trSteps = tr.getStepsInfo();
+    for (const [i, result] of results.entries()) {
+      trSteps[i].result = result;
+    }
+    return tr;
+  }
+
+  setDummyTestResults() {
+    this.results.push({getAsExpected: () => true});
+  }
 
   getExpectedCdt() {
     return loadJsonFixture(this.goodFilename);
@@ -261,6 +282,14 @@ class FakeEyesWrapper extends EventEmitter {
 
   getMatchLevel() {
     return this.matchLevel;
+  }
+
+  setAccessibilityLevel(value) {
+    this.accessibilityLevel = value;
+  }
+
+  getAccessibilityLevel() {
+    return this.accessibilityLevel;
   }
 
   setParentBranchName(value) {
@@ -335,6 +364,14 @@ class FakeEyesWrapper extends EventEmitter {
     return this.useDom;
   }
 
+  setDisplayName(displayName) {
+    this.displayName = displayName;
+  }
+
+  getDisplayName() {
+    return this.displayName;
+  }
+
   getDeviceInfo() {
     return this.deviceInfo;
   }
@@ -357,6 +394,10 @@ class FakeEyesWrapper extends EventEmitter {
 
   getIgnoreDisplacements() {
     return this.ignoreDisplacements;
+  }
+
+  getExistingBatchId() {
+    return this.batchId;
   }
 }
 

@@ -3,12 +3,10 @@
 const fs = require('fs');
 const {promisify} = require('util');
 const {resolve} = require('path');
-const rimrafCB = require('rimraf');
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
-const rimraf = promisify(rimrafCB);
 const URL = require('url').URL;
-const DIR_NAME = '.debug';
+const DIR_NAME = '.applitools';
 
 async function handleBrowserDebugData({frame, metaData = {}, dirPath = DIR_NAME, logger}) {
   if (
@@ -20,34 +18,42 @@ async function handleBrowserDebugData({frame, metaData = {}, dirPath = DIR_NAME,
   }
 
   const isMainDir = dirPath === DIR_NAME;
-  const path = resolve(process.cwd(), dirPath);
+  let path = resolve(process.cwd(), dirPath);
   if (!fs.existsSync(path)) {
-    await mkdir(path);
-  } else if (isMainDir) {
-    await rimraf(path);
     await mkdir(path);
   }
 
-  await Promise.all([
-    createFrameData(frame, path),
-    frame.frames.map((f, i) =>
-      handleBrowserDebugData({frame: f, dirPath: resolve(path, `frame-${i}`), logger}),
-    ),
-  ]);
   if (isMainDir) {
-    await createMetaDataFile(path);
+    path = resolve(path, `browser-snapshot-${new Date().toISOString()}`);
+    await mkdir(path);
     logger.log(`resource data saved to ${path}`);
   }
 
-  async function createMetaDataFile(dirPath) {
-    await writeFile(
-      resolve(dirPath, `INFO-${new Date().toISOString()}.json`),
-      JSON.stringify(Object.assign(metaData, {createdAt: new Date().toISOString()}), null, 2),
-    );
-  }
+  const sanitizeFileName = s => s.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  await Promise.all([
+    createFrameData(frame, path),
+    frame.frames.map(f =>
+      handleBrowserDebugData({
+        frame: f,
+        dirPath: resolve(path, sanitizeFileName(f.url)),
+        logger,
+      }),
+    ),
+  ]);
 
   async function createFrameData(frame, dirPath) {
     await writeFile(resolve(dirPath, 'cdt.json'), JSON.stringify(frame.cdt, null, 2));
+    await writeFile(
+      resolve(dirPath, 'info.json'),
+      JSON.stringify(
+        Object.assign(metaData, {
+          url: frame.url,
+          srcAttr: frame.srcAttr,
+        }),
+        null,
+        2,
+      ),
+    );
     await writeFile(
       resolve(dirPath, 'resourceUrls.json'),
       JSON.stringify(frame.resourceUrls, null, 2),

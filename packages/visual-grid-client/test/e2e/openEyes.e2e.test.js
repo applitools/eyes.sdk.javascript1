@@ -7,7 +7,7 @@ const makeRenderingGridClient = require('../../src/sdk/renderingGridClient');
 const testServer = require('../util/testServer');
 const {presult} = require('@applitools/functional-commons');
 const {DiffsFoundError} = require('@applitools/eyes-sdk-core');
-const {getProcessPageAndSerializeScript} = require('@applitools/dom-snapshot');
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot');
 const fs = require('fs');
 const {resolve} = require('path');
 
@@ -40,7 +40,7 @@ describe('openEyes', () => {
 
     await page.setCookie({name: 'auth', value: 'secret', url: baseUrl});
 
-    const processPageAndSerializeScript = await getProcessPageAndSerializeScript();
+    const processPageAndSerializeScript = await getProcessPageAndSerialize();
     processPageAndSerialize = () => page.evaluate(`(${processPageAndSerializeScript})()`);
   });
 

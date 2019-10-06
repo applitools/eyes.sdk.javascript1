@@ -21,6 +21,8 @@ class ClassicRunner extends EyesRunner {
     for (const testResults of this._allTestResult) {
       allResults.push(new TestResultContainer(testResults));
     }
+
+    await this._closeAllBatches();
     return new TestResultsSummary(allResults);
   }
 }

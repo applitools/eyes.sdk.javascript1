@@ -28,7 +28,7 @@ class FloatingRegionByElement extends GetFloatingRegion {
    * @inheritDoc
    * @param {Eyes} eyes
    * @param {EyesScreenshot} screenshot
-   * @return {Promise<FloatingMatchSettings>}
+   * @return {Promise<FloatingMatchSettings[]>}
    */
   async getRegion(eyes, screenshot) { // eslint-disable-line no-unused-vars
     const rect = await this._element.getRect();
@@ -38,7 +38,7 @@ class FloatingRegionByElement extends GetFloatingRegion {
       CoordinatesType.SCREENSHOT_AS_IS
     );
 
-    return new FloatingMatchSettings({
+    const floatingRegion = new FloatingMatchSettings({
       left: lTag.getX(),
       top: lTag.getY(),
       width: rect.width,
@@ -48,6 +48,7 @@ class FloatingRegionByElement extends GetFloatingRegion {
       maxLeftOffset: this._maxLeftOffset,
       maxRightOffset: this._maxRightOffset,
     });
+    return [floatingRegion];
   }
 }
 

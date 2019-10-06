@@ -1,18 +1,14 @@
 'use strict';
 
-const { makeVisualGridClient } = require('@applitools/visual-grid-client');
-const { getProcessPageAndPollScript } = require('@applitools/dom-snapshot');
-const { ArgumentGuard, TypeUtils, GeneralUtils } = require('@applitools/eyes-common');
+const { makeVisualGridClient, takeDomSnapshot } = require('@applitools/visual-grid-client');
+const { ArgumentGuard, TypeUtils, EyesError, UserAgent, BrowserType } = require('@applitools/eyes-common');
 const { CorsIframeHandle, CorsIframeHandler, IgnoreRegionByRectangle } = require('@applitools/eyes-sdk-core');
 
 const { TestResultsSummary } = require('./runner/TestResultsSummary');
 const { VisualGridRunner } = require('./runner/VisualGridRunner');
-const { BrowserType } = require('./config/BrowserType');
 const { Eyes } = require('./Eyes');
 
 const VERSION = require('../package.json').version;
-
-const CAPTURE_DOM_TIMEOUT_MS = 5 * 60 * 1000; // 5 min
 
 /**
  * @ignore
@@ -32,10 +28,12 @@ class EyesVisualGrid extends Eyes {
     super(serverUrl, isDisabled, runner);
 
     this._isVisualGrid = true;
+    /** @type {UserAgent} */
+    this._userAgent = undefined;
 
-    /** @type {string} */ this._processResourcesScript = undefined;
     /** @function */ this._checkWindowCommand = undefined;
     /** @function */ this._closeCommand = undefined;
+    /** @function */ this._abortCommand = undefined;
     /** @type {Promise} */ this._closePromise = undefined;
   }
 
@@ -71,6 +69,11 @@ class EyesVisualGrid extends Eyes {
 
     await this._initDriver(driver);
 
+    const uaString = await this._driver.getUserAgent();
+    if (uaString) {
+      this._userAgent = UserAgent.parseUserAgentString(uaString, true);
+    }
+
     const { openEyes } = makeVisualGridClient({
       logger: this._logger,
       agentId: this.getFullAgentId(),
@@ -83,8 +86,6 @@ class EyesVisualGrid extends Eyes {
       renderConcurrencyFactor: this._configuration.getConcurrentSessions(),
     });
 
-    this._processResourcesScript = await getProcessPageAndPollScript();
-
     if (this._configuration.getViewportSize()) {
       await this.setViewportSize(this._configuration.getViewportSize());
 
@@ -93,9 +94,10 @@ class EyesVisualGrid extends Eyes {
       }
     }
 
-    const { checkWindow, close } = await openEyes({
+    const { checkWindow, close, abort } = await openEyes({
       appName: this._configuration.getAppName(),
       testName: this._configuration.getTestName(),
+      displayName: this._configuration.getDisplayName(),
       browser: this._configuration.getBrowsersInfo(),
       properties: this._configuration.getProperties(),
       batchSequenceName: this._configuration.getBatch() && this._configuration.getBatch().getSequenceName(),
@@ -131,6 +133,7 @@ class EyesVisualGrid extends Eyes {
 
       throw err;
     });
+    this._abortCommand = async () => abort(true);
 
     return this._driver;
   }
@@ -191,37 +194,22 @@ class EyesVisualGrid extends Eyes {
    * @return {Promise<?TestResults>}
    */
   async abort() {
-    return null; // TODO - implement?
+    if (typeof this._abortCommand === 'function') {
+      if (this._closePromise) {
+        this._logger.verbose('Can not abort while closing async, abort added to close promise.');
+        return this._closePromise.then(() => this._abortCommand(true));
+      }
+
+      return this._abortCommand();
+    }
+    return null;
   }
 
   /**
-   * @private
-   * @param {EyesWebDriver} driver
-   * @param {Logger} logger
-   * @param {string} processResourcesScript
-   * @param {number} startTime
-   * @return {Promise<object>}
+   * @return {Promise}
    */
-  static async _capturePageDom(driver, logger, processResourcesScript, startTime = Date.now()) {
-    let /** @type {{value: object, status: string, error: string}} */ scriptResponse;
-
-    try {
-      const resultAsString = await driver.executeScript(`${processResourcesScript} return __processPageAndPoll();`);
-      scriptResponse = JSON.parse(resultAsString);
-    } catch (err) {
-      logger.log('Failed to execute script to capture DOM:', err);
-    }
-
-    if ((Date.now() - startTime) >= CAPTURE_DOM_TIMEOUT_MS) {
-      throw new Error('Timeout is reached for capture DOM.');
-    } else if (scriptResponse.status === 'SUCCESS') {
-      return scriptResponse.value;
-    } else if (scriptResponse.status === 'ERROR') {
-      throw new Error(`Failed to capture DOM: ${scriptResponse.error}`);
-    }
-
-    await GeneralUtils.sleep(200);
-    return EyesVisualGrid._capturePageDom(driver, logger, processResourcesScript, startTime);
+  async abortAsync() {
+    this._closePromise = this.abort();
   }
 
   /**
@@ -234,56 +222,61 @@ class EyesVisualGrid extends Eyes {
       checkSettings.withName(name);
     }
 
+    // check if we need a region of screenshot, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
     let targetSelector = await checkSettings.getTargetProvider();
     if (targetSelector) {
       targetSelector = await targetSelector.getSelector(this);
     }
 
-    this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`);
-
-    let pageDomResults;
-    try {
-      pageDomResults = await EyesVisualGrid._capturePageDom(this._driver, this._logger, this._processResourcesScript);
-    } catch (e) {
-      throw new Error(`Failed to extract DOM from the page: ${e.toString()}`);
-    }
-
-    const { cdt, url: pageUrl, blobs, resourceUrls, frames } = pageDomResults;
-
-    if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
-      CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames);
-    }
-
-    const resourceContents = this._blobsToResourceContents(blobs);
-    if (frames && frames.length > 0) {
-      for (let i = 0; i < frames.length; i += 1) {
-        frames[i].resourceContents = this._blobsToResourceContents(frames[i].blobs);
-        delete frames[i].blobs;
-      }
-    }
-
-    this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`);
-
-    const source = await this._driver.getCurrentUrl();
+    // prepare regions, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
     const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions());
 
-    await this._checkWindowCommand({
-      resourceUrls,
-      resourceContents,
-      frames,
-      url: pageUrl,
-      cdt,
-      tag: checkSettings.getName(),
-      sizeMode: checkSettings.getSizeMode() === 'viewport' && this.getForceFullPageScreenshot() ? 'full-page' : checkSettings.getSizeMode(),
-      selector: targetSelector,
-      region: checkSettings.getTargetRegion(),
-      scriptHooks: checkSettings.getScriptHooks(),
-      ignore: ignoreRegions,
-      floating: checkSettings.getFloatingRegions(),
-      sendDom: checkSettings.getSendDom() ? checkSettings.getSendDom() : this.getSendDom(),
-      matchLevel: checkSettings.getMatchLevel() ? checkSettings.getMatchLevel() : this.getMatchLevel(),
-      source,
-    });
+    try {
+      this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`);
+
+      const pageDomResults = await takeDomSnapshot({
+        executeScript: this._driver.executeScript.bind(this._driver),
+        browser: this._userAgent.getBrowser(),
+      });
+
+      const { cdt, url: pageUrl, blobs, resourceUrls, frames } = pageDomResults;
+
+      if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
+        CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames);
+      }
+
+      const resourceContents = this._blobsToResourceContents(blobs);
+      if (frames && frames.length > 0) {
+        for (let i = 0; i < frames.length; i += 1) {
+          frames[i].resourceContents = this._blobsToResourceContents(frames[i].blobs);
+          delete frames[i].blobs;
+        }
+      }
+
+      this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`);
+
+      const source = await this._driver.getCurrentUrl();
+
+      await this._checkWindowCommand({
+        resourceUrls,
+        resourceContents,
+        frames,
+        url: pageUrl,
+        cdt,
+        tag: checkSettings.getName(),
+        sizeMode: checkSettings.getSizeMode() === 'viewport' && this.getForceFullPageScreenshot() ? 'full-page' : checkSettings.getSizeMode(),
+        selector: targetSelector,
+        region: checkSettings.getTargetRegion(),
+        scriptHooks: checkSettings.getScriptHooks(),
+        ignore: ignoreRegions,
+        floating: checkSettings.getFloatingRegions(),
+        sendDom: checkSettings.getSendDom() ? checkSettings.getSendDom() : this.getSendDom(),
+        matchLevel: checkSettings.getMatchLevel() ? checkSettings.getMatchLevel() : this.getMatchLevel(),
+        source,
+      });
+    } catch (e) {
+      throw new EyesError(`Failed to extract DOM from the page: ${e.toString()}`);
+    }
   }
 
   /**
@@ -310,8 +303,10 @@ class EyesVisualGrid extends Eyes {
 
       for (const region of regions) {
         if (region instanceof IgnoreRegionByRectangle) {
-          const plainRegion = (await region.getRegion(this, undefined)).toJSON();
-          newRegions.push(plainRegion);
+          const plainRegions = await region.getRegion(this, undefined);
+          plainRegions.forEach((plainRegion) => {
+            newRegions.push(plainRegion.toJSON());
+          });
         } else {
           const selector = await region.getSelector(this);
           newRegions.push({ selector });

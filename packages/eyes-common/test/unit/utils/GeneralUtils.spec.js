@@ -114,6 +114,10 @@ describe('GeneralUtils', () => {
     it('should concat multiple arguments', () => {
       assert.strictEqual(GeneralUtils.stringify(4, 'str', { prop: 'bla' }), '4 str {"prop":"bla"}');
     });
+
+    it('should stringify array of objects', () => {
+      assert.strictEqual(GeneralUtils.stringify([{ prop: 'bla' }, { prop: 'blo' }]), '[{"prop":"bla"},{"prop":"blo"}]');
+    });
   });
 
   describe('cartesianProduct()', () => {

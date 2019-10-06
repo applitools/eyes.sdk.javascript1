@@ -11,7 +11,7 @@ function makeFetchResource({logger, retries = 5, fetchCache = createResourceCach
       retry => {
         const retryStr = retry ? `(retry ${retry}/${retries})` : '';
         const optsStr = JSON.stringify(opts) || '';
-        logger.log(`fetching ${url} ${retryStr} ${optsStr}`);
+        logger.verbose(`fetching ${url} ${retryStr} ${optsStr}`);
 
         return fetch(url, opts).then(resp =>
           (resp.buffer ? resp.buffer() : resp.arrayBuffer().then(buff => Buffer.from(buff))).then(
@@ -25,7 +25,7 @@ function makeFetchResource({logger, retries = 5, fetchCache = createResourceCach
       },
       {retries},
     ).then(result => {
-      logger.log(`fetched ${url}`);
+      logger.verbose(`fetched ${url}`);
       return result;
     });
   }

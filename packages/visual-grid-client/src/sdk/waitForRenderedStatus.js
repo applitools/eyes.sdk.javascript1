@@ -7,7 +7,13 @@ const psetTimeout = t =>
     setTimeout(res, t);
   });
 
-const failMsg = renderId => `failed to render screenshot${renderId ? ' ' + renderId : ''}`;
+const failMsg = (renderId, err) => {
+  let msg = `failed to render screenshot${renderId ? ' ' + renderId : ''}`;
+  if (err) {
+    msg = `${msg} got error: ${err}`;
+  }
+  return msg;
+};
 
 function makeWaitForRenderedStatus({timeout = 3600000, logger, getRenderStatus}) {
   return async function waitForRenderedStatus(renderId, stopCondition = () => {}) {
@@ -36,7 +42,7 @@ function makeWaitForRenderedStatus({timeout = 3600000, logger, getRenderStatus})
 
         const status = rs.getStatus();
         if (status === RenderStatus.ERROR) {
-          return reject(new Error(failMsg(renderId)));
+          return reject(new Error(failMsg(renderId, rs.getError())));
         } else if (status === RenderStatus.RENDERED) {
           return resolve(rs.toJSON());
         }
@@ -47,7 +53,7 @@ function makeWaitForRenderedStatus({timeout = 3600000, logger, getRenderStatus})
     });
 
     function log(msg) {
-      logger.log(`[waitForRenderedStatus] ${msg}`);
+      logger.verbose(`[waitForRenderedStatus] ${msg}`);
     }
   };
 }

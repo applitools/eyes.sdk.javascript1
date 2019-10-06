@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const testServer = require('../util/testServer');
 const fs = require('fs');
 const path = require('path');
-const {getProcessPageAndSerializeScript} = require('@applitools/dom-snapshot');
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot');
 
 describe('browser visual grid', () => {
   let baseUrl, closeServer;
@@ -41,7 +41,7 @@ describe('browser visual grid', () => {
 
   it('passes with correct screenshot', async () => {
     await page.goto(`${baseUrl}/test.html`);
-    const processPageAndSerializeScript = await getProcessPageAndSerializeScript();
+    const processPageAndSerializeScript = await getProcessPageAndSerialize();
     await page.evaluate(browserVisualGrid);
     const results = await page.evaluate(`const { openEyes } = makeRenderingGridClient({ apiKey: '${apiKey}' });
     openEyes({

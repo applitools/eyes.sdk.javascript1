@@ -3,13 +3,23 @@
 const axios = require('axios');
 const { URL } = require('url');
 
-const { ArgumentGuard, Location, GeneralUtils, PerformanceUtils } = require('@applitools/eyes-common');
-const { getCaptureDomScript } = require('@applitools/dom-capture');
+const { ArgumentGuard, Location, GeneralUtils, PerformanceUtils, EyesError } = require('@applitools/eyes-common');
+const { getCaptureDomAndPollScript } = require('@applitools/dom-capture');
 
 const DomCaptureReturnType = {
   OBJECT: 'OBJECT',
   STRING: 'STRING',
 };
+
+const SCRIPT_RESPONSE_STATUS = {
+  WIP: 'WIP',
+  ERROR: 'ERROR',
+  SUCCESS: 'SUCCESS',
+};
+
+const DOM_EXTRACTION_TIMEOUT = 5 * 60 * 1000;
+const DOM_CAPTURE_PULL_TIMEOUT = 200; // ms
+const DOCUMENT_LOCATION_HREF_SCRIPT = 'return document.location.href';
 
 /**
  * @ignore
@@ -55,16 +65,12 @@ class DomCapture {
    * @return {Promise<{string}>}
    */
   async getWindowDom() {
-    const captureDomScript = await getCaptureDomScript();
+    const captureDomScript = await getCaptureDomAndPollScript();
 
-    const asyncCaptureDomScript =
-      `var callback = arguments[arguments.length - 1];
-      (${captureDomScript})().then(res => {
-        return callback(res)
-      })`;
+    const script = `${captureDomScript} return __captureDomAndPoll();`;
     const url = await this._driver.getCurrentUrl();
 
-    return this.getFrameDom(asyncCaptureDomScript, url);
+    return this.getFrameDom(script, url);
   }
 
   /**
@@ -73,9 +79,28 @@ class DomCapture {
    * @return {Promise<{string}>}
    */
   async getFrameDom(script, url) {
-    const domSnapshotRaw = await this._driver.executeAsyncScript(script);
+    let result;
 
-    const domSnapshotRawArr = domSnapshotRaw ? domSnapshotRaw.split('\n') : [];
+    let isCheckTimerTimedOut = false;
+    setTimeout(() => {
+      isCheckTimerTimedOut = true;
+    }, DOM_EXTRACTION_TIMEOUT);
+
+    do {
+      const resultAsString = await this._driver.executeScript(script);
+      result = JSON.parse(resultAsString);
+      await GeneralUtils.sleep(DOM_CAPTURE_PULL_TIMEOUT);
+    } while (result.status === SCRIPT_RESPONSE_STATUS.WIP && !isCheckTimerTimedOut);
+
+    if (result.status === SCRIPT_RESPONSE_STATUS.ERROR) {
+      throw new EyesError('Error during capturing DOM', result.error);
+    }
+
+    if (isCheckTimerTimedOut) {
+      throw new EyesError('DomCapture Timed out');
+    }
+
+    const domSnapshotRawArr = result && result.value ? result.value.split('\n') : [];
 
     if (domSnapshotRawArr.length === 0) {
       return {};
@@ -111,19 +136,32 @@ class DomCapture {
 
     for (const iframeXpath of iframeArr) {
       if (iframeXpath) {
-        const framesCount = await this._switchToFrame(iframeXpath);
         let domIFrame;
         try {
-          domIFrame = await this.getFrameDom(script, url);
+          const originLocation = await this.getLocation();
+
+          const framesCount = await this._switchToFrame(iframeXpath);
+
+          const locationAfterSwitch = await this.getLocation();
+          if (locationAfterSwitch === originLocation) {
+            this._logger.log('Switching to frame failed');
+            domIFrame = {};
+          } else {
+            domIFrame = await this.getFrameDom(script, url);
+            await this._switchToParentFrame(framesCount);
+          }
         } catch (ignored) {
           domIFrame = {};
         }
-        await this._switchToParentFrame(framesCount);
         domSnapshot = domSnapshot.replace(`"${separatorJson.iframeStartToken}${iframeXpath}${separatorJson.iframeEndToken}"`, domIFrame);
       }
     }
 
     return domSnapshot;
+  }
+
+  async getLocation() {
+    return this._driver.executeScript(DOCUMENT_LOCATION_HREF_SCRIPT);
   }
 
   /**

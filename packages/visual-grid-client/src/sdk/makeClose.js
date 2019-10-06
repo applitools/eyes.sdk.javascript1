@@ -1,6 +1,7 @@
 'use strict';
-const makeWaitForTestEnd = require('./makeWaitForTestEnd');
 const {presult} = require('@applitools/functional-commons');
+const makeWaitForTestEnd = require('./makeWaitForTestEnd');
+const storeBatchHandle = require('./storeBatchHandle');
 
 function makeClose({
   getCheckWindowPromises,
@@ -9,6 +10,7 @@ function makeClose({
   resolveTests,
   testController,
   logger,
+  batches,
 }) {
   const waitAndResolveTests = makeWaitForTestEnd({
     getCheckWindowPromises,
@@ -38,8 +40,21 @@ function makeClose({
       }
 
       const [closeError, closeResult] = await presult(wrappers[testIndex].close(throwEx));
-      return closeError ? ((didError = true), closeError) : closeResult;
-    }).then(results => (didError ? settleError(results) : results));
+      if (!closeError) {
+        const renderIds = testController.getRenderIds(testIndex);
+        const steps = closeResult.getStepsInfo();
+        for (const [i, renderId] of renderIds.entries()) {
+          steps[i].setRenderId(renderId);
+        }
+        return closeResult;
+      } else {
+        didError = true;
+        return closeError;
+      }
+    }).then(results => {
+      storeBatchHandle(wrappers, batches);
+      return didError ? settleError(results) : results;
+    });
   };
 }
 

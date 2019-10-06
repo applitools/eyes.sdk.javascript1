@@ -2,7 +2,7 @@
 
 /**
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const DeviceName = {
   iPhone_4: 'iPhone 4',
@@ -10,6 +10,9 @@ const DeviceName = {
   iPhone_6_7_8: 'iPhone 6/7/8',
   iPhone_6_7_8_Plus: 'iPhone 6/7/8 Plus',
   iPhone_X: 'iPhone X',
+  iPhone_11: 'iPhone 11',
+  iPhone_11_Pro: 'iPhone 11 Pro',
+  iPhone_11_Pro_Max: 'iPhone 11 Pro Max',
   iPad: 'iPad',
   iPad_Mini: 'iPad Mini',
   iPad_Pro: 'iPad Pro',

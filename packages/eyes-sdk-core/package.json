@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "5.12.2",
+  "version": "5.19.0",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -31,7 +31,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-common": "^3.8.2",
+    "@applitools/eyes-common": "^3.10.3",
     "axios": "^0.19.0",
     "es6-promise-pool": "^2.5.0"
   },

@@ -4,10 +4,12 @@ const { ArgumentGuard } = require('../utils/ArgumentGuard');
 const { GeneralUtils } = require('../utils/GeneralUtils');
 const { TypeUtils } = require('../utils/TypeUtils');
 const { MatchLevel } = require('./MatchLevel');
+const { AccessibilityLevel } = require('./AccessibilityLevel');
 const { ExactMatchSettings } = require('./ExactMatchSettings');
 
 const DEFAULT_VALUES = {
   matchLevel: MatchLevel.Strict,
+  accessibilityLevel: AccessibilityLevel.None,
   ignoreCaret: true,
   useDom: false,
   enablePatterns: false,
@@ -29,14 +31,17 @@ class ImageMatchSettings {
    * @param {Region[]} [layout]
    * @param {Region[]} [strict]
    * @param {Region[]} [content]
+   * @param {AccessibilityMatchSettings[]} [accessibility]
    * @param {FloatingMatchSettings[]} [floating]
+   * @param {AccessibilityLevel} [accessibilityLevel]
    */
-  constructor({ matchLevel, exact, ignoreCaret, useDom, enablePatterns, ignoreDisplacements, ignore, layout, strict, content, floating } = {}) {
+  constructor({ matchLevel, exact, ignoreCaret, useDom, enablePatterns, ignoreDisplacements, ignore, layout, strict, content, accessibility, floating, accessibilityLevel } = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!');
     }
 
     ArgumentGuard.isValidEnumValue(matchLevel, MatchLevel, false);
+    ArgumentGuard.isValidEnumValue(accessibilityLevel, AccessibilityLevel, false);
     ArgumentGuard.isBoolean(ignoreCaret, 'ignoreCaret', false);
     ArgumentGuard.isBoolean(useDom, 'useDom', false);
     ArgumentGuard.isBoolean(enablePatterns, 'enablePatterns', false);
@@ -45,10 +50,12 @@ class ImageMatchSettings {
     ArgumentGuard.isArray(layout, 'layout', false);
     ArgumentGuard.isArray(strict, 'strict', false);
     ArgumentGuard.isArray(content, 'content', false);
+    ArgumentGuard.isArray(accessibility, 'accessibility', false);
     ArgumentGuard.isArray(floating, 'floating', false);
     ArgumentGuard.isValidType(exact, ExactMatchSettings, false);
 
     this._matchLevel = TypeUtils.getOrDefault(matchLevel, DEFAULT_VALUES.matchLevel);
+    this._accessibilityLevel = TypeUtils.getOrDefault(accessibilityLevel, DEFAULT_VALUES.accessibilityLevel);
     this._ignoreCaret = TypeUtils.getOrDefault(ignoreCaret, DEFAULT_VALUES.ignoreCaret);
     this._useDom = TypeUtils.getOrDefault(useDom, DEFAULT_VALUES.useDom);
     this._enablePatterns = TypeUtils.getOrDefault(enablePatterns, DEFAULT_VALUES.enablePatterns);
@@ -63,6 +70,8 @@ class ImageMatchSettings {
     this._strictRegions = strict || [];
     /** @type {Region[]} */
     this._contentRegions = content || [];
+    /** @type {AccessibilityMatchSettings[]} */
+    this._accessibilityMatchSettings = accessibility || [];
     /** @type {FloatingMatchSettings[]} */
     this._floatingMatchSettings = floating || [];
   }
@@ -82,6 +91,23 @@ class ImageMatchSettings {
   setMatchLevel(value) {
     ArgumentGuard.isValidEnumValue(value, MatchLevel);
     this._matchLevel = value;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {AccessibilityLevel} - The accessablity level to use.
+   */
+  getAccessibilityLevel() {
+    return this._accessibilityLevel;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @param {AccessibilityLevel} value - The accessablity level to use.
+   */
+  setAccessibilityLevel(value) {
+    ArgumentGuard.isValidEnumValue(value, AccessibilityLevel);
+    this._accessibilityLevel = value;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -247,6 +273,24 @@ class ImageMatchSettings {
 
   // noinspection JSUnusedGlobalSymbols
   /**
+   * Sets an array of accessibility regions.
+   * @param {AccessibilityMatchSettings[]} accessibilityMatchSettings - The array of accessibility regions.
+   */
+  setAccessibilityRegions(accessibilityMatchSettings) {
+    this._accessibilityMatchSettings = accessibilityMatchSettings;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Returns an array of accessibility regions.
+   * @return {AccessibilityMatchSettings[]} - an array of accessibility regions.
+   */
+  getAccessibilityRegions() {
+    return this._accessibilityMatchSettings;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
    * Sets an array of floating regions.
    * @param {FloatingMatchSettings[]} floatingMatchSettings - The array of floating regions.
    */
@@ -264,6 +308,7 @@ class ImageMatchSettings {
       strictRegions: 'strict',
       contentRegions: 'content',
       floatingMatchSettings: 'floating',
+      accessibilityMatchSettings: 'accessibility',
     });
   }
 

@@ -8,6 +8,7 @@ const saveData = require('../troubleshoot/saveData');
 const createRenderRequests = require('./createRenderRequests');
 const createCheckSettings = require('./createCheckSettings');
 const calculateMatchRegions = require('./calculateMatchRegions');
+const isInvalidAccessibility = require('./isInvalidAccessibility');
 
 function makeCheckWindow({
   testController,
@@ -25,7 +26,9 @@ function makeCheckWindow({
   stepCounter,
   testName,
   openEyesPromises,
+  fetchHeaders,
   matchLevel: _matchLevel,
+  accessibilityLevel: _accessibilityLevel,
 }) {
   return function checkWindow({
     resourceUrls = [],
@@ -42,14 +45,17 @@ function makeCheckWindow({
     scriptHooks,
     ignore,
     floating,
+    accessibility,
     sendDom = true,
     matchLevel = _matchLevel,
+    accessibilityLevel = _accessibilityLevel,
     layout,
     strict,
     useDom,
     enablePatterns,
     ignoreDisplacements,
     source,
+    referrer,
   }) {
     if (target === 'window' && !fully) {
       sizeMode = 'viewport';
@@ -57,6 +63,13 @@ function makeCheckWindow({
       sizeMode = 'selector';
     } else if (target === 'region' && region) {
       sizeMode = 'region';
+    }
+    fetchHeaders['Referer'] = referrer;
+
+    const accErr = isInvalidAccessibility(accessibility);
+    if (accErr) {
+      testController.setFatalError(`Invalid accessibility:\n${accErr}`);
+      return;
     }
 
     const currStepCount = ++stepCounter;
@@ -69,7 +82,7 @@ function makeCheckWindow({
     if (typeof window === 'undefined') {
       const handleBrowserDebugData = require('../troubleshoot/handleBrowserDebugData');
       handleBrowserDebugData({
-        frame: {resourceUrls, resourceContents, frames, cdt},
+        frame: {resourceUrls, resourceContents, frames, cdt, url},
         metaData: {agentId: wrappers[0].getBaseAgentId()},
         logger,
       });
@@ -79,15 +92,15 @@ function makeCheckWindow({
       resourceUrls,
       resourceContents,
       cdt,
-      url,
       frames,
     });
 
     const noOffsetSelectors = {
-      all: [ignore, layout, strict],
+      all: [ignore, layout, strict, accessibility],
       ignore: 0,
       layout: 1,
       strict: 2,
+      accessibility: 3,
     };
     const offsetSelectors = {
       all: [floating],
@@ -129,8 +142,9 @@ function makeCheckWindow({
       }
 
       const renderId = renderIds[index];
+      testController.addRenderId(index, renderId);
 
-      logger.log(
+      logger.verbose(
         `render request complete for ${renderId}. test=${testName} stepCount #${currStepCount} tag=${tag} target=${target} fully=${fully} region=${JSON.stringify(
           region,
         )} selector=${JSON.stringify(selector)} browser: ${JSON.stringify(browsers[index])}`,
@@ -163,7 +177,7 @@ function makeCheckWindow({
       } = renderStatusResult;
 
       if (screenshotUrl) {
-        logger.log(`screenshot available for ${renderId} at ${screenshotUrl}`);
+        logger.verbose(`screenshot available for ${renderId} at ${screenshotUrl}`);
       } else {
         logger.log(`screenshot NOT available for ${renderId}`);
       }
@@ -176,7 +190,9 @@ function makeCheckWindow({
         wrapper.setViewportSize(deviceSize);
       }
 
-      logger.log(`checkWindow waiting for prev job. test=${testName}, stepCount #${currStepCount}`);
+      logger.verbose(
+        `checkWindow waiting for prev job. test=${testName}, stepCount #${currStepCount}`,
+      );
 
       await prevJobPromise;
 
@@ -208,13 +224,18 @@ function makeCheckWindow({
         floating: offsetRegions[offsetSelectors.floating],
         layout: noOffsetRegions[noOffsetSelectors.layout],
         strict: noOffsetRegions[noOffsetSelectors.strict],
+        accessibility: noOffsetRegions[noOffsetSelectors.accessibility],
         useDom,
         enablePatterns,
         ignoreDisplacements,
         renderId,
+        matchLevel,
+        accessibilityLevel,
       });
 
-      logger.log(`checkWindow waiting for openEyes. test=${testName}, stepCount #${currStepCount}`);
+      logger.verbose(
+        `checkWindow waiting for openEyes. test=${testName}, stepCount #${currStepCount}`,
+      );
 
       await openEyesPromises[index];
 
@@ -223,10 +244,9 @@ function makeCheckWindow({
         return;
       }
 
-      logger.log(`running wrapper.checkWindow for test ${testName} stepCount #${currStepCount}`);
-
-      const origMatchLevel = wrapper.getMatchLevel();
-      if (matchLevel !== undefined) wrapper.setMatchLevel(matchLevel);
+      logger.verbose(
+        `running wrapper.checkWindow for test ${testName} stepCount #${currStepCount}`,
+      );
 
       await wrapper.checkWindow({
         screenshotUrl,
@@ -236,8 +256,6 @@ function makeCheckWindow({
         imageLocation,
         source,
       });
-
-      wrapper.setMatchLevel(origMatchLevel); // origMatchLevel cannot be undefined because eyes-sdk-core sets the default to MatchLevel.Strict
     }
 
     async function startRender() {

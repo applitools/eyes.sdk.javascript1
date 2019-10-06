@@ -31,7 +31,7 @@ class Logger {
     ArgumentGuard.isBoolean(showLogs, 'showLogs');
     ArgumentGuard.isString(debugAppName, 'debugAppName', false);
 
-    this._logHandler = showLogs ? new ConsoleLogHandler(true) : new DebugLogHandler(false, debugAppName);
+    this._logHandler = showLogs ? new ConsoleLogHandler(true) : new DebugLogHandler(true, debugAppName);
     this._sessionId = '';
     this._isIncludeTime = false;
   }
@@ -74,6 +74,8 @@ class Logger {
     const newLogger = new Logger();
     const handler = this._logHandler.extend ? this._logHandler.extend(name) : this._logHandler;
     newLogger.setLogHandler(handler);
+    newLogger.setIncludeTime(this._isIncludeTime);
+    newLogger.setSessionId(this._sessionId);
     return newLogger;
   }
 

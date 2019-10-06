@@ -219,26 +219,28 @@ class GeneralUtils {
    * @return {string}
    */
   static stringify(...args) {
-    return args
-      .map((arg) => {
-        if (arg != null && typeof arg === 'object') {
-          if (arg.constructor !== Object) {
-            // Not plain object
-            if (arg instanceof Error && arg.stack) {
-              return arg.stack;
-            }
-
-            if (typeof arg.toString === 'function' && arg.toString !== Object.prototype.toString) {
-              return arg.toString();
-            }
+    return args.map((arg) => {
+      if (arg != null && typeof arg === 'object') {
+        if (arg.constructor !== Object) {
+          // Not plain object
+          if (arg instanceof Error && arg.stack) {
+            return arg.stack;
           }
 
-          return GeneralUtils.toString(arg);
+          if (arg instanceof Array && arg.length) {
+            return `[${arg.map(i => GeneralUtils.stringify(i)).join(',')}]`;
+          }
+
+          if (typeof arg.toString === 'function' && arg.toString !== Object.prototype.toString) {
+            return arg.toString();
+          }
         }
 
-        return arg;
-      })
-      .join(' ');
+        return GeneralUtils.toString(arg);
+      }
+
+      return arg;
+    }).join(' ');
   }
 
   /**

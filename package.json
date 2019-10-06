@@ -17,12 +17,12 @@
   "devDependencies": {
     "commitizen": "^3.1.2",
     "cz-conventional-changelog": "^2.1.0",
-    "eslint": "^6.1.0",
-    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.0",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "lerna": "^3.16.4",
     "prettier": "^1.18.2"
   },

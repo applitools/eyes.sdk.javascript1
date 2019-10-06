@@ -26,6 +26,7 @@ describe('openEyesLimitedConcurrency', () => {
         },
       };
     };
+    console.verbose = console.log;
     const openEyesLimitedConcurrency = makeOpenEyesLimitedConcurrency({
       openEyes,
       concurrency: 2,

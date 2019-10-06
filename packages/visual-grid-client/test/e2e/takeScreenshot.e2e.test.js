@@ -4,7 +4,7 @@ const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const puppeteer = require('puppeteer');
 const takeScreenshot = require('../../src/sdk/takeScreenshot');
-const {getProcessPageAndSerializeScript} = require('@applitools/dom-snapshot');
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot');
 const fetch = require('node-fetch');
 const {presult} = require('@applitools/functional-commons');
 const testServer = require('../util/testServer');
@@ -31,10 +31,10 @@ describe('takeScreenshot e2e', () => {
       r => r.json(),
     );
 
-    const processPageAndSerialize = `(${await getProcessPageAndSerializeScript()})()`;
+    const processPageAndSerialize = `(${await getProcessPageAndSerialize()})()`;
     await page.goto(website);
     const {cdt, url, resourceUrls, blobs, frames} = await page.evaluate(processPageAndSerialize);
-    const [err, imageLocation] = await presult(
+    const [err, [{imageLocation, renderId}]] = await presult(
       takeScreenshot({
         apiKey,
         showLogs: process.env.APPLITOOLS_SHOW_LOGS,
@@ -50,6 +50,7 @@ describe('takeScreenshot e2e', () => {
 
     err && console.log(err);
     expect(err).to.be.undefined;
+    expect(renderId).to.not.be.undefined;
 
     console.log(imageLocation);
     expect(imageLocation).to.match(/https:\/\/.+/);

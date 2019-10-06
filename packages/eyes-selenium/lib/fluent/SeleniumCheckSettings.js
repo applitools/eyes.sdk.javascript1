@@ -8,6 +8,8 @@ const { IgnoreRegionBySelector } = require('./IgnoreRegionBySelector');
 const { IgnoreRegionByElement } = require('./IgnoreRegionByElement');
 const { FloatingRegionBySelector } = require('./FloatingRegionBySelector');
 const { FloatingRegionByElement } = require('./FloatingRegionByElement');
+const { AccessibilityRegionBySelector } = require('./AccessibilityRegionBySelector');
+const { AccessibilityRegionByElement } = require('./AccessibilityRegionByElement');
 const { SelectorByElement } = require('./SelectorByElement');
 const { SelectorByLocator } = require('./SelectorByLocator');
 const { FrameLocator } = require('./FrameLocator');
@@ -233,6 +235,33 @@ class SeleniumCheckSettings extends CheckSettings {
    */
   floatingRegions(maxOffset, ...regionsOrContainers) {
     return super.floatingRegions(maxOffset, ...regionsOrContainers);
+  }
+
+  // noinspection JSCheckFunctionSignatures
+  /**
+   * @inheritDoc
+   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings|By|WebElement|EyesWebElement} regionOrContainer -
+   *   The content rectangle or region container
+   * @param {AccessibilityRegionType} [regionType] - Type of accessibility.
+   * @return {this}
+   */
+  accessibilityRegion(regionOrContainer, regionType) {
+    if (EyesWebElement.isLocator(regionOrContainer)) {
+      const accessibilityRegion = new AccessibilityRegionBySelector(
+        regionOrContainer,
+        regionType
+      );
+      this._accessibilityRegions.push(accessibilityRegion);
+    } else if (regionOrContainer instanceof WebElement) {
+      const floatingRegion = new AccessibilityRegionByElement(
+        regionOrContainer,
+        regionType
+      );
+      this._accessibilityRegions.push(floatingRegion);
+    } else {
+      super.accessibilityRegion(regionOrContainer, regionType);
+    }
+    return this;
   }
 
   /**

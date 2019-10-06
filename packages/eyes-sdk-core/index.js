@@ -31,13 +31,15 @@ exports.NewTestError = require('./lib/errors/NewTestError').NewTestError;
 exports.OutOfBoundsError = require('./lib/errors/OutOfBoundsError').OutOfBoundsError;
 exports.TestFailedError = require('./lib/errors/TestFailedError').TestFailedError;
 
+exports.AccessibilityRegionByRectangle = require('./lib/fluent/AccessibilityRegionByRectangle').AccessibilityRegionByRectangle;
 exports.CheckSettings = require('./lib/fluent/CheckSettings').CheckSettings;
 exports.CheckTarget = require('./lib/fluent/CheckTarget').CheckTarget;
-exports.GetRegion = require('./lib/fluent/GetRegion').GetRegion;
-exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle').IgnoreRegionByRectangle;
-exports.GetFloatingRegion = require('./lib/fluent/GetFloatingRegion').GetFloatingRegion;
 exports.FloatingRegionByRectangle = require('./lib/fluent/FloatingRegionByRectangle').FloatingRegionByRectangle;
+exports.GetAccessibilityRegion = require('./lib/fluent/GetAccessibilityRegion').GetAccessibilityRegion;
+exports.GetFloatingRegion = require('./lib/fluent/GetFloatingRegion').GetFloatingRegion;
+exports.GetRegion = require('./lib/fluent/GetRegion').GetRegion;
 exports.GetSelector = require('./lib/fluent/GetSelector').GetSelector;
+exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle').IgnoreRegionByRectangle;
 
 exports.AppOutput = require('./lib/match/AppOutput').AppOutput;
 exports.MatchResult = require('./lib/match/MatchResult').MatchResult;
@@ -64,7 +66,6 @@ exports.RGridResource = require('./lib/renderer/RGridResource').RGridResource;
 exports.RunningRender = require('./lib/renderer/RunningRender').RunningRender;
 exports.EmulationInfo = require('./lib/renderer/EmulationInfo').EmulationInfo;
 exports.EmulationDevice = require('./lib/renderer/EmulationDevice').EmulationDevice;
-exports.ScreenOrientation = require('./lib/renderer/ScreenOrientation').ScreenOrientation;
 
 exports.ContextBasedScaleProvider = require('./lib/scaling/ContextBasedScaleProvider').ContextBasedScaleProvider;
 exports.ContextBasedScaleProviderFactory = require('./lib/scaling/ContextBasedScaleProviderFactory').ContextBasedScaleProviderFactory;
@@ -100,38 +101,52 @@ exports.TestResultsStatus = require('./lib/TestResultsStatus').TestResultsStatus
 
 
 // Classes from eyes-common which may be used as part of public API
-// Classes which only used internally, should not be exported
-exports.Configuration = common.Configuration;
-exports.PropertyData = common.PropertyData;
-exports.ProxySettings = common.ProxySettings;
+exports.AccessibilityLevel = common.AccessibilityLevel;
+exports.AccessibilityMatchSettings = common.AccessibilityMatchSettings;
+exports.AccessibilityRegionType = common.AccessibilityRegionType;
 exports.BatchInfo = common.BatchInfo;
-exports.MatchLevel = common.MatchLevel;
-exports.ImageMatchSettings = common.ImageMatchSettings;
+exports.BrowserType = common.BrowserType;
+exports.Configuration = common.Configuration;
+exports.DeviceName = common.DeviceName;
 exports.ExactMatchSettings = common.ExactMatchSettings;
 exports.FloatingMatchSettings = common.FloatingMatchSettings;
-exports.CoordinatesType = common.CoordinatesType;
-exports.Location = common.Location;
-exports.RectangleSize = common.RectangleSize;
-exports.Region = common.Region;
-exports.LogHandler = common.LogHandler;
-exports.ConsoleLogHandler = common.ConsoleLogHandler;
-exports.FileLogHandler = common.FileLogHandler;
-exports.NullLogHandler = common.NullLogHandler;
+exports.ImageMatchSettings = common.ImageMatchSettings;
+exports.MatchLevel = common.MatchLevel;
+exports.PropertyData = common.PropertyData;
+exports.ProxySettings = common.ProxySettings;
+exports.ScreenOrientation = common.ScreenOrientation;
+exports.StitchMode = common.StitchMode;
+
 exports.DebugScreenshotsProvider = common.DebugScreenshotsProvider;
 exports.FileDebugScreenshotsProvider = common.FileDebugScreenshotsProvider;
 exports.NullDebugScreenshotProvider = common.NullDebugScreenshotProvider;
 
-// for backward compatibility
 exports.EyesError = common.EyesError;
+
+exports.CoordinatesType = common.CoordinatesType;
+exports.Location = common.Location;
+exports.RectangleSize = common.RectangleSize;
+exports.Region = common.Region;
+
 exports.PropertyHandler = common.PropertyHandler;
 exports.ReadOnlyPropertyHandler = common.ReadOnlyPropertyHandler;
 exports.SimplePropertyHandler = common.SimplePropertyHandler;
+
 exports.ImageDeltaCompressor = common.ImageDeltaCompressor;
 exports.MutableImage = common.MutableImage;
+
+exports.ConsoleLogHandler = common.ConsoleLogHandler;
+exports.DebugLogHandler = common.DebugLogHandler;
+exports.FileLogHandler = common.FileLogHandler;
 exports.Logger = common.Logger;
+exports.LogHandler = common.LogHandler;
+exports.NullLogHandler = common.NullLogHandler;
+
+// Classes which can be used internally, but should not be exported from final SDKs
 exports.BrowserNames = common.BrowserNames;
 exports.OSNames = common.OSNames;
 exports.UserAgent = common.UserAgent;
+
 exports.ArgumentGuard = common.ArgumentGuard;
 exports.ConfigUtils = common.ConfigUtils;
 exports.DateTimeUtils = common.DateTimeUtils;

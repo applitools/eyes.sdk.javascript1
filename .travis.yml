@@ -43,6 +43,6 @@ jobs:
     - stage: "Integration tests"
       node_js: "8"
       script: npm run test:it
-    - stage: "End-to-end tests"
-      node_js: "8"
-      script: npm run test:e2e
+#    - stage: "End-to-end tests"
+#      node_js: "8"
+#      script: npm run test:e2e

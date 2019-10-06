@@ -13,6 +13,8 @@ const {
   apiKeyFailMsg,
 } = require('./wrapperUtils');
 
+const SUPPORTED_BROWSERS = ['firefox', 'ie10', 'ie11', 'edge', 'chrome', 'ie', 'safari'];
+
 function makeOpenEyes({
   appName: _appName,
   browser: _browser,
@@ -28,6 +30,7 @@ function makeOpenEyes({
   ignoreCaret: _ignoreCaret,
   isDisabled: _isDisabled,
   matchLevel: _matchLevel,
+  accessibilityLevel: _accessibilityLevel,
   useDom: _useDom,
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
@@ -51,9 +54,12 @@ function makeOpenEyes({
   getHandledRenderInfoPromise,
   getRenderInfo,
   agentId,
+  notifyOnCompletion: _notifyOnCompletion,
+  batches,
 }) {
   return async function openEyes({
     testName,
+    displayName,
     wrappers,
     userAgent = _userAgent,
     appName = _appName,
@@ -70,6 +76,7 @@ function makeOpenEyes({
     ignoreCaret = _ignoreCaret,
     isDisabled = _isDisabled,
     matchLevel = _matchLevel,
+    accessibilityLevel = _accessibilityLevel,
     useDom = _useDom,
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
@@ -79,15 +86,16 @@ function makeOpenEyes({
     saveNewTests = _saveNewTests,
     compareWithParentBranch = _compareWithParentBranch,
     ignoreBaseline = _ignoreBaseline,
+    notifyOnCompletion = _notifyOnCompletion,
   }) {
-    logger.log(`openEyes: testName=${testName}, browser=`, browser);
+    logger.verbose(`openEyes: testName=${testName}, browser=`, browser);
 
     if (!apiKey) {
       throw new Error(apiKeyFailMsg);
     }
 
     if (isDisabled) {
-      logger.log('openEyes: isDisabled=true, skipping checks');
+      logger.verbose('openEyes: isDisabled=true, skipping checks');
       return {
         checkWindow: disabledFunc('checkWindow'),
         close: disabledFunc('close'),
@@ -114,6 +122,7 @@ function makeOpenEyes({
       wrappers,
       browsers,
       isDisabled,
+      displayName,
       batchSequenceName,
       batchName,
       batchId,
@@ -124,6 +133,7 @@ function makeOpenEyes({
       envName,
       ignoreCaret,
       matchLevel,
+      accessibilityLevel,
       useDom,
       enablePatterns,
       ignoreDisplacements,
@@ -137,6 +147,7 @@ function makeOpenEyes({
       serverUrl,
       agentId,
       assumeEnvironment,
+      notifyOnCompletion,
     });
 
     const renderInfoPromise =
@@ -161,12 +172,9 @@ function makeOpenEyes({
     let checkWindowPromises = wrappers.map(() => Promise.resolve());
     const testController = makeTestContorler({testName, numOfTests: wrappers.length, logger});
 
-    const createRGridDOMAndGetResourceMapping = userAgent
-      ? async args =>
-          _createRGridDOMAndGetResourceMapping(
-            Object.assign({fetchOptions: {headers: {'User-Agent': userAgent}}}, args),
-          )
-      : _createRGridDOMAndGetResourceMapping;
+    const headers = {'User-Agent': userAgent};
+    const createRGridDOMAndGetResourceMapping = args =>
+      _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, args));
 
     const checkWindow = makeCheckWindow({
       testController,
@@ -185,6 +193,8 @@ function makeOpenEyes({
       testName,
       openEyesPromises,
       matchLevel,
+      accessibilityLevel,
+      fetchHeaders: headers,
     });
 
     const close = makeClose({
@@ -194,6 +204,7 @@ function makeOpenEyes({
       resolveTests,
       testController,
       logger,
+      batches,
     });
     const abort = makeAbort({
       getCheckWindowPromises,
@@ -201,6 +212,7 @@ function makeOpenEyes({
       wrappers,
       resolveTests,
       testController,
+      batches,
     });
 
     return {
@@ -219,16 +231,13 @@ function makeOpenEyes({
 
     function disabledFunc(name) {
       return async () => {
-        logger.log(`${name}: isDisabled=true, skipping checks`);
+        logger.verbose(`${name}: isDisabled=true, skipping checks`);
       };
     }
 
     function getBrowserError(browser) {
-      if (
-        browser.name &&
-        !['firefox', 'ie10', 'ie11', 'edge', 'chrome', 'ie'].includes(browser.name)
-      ) {
-        return `browser name should be one of the following 'chrome', 'firefox', 'ie10', 'ie11' or 'edge' but recieved '${browser.name}'.`;
+      if (browser.name && !SUPPORTED_BROWSERS.includes(browser.name.replace(/-canary$/, ''))) {
+        return `browser name should be one of the following 'chrome', 'firefox', 'safari', 'ie10', 'ie11' or 'edge' but received '${browser.name}'.`;
       }
       if (browser.name && !browser.deviceName && (!browser.height || !browser.width)) {
         return `browser '${browser.name}' should include 'height' and 'width' parameters.`;

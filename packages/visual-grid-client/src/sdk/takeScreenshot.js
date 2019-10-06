@@ -57,7 +57,6 @@ async function takeScreenshot({
     resourceUrls,
     resourceContents,
     cdt,
-    url,
     frames: framesWithResources,
   });
 
@@ -77,10 +76,15 @@ async function takeScreenshot({
   const renderIds = await renderBatch(renderRequests);
 
   const renderStatusResults = await Promise.all(
-    renderIds.map(renderId => waitForRenderedStatus(renderId, () => false)),
+    renderIds.map(renderId =>
+      waitForRenderedStatus(renderId, () => false).then(({imageLocation}) => ({
+        imageLocation,
+        renderId,
+      })),
+    ),
   );
 
-  return renderStatusResults.map(({imageLocation}) => imageLocation);
+  return renderStatusResults;
 }
 
 function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo}) {

@@ -18,7 +18,7 @@ class IgnoreRegionByRectangle extends GetRegion {
    * @inheritDoc
    */
   async getRegion(eyesBase, screenshot) { // eslint-disable-line no-unused-vars
-    return this._region;
+    return [this._region];
   }
 }
 

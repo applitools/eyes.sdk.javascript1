@@ -1,5 +1,6 @@
 'use strict';
 const {EyesBase, NullRegionProvider} = require('@applitools/eyes-sdk-core');
+const {presult} = require('@applitools/functional-commons');
 
 const VERSION = require('../../package.json').version;
 
@@ -21,9 +22,53 @@ class EyesWrapper extends EyesBase {
   async ensureAborted() {
     if (!this.getRunningSession()) {
       this._configuration.mergeConfig(this.getAssumedConfiguration());
-      await this._ensureRunningSession();
+      const [err] = await presult(this._ensureRunningSession());
+      if (err) {
+        this._logger.log(
+          'failed to ensure a running session (probably due to a previous fatal error)',
+          err,
+        );
+      }
     }
     await this.abort();
+  }
+
+  async getScreenshot() {
+    return;
+  }
+
+  async getScreenshotUrl() {
+    return this.screenshotUrl;
+  }
+
+  async getInferredEnvironment() {
+    return this.inferredEnvironment;
+  }
+
+  async setViewportSize(viewportSize) {
+    this._configuration.setViewportSize(viewportSize);
+    this._viewportSizeHandler.set(this._configuration.getViewportSize());
+  }
+
+  async getTitle() {
+    return 'some title'; // TODO what should this be? is it connected with the tag in `checkWindow` somehow?
+  }
+
+  async getDomUrl() {
+    return this.domUrl;
+  }
+
+  async getImageLocation() {
+    return this.imageLocation;
+  }
+
+  /**
+   * Get the AUT session id.
+   *
+   * @return {Promise<?String>}
+   */
+  async getAUTSessionId() {
+    return; // TODO is this good?
   }
 
   setAssumedConfiguration(configuration) {
@@ -43,13 +88,8 @@ class EyesWrapper extends EyesBase {
     this.agentId = agentId;
   }
 
-  /**
-   * Get the AUT session id.
-   *
-   * @return {Promise<?String>}
-   */
-  async getAUTSessionId() {
-    return; // TODO is this good?
+  setAccessibilityLevel(accessibilityLevel) {
+    this._configuration.getDefaultMatchSettings().setAccessibilityLevel(accessibilityLevel);
   }
 
   /**
@@ -92,37 +132,21 @@ class EyesWrapper extends EyesBase {
     return this.checkWindowBase(regionProvider, tag, false, checkSettings, source);
   }
 
-  async getScreenshot() {
-    return;
-  }
-
-  async getScreenshotUrl() {
-    return this.screenshotUrl;
-  }
-
-  async getInferredEnvironment() {
-    return this.inferredEnvironment;
+  setProxy(proxy) {
+    if (proxy.uri !== undefined) {
+      proxy.url = proxy.uri; // backward compatible
+    }
+    super.setProxy(proxy);
   }
 
   setInferredEnvironment(value) {
     this.inferredEnvironment = value;
   }
 
-  async setViewportSize(viewportSize) {
-    this._configuration.setViewportSize(viewportSize);
-    this._viewportSizeHandler.set(this._configuration.getViewportSize());
-  }
-
-  async getTitle() {
-    return 'some title'; // TODO what should this be? is it connected with the tag in `checkWindow` somehow?
-  }
-
-  async getDomUrl() {
-    return this.domUrl;
-  }
-
-  async getImageLocation() {
-    return this.imageLocation;
+  getExistingBatchId() {
+    // not doing eyesInstance.getBatch().getId() because
+    // it would generate a new id if called before open
+    return this._configuration._batch && this._configuration._batch.getId();
   }
 }
 

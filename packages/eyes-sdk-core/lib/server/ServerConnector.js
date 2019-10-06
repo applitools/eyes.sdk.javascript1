@@ -49,6 +49,7 @@ const REQUEST_FAILED_CODES = [
   'ECONNRESET',
   'ECONNABORTED',
   'ETIMEDOUT',
+  'ENOTFOUND',
 ];
 
 /**
@@ -73,7 +74,7 @@ async function sendRequest(self, name, options, retry = 1, delayBeforeRetry = fa
   }
 
   // eslint-disable-next-line max-len
-  self._logger.verbose(`ServerConnector.${name} will now post call to ${options.url} with params ${JSON.stringify(options.params)}`);
+  self._logger.verbose(`ServerConnector.${name} will now call to ${options.url} with params ${JSON.stringify(options.params)}`);
   try {
     const response = await axios(options);
 
@@ -87,7 +88,8 @@ async function sendRequest(self, name, options, retry = 1, delayBeforeRetry = fa
     }
 
     // eslint-disable-next-line max-len
-    self._logger.log(`ServerConnector.${name} - post failed on ${options.url}: ${reasonMsg} with params ${JSON.stringify(options.params).slice(0, 100)}`);
+    self._logger.log(`ServerConnector.${name} - ${options.method} failed on ${options.url}: ${reasonMsg} with params ${JSON.stringify(options.params).slice(0, 100)} body:\n${err.response && err.response.data}`);
+    self._logger.verbose(`ServerConnector.${name} - failure body:\n${err.response && err.response.data}`);
 
     if (retry > 0 && ((err.response && HTTP_FAILED_CODES.includes(err.response.status)) || REQUEST_FAILED_CODES.includes(err.code))) {
       if (delayBeforeRetry) {
@@ -336,6 +338,31 @@ class ServerConnector {
   }
 
   /**
+   * Stops the running batch sessions.
+   *
+   * @param {string} batchId - The batchId to be stopped.
+   * @return {Promise<void>}
+   */
+  async deleteBatchSessions(batchId) {
+    ArgumentGuard.notNull(batchId, 'batchId');
+    this._logger.verbose(`ServerConnector.deleteBatchSessions called for batchId: ${batchId}`);
+
+    const options = this._createHttpOptions({
+      method: 'DELETE',
+      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/batches', batchId, '/close/bypointerid'),
+    });
+
+    const response = await sendRequest(this, 'deleteBatchSessions', options);
+    const validStatusCodes = [HTTP_STATUS_CODES.OK];
+    if (validStatusCodes.includes(response.status)) {
+      this._logger.verbose('ServerConnector.deleteBatchSessions - delete succeeded');
+      return;
+    }
+
+    throw new Error(`ServerConnector.deleteBatchSessions - unexpected status (${response.statusText})`);
+  }
+
+  /**
    * Deletes the given test result
    *
    * @param {TestResults} testResults - The session to delete by test results.
@@ -356,7 +383,7 @@ class ServerConnector {
     const response = await sendRequest(this, 'deleteSession', options);
     const validStatusCodes = [HTTP_STATUS_CODES.OK];
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.deleteSession - post succeeded');
+      this._logger.verbose('ServerConnector.deleteSession - delete succeeded');
       return;
     }
 
@@ -599,7 +626,7 @@ class ServerConnector {
     const response = await sendRequest(this, 'renderPutResource', options);
     const validStatusCodes = [HTTP_STATUS_CODES.OK];
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.putResource - request succeeded');
+      this._logger.verbose('ServerConnector.putResource - request succeeded. Response:', response.data);
       return true;
     }
 

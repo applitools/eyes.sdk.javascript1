@@ -51,7 +51,7 @@ describe('closeEyes', () => {
     });
     checkWindow({cdt: [], tag: 'good1', url: `${baseUrl}/basic.html`});
     const result = (await presult(close()))[1];
-    expect(result[0].map(r => r.getAsExpected())).to.eql([true]);
+    expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 
   it('rejects with an error with bad tag', async () => {
@@ -78,7 +78,7 @@ describe('closeEyes', () => {
     expect(result[0].message).to.equal(
       'Tag ok-in-1-test should be one of the good tags good1,good2',
     );
-    expect(result[1].map(r => r.getAsExpected())).to.eql([true]);
+    expect(result[1].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 
   it('rejects with a diff and test result', async () => {
@@ -91,7 +91,7 @@ describe('closeEyes', () => {
     checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`});
     await psetTimeout(0); // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0];
-    expect(result[0].map(r => r.getAsExpected())).to.eql([true]);
+    expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
     expect(result[1].message).to.equal('mismatch');
   });
 
@@ -180,6 +180,41 @@ describe('closeEyes', () => {
     expect(resultWithErr).to.deep.equal([]);
   });
 
+  it('sets the correct batchId on batches when closing', async () => {
+    const batches = new Map();
+    const openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      fetchResourceTimeout: 2000,
+      batches,
+    }).openEyes;
+
+    let {checkWindow, close} = await openEyes({
+      wrappers: [wrapper, wrapper2],
+      browser: [{width: 1, height: 1}, {width: 2, height: 2}],
+      appName,
+    });
+    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`});
+    await close();
+
+    // this simulates setting batchId: 'secondBatchId' in openEyes
+    const wrapper3 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'});
+    const wrapper4 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'});
+
+    ({checkWindow, close} = await openEyes({
+      wrappers: [wrapper3, wrapper4],
+      browser: [{width: 1, height: 1}, {width: 2, height: 2}],
+      appName,
+    }));
+    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`});
+    await close();
+
+    expect([...batches.keys()]).to.eql(['1', 'secondBatchId']);
+    expect(batches.get('1').name).to.equal('bound deleteBatchSessions');
+    expect(batches.get('secondBatchId').name).to.equal('bound deleteBatchSessions');
+  });
+
   it('resolves with empty array if aborted by user with throwEx=false', async () => {
     const {checkWindow, abort, close} = await openEyes({
       wrappers: [wrapper, wrapper2],
@@ -209,7 +244,7 @@ describe('closeEyes', () => {
     expect(result[1].message).to.equal(
       'Tag ok-in-1-test should be one of the good tags good1,good2',
     );
-    expect(result[2].map(r => r.getAsExpected())).to.eql([true]);
+    expect(result[2].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 
   it('rejects with 2 diffs', async () => {
@@ -262,6 +297,6 @@ describe('closeEyes', () => {
     expect(result[1].message).to.equal(
       'Tag ok-in-1-test should be one of the good tags good1,good2',
     );
-    expect(result[2].map(r => r.getAsExpected())).to.eql([true]);
+    expect(result[2].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 });

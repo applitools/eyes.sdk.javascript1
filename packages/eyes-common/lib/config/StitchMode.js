@@ -4,7 +4,7 @@
  * Represents the types of available stitch modes.
  *
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const StitchMode = {
   /**

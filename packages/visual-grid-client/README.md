@@ -37,7 +37,7 @@ The visualGridClient, returned by `makeVisualGridClient`, is an object with the 
 ### openEyes
 
 Async function `openEyes` will create a test. Actually, it will create a series of tests, one for each browser configuration
-defined in the `browser` property of the configuraion.
+defined in the `browser` property of the configuration.
 
 * `openEyes` accepts a configuration object that will override the default configuration found by
   `makeVisualGridClient`, per this test.
@@ -59,12 +59,13 @@ defined in the `browser` property of the configuraion.
 * `cdt`: the HTML and set and resources, in the `x-applitools-html/cdt` format (see below).
   you can use `domNodesToCdt` to create a CDT from a `document`.
 * `target`: the target of the rendering. Can be one of `window`, `region`
-* `fully`: set wehn `target` is `window`, if `fully` is `true` then snapshot is full page, if `fully` is `false` then snapshot is viewport.
-* `selector`: if the `target` is `region`, this is the selector we are targetting.
-* `region`: if the `target` is `region`, this is the region we are targetting.
+* `fully`: set when `target` is `window`, if `fully` is `true` then snapshot is full page, if `fully` is `false` then snapshot is viewport.
+* `selector`: if the `target` is `region`, this is the selector we are targeting.
+* `region`: if the `target` is `region`, this is the region we are targeting.
   This is an object with `x`, `y`, `width`, `height` properties.
 * `ignore`: TBD
 * `floating`: TBD
+* `accessibility`: TBD
 * `strict`: TBD
 * `layout`: TBD
 * `sendDom`: TBD
@@ -78,6 +79,8 @@ defined in the `browser` property of the configuraion.
   * `type`: the content type of the resource.
   * `value`: a `Buffer` of the resource content.
 * `matchLevel`: The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match.
+* `accessibilityLevel`: The accessibility to use for the screenshots. Possible values are 'None', 'AA' and 'AAA'.
+* `notifyOnCompletion`.
 
 ### close()
 
@@ -139,7 +142,7 @@ Example [Mocha](https://www.npmjs.com/package/mocha) test that uses the visual g
 const path = require('path')
 const fs = require('fs')
 const {makeVisualGridClient} = require('@applitools/visual-grid-client')
-const {getProcessPageAndSerializeScript} = require('@applitools/dom-snapshot')
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const puppeteer = require('puppeteer')
 
 describe('visual-grid-client test', function() {
@@ -160,9 +163,11 @@ describe('visual-grid-client test', function() {
     processPageAndSerialize = `(${await getProcessPageAndSerializeScript()})()`
   })
 
-  after(() => {
+  after(async () => {
     await browser.close()
-    return Promise.all(closePromises)
+    const results = await Promise.all(closePromises)
+    await visualGridClient.closeBatch() // after all sessions ended (session = open checkWindow close)
+    return results;
   })
 
   let checkWindow, close

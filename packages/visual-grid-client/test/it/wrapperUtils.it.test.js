@@ -36,4 +36,15 @@ describe('wrapperUtils', () => {
       expect(wrapper.getEnablePatterns()).to.be.false;
     });
   });
+
+  it('sets notifyOnCompletion', () => {
+    let wrapper = new EyesWrapper();
+    configureWrappers({
+      wrappers: [wrapper],
+      browsers: [{}],
+      notifyOnCompletion: true,
+      assumeEnvironment,
+    });
+    expect(wrapper._configuration.getBatch().getNotifyOnCompletion()).to.be.true;
+  });
 });

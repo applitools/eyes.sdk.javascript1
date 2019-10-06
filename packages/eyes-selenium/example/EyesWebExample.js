@@ -2,7 +2,7 @@
 
 require('chromedriver'); // eslint-disable-line node/no-unpublished-require
 const { Builder, Capabilities, By } = require('selenium-webdriver');
-const { Eyes, Target, ConsoleLogHandler, BatchInfo } = require('../index'); // should be replaced to '@applitools/eyes-selenium'
+const { Eyes, Target, ConsoleLogHandler, BatchInfo, AccessibilityRegionType, AccessibilityLevel, Configuration } = require('../index'); // should be replaced to '@applitools/eyes-selenium'
 
 (async () => {
   // Open a Chrome browser.
@@ -13,13 +13,18 @@ const { Eyes, Target, ConsoleLogHandler, BatchInfo } = require('../index'); // s
 
   // Initialize the eyes SDK and set your private API key.
   const eyes = new Eyes();
-  // eyes.setApiKey('Your API Key');
   eyes.setLogHandler(new ConsoleLogHandler(false));
-  // eyes.setProxy('http://localhost:8888');
 
   const batchInfo = new BatchInfo();
   batchInfo.setSequenceName('alpha sequence');
-  eyes.setBatch(batchInfo);
+
+  const configuration = new Configuration();
+  configuration.setBatch(batchInfo);
+  // configuration.setProxy('http://localhost:8888');
+  // configuration.setApiKey(process.env.APPLITOOLS_FABRIC_API_KEY);
+  // configuration.setServerUrl('https://eyesfabric4eyes.applitools.com');
+  configuration.setAccessibilityLevel(AccessibilityLevel.AAA);
+  eyes.setConfiguration(configuration);
 
   try {
     // Start the test and set the browser's viewport size to 800x600.
@@ -29,7 +34,9 @@ const { Eyes, Target, ConsoleLogHandler, BatchInfo } = require('../index'); // s
     await driver.get('https://applitools.com/helloworld');
 
     // Visual checkpoint #1.
-    await eyes.check('Main Page', Target.window());
+    await eyes.check('Main Page', Target.window()
+      // .accessibilityLevel(AccessibilityLevel.AAA) // will not work as for now
+      .accessibilityRegion(By.css('button'), AccessibilityRegionType.RegularText));
 
     // Click the "Click me!" button.
     await driver.findElement(By.css('button')).click();

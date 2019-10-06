@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.2...@applitools/eyes-common@3.10.3) (2019-09-23)
+
+
+### Bug Fixes
+
+* refactoring and fixing AccessibilityRegionByElement/Selector ([73dc022](https://github.com/applitools/eyes.sdk.javascript1/commit/73dc022))
+
+
+
+
+
+## [3.10.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.1...@applitools/eyes-common@3.10.2) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changed accessibilityRegionType API - removed None. ([b510014](https://github.com/applitools/eyes.sdk.javascript1/commit/b510014))
+
+
+
+
+
+## [3.10.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.0...@applitools/eyes-common@3.10.1) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changes API for AccessibilityRegionType ([757c8b7](https://github.com/applitools/eyes.sdk.javascript1/commit/757c8b7))
+
+
+
+
+
+# [3.10.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.3...@applitools/eyes-common@3.10.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **eyes-common:** add `BATCH_NOTIFY` env var to set notifyOnCompletion value ([40f0bae](https://github.com/applitools/eyes.sdk.javascript1/commit/40f0bae))
+
+
+### Features
+
+* **eyes-common:** add `notifyOnCompletion` to `BatchInfo` ([bcffb40](https://github.com/applitools/eyes.sdk.javascript1/commit/bcffb40))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** Added accessibilityLevel to match request. ([df2a383](https://github.com/applitools/eyes.sdk.javascript1/commit/df2a383))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** supporting accessibility regions to match request ([cc9ec8c](https://github.com/applitools/eyes.sdk.javascript1/commit/cc9ec8c))
+
+
+
+
+
+## [3.9.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.2...@applitools/eyes-common@3.9.3) (2019-09-04)
+
+**Note:** Version bump only for package @applitools/eyes-common
+
+
+
+
+
+## [3.9.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.1...@applitools/eyes-common@3.9.2) (2019-09-02)
+
+
+### Bug Fixes
+
+* **eyes-common:** debug logger is now verbose and is cloned ([2d47c3a](https://github.com/applitools/eyes.sdk.javascript1/commit/2d47c3a))
+
+
+
+
+
+## [3.9.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.0...@applitools/eyes-common@3.9.1) (2019-08-27)
+
+
+### Bug Fixes
+
+* serialize arrays in log output ([a255f95](https://github.com/applitools/eyes.sdk.javascript1/commit/a255f95))
+
+
+
+
+
+# [3.9.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.8.3...@applitools/eyes-common@3.9.0) (2019-08-14)
+
+
+### Features
+
+* add `displayName` property to SessionStartInfo ([68ebb4e](https://github.com/applitools/eyes.sdk.javascript1/commit/68ebb4e))
+
+
+
+
+
+## [3.8.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.8.2...@applitools/eyes-common@3.8.3) (2019-08-08)
+
+**Note:** Version bump only for package @applitools/eyes-common
+
+
+
+
+
 ## [3.8.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.8.1...@applitools/eyes-common@3.8.2) (2019-07-29)
 
 **Note:** Version bump only for package @applitools/eyes-common

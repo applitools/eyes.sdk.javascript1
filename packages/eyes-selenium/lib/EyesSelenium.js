@@ -12,6 +12,7 @@ const {
   UserAgent,
   ArgumentGuard,
   TypeUtils,
+  StitchMode,
 } = require('@applitools/eyes-common');
 
 const {
@@ -27,7 +28,6 @@ const {
 } = require('@applitools/eyes-sdk-core');
 
 const { ClassicRunner } = require('./runner/ClassicRunner');
-const { StitchMode } = require('./config/StitchMode');
 const { ImageProviderFactory } = require('./capture/ImageProviderFactory');
 const { EyesWebDriverScreenshotFactory } = require('./capture/EyesWebDriverScreenshotFactory');
 const { FrameChain } = require('./frames/FrameChain');

@@ -1,6 +1,6 @@
 'use strict';
 const EyesWrapper = require('./EyesWrapper');
-const {BatchInfo, RectangleSize, ProxySettings} = require('@applitools/eyes-sdk-core');
+const {BatchInfo, RectangleSize} = require('@applitools/eyes-sdk-core');
 
 function initWrappers({count, apiKey, logHandler}) {
   return Array.from(new Array(count), () => new EyesWrapper({apiKey, logHandler}));
@@ -26,6 +26,7 @@ function configureWrappers({
   wrappers,
   browsers,
   isDisabled,
+  displayName,
   batchSequenceName,
   batchName,
   batchId,
@@ -36,6 +37,7 @@ function configureWrappers({
   envName,
   ignoreCaret,
   matchLevel,
+  accessibilityLevel,
   parentBranchName,
   branchName,
   proxy,
@@ -49,12 +51,14 @@ function configureWrappers({
   enablePatterns,
   ignoreDisplacements,
   assumeEnvironment,
+  notifyOnCompletion,
 }) {
-  const batchInfo = new BatchInfo({id: batchId, name: batchName, sequenceName: batchSequenceName});
-
-  if (proxy && typeof proxy === 'object' && !(proxy instanceof ProxySettings)) {
-    proxy = new ProxySettings(proxy.uri, proxy.username, proxy.password);
-  }
+  const batchInfo = new BatchInfo({
+    id: batchId,
+    name: batchName,
+    sequenceName: batchSequenceName,
+    notifyOnCompletion,
+  });
 
   for (let i = 0, ii = wrappers.length; i < ii; i++) {
     const wrapper = wrappers[i];
@@ -66,6 +70,7 @@ function configureWrappers({
     validateAndAddProperties(wrapper, properties);
     wrapper.setBatch(batchInfo);
 
+    displayName !== undefined && wrapper.setDisplayName(displayName);
     baselineBranchName !== undefined && wrapper.setBaselineBranchName(baselineBranchName);
     baselineEnvName !== undefined && wrapper.setBaselineEnvName(baselineEnvName);
     baselineName !== undefined && wrapper.setBaselineName(baselineName);
@@ -73,6 +78,7 @@ function configureWrappers({
     ignoreCaret !== undefined && wrapper.setIgnoreCaret(ignoreCaret);
     isDisabled !== undefined && wrapper.setIsDisabled(isDisabled);
     matchLevel !== undefined && wrapper.setMatchLevel(matchLevel);
+    accessibilityLevel !== undefined && wrapper.setAccessibilityLevel(accessibilityLevel);
     useDom !== undefined && wrapper.setUseDom(useDom);
     enablePatterns !== undefined && wrapper.setEnablePatterns(enablePatterns);
     ignoreDisplacements !== undefined && wrapper.setIgnoreDisplacements(ignoreDisplacements);

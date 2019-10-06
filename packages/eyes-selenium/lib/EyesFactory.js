@@ -1,12 +1,12 @@
 'use strict';
 
+const { Configuration } = require('@applitools/eyes-common');
 const { CorsIframeHandle } = require('@applitools/eyes-sdk-core');
 
 const { VisualGridRunner } = require('./runner/VisualGridRunner');
 const { EyesRunner } = require('./runner/EyesRunner');
 const { EyesSelenium } = require('./EyesSelenium');
 const { EyesVisualGrid } = require('./EyesVisualGrid');
-const { Configuration } = require('./config/Configuration');
 
 /**
  * @ignore

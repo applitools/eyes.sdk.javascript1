@@ -2,7 +2,7 @@
 
 /**
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const BrowserType = {
   CHROME: 'chrome',

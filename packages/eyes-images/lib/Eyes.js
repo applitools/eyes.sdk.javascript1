@@ -53,25 +53,25 @@ class Eyes extends EyesBase {
   /**
    * Perform visual validation for the current image.
    *
-   * @signature `checkImage(base64String, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(base64String, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} base64String - A base64 encoded image to use as the checkpoint image
    * @sigparam {string} [name] - Tag to be associated with the validation checkpoint.
    * @sigparam {boolean} [ignoreMismatch] - True if the server should ignore a negative result for the visual validation.
    * @sigparam {number} [retryTimeout] - timeout for performing the match (ms).
    *
-   * @signature `checkImage(url, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(url, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} url - A URL of the PNG image to download and use as the checkpoint image
    *
-   * @signature `checkImage(filePath, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(filePath, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} filePath - Path to a local PNG file to use as the checkpoint image
    *
-   * @signature `checkImage(imageBuffer, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(imageBuffer, name, ignoreMismatch, retryTimeout)`
    * @sigparam {Buffer} imageBuffer - A Buffer object that contains an image to use as checkpoint image
    *
-   * @signature `checkImage(mutableImage, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(mutableImage, name, ignoreMismatch, retryTimeout)`
    * @sigparam {MutableImage} mutableImage - An in memory image to use as the checkpoint image
    *
-   * @signature `checkImage(imageProvider, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkImage(imageProvider, name, ignoreMismatch, retryTimeout)`
    * @sigparam {ImageProvider} imageProvider - An instance of class (object) which implements {@link ImageProvider}
    *  (has a method called {@code getImage} which returns {@code Promise<MutableImage>})
    *
@@ -89,9 +89,7 @@ class Eyes extends EyesBase {
   /**
    * Perform visual validation for the current image.
    *
-   * Perform visual validation for the current image.
-   *
-   * @signature `checkRegion(base64String, region, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(base64String, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} base64String - A base64 encoded image to use as the checkpoint image
    * @sigparam {Region|RegionObject} region - The region of the image which should be verified, or {undefined}/{null} if the
    *   entire image should be verified.
@@ -99,21 +97,22 @@ class Eyes extends EyesBase {
    * @sigparam {boolean} [ignoreMismatch] - True if the server should ignore a negative result for the visual validation.
    * @sigparam {number} [retryTimeout] - timeout for performing the match (ms).
    *
-   * @signature `checkRegion(url,region,name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(url, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} url - A URL of the PNG image to download and use as the checkpoint image
    *
-   * @signature `checkRegion(filePath, region,name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(filePath, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {string} filePath - Path to a local PNG file to use as the checkpoint image
    *
-   * @signature `checkRegion(imageBuffer, region ,name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(imageBuffer, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {Buffer} imageBuffer - A Buffer object that contains an image to use as checkpoint image
    *
-   * @signature `checkRegion(mutableImage, region, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(mutableImage, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {MutableImage} mutableImage - An in memory image to use as the checkpoint image
    *
-   * @signature `checkRegion(imageProvider, region, name,ignoreMismatch,retryTimeout)`
+   * @signature `checkRegion(imageProvider, region, name, ignoreMismatch, retryTimeout)`
    * @sigparam {ImageProvider} imageProvider - An instance of class (object) which implements {@link ImageProvider}
    *  (has a method called {@code getImage} which returns {@code Promise<MutableImage>})
+   *
    * @param {string|Buffer|ImageProvider|MutableImage} image - The image path, base64 string, image buffer or MutableImage.
    * @param {Region|RegionObject} region - The region of the image which should be verified, or {undefined}/{null} if the
    *   entire image should be verified.

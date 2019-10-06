@@ -3,6 +3,7 @@
 module.exports = [
   'appName',
   'testName',
+  'displayName',
   'browser',
   'url',
   'apiKey',
@@ -31,4 +32,7 @@ module.exports = [
   'useDom',
   'enablePatterns',
   'ignoreDisplacements',
+  'accessibilityLevel',
+  'notifyOnCompletion',
+  'dontCloseBatches',
 ];

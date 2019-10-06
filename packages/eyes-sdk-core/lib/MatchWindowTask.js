@@ -63,41 +63,22 @@ class MatchWindowTask {
   }
 
   /**
-   * @param {CheckSettings} checkSettings
-   * @param {ImageMatchSettings} imageMatchSettings
+   * @param {GetRegion[]|GetFloatingRegion[]|GetAccessibilityRegion[]} regionProviders
    * @param {EyesScreenshot} screenshot
-   * @return {Promise}
+   * @return {Promise<Region[]|FloatingMatchSettings[]|AccessibilityMatchSettings[]>}
    */
-  async _collectSimpleRegions(checkSettings, imageMatchSettings, screenshot) {
-    const ignoreRegions = await this._collectRegions(checkSettings.getIgnoreRegions(), screenshot);
-    imageMatchSettings.setIgnoreRegions(ignoreRegions);
-
-    const layoutRegions = await this._collectRegions(checkSettings.getLayoutRegions(), screenshot);
-    imageMatchSettings.setLayoutRegions(layoutRegions);
-
-    const strictRegions = await this._collectRegions(checkSettings.getStrictRegions(), screenshot);
-    imageMatchSettings.setStrictRegions(strictRegions);
-
-    const contentRegions = await this._collectRegions(checkSettings.getContentRegions(), screenshot);
-    imageMatchSettings.setContentRegions(contentRegions);
-  }
-
-  /**
-   * @param {GetRegion[]} regionProviders
-   * @param {EyesScreenshot} screenshot
-   * @return {Promise<Region[]>}
-   */
-  async _collectRegions(regionProviders, screenshot) {
+  async _getTotalRegions(regionProviders, screenshot) {
     const eyes = this._eyes;
-    const regionsPromises = [];
-    regionProviders.forEach((regionProvider) => {
+    const totalRegions = [];
+    for (let i = 0; i < regionProviders.length; i += 1) {
       try {
-        regionsPromises.push(regionProvider.getRegion(eyes, screenshot));
+        const regions = await regionProviders[i].getRegion(eyes, screenshot);
+        totalRegions.push(...regions);
       } catch (e) {
         eyes.log('WARNING - region was out of bounds.', e);
       }
-    });
-    return Promise.all(regionsPromises);
+    }
+    return totalRegions;
   }
 
   /**
@@ -106,13 +87,24 @@ class MatchWindowTask {
    * @param {EyesScreenshot} screenshot
    * @return {Promise}
    */
-  async _collectFloatingRegions(checkSettings, imageMatchSettings, screenshot) {
-    const eyes = this._eyes;
-    const regionPromises = checkSettings.getFloatingRegions()
-      .map(container => container.getRegion(eyes, screenshot));
+  async _collectRegions(checkSettings, imageMatchSettings, screenshot) {
+    const ignoreRegions = await this._getTotalRegions(checkSettings.getIgnoreRegions(), screenshot);
+    imageMatchSettings.setIgnoreRegions(ignoreRegions);
 
-    const floatingRegions = await Promise.all(regionPromises);
+    const layoutRegions = await this._getTotalRegions(checkSettings.getLayoutRegions(), screenshot);
+    imageMatchSettings.setLayoutRegions(layoutRegions);
+
+    const strictRegions = await this._getTotalRegions(checkSettings.getStrictRegions(), screenshot);
+    imageMatchSettings.setStrictRegions(strictRegions);
+
+    const contentRegions = await this._getTotalRegions(checkSettings.getContentRegions(), screenshot);
+    imageMatchSettings.setContentRegions(contentRegions);
+
+    const floatingRegions = await this._getTotalRegions(checkSettings.getFloatingRegions(), screenshot);
     imageMatchSettings.setFloatingRegions(floatingRegions);
+
+    const accessibilityRegions = await this._getTotalRegions(checkSettings.getAccessibilityRegions(), screenshot);
+    imageMatchSettings.setAccessibilityRegions(accessibilityRegions);
   }
 
   /**
@@ -127,6 +119,11 @@ class MatchWindowTask {
       let matchLevel = checkSettings.getMatchLevel();
       if (TypeUtils.isNull(matchLevel)) {
         matchLevel = this._eyes.getDefaultMatchSettings().getMatchLevel();
+      }
+
+      let accessibilityLevel = checkSettings.getAccessibilityLevel();
+      if (TypeUtils.isNull(accessibilityLevel)) {
+        accessibilityLevel = this._eyes.getDefaultMatchSettings().getAccessibilityLevel();
       }
 
       let ignoreCaret = checkSettings.getIgnoreCaret();
@@ -151,6 +148,7 @@ class MatchWindowTask {
 
       imageMatchSettings = new ImageMatchSettings({
         matchLevel,
+        accessibilityLevel,
         exact: null,
         ignoreCaret,
         useDom,
@@ -158,8 +156,7 @@ class MatchWindowTask {
         ignoreDisplacements,
       });
 
-      await this._collectSimpleRegions(checkSettings, imageMatchSettings, screenshot);
-      await this._collectFloatingRegions(checkSettings, imageMatchSettings, screenshot);
+      await this._collectRegions(checkSettings, imageMatchSettings, screenshot);
     }
     return imageMatchSettings;
   }

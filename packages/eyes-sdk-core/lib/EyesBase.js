@@ -626,6 +626,7 @@ class EyesBase extends EyesAbstract {
       appIdOrName: this.getAppName(),
       verId: undefined,
       scenarioIdOrName: this._configuration.getTestName(),
+      displayName: this._configuration.getDisplayName(),
       batchInfo: this._configuration.getBatch(),
       baselineEnvName: this._configuration.getBaselineEnvName(),
       environmentName: this._configuration.getEnvironmentName(),
@@ -1165,6 +1166,7 @@ class EyesBase extends EyesAbstract {
       appIdOrName: this.getAppName(),
       verId: undefined,
       scenarioIdOrName: this._configuration.getTestName(),
+      displayName: this._configuration.getDisplayName(),
       batchInfo: this._configuration.getBatch(),
       baselineEnvName: this._configuration.getBaselineEnvName(),
       environmentName: this._configuration.getEnvironmentName(),
@@ -1195,6 +1197,24 @@ class EyesBase extends EyesAbstract {
     } else {
       this._logger.log(`--- Test started - ${testInfo}`);
       this._shouldMatchWindowRunOnceOnTimeout = false;
+    }
+  }
+
+  /**
+   * @package
+   * @return {Promise}
+   */
+  async closeBatch() {
+    if (this._configuration.getIsDisabled()) {
+      this._logger.verbose('closeBatch Ignored');
+      return;
+    }
+
+    if (this._configuration._batch) { // if use .getBatch(), it will create an empty batch. If session is open, batch should exists
+      const batchId = this._configuration._batch.getId();
+      await this._serverConnector.deleteBatchSessions(batchId);
+    } else {
+      this._logger.log('Cannot close batch: no batch found.');
     }
   }
 

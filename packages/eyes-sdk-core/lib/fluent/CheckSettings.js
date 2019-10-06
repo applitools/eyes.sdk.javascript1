@@ -1,11 +1,13 @@
 'use strict';
 
-const { Region, GeneralUtils, MatchLevel, FloatingMatchSettings } = require('@applitools/eyes-common');
+const { Region, GeneralUtils, MatchLevel, FloatingMatchSettings, AccessibilityMatchSettings } = require('@applitools/eyes-common');
 
 const { GetRegion } = require('./GetRegion');
 const { IgnoreRegionByRectangle } = require('./IgnoreRegionByRectangle');
 const { FloatingRegionByRectangle } = require('./FloatingRegionByRectangle');
+const { AccessibilityRegionByRectangle } = require('./AccessibilityRegionByRectangle');
 const { GetFloatingRegion } = require('./GetFloatingRegion');
+const { GetAccessibilityRegion } = require('./GetAccessibilityRegion');
 
 /**
  * The Match settings object to use in the various Eyes.Check methods.
@@ -22,6 +24,8 @@ class CheckSettings {
     this._sendDom = undefined;
     /** @type {MatchLevel} */
     this._matchLevel = undefined;
+    /** @type {AccessibilityLevel} */
+    this._accessibilityLevel = undefined;
     /** @type {boolean} */
     this._useDom = undefined;
     /** @type {boolean} */
@@ -43,6 +47,7 @@ class CheckSettings {
     this._strictRegions = [];
     this._contentRegions = [];
     this._floatingRegions = [];
+    this._accessibilityRegions = [];
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -169,6 +174,26 @@ class CheckSettings {
    */
   getMatchLevel() {
     return this._matchLevel;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Set the accessibilityLevel level for the screenshot.
+   *
+   * @param {AccessibilityLevel} accessibilityLevel - The accessibilityLevel level to use.
+   * @return {this} - This instance of the settings object.
+   */
+  accessibilityLevel(accessibilityLevel) {
+    this._accessibilityLevel = accessibilityLevel;
+    return this;
+  }
+
+  /**
+   * @ignore
+   * @return {AccessibilityLevel}
+   */
+  getAccessibilityLevel() {
+    return this._accessibilityLevel;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -457,12 +482,42 @@ class CheckSettings {
    */
   floatingRegions(maxOffset, ...regionsOrContainers) {
     if (!regionsOrContainers) {
-      throw new TypeError('floatings method called without arguments!');
+      throw new TypeError('floatingRegions method called without arguments!');
     }
 
     regionsOrContainers.forEach((region) => {
       this.floatingRegion(region, maxOffset, maxOffset, maxOffset, maxOffset);
     });
+
+    return this;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Adds an accessibility region. An accessibility region is a region that has an accessibility type.
+   *
+   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings} regionOrContainer - The content rectangle or
+   *   region container
+   * @param {AccessibilityRegionType} [regionType] - Type of accessibility.
+   * @return {this} - This instance of the settings object.
+   */
+  accessibilityRegion(regionOrContainer, regionType) {
+    // noinspection IfStatementWithTooManyBranchesJS
+    if (regionOrContainer instanceof GetAccessibilityRegion) {
+      this._accessibilityRegions.push(regionOrContainer);
+    } else if (regionOrContainer instanceof AccessibilityMatchSettings) {
+      this._accessibilityRegions.push(new AccessibilityRegionByRectangle(
+        regionOrContainer.getRegion(),
+        regionOrContainer.getType()
+      ));
+    } else if (Region.isRegionCompatible(regionOrContainer)) {
+      this._accessibilityRegions.push(new AccessibilityRegionByRectangle(
+        new Region(regionOrContainer),
+        regionType
+      ));
+    } else {
+      throw new TypeError('Method called with argument of unknown type!');
+    }
 
     return this;
   }
@@ -505,6 +560,14 @@ class CheckSettings {
    */
   getFloatingRegions() {
     return this._floatingRegions;
+  }
+
+  /**
+   * @ignore
+   * @return {GetAccessibilityRegion[]}
+   */
+  getAccessibilityRegions() {
+    return this._accessibilityRegions;
   }
 
   /**

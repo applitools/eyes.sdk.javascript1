@@ -67,7 +67,7 @@ function makeGetRenderStatus({logger, doGetRenderStatus, getStatusInterval = 500
   }
 
   function log(msg) {
-    logger.log(`[getRenderStatus] ${msg}`);
+    logger.verbose(`[getRenderStatus] ${msg}`);
   }
 }
 

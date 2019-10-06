@@ -2,28 +2,18 @@
 
 const {RGridResource} = require('@applitools/eyes-sdk-core');
 const createRGridDom = require('./createRGridDom');
-const mapKeys = require('lodash.mapkeys');
-const mapValues = require('lodash.mapvalues');
-const absolutizeUrl = require('./absolutizeUrl');
 
 function makeCreateRGridDOMAndGetResourceMapping({getAllResources}) {
   return async function createRGridDOMAndGetResourceMapping({
-    url,
     cdt,
     resourceUrls,
     resourceContents,
     frames = [],
     fetchOptions,
   }) {
-    const absoluteUrls = resourceUrls.map(resourceUrl => absolutizeUrl(resourceUrl, url));
-    const preResources = mapValues(
-      mapKeys(resourceContents, (_value, key) => absolutizeUrl(key, url)),
-      ({url: resourceUrl, type, value}) => ({url: absolutizeUrl(resourceUrl, url), type, value}),
-    );
-
     const resources = await getAllResources({
-      resourceUrls: absoluteUrls,
-      preResources,
+      resourceUrls,
+      preResources: resourceContents,
       fetchOptions,
     });
     const allResources = Object.assign({}, resources);

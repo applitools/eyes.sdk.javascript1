@@ -45,6 +45,19 @@ describe('calculateMatchRegions', () => {
     });
   });
 
+  it('handles single no-offset region with type', () => {
+    const accessibility = {bla: 'kuku', accessibilityType: 'RegularText'};
+    expect(
+      calculateMatchRegions({
+        noOffsetSelectors: [undefined, undefined, undefined, accessibility],
+        offsetSelectors: [undefined],
+      }),
+    ).to.eql({
+      noOffsetRegions: [undefined, undefined, undefined, [accessibility]],
+      offsetRegions: [undefined],
+    });
+  });
+
   it('handles single no-offset with order region', () => {
     const ignore = {bla: 'kuku'};
     const layout = {bla: 'kuku'};
@@ -55,6 +68,34 @@ describe('calculateMatchRegions', () => {
       }),
     ).to.eql({
       noOffsetRegions: [[ignore], undefined, [layout]],
+      offsetRegions: [undefined],
+    });
+  });
+
+  it('handles single no-offset with order region and types', () => {
+    const a1 = {bla: 'kuku', accessibilityType: 'LargeText'};
+    const a2 = {bla: 'kuku', accessibilityType: 'RegularText'};
+    expect(
+      calculateMatchRegions({
+        noOffsetSelectors: [undefined, undefined, a2, a1],
+        offsetSelectors: [undefined],
+      }),
+    ).to.eql({
+      noOffsetRegions: [undefined, undefined, [a2], [a1]],
+      offsetRegions: [undefined],
+    });
+  });
+
+  it('handles no-offset exact region with order region and types', () => {
+    const a1 = {top: 100, left: 0, width: 1000, height: 100, accessibilityType: 'LargeText'};
+    const a2 = {top: 2, left: 2, width: 2, height: 2, accessibilityType: 'RegularText'};
+    expect(
+      calculateMatchRegions({
+        noOffsetSelectors: [undefined, undefined, a1, a2],
+        offsetSelectors: [undefined],
+      }),
+    ).to.eql({
+      noOffsetRegions: [undefined, undefined, [a1], [a2]],
       offsetRegions: [undefined],
     });
   });

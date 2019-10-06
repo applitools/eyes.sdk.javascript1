@@ -12,6 +12,7 @@ class SessionStartInfo {
    * @param {string} appIdOrName
    * @param {string} [verId]
    * @param {string} scenarioIdOrName
+   * @param {string} [displayName]
    * @param {BatchInfo} batchInfo
    * @param {string} [baselineEnvName]
    * @param {string} [environmentName]
@@ -26,7 +27,7 @@ class SessionStartInfo {
    * @param {boolean} [render]
    * @param {PropertyData[]} [properties]
    */
-  constructor({ agentId, sessionType, appIdOrName, verId, scenarioIdOrName, batchInfo, baselineEnvName, environmentName,
+  constructor({ agentId, sessionType, appIdOrName, verId, scenarioIdOrName, displayName, batchInfo, baselineEnvName, environmentName,
     environment, defaultMatchSettings, branchName, parentBranchName, baselineBranchName, compareWithParentBranch,
     ignoreBaseline, saveDiffs, render, properties } = {}) {
     ArgumentGuard.notNullOrEmpty(agentId, 'agentId');
@@ -41,6 +42,7 @@ class SessionStartInfo {
     this._appIdOrName = appIdOrName;
     this._verId = verId;
     this._scenarioIdOrName = scenarioIdOrName;
+    this._displayName = displayName;
     this._batchInfo = batchInfo;
     this._baselineEnvName = baselineEnvName;
     this._environmentName = environmentName;
@@ -94,6 +96,14 @@ class SessionStartInfo {
    */
   getScenarioIdOrName() {
     return this._scenarioIdOrName;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {string}
+   */
+  getDisplayName() {
+    return this._displayName;
   }
 
   // noinspection JSUnusedGlobalSymbols
