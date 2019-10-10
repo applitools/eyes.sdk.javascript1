@@ -13,6 +13,7 @@ function createCheckSettings({
   floating,
   layout,
   strict,
+  content,
   accessibility,
   useDom,
   enablePatterns,
@@ -25,6 +26,7 @@ function createCheckSettings({
   setEachRegion(ignore, checkSettings.ignoreRegions.bind(checkSettings));
   setEachRegion(layout, checkSettings.layoutRegions.bind(checkSettings));
   setEachRegion(strict, checkSettings.strictRegions.bind(checkSettings));
+  setEachRegion(content, checkSettings.contentRegions.bind(checkSettings));
 
   if (floating) {
     floating = [].concat(floating);
@@ -42,6 +44,7 @@ function createCheckSettings({
       }
     }
   }
+  
   if (accessibility) {
     accessibility = [].concat(accessibility);
     for (const region of accessibility) {
@@ -69,7 +72,7 @@ function createCheckSettings({
     checkSettings.matchLevel(matchLevel);
   }
   if (accessibilityLevel !== undefined) {
-    checkSettings.accessibilityLevel(accessibilityLevel);
+    checkSettings.accessibilityValidation(accessibilityLevel);
   }
 
   return checkSettings;

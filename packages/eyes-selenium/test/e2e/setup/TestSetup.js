@@ -25,9 +25,14 @@ class TestSetup {
     this._testedPageSize = new RectangleSize({ width: 800, height: 600 });
     this._desiredCaps = new Capabilities();
 
-    this._expectedFloatingRegions = [];
-    this._expectedIgnoreRegions = [];
     this._compareExpectedRegions = false;
+    this._expectedIgnoreRegions = [];
+    this._expectedLayoutRegions = [];
+    this._expectedStrictRegions = [];
+    this._expectedContentRegions = [];
+    this._expectedFloatingRegions = [];
+    this._expectedAccessibilityRegions = [];
+    this._expectedProperties = new Map();
 
     // Initialize the eyes SDK and set your private API key.
     this._eyes = new Eyes();
@@ -78,11 +83,31 @@ class TestSetup {
     this._expectedIgnoreRegions = expectedIgnoreRegions;
   }
 
+  setExpectedLayoutRegions(...expectedLayoutRegions) {
+    this._expectedLayoutRegions = expectedLayoutRegions;
+  }
+
+  setExpectedStrictRegions(...expectedStrictRegions) {
+    this._expectedStrictRegions = expectedStrictRegions;
+  }
+
+  setExpectedContentRegions(...expectedContentRegions) {
+    this._expectedContentRegions = expectedContentRegions;
+  }
+
   setExpectedFloatingsRegions(...expectedFloatingsRegions) {
     this._expectedFloatingRegions = expectedFloatingsRegions;
   }
 
-  async beforeMethod(methodName) {
+  setExpectedAccessibilityRegions(...accessibilityRegions) {
+    this._expectedAccessibilityRegions = accessibilityRegions;
+  }
+
+  addExpectedProperty(propertyName, expectedValue) {
+    this._expectedProperties.set(propertyName, expectedValue);
+  }
+
+  async beforeMethod(methodName, beforeOpen) {
     const fps = this._forceFPS ? '_FPS' : '';
     let testName = methodName + fps;
     testName = testName.replace('[', '_').replace(' ', '_').replace(']', '');
@@ -134,6 +159,10 @@ class TestSetup {
     this._eyes.addProperty('ScaleRatio', `${this._eyes.getScaleRatio()}`);
     this._eyes.addProperty('Agent ID', this._eyes.getFullAgentId());
 
+    if (beforeOpen) {
+      beforeOpen();
+    }
+
     this._driver = await this._eyes.open(this._webDriver, this._testSuitName, testName, this._testedPageSize);
 
     await this._driver.get(this._testedPageUrl);
@@ -141,7 +170,12 @@ class TestSetup {
     this._eyes.setForceFullPageScreenshot(this._forceFPS);
 
     this._expectedIgnoreRegions = [];
+    this._expectedLayoutRegions = [];
+    this._expectedStrictRegions = [];
+    this._expectedContentRegions = [];
     this._expectedFloatingRegions = [];
+    this._expectedAccessibilityRegions = [];
+    this._expectedProperties = new Map();
   }
 
   async afterMethod() {
@@ -158,18 +192,8 @@ class TestSetup {
 
         if (actualAppOutput.length > 0) {
           const imageMatchSettings = actualAppOutput[0].getImageMatchSettings();
-          const floating = imageMatchSettings.getFloating();
-          const ignoreRegions = imageMatchSettings.getIgnore();
-
-          if (this._compareExpectedRegions) {
-            if (this._expectedFloatingRegions.size() > 0) {
-              assert.deepStrictEqual(floating, this._expectedFloatingRegions, 'Floating regions lists differ');
-            }
-
-            if (this._expectedIgnoreRegions.size() > 0) {
-              assert.deepStrictEqual(ignoreRegions, this._expectedIgnoreRegions, 'Ignore regions lists differ');
-            }
-          }
+          this._compareRegions(imageMatchSettings);
+          this._compareProperties(imageMatchSettings);
         }
       }
     } catch (err) {
@@ -179,6 +203,56 @@ class TestSetup {
       if (this._driver) {
         await this._driver.quit();
       }
+    }
+  }
+
+  _compareRegions(imageMatchSettings) {
+    const floatingRegions = imageMatchSettings.getFloating();
+    const ignoreRegions = imageMatchSettings.getIgnore();
+    const layoutRegions = imageMatchSettings.getLayout();
+    const strictRegions = imageMatchSettings.getStrict();
+    const contentRegions = imageMatchSettings.getContent();
+
+    if (this._compareExpectedRegions) {
+      if (this._expectedFloatingRegions.size() > 0) {
+        assert.deepStrictEqual(floatingRegions, this._expectedFloatingRegions, 'Floating regions lists differ');
+      }
+
+      if (this._expectedIgnoreRegions.size() > 0) {
+        assert.deepStrictEqual(ignoreRegions, this._expectedIgnoreRegions, 'Ignore regions lists differ');
+      }
+
+      if (this._expectedLayoutRegions.size() > 0) {
+        assert.deepStrictEqual(layoutRegions, this._expectedLayoutRegions, 'Layout regions lists differ');
+      }
+
+      if (this._expectedStrictRegions.size() > 0) {
+        assert.deepStrictEqual(strictRegions, this._expectedStrictRegions, 'Strict regions lists differ');
+      }
+
+      if (this._expectedContentRegions.size() > 0) {
+        assert.deepStrictEqual(contentRegions, this._expectedContentRegions, 'Content regions lists differ');
+      }
+
+      // if (this._expectedAccessibilityRegions.size() > 0) {
+      //   assert.deepStrictEqual(ignoreRegions, this._expectedAccessibilityRegions, 'Accessibility regions lists differ');
+      // }
+    }
+  }
+
+  _compareProperties(imageMatchSettings) {
+    for (const [propertyNamePath, value] of this._expectedProperties.entries()) {
+      const properties = propertyNamePath.split('\\.');
+
+      let currentObject = imageMatchSettings;
+      for (const propName of properties) {
+        currentObject = currentObject[`get${propName}`]();
+        if (!currentObject) {
+          break;
+        }
+      }
+
+      assert.strictEqual(currentObject, value);
     }
   }
 

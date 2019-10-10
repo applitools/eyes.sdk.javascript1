@@ -16,14 +16,18 @@ describe('VisualGridSimple', function () {
   it('VisualGridTestPage', async function () {
     await driver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage');
 
+    const batchInfo = new BatchInfo('EyesRenderingBatch');
+    batchInfo.setSequenceName('alpha sequence');
+
     const eyes = new Eyes(new VisualGridRunner());
-    eyes.setBatch(new BatchInfo('EyesRenderingBatch'));
+    eyes.setBatch(batchInfo);
     eyes.setCorsIframeHandle(CorsIframeHandle.BLANK);
     // eyes.setProxy('http://127.0.0.1:8888');
 
     const configuration = new Configuration();
     configuration.setTestName('Open Concurrency with Batch 2');
     configuration.setAppName('RenderingGridIntegration');
+    configuration.addBrowser(800, 600, BrowserType.CHROME);
     configuration.addBrowser(800, 600, BrowserType.CHROME);
     configuration.addBrowser(700, 500, BrowserType.CHROME);
     configuration.addBrowser(400, 300, BrowserType.CHROME);

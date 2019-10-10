@@ -51,6 +51,7 @@ function makeCheckWindow({
     accessibilityLevel = _accessibilityLevel,
     layout,
     strict,
+    content,
     useDom,
     enablePatterns,
     ignoreDisplacements,
@@ -96,11 +97,12 @@ function makeCheckWindow({
     });
 
     const noOffsetSelectors = {
-      all: [ignore, layout, strict, accessibility],
+      all: [ignore, layout, strict, content, accessibility],
       ignore: 0,
       layout: 1,
       strict: 2,
-      accessibility: 3,
+      content: 3,
+      accessibility: 4,
     };
     const offsetSelectors = {
       all: [floating],
@@ -224,6 +226,7 @@ function makeCheckWindow({
         floating: offsetRegions[offsetSelectors.floating],
         layout: noOffsetRegions[noOffsetSelectors.layout],
         strict: noOffsetRegions[noOffsetSelectors.strict],
+        content: noOffsetRegions[noOffsetSelectors.content],
         accessibility: noOffsetRegions[noOffsetSelectors.accessibility],
         useDom,
         enablePatterns,

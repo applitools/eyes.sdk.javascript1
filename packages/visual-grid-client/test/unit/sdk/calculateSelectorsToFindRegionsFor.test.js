@@ -147,10 +147,10 @@ describe('calculateSelectorsToFindRegionsFor', () => {
   it('handles no sizeMode selector, no-offset AND offset selectors', () => {
     expect(
       calculateSelectorsToFindRegionsFor({
-        noOffsetSelectors: [{selector: 'ignore'}, {selector: 'layout'}, {selector: 'strict'}],
+        noOffsetSelectors: [{selector: 'ignore'}, {selector: 'layout'}, {selector: 'strict'}, {selector: 'content'}],
         offsetSelectors: [{selector: 'float'}],
       }),
-    ).to.eql(['ignore', 'layout', 'strict', 'float']);
+    ).to.eql(['ignore', 'layout', 'strict', 'content', 'float']);
   });
 
   it('handles sizeMode selector, with no-offset AND offset selectors', () => {
@@ -158,10 +158,10 @@ describe('calculateSelectorsToFindRegionsFor', () => {
       calculateSelectorsToFindRegionsFor({
         sizeMode: 'selector',
         selector: 'selector',
-        noOffsetSelectors: [{selector: 'ignore'}, {selector: 'layout'}, {selector: 'strict'}],
+        noOffsetSelectors: [{selector: 'ignore'}, {selector: 'layout'}, {selector: 'strict'}, {selector: 'content'}],
         offsetSelectors: [{selector: 'float'}],
       }),
-    ).to.eql(['selector', 'ignore', 'layout', 'strict', 'float']);
+    ).to.eql(['selector', 'ignore', 'layout', 'strict', 'content', 'float']);
   });
 
   it('handles no sizeMode selector, with no-offset selector AND offset selector *arrays* (including duplicates)', () => {
@@ -171,12 +171,13 @@ describe('calculateSelectorsToFindRegionsFor', () => {
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'kuku'}, {selector: 'ignore'}],
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'layout'}],
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'strict'}],
+          [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'content'}]
         ],
         offsetSelectors: [
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'kuku'}, {selector: 'float'}],
         ],
       }),
-    ).to.eql(['bla', 'kuku', 'ignore', 'bla', 'layout', 'bla', 'strict', 'bla', 'kuku', 'float']);
+    ).to.eql(['bla', 'kuku', 'ignore', 'bla', 'layout', 'bla', 'strict', 'bla', 'content', 'bla', 'kuku', 'float']);
   });
 
   it('handles sizeMode selector, with no-offset selector AND offset selector *arrays* (including duplicates)', () => {
@@ -186,6 +187,7 @@ describe('calculateSelectorsToFindRegionsFor', () => {
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'kuku'}, {selector: 'ignore'}],
           {selector: 'layout'},
           [{selector: 'strict'}, {selector: 'yo'}, {d: 'g'}],
+          [{selector: 'content'}],
         ],
         offsetSelectors: [
           [{a: 'b'}, {selector: 'bla'}, {c: 'd'}, {selector: 'kuku'}, {selector: 'float'}],
@@ -201,6 +203,7 @@ describe('calculateSelectorsToFindRegionsFor', () => {
       'layout',
       'strict',
       'yo',
+      'content',
       'bla',
       'kuku',
       'float',

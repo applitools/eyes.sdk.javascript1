@@ -97,7 +97,7 @@ class ImageMatchSettings {
   /**
    * @return {AccessibilityLevel} - The accessablity level to use.
    */
-  getAccessibilityLevel() {
+  getAccessibilityValidation() {
     return this._accessibilityLevel;
   }
 
@@ -105,7 +105,7 @@ class ImageMatchSettings {
   /**
    * @param {AccessibilityLevel} value - The accessablity level to use.
    */
-  setAccessibilityLevel(value) {
+  setAccessibilityValidation(value) {
     ArgumentGuard.isValidEnumValue(value, AccessibilityLevel);
     this._accessibilityLevel = value;
   }

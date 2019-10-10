@@ -1216,7 +1216,7 @@ describe('openEyes', () => {
     ]);
   });
 
-  it('handles layout and strict regions', async () => {
+  it('handles layout and strict and content regions', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1224,12 +1224,14 @@ describe('openEyes', () => {
 
     const regionLayout = {left: 1, top: 2, width: 3, height: 4};
     const regionStrict = {left: 10, top: 20, width: 30, height: 40};
+    const regionContent = {left: 11, top: 21, width: 31, height: 41};
     checkWindow({
       url: '',
       // resourceUrls: [],
       cdt: [],
       layout: [regionLayout],
       strict: [regionStrict],
+      content: [regionContent],
     });
     const [results] = await close();
     const r = results.getStepsInfo()[0].result;
@@ -1240,9 +1242,12 @@ describe('openEyes', () => {
     expect(r.__checkSettings.getStrictRegions()).to.eql([
       new IgnoreRegionByRectangle(new Region(regionStrict)),
     ]);
+    expect(r.__checkSettings.getContentRegions()).to.eql([
+      new IgnoreRegionByRectangle(new Region(regionContent)),
+    ]);
   });
 
-  it('handles ignore, layout, accessibility and strict regions with selector', async () => {
+  it('handles ignore, layout, content, accessibility and strict regions with selector', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1273,6 +1278,15 @@ describe('openEyes', () => {
       top: regionStrict1FromStatusResults.y,
       width: regionStrict1FromStatusResults.width,
       height: regionStrict1FromStatusResults.height,
+    });
+
+    const contentSelector1 = {selector: 'sel9'};
+    const regionContent1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel9'];
+    const regionContent1 = new Region({
+      left: regionContent1FromStatusResults.x,
+      top: regionContent1FromStatusResults.y,
+      width: regionContent1FromStatusResults.width,
+      height: regionContent1FromStatusResults.height,
     });
 
     const accessibilitySelector1 = {selector: 'sel4', accessibilityType: 'LargeText'};
@@ -1311,6 +1325,15 @@ describe('openEyes', () => {
       height: regionStrict2FromStatusResults.height,
     });
 
+    const contentSelector2 = {selector: 'sel10'};
+    const regionContentFromStatusResults = FakeEyesWrapper.selectorsToLocations['sel10'];
+    const regionContent2 = new Region({
+      left: regionContentFromStatusResults.x,
+      top: regionContentFromStatusResults.y,
+      width: regionContentFromStatusResults.width,
+      height: regionContentFromStatusResults.height,
+    });
+
     const accessibilitySelector2 = {selector: 'sel8', accessibilityType: 'RegularText'};
     const regionAaccessibility2FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel8'];
     const regionAccessibility2 = new Region({
@@ -1327,6 +1350,7 @@ describe('openEyes', () => {
       ignore: [ignoreSelector1, ignoreSelector2],
       layout: [layoutSelector1, layoutSelector2],
       strict: [strictSelector1, strictSelector2],
+      content: [contentSelector1, contentSelector2],
       accessibility: [accessibilitySelector1, accessibilitySelector2],
     });
     const [results] = await close();
@@ -1344,13 +1368,17 @@ describe('openEyes', () => {
       new IgnoreRegionByRectangle(regionStrict1),
       new IgnoreRegionByRectangle(regionStrict2),
     ]);
+    expect(r.__checkSettings.getContentRegions()).to.eql([
+      new IgnoreRegionByRectangle(regionContent1),
+      new IgnoreRegionByRectangle(regionContent2),
+    ]);
     expect(r.__checkSettings.getAccessibilityRegions()).to.eql([
       new AccessibilityRegionByRectangle(regionAccessibility1, 'LargeText'),
       new AccessibilityRegionByRectangle(regionAccessibility2, 'RegularText'),
     ]);
   });
 
-  it('handles ignore, layout, accessibility and strict regions with selector, when target=region and selector', async () => {
+  it('handles ignore, layout, content, accessibility and strict regions with selector, when target=region and selector', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1359,6 +1387,7 @@ describe('openEyes', () => {
     const ignoreRegion = {left: 1, top: 2, width: 3, height: 4};
     const layoutRegion = {left: 10, top: 20, width: 30, height: 40};
     const strictRegion = {left: 100, top: 200, width: 300, height: 400};
+    const contentRegion = {left: 101, top: 201, width: 301, height: 401};
     const accessibilityRegion = {
       left: 1000,
       top: 2000,
@@ -1369,11 +1398,13 @@ describe('openEyes', () => {
     const ignoreSelector = {selector: 'sel2'};
     const layoutSelector = {selector: 'sel1'};
     const strictSelector = {selector: 'sel3'};
+    const contentSelector = {selector: 'sel5'};
     const accessibilitySelector = {selector: 'sel4', accessibilityType: 'RegularText'};
     const imageOffset = FakeEyesWrapper.selectorsToLocations[selector];
     const expectedIgnoreSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel2'];
     const expectedLayoutSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel1'];
     const expectedStrictSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel3'];
+    const expectedContentSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel5'];
     const expectedAccessibilitySelectorRegion = FakeEyesWrapper.selectorsToLocations['sel4'];
 
     checkWindow({
@@ -1385,6 +1416,7 @@ describe('openEyes', () => {
       ignore: [ignoreRegion, ignoreSelector],
       layout: [layoutRegion, layoutSelector],
       strict: [strictRegion, strictSelector],
+      content: [contentRegion, contentSelector],
       accessibility: [accessibilityRegion, accessibilitySelector],
     });
 
@@ -1413,6 +1445,17 @@ describe('openEyes', () => {
         }),
       ),
     ]);
+    expect(r.__checkSettings.getContentRegions()).to.eql([
+      new IgnoreRegionByRectangle(new Region(contentRegion)),
+      new IgnoreRegionByRectangle(
+        new Region({
+          left: expectedContentSelectorRegion.x - imageOffset.x,
+          top: expectedContentSelectorRegion.y - imageOffset.y,
+          width: expectedContentSelectorRegion.width,
+          height: expectedContentSelectorRegion.height,
+        }),
+      ),
+    ]);
     expect(r.__checkSettings.getStrictRegions()).to.eql([
       new IgnoreRegionByRectangle(new Region(strictRegion)),
       new IgnoreRegionByRectangle(
@@ -1438,7 +1481,7 @@ describe('openEyes', () => {
     ]);
   });
 
-  it('handles ignore, layout, accessibility and strict regions with selector and floating regions with selector, when target=region and selector', async () => {
+  it('handles ignore, layout, content, accessibility and strict regions with selector and floating regions with selector, when target=region and selector', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
@@ -1447,6 +1490,7 @@ describe('openEyes', () => {
     const ignoreRegion = {left: 1, top: 2, width: 3, height: 4};
     const layoutRegion = {left: 10, top: 20, width: 30, height: 40};
     const strictRegion = {left: 100, top: 200, width: 300, height: 400};
+    const contentRegion = {left: 101, top: 201, width: 301, height: 401};
     const accessibilityRegion = {
       left: 1000,
       top: 2000,
@@ -1457,11 +1501,13 @@ describe('openEyes', () => {
     const ignoreSelector = {selector: 'sel2'};
     const layoutSelector = {selector: 'sel1'};
     const strictSelector = {selector: 'sel3'};
+    const contentSelector = {selector: 'sel5'};
     const accessibilitySelector = {selector: 'sel4', accessibilityType: 'RegularText'};
     const imageOffset = FakeEyesWrapper.selectorsToLocations[selector];
     const expectedIgnoreSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel2'];
     const expectedLayoutSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel1'];
     const expectedStrictSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel3'];
+    const expectedContentSelectorRegion = FakeEyesWrapper.selectorsToLocations['sel5'];
     const expectedAccessibilitySelectorRegion = FakeEyesWrapper.selectorsToLocations['sel4'];
 
     const floatingRegion = {
@@ -1493,6 +1539,7 @@ describe('openEyes', () => {
       ignore: [ignoreRegion, ignoreSelector],
       layout: [layoutRegion, layoutSelector],
       strict: [strictRegion, strictSelector],
+      content: [contentRegion, contentSelector],
       accessibility: [accessibilityRegion, accessibilitySelector],
       floating: [floatingRegion, floatingSelector],
     });
@@ -1519,6 +1566,17 @@ describe('openEyes', () => {
           top: expectedLayoutSelectorRegion.y - imageOffset.y,
           width: expectedLayoutSelectorRegion.width,
           height: expectedLayoutSelectorRegion.height,
+        }),
+      ),
+    ]);
+    expect(r.__checkSettings.getContentRegions()).to.eql([
+      new IgnoreRegionByRectangle(new Region(contentRegion)),
+      new IgnoreRegionByRectangle(
+        new Region({
+          left: expectedContentSelectorRegion.x - imageOffset.x,
+          top: expectedContentSelectorRegion.y - imageOffset.y,
+          width: expectedContentSelectorRegion.width,
+          height: expectedContentSelectorRegion.height,
         }),
       ),
     ]);
@@ -1784,9 +1842,9 @@ describe('openEyes', () => {
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20);
       if (tag === 2) {
-        expect(checkSettings.getAccessibilityLevel()).to.equal('AA');
+        expect(checkSettings.getAccessibilityValidation()).to.equal('AA');
       } else {
-        expect(wrapper.getAccessibilityLevel()).to.equal('None');
+        expect(wrapper.getAccessibilityValidation()).to.equal('None');
       }
       wrapper.setDummyTestResults();
     };
@@ -1829,9 +1887,9 @@ describe('openEyes', () => {
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20);
       if (tag === 2) {
-        expect(checkSettings.getAccessibilityLevel()).to.equal('AAA');
+        expect(checkSettings.getAccessibilityValidation()).to.equal('AAA');
       } else {
-        expect(wrapper.getAccessibilityLevel()).to.equal('AA');
+        expect(wrapper.getAccessibilityValidation()).to.equal('AA');
       }
       wrapper.setDummyTestResults();
     };
@@ -1889,9 +1947,9 @@ describe('openEyes', () => {
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20);
       if (tag === 2) {
-        expect(checkSettings.getAccessibilityLevel()).to.equal('AAA');
+        expect(checkSettings.getAccessibilityValidation()).to.equal('AAA');
       } else {
-        expect(wrapper.getAccessibilityLevel()).to.equal('AA');
+        expect(wrapper.getAccessibilityValidation()).to.equal('AA');
       }
       wrapper.setDummyTestResults();
     };

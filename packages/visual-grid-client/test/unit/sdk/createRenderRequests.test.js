@@ -162,7 +162,7 @@ describe('createRenderRequests', () => {
     ]);
   });
 
-  it('handles ignore, layout, strict, accessibility and floating regions', () => {
+  it('handles ignore, layout, strict, content, accessibility and floating regions', () => {
     const url = 'url';
     const cdt = '';
     const resources = [];
@@ -171,6 +171,7 @@ describe('createRenderRequests', () => {
     const ignore = ['kuku', {selector: 'bla'}];
     const layout = [{selector: 'bla2'}, 'kuku2'];
     const strict = ['kuku3', {selector: 'bla3'}, {selector: 'bla4'}];
+    const content = ['c1', {selector: 'c2'}, {selector: 'c3'}];
     const accessibility = [
       'kuku4',
       {selector: 'bla5', accessibilityType: 'RegularText'},
@@ -183,7 +184,7 @@ describe('createRenderRequests', () => {
       dom: createRGridDom({resources: {}, cdt}),
       browsers,
       renderInfo,
-      noOffsetSelectors: [ignore, layout, strict, accessibility],
+      noOffsetSelectors: [ignore, layout, strict, content, accessibility],
       offsetSelectors: [floating],
     });
 
@@ -205,7 +206,17 @@ describe('createRenderRequests', () => {
           region: undefined,
           sizeMode: undefined,
         },
-        selectorsToFindRegionsFor: ['bla', 'bla2', 'bla3', 'bla4', 'bla5', 'bla6', 'sel'],
+        selectorsToFindRegionsFor: [
+          'bla',
+          'bla2',
+          'bla3',
+          'bla4',
+          'c2',
+          'c3',
+          'bla5',
+          'bla6',
+          'sel',
+        ],
       },
     ]);
   });

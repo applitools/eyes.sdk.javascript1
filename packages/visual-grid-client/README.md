@@ -68,6 +68,7 @@ defined in the `browser` property of the configuration.
 * `accessibility`: TBD
 * `strict`: TBD
 * `layout`: TBD
+* `content`: TBD
 * `sendDom`: TBD
 * `scriptHooks`: a set of scripts to be run by the browser during the rendering.
    An object with the following properties:

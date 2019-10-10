@@ -33,6 +33,8 @@ const selectorsToLocations = {
   sel6: {x: 400, y: 401, width: 402, height: 403},
   sel7: {x: 500, y: 501, width: 502, height: 503},
   sel8: {x: 600, y: 601, width: 602, height: 603},
+  sel9: {x: 604, y: 604, width: 604, height: 604},
+  sel10: {x: 605, y: 605, width: 605, height: 605},
 };
 
 class FakeEyesWrapper extends EventEmitter {
@@ -284,11 +286,11 @@ class FakeEyesWrapper extends EventEmitter {
     return this.matchLevel;
   }
 
-  setAccessibilityLevel(value) {
+  setAccessibilityValidation(value) {
     this.accessibilityLevel = value;
   }
 
-  getAccessibilityLevel() {
+  getAccessibilityValidation() {
     return this.accessibilityLevel;
   }
 

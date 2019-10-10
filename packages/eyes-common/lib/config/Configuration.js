@@ -11,6 +11,11 @@ const { ArgumentGuard } = require('../utils/ArgumentGuard');
 const { TypeUtils } = require('../utils/TypeUtils');
 const { GeneralUtils } = require('../utils/GeneralUtils');
 
+/**
+ * @typedef {{width: number, height: number, name: BrowserType}} RenderBrowserInfo
+ * @typedef {{deviceName: string, screenOrientation: ScreenOrientation}} DeviceInfo
+ */
+
 const MIN_MATCH_TIMEOUT = 500;
 
 const DEFAULT_VALUES = {
@@ -837,8 +842,8 @@ class Configuration {
   /**
    * @return {AccessibilityLevel} - The test-wide accessibility level.
    */
-  getAccessibilityLevel() {
-    return this._defaultMatchSettings.getAccessibilityLevel();
+  getAccessibilityValidation() {
+    return this._defaultMatchSettings.getAccessibilityValidation();
   }
 
   /**
@@ -847,8 +852,8 @@ class Configuration {
    * @param {AccessibilityLevel} value - The test-wide accessibility level to use when checking application screenshot.
    * @return {this}
    */
-  setAccessibilityLevel(value) {
-    this._defaultMatchSettings.setAccessibilityLevel(value);
+  setAccessibilityValidation(value) {
+    this._defaultMatchSettings.setAccessibilityValidation(value);
     return this;
   }
 

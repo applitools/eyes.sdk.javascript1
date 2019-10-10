@@ -65,7 +65,7 @@ class BatchInfo {
     this._name = name || GeneralUtils.getEnvValue('BATCH_NAME');
     this._startedAt = startedAt || new Date();
     this._sequenceName = sequenceName || GeneralUtils.getEnvValue('BATCH_SEQUENCE');
-    this._notifyOnCompletion = notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY') || false;
+    this._notifyOnCompletion = notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY', true) || false;
   }
 
   /**

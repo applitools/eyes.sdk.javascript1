@@ -121,9 +121,9 @@ class MatchWindowTask {
         matchLevel = this._eyes.getDefaultMatchSettings().getMatchLevel();
       }
 
-      let accessibilityLevel = checkSettings.getAccessibilityLevel();
+      let accessibilityLevel = checkSettings.getAccessibilityValidation();
       if (TypeUtils.isNull(accessibilityLevel)) {
-        accessibilityLevel = this._eyes.getDefaultMatchSettings().getAccessibilityLevel();
+        accessibilityLevel = this._eyes.getDefaultMatchSettings().getAccessibilityValidation();
       }
 
       let ignoreCaret = checkSettings.getIgnoreCaret();

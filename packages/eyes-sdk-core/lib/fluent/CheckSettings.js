@@ -183,7 +183,7 @@ class CheckSettings {
    * @param {AccessibilityLevel} accessibilityLevel - The accessibilityLevel level to use.
    * @return {this} - This instance of the settings object.
    */
-  accessibilityLevel(accessibilityLevel) {
+  accessibilityValidation(accessibilityLevel) {
     this._accessibilityLevel = accessibilityLevel;
     return this;
   }
@@ -192,7 +192,7 @@ class CheckSettings {
    * @ignore
    * @return {AccessibilityLevel}
    */
-  getAccessibilityLevel() {
+  getAccessibilityValidation() {
     return this._accessibilityLevel;
   }
 

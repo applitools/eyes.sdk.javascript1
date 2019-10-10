@@ -2,7 +2,7 @@
 
 const {
   ArgumentGuard, TypeUtils, EyesError, Region, Location, RectangleSize, CoordinatesType, ImageDeltaCompressor,
-  SimplePropertyHandler, ReadOnlyPropertyHandler, FileDebugScreenshotsProvider, NullDebugScreenshotProvider,
+  SimplePropertyHandler, ReadOnlyPropertyHandler, FileDebugScreenshotsProvider, NullDebugScreenshotProvider, GeneralUtils
 } = require('@applitools/eyes-common');
 
 const { AppOutputProvider } = require('./capture/AppOutputProvider');
@@ -1201,20 +1201,32 @@ class EyesBase extends EyesAbstract {
   }
 
   /**
+   * @return {boolean}
+   * @private
+   */
+  _getDontCloseBatches() {
+    return GeneralUtils.getEnvValue('DONT_CLOSE_BATCHES', true) || false;
+  }
+
+  /**
    * @package
    * @return {Promise}
    */
   async closeBatch() {
-    if (this._configuration.getIsDisabled()) {
+    if (this._configuration.getIsDisabled() || this._getDontCloseBatches()) {
       this._logger.verbose('closeBatch Ignored');
       return;
     }
 
-    if (this._configuration._batch) { // if use .getBatch(), it will create an empty batch. If session is open, batch should exists
-      const batchId = this._configuration._batch.getId();
-      await this._serverConnector.deleteBatchSessions(batchId);
-    } else {
-      this._logger.log('Cannot close batch: no batch found.');
+    try {
+      if (this._configuration._batch) { // if use .getBatch(), it will create an empty batch. If session is open, batch should exists
+        const batchId = this._configuration._batch.getId();
+        await this._serverConnector.deleteBatchSessions(batchId);
+      } else {
+        this._logger.log('Failed to close batch: no batch found.');
+      }
+    } catch (e) {
+      this._logger.log('Failed to close batch: error occurred', e);
     }
   }
 

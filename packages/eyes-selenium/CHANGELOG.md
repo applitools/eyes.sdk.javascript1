@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.3...@applitools/eyes-selenium@4.31.4) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.2...@applitools/eyes-selenium@4.31.3) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.1...@applitools/eyes-selenium@4.31.2) (2019-10-07)
+
+
+### Bug Fixes
+
+* skip error inside `EyesBase.closeBatch()` (to work for all SDKs) ([b25d298](https://github.com/applitools/eyes.sdk.javascript1/commit/b25d298))
+
+
+
+
+
+## [4.31.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.0...@applitools/eyes-selenium@4.31.1) (2019-10-06)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** gaurding error in Runners for close batch exceptions ([17705be](https://github.com/applitools/eyes.sdk.javascript1/commit/17705be))
+
+
+
+
+
+# [4.31.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.7...@applitools/eyes-selenium@4.31.0) (2019-10-06)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** if we need to get region by selector, VG captured dom without data attributes ([2b3d660](https://github.com/applitools/eyes.sdk.javascript1/commit/2b3d660))
+* **visual-grid-client, eyes-common, eyes-sdk-core, eyes-selenium:** renamed setAccessibilityLevel to setAccessibilityValidation ([77d60e8](https://github.com/applitools/eyes.sdk.javascript1/commit/77d60e8))
+
+
+### Features
+
+* **eyes-common:** move BrowserType, DeviceName, ScreenOrientation, StitchMode to common module ([7dbdb41](https://github.com/applitools/eyes.sdk.javascript1/commit/7dbdb41))
+
+
+
+
+
 ## [4.30.7](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.6...@applitools/eyes-selenium@4.30.7) (2019-10-02)
 
 **Note:** Version bump only for package @applitools/eyes-selenium
