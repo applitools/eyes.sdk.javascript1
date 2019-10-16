@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "12.35.1",
+  "version": "12.36.3",
   "description": "",
   "keywords": [
     "applitools",
@@ -27,7 +27,8 @@
   "main": "src/visual-grid-client.js",
   "files": [
     "src",
-    "browser.js"
+    "browser.js",
+    "index.d.ts"
   ],
   "dependencies": {
     "@applitools/dom-snapshot": "^3.0.2",

@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.36.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.0...@applitools/visual-grid-client@12.36.2) (2019-10-15)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added isDisabled to ts defenition file ([71c6908](https://github.com/applitools/eyes.sdk.javascript1/commit/71c6908))
+* **visual-grid-client:** trying package fix ([8b42147](https://github.com/applitools/eyes.sdk.javascript1/commit/8b42147))
+
+
+
+
+
+# [12.36.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.35.1...@applitools/visual-grid-client@12.36.0) (2019-10-15)
+
+
+### Features
+
+* **visual-grid-client:** added typescript support ([cbfaac9](https://github.com/applitools/eyes.sdk.javascript1/commit/cbfaac9))
+
+
+
+
+
 ## [12.35.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.35.0...@applitools/visual-grid-client@12.35.1) (2019-10-07)
 
 **Note:** Version bump only for package @applitools/visual-grid-client

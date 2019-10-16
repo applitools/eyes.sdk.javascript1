@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.38](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/dom-utils@4.6.37...@applitools/dom-utils@4.6.38) (2019-10-15)
+
+
+### Bug Fixes
+
+* **dom-utils:** clear timeout when it is not needed anymore ([e8722b3](https://github.com/applitools/eyes.sdk.javascript1/commit/e8722b3))
+
+
+
+
+
 ## [4.6.37](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/dom-utils@4.6.36...@applitools/dom-utils@4.6.37) (2019-10-07)
 
 **Note:** Version bump only for package @applitools/dom-utils

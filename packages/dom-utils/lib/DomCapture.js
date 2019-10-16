@@ -79,18 +79,23 @@ class DomCapture {
    * @return {Promise<{string}>}
    */
   async getFrameDom(script, url) {
-    let result;
+    let timeout, result;
 
     let isCheckTimerTimedOut = false;
-    setTimeout(() => {
-      isCheckTimerTimedOut = true;
-    }, DOM_EXTRACTION_TIMEOUT);
 
-    do {
-      const resultAsString = await this._driver.executeScript(script);
-      result = JSON.parse(resultAsString);
-      await GeneralUtils.sleep(DOM_CAPTURE_PULL_TIMEOUT);
-    } while (result.status === SCRIPT_RESPONSE_STATUS.WIP && !isCheckTimerTimedOut);
+    try {
+      timeout = setTimeout(() => {
+        isCheckTimerTimedOut = true;
+      }, DOM_EXTRACTION_TIMEOUT);
+
+      do {
+        const resultAsString = await this._driver.executeScript(script);
+        result = JSON.parse(resultAsString);
+        await GeneralUtils.sleep(DOM_CAPTURE_PULL_TIMEOUT);
+      } while (result.status === SCRIPT_RESPONSE_STATUS.WIP && !isCheckTimerTimedOut);
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (result.status === SCRIPT_RESPONSE_STATUS.ERROR) {
       throw new EyesError('Error during capturing DOM', result.error);

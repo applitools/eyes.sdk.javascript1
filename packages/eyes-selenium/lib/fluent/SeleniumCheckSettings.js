@@ -240,8 +240,8 @@ class SeleniumCheckSettings extends CheckSettings {
   // noinspection JSCheckFunctionSignatures
   /**
    * @inheritDoc
-   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings|By|WebElement|EyesWebElement} regionOrContainer -
-   *   The content rectangle or region container
+   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings|By|WebElement|EyesWebElement} regionOrContainer - The
+   *   content rectangle or region container
    * @param {AccessibilityRegionType} [regionType] - Type of accessibility.
    * @return {this}
    */
