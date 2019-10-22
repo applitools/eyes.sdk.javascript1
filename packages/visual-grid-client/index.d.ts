@@ -256,11 +256,15 @@ declare namespace Eyes {
     interface FloatingRegion extends Region {
       maxUpOffset: number
       maxDownOffset: number
+      maxLeftOffset: number
+      maxRightOffset: number
     }
 
     interface FloatingSelector extends Selector {
       maxUpOffset: number
       maxDownOffset: number
+      maxLeftOffset: number
+      maxRightOffset: number
     }
 
     enum AccessibilityType {

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.36.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.2...@applitools/visual-grid-client@12.36.4) (2019-10-16)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added Left and Right offsets to ts defenition file ([1d967c7](https://github.com/applitools/eyes.sdk.javascript1/commit/1d967c7))
+* **visual-grid-client:** better ts defention file ([4afcfcc](https://github.com/applitools/eyes.sdk.javascript1/commit/4afcfcc))
+
+
+
+
+
 ## [12.36.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.0...@applitools/visual-grid-client@12.36.2) (2019-10-15)
 
 
