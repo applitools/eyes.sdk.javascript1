@@ -3,6 +3,277 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [13.0.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.0.0...@applitools/visual-grid-client@13.0.1) (2019-10-27)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added dom snapshot to 3.0.4 ([586c413](https://github.com/applitools/eyes.sdk.javascript1/commit/586c413))
+
+
+
+
+
+# [13.0.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.4...@applitools/visual-grid-client@13.0.0) (2019-10-27)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** changed enums to strings in ts defenition file ([b2fe5a9](https://github.com/applitools/eyes.sdk.javascript1/commit/b2fe5a9))
+* **visual-grid-client:** fix package json ([579c8c2](https://github.com/applitools/eyes.sdk.javascript1/commit/579c8c2))
+* **visual-grid-client:** removed unnessecery parsing of blobs ([8075058](https://github.com/applitools/eyes.sdk.javascript1/commit/8075058))
+
+
+### BREAKING CHANGES
+
+* **visual-grid-client:** MUST UPDATE dom snapshot to 3.0.4 - since dom snapshot had a bug that this bug fix in vgc covers for git status
+
+
+
+
+
+## [12.36.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.2...@applitools/visual-grid-client@12.36.4) (2019-10-16)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added Left and Right offsets to ts defenition file ([1d967c7](https://github.com/applitools/eyes.sdk.javascript1/commit/1d967c7))
+* **visual-grid-client:** better ts defention file ([4afcfcc](https://github.com/applitools/eyes.sdk.javascript1/commit/4afcfcc))
+
+
+
+
+
+## [12.36.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.0...@applitools/visual-grid-client@12.36.2) (2019-10-15)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added isDisabled to ts defenition file ([71c6908](https://github.com/applitools/eyes.sdk.javascript1/commit/71c6908))
+* **visual-grid-client:** trying package fix ([8b42147](https://github.com/applitools/eyes.sdk.javascript1/commit/8b42147))
+
+
+
+
+
+# [12.36.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.35.1...@applitools/visual-grid-client@12.36.0) (2019-10-15)
+
+
+### Features
+
+* **visual-grid-client:** added typescript support ([cbfaac9](https://github.com/applitools/eyes.sdk.javascript1/commit/cbfaac9))
+
+
+
+
+
+## [12.35.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.35.0...@applitools/visual-grid-client@12.35.1) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.35.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.34.4...@applitools/visual-grid-client@12.35.0) (2019-10-07)
+
+
+### Features
+
+* **visual-grid-client:** added content match regions to checkWindow ([462302a](https://github.com/applitools/eyes.sdk.javascript1/commit/462302a))
+
+
+
+
+
+## [12.34.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.34.3...@applitools/visual-grid-client@12.34.4) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+## [12.34.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.34.2...@applitools/visual-grid-client@12.34.3) (2019-10-06)
+
+
+### Bug Fixes
+
+* **visual-grid-client, eyes-common, eyes-sdk-core, eyes-selenium:** renamed setAccessibilityLevel to setAccessibilityValidation ([77d60e8](https://github.com/applitools/eyes.sdk.javascript1/commit/77d60e8))
+
+
+
+
+
+## [12.34.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.34.1...@applitools/visual-grid-client@12.34.2) (2019-10-02)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+## [12.34.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.34.0...@applitools/visual-grid-client@12.34.1) (2019-09-27)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.34.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.33.2...@applitools/visual-grid-client@12.34.0) (2019-09-26)
+
+
+### Features
+
+* **visual-grid-client:** added 'safari' to supported browsers arguments ([59cd915](https://github.com/applitools/eyes.sdk.javascript1/commit/59cd915))
+
+
+
+
+
+## [12.33.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.33.1...@applitools/visual-grid-client@12.33.2) (2019-09-24)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed disabled closeBatch functions ([e11162f](https://github.com/applitools/eyes.sdk.javascript1/commit/e11162f))
+
+
+
+
+
+## [12.33.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.33.0...@applitools/visual-grid-client@12.33.1) (2019-09-24)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** better memory for closeBatches & dontCloseBatches ([6961241](https://github.com/applitools/eyes.sdk.javascript1/commit/6961241))
+
+
+
+
+
+# [12.33.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.5...@applitools/visual-grid-client@12.33.0) (2019-09-24)
+
+
+### Features
+
+* **visual-grid-client:** added closeBatch function to makeVisualGridClient ctr ([40b5a67](https://github.com/applitools/eyes.sdk.javascript1/commit/40b5a67))
+
+
+
+
+
+## [12.32.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.4...@applitools/visual-grid-client@12.32.5) (2019-09-23)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fix render script ([1ffbfd0](https://github.com/applitools/eyes.sdk.javascript1/commit/1ffbfd0))
+
+
+
+
+
+## [12.32.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.3...@applitools/visual-grid-client@12.32.4) (2019-09-23)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core, visual-grid-client:** removed getter and setter for accessibilityLevel from EyesAbstarct ([9bb7e39](https://github.com/applitools/eyes.sdk.javascript1/commit/9bb7e39))
+
+
+
+
+
+## [12.32.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.2...@applitools/visual-grid-client@12.32.3) (2019-09-23)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** removed delete sessions on each close ([e804cb7](https://github.com/applitools/eyes.sdk.javascript1/commit/e804cb7))
+
+
+
+
+
+## [12.32.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.1...@applitools/visual-grid-client@12.32.2) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changed accessibilityRegionType API - removed None. ([b510014](https://github.com/applitools/eyes.sdk.javascript1/commit/b510014))
+
+
+
+
+
+## [12.32.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.32.0...@applitools/visual-grid-client@12.32.1) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+# [12.32.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.31.1...@applitools/visual-grid-client@12.32.0) (2019-09-19)
+
+
+### Features
+
+* **visual-grid-client:** better error handeling for accessibility ([1de4b45](https://github.com/applitools/eyes.sdk.javascript1/commit/1de4b45))
+
+
+
+
+
+## [12.31.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.31.0...@applitools/visual-grid-client@12.31.1) (2019-09-18)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** renamed type in accessibility region to accessibilityType ([d2039cf](https://github.com/applitools/eyes.sdk.javascript1/commit/d2039cf))
+
+
+
+
+
+# [12.31.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.30.0...@applitools/visual-grid-client@12.31.0) (2019-09-18)
+
+
+### Features
+
+* **visual-grid-client:** added new params to configParams export ([d2f11e1](https://github.com/applitools/eyes.sdk.javascript1/commit/d2f11e1))
+
+
+
+
+
+# [12.30.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.28.3...@applitools/visual-grid-client@12.30.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed cloesBatches error handleing ([2ccdb7e](https://github.com/applitools/eyes.sdk.javascript1/commit/2ccdb7e))
+* **visual-grid-client:** fixed dom snapshot process page function name in takeDomSnapshot ([be9c713](https://github.com/applitools/eyes.sdk.javascript1/commit/be9c713))
+* **visual-grid-client:** now referrer is per checkWindow ([4998285](https://github.com/applitools/eyes.sdk.javascript1/commit/4998285))
+* **visual-grid-client:** render script fix ([aaa6828](https://github.com/applitools/eyes.sdk.javascript1/commit/aaa6828))
+* **visual-grid-client:** updated ds to new script names ([dadd163](https://github.com/applitools/eyes.sdk.javascript1/commit/dadd163))
+
+
+### Features
+
+* **eyes-common, eyes-sdk-core, visual-grid-client:** Added accessibilityLevel to match request. ([df2a383](https://github.com/applitools/eyes.sdk.javascript1/commit/df2a383))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** supporting accessibility regions to match request ([cc9ec8c](https://github.com/applitools/eyes.sdk.javascript1/commit/cc9ec8c))
+* **visual-grid-client:** added closeBatch request and notifyOnCompletion flag ([a1ee92d](https://github.com/applitools/eyes.sdk.javascript1/commit/a1ee92d))
+* **visual-grid-client:** added referrer to openEyes and ctr ([5906063](https://github.com/applitools/eyes.sdk.javascript1/commit/5906063))
+* **visual-grid-client:** use correct script to make DOM snapshot in IE ([543d38e](https://github.com/applitools/eyes.sdk.javascript1/commit/543d38e))
+
+
+
+
+
 ## [12.28.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.28.2...@applitools/visual-grid-client@12.28.3) (2019-09-04)
 
 **Note:** Version bump only for package @applitools/visual-grid-client

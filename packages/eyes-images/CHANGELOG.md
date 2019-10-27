@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.12.20](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.19...@applitools/eyes-images@4.12.20) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.19](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.18...@applitools/eyes-images@4.12.19) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.18](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.17...@applitools/eyes-images@4.12.18) (2019-10-06)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.17](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.16...@applitools/eyes-images@4.12.17) (2019-10-02)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.16](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.15...@applitools/eyes-images@4.12.16) (2019-09-27)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.15](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.14...@applitools/eyes-images@4.12.15) (2019-09-23)
+
+
+### Bug Fixes
+
+* add exports of accessibility constants ([a4c0bed](https://github.com/applitools/eyes.sdk.javascript1/commit/a4c0bed))
+
+
+
+
+
+## [4.12.14](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.13...@applitools/eyes-images@4.12.14) (2019-09-23)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.13](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.12...@applitools/eyes-images@4.12.13) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.12](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.11...@applitools/eyes-images@4.12.12) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
+## [4.12.11](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.10...@applitools/eyes-images@4.12.11) (2019-09-18)
+
+**Note:** Version bump only for package @applitools/eyes-images
+
+
+
+
+
 ## [4.12.10](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-images@4.12.9...@applitools/eyes-images@4.12.10) (2019-09-04)
 
 

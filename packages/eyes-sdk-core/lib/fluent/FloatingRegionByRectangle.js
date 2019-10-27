@@ -28,7 +28,7 @@ class FloatingRegionByRectangle extends GetFloatingRegion {
    * @inheritDoc
    */
   async getRegion(eyesBase, screenshot) { // eslint-disable-line no-unused-vars
-    return new FloatingMatchSettings({
+    const floatingRegion = new FloatingMatchSettings({
       left: this._rect.getLeft(),
       top: this._rect.getTop(),
       width: this._rect.getWidth(),
@@ -38,6 +38,7 @@ class FloatingRegionByRectangle extends GetFloatingRegion {
       maxLeftOffset: this._maxLeftOffset,
       maxRightOffset: this._maxRightOffset,
     });
+    return [floatingRegion];
   }
 }
 

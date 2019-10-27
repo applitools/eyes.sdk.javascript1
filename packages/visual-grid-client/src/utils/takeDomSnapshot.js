@@ -1,23 +1,36 @@
 'use strict';
 
-const {getProcessPageAndSerializePoll} = require('@applitools/dom-snapshot');
+const {
+  getProcessPageAndSerializePoll,
+  getProcessPageAndSerializePollForIE,
+} = require('@applitools/dom-snapshot');
 const {GeneralUtils} = require('@applitools/eyes-common');
 
 const PULL_TIMEOUT = 200; // ms
 const CAPTURE_DOM_TIMEOUT_MS = 5 * 60 * 1000; // 5 min
 
-let captureScript;
+let captureScript, captureScriptIE;
+
 async function getScript() {
   if (!captureScript) {
-    const processPageAndPollScript = await getProcessPageAndSerializePoll();
-    captureScript = `${processPageAndPollScript} return __processPageAndPoll();`;
+    const scriptBody = await getProcessPageAndSerializePoll();
+    captureScript = `${scriptBody} return __processPageAndSerializePoll();`;
   }
 
   return captureScript;
 }
 
-async function takeDomSnapshot({executeScript, startTime = Date.now()}) {
-  const processPageAndPollScript = await getScript();
+async function getScriptForIE() {
+  if (!captureScriptIE) {
+    const scriptBody = await getProcessPageAndSerializePollForIE();
+    captureScriptIE = `${scriptBody} return __processPageAndSerializePollForIE();`;
+  }
+
+  return captureScriptIE;
+}
+
+async function takeDomSnapshot({executeScript, startTime = Date.now(), browser}) {
+  const processPageAndPollScript = browser === 'IE' ? await getScriptForIE() : await getScript();
   const resultAsString = await executeScript(processPageAndPollScript);
 
   const scriptResponse = JSON.parse(resultAsString);

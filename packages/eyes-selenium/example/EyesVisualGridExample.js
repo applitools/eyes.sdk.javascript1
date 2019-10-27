@@ -12,7 +12,6 @@ const { Eyes, VisualGridRunner, Target, ConsoleLogHandler, Configuration, Browse
 
   // Initialize the eyes SDK and set your private API key.
   const eyes = new Eyes(new VisualGridRunner());
-  // eyes.setApiKey('Your API Key');
   eyes.setLogHandler(new ConsoleLogHandler(false));
 
   try {
@@ -24,11 +23,13 @@ const { Eyes, VisualGridRunner, Target, ConsoleLogHandler, Configuration, Browse
     configuration.setConcurrentSessions(3);
     configuration.setAppName('Eyes Examples');
     configuration.setTestName('My first Javascript test!');
-    configuration.setDisplayName('The display title');
+    // configuration.setDisplayName('The display title');
     configuration.addBrowser(1200, 800, BrowserType.CHROME);
     configuration.addBrowser(1200, 800, BrowserType.FIREFOX);
     configuration.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
     // configuration.setProxy('http://localhost:8888');
+    // configuration.setApiKey(process.env.APPLITOOLS_FABRIC_API_KEY);
+    // configuration.setServerUrl('https://eyesfabric4eyes.applitools.com');
     eyes.setConfiguration(configuration);
 
     // Start the test and set the browser's viewport size to 800x600.

@@ -9,7 +9,7 @@ function makeTestController({testName, numOfTests, logger}) {
   return {
     setError: (index, err) => {
       logger.log('error set in test', testName, err);
-      errors[index] = err;
+      errors[index] = err && err.message ? err : new Error(err);
     },
 
     getError: index => {
@@ -26,7 +26,7 @@ function makeTestController({testName, numOfTests, logger}) {
     },
 
     setFatalError: err => {
-      fatalError = err;
+      fatalError = err && err.message ? err : new Error(err);
     },
 
     getFatalError: () => {

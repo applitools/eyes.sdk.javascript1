@@ -32,4 +32,7 @@ module.exports = [
   'useDom',
   'enablePatterns',
   'ignoreDisplacements',
+  'accessibilityLevel',
+  'notifyOnCompletion',
+  'dontCloseBatches',
 ];

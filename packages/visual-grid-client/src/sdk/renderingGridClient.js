@@ -1,9 +1,9 @@
 /* global fetch */
 'use strict';
 
-const {Logger} = require('@applitools/eyes-common');
-
 const throatPkg = require('throat');
+const {Logger} = require('@applitools/eyes-common');
+const {ptimeoutWithError} = require('@applitools/functional-commons');
 const makeGetAllResources = require('./getAllResources');
 const extractCssResources = require('./extractCssResources');
 const makeFetchResource = require('./fetchResource');
@@ -15,9 +15,9 @@ const makeRenderBatch = require('./renderBatch');
 const makeOpenEyes = require('./openEyes');
 const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping');
 const getBatch = require('./getBatch');
+const makeCloseBatch = require('./makeCloseBatch');
 const transactionThroat = require('./transactionThroat');
 const getRenderMethods = require('./getRenderMethods');
-const {ptimeoutWithError} = require('@applitools/functional-commons');
 
 const {
   createRenderWrapper,
@@ -51,6 +51,7 @@ function makeRenderingGridClient({
   ignoreCaret,
   isDisabled,
   matchLevel,
+  accessibilityLevel,
   useDom,
   enablePatterns,
   ignoreDisplacements,
@@ -65,7 +66,9 @@ function makeRenderingGridClient({
   agentId,
   fetchResourceTimeout = 120000,
   userAgent,
-  referrer,
+  notifyOnCompletion,
+  batches: _batches,
+  dontCloseBatches,
 }) {
   const openEyesConcurrency = Number(concurrency);
 
@@ -133,6 +136,7 @@ function makeRenderingGridClient({
     batchSequenceName: defaultBatchSequenceName,
   } = getBatch({batchSequenceName, batchName, batchId});
 
+  const batches = _batches || new Map();
   const openEyes = makeOpenEyes({
     appName,
     browser,
@@ -149,6 +153,7 @@ function makeRenderingGridClient({
     ignoreCaret,
     isDisabled,
     matchLevel,
+    accessibilityLevel,
     useDom,
     enablePatterns,
     ignoreDisplacements,
@@ -171,11 +176,15 @@ function makeRenderingGridClient({
     eyesTransactionThroat,
     agentId,
     userAgent,
-    referrer,
+    notifyOnCompletion,
+    batches,
   });
+
+  const closeBatch = !dontCloseBatches && !isDisabled ? makeCloseBatch(batches) : async () => {};
 
   return {
     openEyes,
+    closeBatch,
   };
 
   function getRenderInfo() {

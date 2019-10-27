@@ -8,6 +8,7 @@ const saveData = require('../troubleshoot/saveData');
 const createRenderRequests = require('./createRenderRequests');
 const createCheckSettings = require('./createCheckSettings');
 const calculateMatchRegions = require('./calculateMatchRegions');
+const isInvalidAccessibility = require('./isInvalidAccessibility');
 
 function makeCheckWindow({
   testController,
@@ -25,7 +26,9 @@ function makeCheckWindow({
   stepCounter,
   testName,
   openEyesPromises,
+  fetchHeaders,
   matchLevel: _matchLevel,
+  accessibilityLevel: _accessibilityLevel,
 }) {
   return function checkWindow({
     resourceUrls = [],
@@ -42,14 +45,18 @@ function makeCheckWindow({
     scriptHooks,
     ignore,
     floating,
+    accessibility,
     sendDom = true,
     matchLevel = _matchLevel,
+    accessibilityLevel = _accessibilityLevel,
     layout,
     strict,
+    content,
     useDom,
     enablePatterns,
     ignoreDisplacements,
     source,
+    referrer,
   }) {
     if (target === 'window' && !fully) {
       sizeMode = 'viewport';
@@ -57,6 +64,13 @@ function makeCheckWindow({
       sizeMode = 'selector';
     } else if (target === 'region' && region) {
       sizeMode = 'region';
+    }
+    fetchHeaders['Referer'] = referrer;
+
+    const accErr = isInvalidAccessibility(accessibility);
+    if (accErr) {
+      testController.setFatalError(`Invalid accessibility:\n${accErr}`);
+      return;
     }
 
     const currStepCount = ++stepCounter;
@@ -83,10 +97,12 @@ function makeCheckWindow({
     });
 
     const noOffsetSelectors = {
-      all: [ignore, layout, strict],
+      all: [ignore, layout, strict, content, accessibility],
       ignore: 0,
       layout: 1,
       strict: 2,
+      content: 3,
+      accessibility: 4,
     };
     const offsetSelectors = {
       all: [floating],
@@ -210,10 +226,14 @@ function makeCheckWindow({
         floating: offsetRegions[offsetSelectors.floating],
         layout: noOffsetRegions[noOffsetSelectors.layout],
         strict: noOffsetRegions[noOffsetSelectors.strict],
+        content: noOffsetRegions[noOffsetSelectors.content],
+        accessibility: noOffsetRegions[noOffsetSelectors.accessibility],
         useDom,
         enablePatterns,
         ignoreDisplacements,
         renderId,
+        matchLevel,
+        accessibilityLevel,
       });
 
       logger.verbose(
@@ -231,9 +251,6 @@ function makeCheckWindow({
         `running wrapper.checkWindow for test ${testName} stepCount #${currStepCount}`,
       );
 
-      const origMatchLevel = wrapper.getMatchLevel();
-      if (matchLevel !== undefined) wrapper.setMatchLevel(matchLevel);
-
       await wrapper.checkWindow({
         screenshotUrl,
         tag,
@@ -242,8 +259,6 @@ function makeCheckWindow({
         imageLocation,
         source,
       });
-
-      wrapper.setMatchLevel(origMatchLevel); // origMatchLevel cannot be undefined because eyes-sdk-core sets the default to MatchLevel.Strict
     }
 
     async function startRender() {

@@ -33,6 +33,44 @@ class EyesWrapper extends EyesBase {
     await this.abort();
   }
 
+  async getScreenshot() {
+    return;
+  }
+
+  async getScreenshotUrl() {
+    return this.screenshotUrl;
+  }
+
+  async getInferredEnvironment() {
+    return this.inferredEnvironment;
+  }
+
+  async setViewportSize(viewportSize) {
+    this._configuration.setViewportSize(viewportSize);
+    this._viewportSizeHandler.set(this._configuration.getViewportSize());
+  }
+
+  async getTitle() {
+    return 'some title'; // TODO what should this be? is it connected with the tag in `checkWindow` somehow?
+  }
+
+  async getDomUrl() {
+    return this.domUrl;
+  }
+
+  async getImageLocation() {
+    return this.imageLocation;
+  }
+
+  /**
+   * Get the AUT session id.
+   *
+   * @return {Promise<?String>}
+   */
+  async getAUTSessionId() {
+    return; // TODO is this good?
+  }
+
   setAssumedConfiguration(configuration) {
     this._assumedConfiguration = configuration;
   }
@@ -50,13 +88,8 @@ class EyesWrapper extends EyesBase {
     this.agentId = agentId;
   }
 
-  /**
-   * Get the AUT session id.
-   *
-   * @return {Promise<?String>}
-   */
-  async getAUTSessionId() {
-    return; // TODO is this good?
+  setAccessibilityValidation(accessibilityLevel) {
+    this._configuration.getDefaultMatchSettings().setAccessibilityValidation(accessibilityLevel);
   }
 
   /**
@@ -106,37 +139,14 @@ class EyesWrapper extends EyesBase {
     super.setProxy(proxy);
   }
 
-  async getScreenshot() {
-    return;
-  }
-
-  async getScreenshotUrl() {
-    return this.screenshotUrl;
-  }
-
-  async getInferredEnvironment() {
-    return this.inferredEnvironment;
-  }
-
   setInferredEnvironment(value) {
     this.inferredEnvironment = value;
   }
 
-  async setViewportSize(viewportSize) {
-    this._configuration.setViewportSize(viewportSize);
-    this._viewportSizeHandler.set(this._configuration.getViewportSize());
-  }
-
-  async getTitle() {
-    return 'some title'; // TODO what should this be? is it connected with the tag in `checkWindow` somehow?
-  }
-
-  async getDomUrl() {
-    return this.domUrl;
-  }
-
-  async getImageLocation() {
-    return this.imageLocation;
+  getExistingBatchId() {
+    // not doing eyesInstance.getBatch().getId() because
+    // it would generate a new id if called before open
+    return this._configuration._batch && this._configuration._batch.getId();
   }
 }
 

@@ -180,6 +180,41 @@ describe('closeEyes', () => {
     expect(resultWithErr).to.deep.equal([]);
   });
 
+  it('sets the correct batchId on batches when closing', async () => {
+    const batches = new Map();
+    const openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      fetchResourceTimeout: 2000,
+      batches,
+    }).openEyes;
+
+    let {checkWindow, close} = await openEyes({
+      wrappers: [wrapper, wrapper2],
+      browser: [{width: 1, height: 1}, {width: 2, height: 2}],
+      appName,
+    });
+    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`});
+    await close();
+
+    // this simulates setting batchId: 'secondBatchId' in openEyes
+    const wrapper3 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'});
+    const wrapper4 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'});
+
+    ({checkWindow, close} = await openEyes({
+      wrappers: [wrapper3, wrapper4],
+      browser: [{width: 1, height: 1}, {width: 2, height: 2}],
+      appName,
+    }));
+    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`});
+    await close();
+
+    expect([...batches.keys()]).to.eql(['1', 'secondBatchId']);
+    expect(batches.get('1').name).to.equal('bound deleteBatchSessions');
+    expect(batches.get('secondBatchId').name).to.equal('bound deleteBatchSessions');
+  });
+
   it('resolves with empty array if aborted by user with throwEx=false', async () => {
     const {checkWindow, abort, close} = await openEyes({
       wrappers: [wrapper, wrapper2],

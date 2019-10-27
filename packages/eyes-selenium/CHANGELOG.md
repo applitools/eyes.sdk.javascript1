@@ -3,6 +3,250 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.9](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.8...@applitools/eyes-selenium@4.31.9) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.8](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.7...@applitools/eyes-selenium@4.31.8) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.7](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.6...@applitools/eyes-selenium@4.31.7) (2019-10-16)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.6](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.5...@applitools/eyes-selenium@4.31.6) (2019-10-15)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.4...@applitools/eyes-selenium@4.31.5) (2019-10-15)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.3...@applitools/eyes-selenium@4.31.4) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.2...@applitools/eyes-selenium@4.31.3) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.1...@applitools/eyes-selenium@4.31.2) (2019-10-07)
+
+
+### Bug Fixes
+
+* skip error inside `EyesBase.closeBatch()` (to work for all SDKs) ([b25d298](https://github.com/applitools/eyes.sdk.javascript1/commit/b25d298))
+
+
+
+
+
+## [4.31.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.0...@applitools/eyes-selenium@4.31.1) (2019-10-06)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** gaurding error in Runners for close batch exceptions ([17705be](https://github.com/applitools/eyes.sdk.javascript1/commit/17705be))
+
+
+
+
+
+# [4.31.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.7...@applitools/eyes-selenium@4.31.0) (2019-10-06)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** if we need to get region by selector, VG captured dom without data attributes ([2b3d660](https://github.com/applitools/eyes.sdk.javascript1/commit/2b3d660))
+* **visual-grid-client, eyes-common, eyes-sdk-core, eyes-selenium:** renamed setAccessibilityLevel to setAccessibilityValidation ([77d60e8](https://github.com/applitools/eyes.sdk.javascript1/commit/77d60e8))
+
+
+### Features
+
+* **eyes-common:** move BrowserType, DeviceName, ScreenOrientation, StitchMode to common module ([7dbdb41](https://github.com/applitools/eyes.sdk.javascript1/commit/7dbdb41))
+
+
+
+
+
+## [4.30.7](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.6...@applitools/eyes-selenium@4.30.7) (2019-10-02)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.30.6](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.5...@applitools/eyes-selenium@4.30.6) (2019-09-27)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** add new iphones to DeviceName list ([55cee88](https://github.com/applitools/eyes.sdk.javascript1/commit/55cee88))
+
+
+
+
+
+## [4.30.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.4...@applitools/eyes-selenium@4.30.5) (2019-09-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.30.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.3...@applitools/eyes-selenium@4.30.4) (2019-09-26)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.30.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.2...@applitools/eyes-selenium@4.30.3) (2019-09-24)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.30.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.1...@applitools/eyes-selenium@4.30.2) (2019-09-24)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.30.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.30.0...@applitools/eyes-selenium@4.30.1) (2019-09-24)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+# [4.30.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.7...@applitools/eyes-selenium@4.30.0) (2019-09-23)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** close batch using `closeBatch` method from each instance ([a295466](https://github.com/applitools/eyes.sdk.javascript1/commit/a295466))
+* add exports of accessibility constants ([a4c0bed](https://github.com/applitools/eyes.sdk.javascript1/commit/a4c0bed))
+* refactoring and fixing AccessibilityRegionByElement/Selector ([73dc022](https://github.com/applitools/eyes.sdk.javascript1/commit/73dc022))
+
+
+### Features
+
+* **eyes-selenium:** add AccessibilityRegionBySelector, AccessibilityRegionByElement ([d9ba235](https://github.com/applitools/eyes.sdk.javascript1/commit/d9ba235))
+
+
+
+
+
+## [4.29.7](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.6...@applitools/eyes-selenium@4.29.7) (2019-09-23)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.6](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.5...@applitools/eyes-selenium@4.29.6) (2019-09-23)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.4...@applitools/eyes-selenium@4.29.5) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.3...@applitools/eyes-selenium@4.29.4) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.2...@applitools/eyes-selenium@4.29.3) (2019-09-19)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.1...@applitools/eyes-selenium@4.29.2) (2019-09-18)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.29.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.29.0...@applitools/eyes-selenium@4.29.1) (2019-09-18)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+# [4.29.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.28.1...@applitools/eyes-selenium@4.29.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** update ServerConnector's configuration when using `setConfiguration` method ([58f895f](https://github.com/applitools/eyes.sdk.javascript1/commit/58f895f))
+
+
+### Features
+
+* **eyes-selenium:** close batches on `getAllTestResults` ([94c3ffb](https://github.com/applitools/eyes.sdk.javascript1/commit/94c3ffb))
+
+
+
+
+
 ## [4.28.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.28.0...@applitools/eyes-selenium@4.28.1) (2019-09-05)
 
 

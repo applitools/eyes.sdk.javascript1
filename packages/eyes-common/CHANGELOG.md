@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.11.1...@applitools/eyes-common@3.11.2) (2019-10-07)
+
+
+### Bug Fixes
+
+* **eyes-common:** set boolean variable from environment property ([aadb2d1](https://github.com/applitools/eyes.sdk.javascript1/commit/aadb2d1))
+
+
+
+
+
+## [3.11.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.11.0...@applitools/eyes-common@3.11.1) (2019-10-07)
+
+**Note:** Version bump only for package @applitools/eyes-common
+
+
+
+
+
+# [3.11.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.3...@applitools/eyes-common@3.11.0) (2019-10-06)
+
+
+### Bug Fixes
+
+* **visual-grid-client, eyes-common, eyes-sdk-core, eyes-selenium:** renamed setAccessibilityLevel to setAccessibilityValidation ([77d60e8](https://github.com/applitools/eyes.sdk.javascript1/commit/77d60e8))
+
+
+### Features
+
+* **eyes-common:** extent Configuration with properties from Selenium ([408d70b](https://github.com/applitools/eyes.sdk.javascript1/commit/408d70b))
+* **eyes-common:** move BrowserType, DeviceName, ScreenOrientation, StitchMode to common module ([7dbdb41](https://github.com/applitools/eyes.sdk.javascript1/commit/7dbdb41))
+
+
+
+
+
+## [3.10.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.2...@applitools/eyes-common@3.10.3) (2019-09-23)
+
+
+### Bug Fixes
+
+* refactoring and fixing AccessibilityRegionByElement/Selector ([73dc022](https://github.com/applitools/eyes.sdk.javascript1/commit/73dc022))
+
+
+
+
+
+## [3.10.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.1...@applitools/eyes-common@3.10.2) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changed accessibilityRegionType API - removed None. ([b510014](https://github.com/applitools/eyes.sdk.javascript1/commit/b510014))
+
+
+
+
+
+## [3.10.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.10.0...@applitools/eyes-common@3.10.1) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changes API for AccessibilityRegionType ([757c8b7](https://github.com/applitools/eyes.sdk.javascript1/commit/757c8b7))
+
+
+
+
+
+# [3.10.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.3...@applitools/eyes-common@3.10.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **eyes-common:** add `BATCH_NOTIFY` env var to set notifyOnCompletion value ([40f0bae](https://github.com/applitools/eyes.sdk.javascript1/commit/40f0bae))
+
+
+### Features
+
+* **eyes-common:** add `notifyOnCompletion` to `BatchInfo` ([bcffb40](https://github.com/applitools/eyes.sdk.javascript1/commit/bcffb40))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** Added accessibilityLevel to match request. ([df2a383](https://github.com/applitools/eyes.sdk.javascript1/commit/df2a383))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** supporting accessibility regions to match request ([cc9ec8c](https://github.com/applitools/eyes.sdk.javascript1/commit/cc9ec8c))
+
+
+
+
+
 ## [3.9.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.9.2...@applitools/eyes-common@3.9.3) (2019-09-04)
 
 **Note:** Version bump only for package @applitools/eyes-common

@@ -23,6 +23,10 @@ describe('TestResults', () => {
       branchName: 'default',
       hostOS: 'Windows 10.0',
       hostApp: 'Chrome',
+      accessibilityStatus: {
+        status: 'Failed',
+        level: 'AA',
+      },
       hostDisplaySize: {
         width: 800,
         height: 560,
@@ -34,9 +38,11 @@ describe('TestResults', () => {
       isAborted: false,
       defaultMatchSettings: {
         matchLevel: 'Strict',
+        accessibilityLevel: 'None',
         ignore: [],
         strict: [],
         content: [],
+        accessibility: [],
         layout: [],
         floating: [],
         splitTopHeight: 0,
@@ -117,6 +123,6 @@ describe('TestResults', () => {
       '"https://eyes.applitools.com/app/test-results/123/567/steps/2?accountId=abc","stepEditor":' +
       '"https://eyes.applitools.com/app/test-results/123/567/steps/2/edit?accountId=abc"}}],"steps":2,"matches":2,' +
       '"mismatches":0,"missing":0,"exactMatches":0,"strictMatches":0,"contentMatches":0,"layoutMatches":0,' +
-      '"noneMatches":0,"url":null}');
+      '"noneMatches":0,"url":null,"accessibilityStatus":{"status":"Failed","level":"AA"}}');
   });
 });

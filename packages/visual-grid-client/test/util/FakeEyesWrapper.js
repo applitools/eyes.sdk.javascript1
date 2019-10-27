@@ -31,6 +31,10 @@ const selectorsToLocations = {
   sel4: {x: 200, y: 201, width: 202, height: 203},
   sel5: {x: 300, y: 301, width: 302, height: 303},
   sel6: {x: 400, y: 401, width: 402, height: 403},
+  sel7: {x: 500, y: 501, width: 502, height: 503},
+  sel8: {x: 600, y: 601, width: 602, height: 603},
+  sel9: {x: 604, y: 604, width: 604, height: 604},
+  sel10: {x: 605, y: 605, width: 605, height: 605},
 };
 
 class FakeEyesWrapper extends EventEmitter {
@@ -41,6 +45,7 @@ class FakeEyesWrapper extends EventEmitter {
     goodResources = [],
     closeErr = false,
     failRender,
+    batchId = '1',
   }) {
     super();
     this._logger = {
@@ -52,11 +57,14 @@ class FakeEyesWrapper extends EventEmitter {
     this.goodResources = goodResources;
     this.goodTags = goodTags;
     this.batch;
+    this.batchId = batchId;
     this.baseUrl = 'http://fake';
     this.resultsRoute = '/results_url';
     this.matchLevel = 'Strict';
+    this.accessibilityLevel = 'None';
     this.closeErr = closeErr;
     this.failRender = failRender;
+    this._serverConnector = {deleteBatchSessions: () => {}};
   }
 
   async open(_appName, _testName, _viewportSize) {
@@ -278,6 +286,14 @@ class FakeEyesWrapper extends EventEmitter {
     return this.matchLevel;
   }
 
+  setAccessibilityValidation(value) {
+    this.accessibilityLevel = value;
+  }
+
+  getAccessibilityValidation() {
+    return this.accessibilityLevel;
+  }
+
   setParentBranchName(value) {
     this.parentBranchName = value;
   }
@@ -380,6 +396,10 @@ class FakeEyesWrapper extends EventEmitter {
 
   getIgnoreDisplacements() {
     return this.ignoreDisplacements;
+  }
+
+  getExistingBatchId() {
+    return this.batchId;
   }
 }
 

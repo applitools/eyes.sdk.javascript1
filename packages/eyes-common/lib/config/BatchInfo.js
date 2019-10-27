@@ -6,7 +6,7 @@ const { TypeUtils } = require('../utils/TypeUtils');
 const { DateTimeUtils } = require('../utils/DateTimeUtils');
 
 /**
- * @typedef {{id: (string|undefined), name: (string|undefined), startedAt: (Date|string|undefined), sequenceName: (string|undefined)}} BatchInfoObject
+ * @typedef {{id: (string|undefined), name: (string|undefined), startedAt: (Date|string|undefined), sequenceName: (string|undefined), notifyOnCompletion: (boolean|undefined)}} BatchInfoObject
  */
 
 /**
@@ -37,17 +37,24 @@ class BatchInfo {
    */
   constructor(varArg1, varArg2, varArg3) {
     if (varArg1 instanceof BatchInfo) {
-      return new BatchInfo({ id: varArg1.getId(), name: varArg1.getName(), startedAt: varArg1.getStartedAt(), sequenceName: varArg1.getSequenceName() });
+      return new BatchInfo({
+        id: varArg1.getId(),
+        name: varArg1.getName(),
+        startedAt: varArg1.getStartedAt(),
+        sequenceName: varArg1.getSequenceName(),
+        notifyOnCompletion: varArg1.getNotifyOnCompletion(),
+      });
     }
 
     if (TypeUtils.isString(varArg1)) {
       return new BatchInfo({ id: varArg3, name: varArg1, startedAt: varArg2 });
     }
 
-    let { id, name, startedAt, sequenceName } = varArg1 || {};
+    let { id, name, startedAt, sequenceName, notifyOnCompletion } = varArg1 || {};
     ArgumentGuard.isString(id, 'batchId', false);
     ArgumentGuard.isString(name, 'batchName', false);
     ArgumentGuard.isString(sequenceName, 'sequenceName', false);
+    ArgumentGuard.isBoolean(notifyOnCompletion, 'notifyOnCompletion', false);
 
     if (startedAt && !(startedAt instanceof Date)) {
       ArgumentGuard.isString(startedAt, 'startedAt', false);
@@ -58,6 +65,7 @@ class BatchInfo {
     this._name = name || GeneralUtils.getEnvValue('BATCH_NAME');
     this._startedAt = startedAt || new Date();
     this._sequenceName = sequenceName || GeneralUtils.getEnvValue('BATCH_SEQUENCE');
+    this._notifyOnCompletion = notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY', true) || false;
   }
 
   /**
@@ -129,6 +137,22 @@ class BatchInfo {
    */
   setSequenceName(sequenceName) {
     this._sequenceName = sequenceName;
+    return this;
+  }
+
+  /**
+   * @return {boolean} - Indicate whether notification should be sent on this batch completion.
+   */
+  getNotifyOnCompletion() {
+    return this._notifyOnCompletion;
+  }
+
+  /**
+   * @param {boolean} notifyOnCompletion - Indicate whether notification should be sent on this batch completion.
+   * @return {this}
+   */
+  setNotifyOnCompletion(notifyOnCompletion) {
+    this._notifyOnCompletion = notifyOnCompletion;
     return this;
   }
 

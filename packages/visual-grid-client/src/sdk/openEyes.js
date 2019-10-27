@@ -13,7 +13,7 @@ const {
   apiKeyFailMsg,
 } = require('./wrapperUtils');
 
-const SUPPORTED_BROWSERS = ['firefox', 'ie10', 'ie11', 'edge', 'chrome', 'ie'];
+const SUPPORTED_BROWSERS = ['firefox', 'ie10', 'ie11', 'edge', 'chrome', 'ie', 'safari'];
 
 function makeOpenEyes({
   appName: _appName,
@@ -30,6 +30,7 @@ function makeOpenEyes({
   ignoreCaret: _ignoreCaret,
   isDisabled: _isDisabled,
   matchLevel: _matchLevel,
+  accessibilityLevel: _accessibilityLevel,
   useDom: _useDom,
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
@@ -40,7 +41,6 @@ function makeOpenEyes({
   compareWithParentBranch: _compareWithParentBranch,
   ignoreBaseline: _ignoreBaseline,
   userAgent: _userAgent,
-  referrer: _referrer,
   createRGridDOMAndGetResourceMapping: _createRGridDOMAndGetResourceMapping,
   apiKey,
   proxy,
@@ -54,13 +54,14 @@ function makeOpenEyes({
   getHandledRenderInfoPromise,
   getRenderInfo,
   agentId,
+  notifyOnCompletion: _notifyOnCompletion,
+  batches,
 }) {
   return async function openEyes({
     testName,
     displayName,
     wrappers,
     userAgent = _userAgent,
-    referrer = _referrer,
     appName = _appName,
     browser = _browser,
     saveDebugData = _saveDebugData,
@@ -75,6 +76,7 @@ function makeOpenEyes({
     ignoreCaret = _ignoreCaret,
     isDisabled = _isDisabled,
     matchLevel = _matchLevel,
+    accessibilityLevel = _accessibilityLevel,
     useDom = _useDom,
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
@@ -84,6 +86,7 @@ function makeOpenEyes({
     saveNewTests = _saveNewTests,
     compareWithParentBranch = _compareWithParentBranch,
     ignoreBaseline = _ignoreBaseline,
+    notifyOnCompletion = _notifyOnCompletion,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser);
 
@@ -130,6 +133,7 @@ function makeOpenEyes({
       envName,
       ignoreCaret,
       matchLevel,
+      accessibilityLevel,
       useDom,
       enablePatterns,
       ignoreDisplacements,
@@ -143,6 +147,7 @@ function makeOpenEyes({
       serverUrl,
       agentId,
       assumeEnvironment,
+      notifyOnCompletion,
     });
 
     const renderInfoPromise =
@@ -167,11 +172,9 @@ function makeOpenEyes({
     let checkWindowPromises = wrappers.map(() => Promise.resolve());
     const testController = makeTestContorler({testName, numOfTests: wrappers.length, logger});
 
-    const headers = {'User-Agent': userAgent, Referer: referrer};
-    const createRGridDOMAndGetResourceMapping =
-      headers['User-Agent'] || headers['Referer']
-        ? arg => _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, arg))
-        : _createRGridDOMAndGetResourceMapping;
+    const headers = {'User-Agent': userAgent};
+    const createRGridDOMAndGetResourceMapping = args =>
+      _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, args));
 
     const checkWindow = makeCheckWindow({
       testController,
@@ -190,6 +193,8 @@ function makeOpenEyes({
       testName,
       openEyesPromises,
       matchLevel,
+      accessibilityLevel,
+      fetchHeaders: headers,
     });
 
     const close = makeClose({
@@ -199,6 +204,7 @@ function makeOpenEyes({
       resolveTests,
       testController,
       logger,
+      batches,
     });
     const abort = makeAbort({
       getCheckWindowPromises,
@@ -206,6 +212,7 @@ function makeOpenEyes({
       wrappers,
       resolveTests,
       testController,
+      batches,
     });
 
     return {
@@ -230,7 +237,7 @@ function makeOpenEyes({
 
     function getBrowserError(browser) {
       if (browser.name && !SUPPORTED_BROWSERS.includes(browser.name.replace(/-canary$/, ''))) {
-        return `browser name should be one of the following 'chrome', 'firefox', 'ie10', 'ie11' or 'edge' but received '${browser.name}'.`;
+        return `browser name should be one of the following 'chrome', 'firefox', 'safari', 'ie10', 'ie11' or 'edge' but received '${browser.name}'.`;
       }
       if (browser.name && !browser.deviceName && (!browser.height || !browser.width)) {
         return `browser '${browser.name}' should include 'height' and 'width' parameters.`;

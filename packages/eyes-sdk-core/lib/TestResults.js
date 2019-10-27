@@ -355,6 +355,56 @@ class StepInfo {
   }
 }
 
+class TestAccessibilityStatus {
+  /**
+   * @param {AccessibilityStatus} status
+   * @param {AccessibilityLevel} level
+   */
+  constructor({ status, level } = {}) {
+    this._status = status;
+    this._level = level;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {string}
+   */
+  getStatus() {
+    return this._status;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @param {string} value
+   */
+  setStatus(value) {
+    this._status = value;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {string}
+   */
+  getLevel() {
+    return this._level;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @param {string} value
+   */
+  setLevel(value) {
+    this._level = value;
+  }
+
+  /**
+   * @override
+   */
+  toJSON() {
+    return GeneralUtils.toPlain(this);
+  }
+}
+
 /**
  * Eyes test results.
  */
@@ -372,6 +422,7 @@ class TestResults {
    * @param {string} [hostOS]
    * @param {string} [hostApp]
    * @param {RectangleSize|object} [hostDisplaySize]
+   * @param {TestAccessibilityStatus|object} [accessibilityStatus]
    * @param {Date|string} [startedAt]
    * @param {number} [duration]
    * @param {boolean} [isNew]
@@ -393,7 +444,7 @@ class TestResults {
    */
   constructor({ id, name, secretToken, status, appName, batchName, batchId, branchName, hostOS, hostApp,
     hostDisplaySize, startedAt, duration, isNew, isDifferent, isAborted, appUrls, apiUrls, stepsInfo, steps,
-    matches, mismatches, missing, exactMatches, strictMatches, contentMatches, layoutMatches, noneMatches, url } = {}) {
+    matches, mismatches, missing, exactMatches, strictMatches, contentMatches, layoutMatches, noneMatches, url, accessibilityStatus } = {}) {
     if (hostDisplaySize && !(hostDisplaySize instanceof RectangleSize)) {
       hostDisplaySize = new RectangleSize(hostDisplaySize);
     }
@@ -412,6 +463,10 @@ class TestResults {
 
     if (stepsInfo && stepsInfo.length > 0 && !(stepsInfo[0] instanceof StepInfo)) {
       stepsInfo = stepsInfo.map(step => new StepInfo(step));
+    }
+
+    if (accessibilityStatus && !(accessibilityStatus instanceof TestAccessibilityStatus)) {
+      accessibilityStatus = new TestAccessibilityStatus(accessibilityStatus);
     }
 
     this._id = id;
@@ -445,6 +500,7 @@ class TestResults {
     this._layoutMatches = layoutMatches;
     this._noneMatches = noneMatches;
     this._url = url;
+    this._accessibilityStatus = accessibilityStatus;
 
     /** @type {ServerConnector} */
     this._serverConnector = undefined;
@@ -624,6 +680,22 @@ class TestResults {
    */
   setHostDisplaySize(value) {
     this._hostDisplaySize = value;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @return {TestAccessibilityStatus}
+   */
+  getAccessibilityStatus() {
+    return this._accessibilityStatus;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * @param {TestAccessibilityStatus} value
+   */
+  setAccessibilityStatus(value) {
+    this._accessibilityStatus = value;
   }
 
   // noinspection JSUnusedGlobalSymbols

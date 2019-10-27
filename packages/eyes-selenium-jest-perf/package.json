@@ -1,7 +1,7 @@
 {
   "name": "@applitools/eyes-selenium-jest-perf",
   "private": true,
-  "version": "4.5.57",
+  "version": "4.5.83",
   "scripts": {
     "test:perf": "jest"
   },
@@ -15,14 +15,14 @@
     ]
   },
   "dependencies": {
-    "@applitools/eyes-common": "^3.9.3",
-    "@applitools/eyes-sdk-core": "^5.16.1",
-    "@applitools/eyes-selenium": "^4.28.1"
+    "@applitools/eyes-common": "^3.11.2",
+    "@applitools/eyes-sdk-core": "^5.20.2",
+    "@applitools/eyes-selenium": "^4.31.9"
   },
   "devDependencies": {
-    "chromedriver": "^76.0.0",
-    "jest": "^24.8.0",
-    "selenium-webdriver": "^4.0.0-alpha.4"
+    "chromedriver": "^77.0.0",
+    "jest": "^24.9.0",
+    "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "engines": {
     "node": ">=8.9.0"

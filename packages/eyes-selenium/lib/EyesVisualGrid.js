@@ -1,12 +1,11 @@
 'use strict';
 
 const { makeVisualGridClient, takeDomSnapshot } = require('@applitools/visual-grid-client');
-const { ArgumentGuard, TypeUtils, EyesError, UserAgent } = require('@applitools/eyes-common');
+const { ArgumentGuard, TypeUtils, EyesError, UserAgent, BrowserType } = require('@applitools/eyes-common');
 const { CorsIframeHandle, CorsIframeHandler, IgnoreRegionByRectangle } = require('@applitools/eyes-sdk-core');
 
 const { TestResultsSummary } = require('./runner/TestResultsSummary');
 const { VisualGridRunner } = require('./runner/VisualGridRunner');
-const { BrowserType } = require('./config/BrowserType');
 const { Eyes } = require('./Eyes');
 
 const VERSION = require('../package.json').version;
@@ -223,10 +222,14 @@ class EyesVisualGrid extends Eyes {
       checkSettings.withName(name);
     }
 
+    // check if we need a region of screenshot, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
     let targetSelector = await checkSettings.getTargetProvider();
     if (targetSelector) {
       targetSelector = await targetSelector.getSelector(this);
     }
+
+    // prepare regions, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
+    const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions());
 
     try {
       this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`);
@@ -253,7 +256,6 @@ class EyesVisualGrid extends Eyes {
       this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`);
 
       const source = await this._driver.getCurrentUrl();
-      const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions());
 
       await this._checkWindowCommand({
         resourceUrls,
@@ -301,8 +303,10 @@ class EyesVisualGrid extends Eyes {
 
       for (const region of regions) {
         if (region instanceof IgnoreRegionByRectangle) {
-          const plainRegion = (await region.getRegion(this, undefined)).toJSON();
-          newRegions.push(plainRegion);
+          const plainRegions = await region.getRegion(this, undefined);
+          plainRegions.forEach((plainRegion) => {
+            newRegions.push(plainRegion.toJSON());
+          });
         } else {
           const selector = await region.getSelector(this);
           newRegions.push({ selector });

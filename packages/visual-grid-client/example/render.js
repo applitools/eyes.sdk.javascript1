@@ -17,7 +17,7 @@ const debug = require('debug')('eyes:render');
 
   console.log('checking website:', website);
 
-  const {openEyes} = makeVisualGridClient({
+  const {openEyes, closeBatch} = makeVisualGridClient({
     apiKey: process.env.APPLITOOLS_API_KEY,
     logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS, 'eyes:vgc'),
     proxy: process.env.APPLITOOLS_PROXY,
@@ -28,6 +28,7 @@ const debug = require('debug')('eyes:render');
     testName: `render script ${website}`,
     batchName: 'Render VGC',
     browser: [{width: 1024, height: 768, name: 'chrome'}],
+    notifyOnCompletion: true,
   });
 
   debug('open done');
@@ -47,11 +48,14 @@ const debug = require('debug')('eyes:render');
   debug('processPage done');
 
   const mapBlobs = f => {
-    f.resourceContents = f.blobs.map(({url, type, value}) => ({
-      url,
-      type,
-      value: Buffer.from(value, 'base64'),
-    }));
+    f.resourceContents = f.blobs.reduce((acc, {url, type, value}) => {
+      acc[url] = {
+        url,
+        type,
+        value: Buffer.from(value, 'base64'),
+      };
+      return acc;
+    }, {});
     f.frames.forEach(mapBlobs);
   };
   mapBlobs(frame);
@@ -60,6 +64,8 @@ const debug = require('debug')('eyes:render');
 
   checkWindow(frame);
   const results = await close(false);
+  await closeBatch();
+
   if (results.some(r => r instanceof Error)) {
     console.log(
       '\nTest error:\n\t',

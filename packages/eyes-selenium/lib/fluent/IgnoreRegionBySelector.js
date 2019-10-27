@@ -1,8 +1,8 @@
 'use strict';
 
-const { GetRegion } = require('@applitools/eyes-sdk-core');
+const { GetRegion, CoordinatesType, Location, Region } = require('@applitools/eyes-sdk-core');
 
-const { IgnoreRegionByElement } = require('./IgnoreRegionByElement');
+const { SelectorByLocator } = require('./SelectorByLocator');
 
 /**
  * @ignore
@@ -13,7 +13,7 @@ class IgnoreRegionBySelector extends GetRegion {
    */
   constructor(regionSelector) {
     super();
-    this._element = regionSelector;
+    this._selector = regionSelector;
   }
 
   // noinspection JSCheckFunctionSignatures
@@ -21,11 +21,25 @@ class IgnoreRegionBySelector extends GetRegion {
    * @inheritDoc
    * @param {Eyes} eyes
    * @param {EyesScreenshot} screenshot
-   * @return {Promise<Region>}
+   * @return {Promise<Region[]>}
    */
   async getRegion(eyes, screenshot) {
-    const element = await eyes.getDriver().findElement(this._element);
-    return new IgnoreRegionByElement(element).getRegion(eyes, screenshot);
+    const elements = await eyes.getDriver().findElements(this._selector);
+
+    const values = [];
+    if (elements && elements.length > 0) {
+      for (let i = 0; i < elements.length; i += 1) {
+        const rect = await elements[i].getRect();
+        const lTag = screenshot.convertLocation(
+          new Location(rect),
+          CoordinatesType.CONTEXT_RELATIVE,
+          CoordinatesType.SCREENSHOT_AS_IS
+        );
+        values.push(new Region(lTag.getX(), lTag.getY(), rect.width, rect.height));
+      }
+    }
+
+    return values;
   }
 
   // noinspection JSCheckFunctionSignatures
@@ -35,8 +49,7 @@ class IgnoreRegionBySelector extends GetRegion {
    * @return {Promise<string>}
    */
   async getSelector(eyes) { // eslint-disable-line no-unused-vars
-    const element = await eyes.getDriver().findElement(this._element);
-    return new IgnoreRegionByElement(element).getSelector(eyes);
+    return new SelectorByLocator(this._selector).getSelector(eyes);
   }
 }
 

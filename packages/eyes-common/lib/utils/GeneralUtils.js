@@ -296,13 +296,20 @@ class GeneralUtils {
   /**
    * Get an environment property by property name
    *
+   * @param {string} propName The property name to look up
+   * @param {boolean=false} isBoolean Whether or not the value should be converted to boolean type
    * @return {*|undefined} - The value of the given property or `undefined` if the property is not exists.
    */
-  static getEnvValue(propName) {
+  static getEnvValue(propName, isBoolean = false) {
     if (process !== undefined) {
       for (const prefix of ENV_PREFIXES) {
         const value = process.env[prefix + propName];
         if (value !== undefined) {
+          // for boolean values, cast string value
+          if (isBoolean && !TypeUtils.isBoolean(value)) {
+            return value === 'true';
+          }
+
           return value;
         }
       }

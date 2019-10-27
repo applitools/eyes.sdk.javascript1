@@ -20,9 +20,11 @@ describe('TestBadSelectors', function () {
     const eyes = new Eyes(new VisualGridRunner());
     await eyes.open(driver, 'Applitools Eyes JavaScript SDK', this.test.title, new RectangleSize(1200, 800));
 
-    await assertRejects(eyes.check('window', Target.region(By.css('#element_that_does_not_exist'))), NoSuchElementError);
+    await assertRejects((async () => {
+      await eyes.check('window', Target.region(By.css('#element_that_does_not_exist')));
 
-    await eyes.close();
+      await eyes.close();
+    })(), NoSuchElementError);
   });
 
   it('TestCheckRegionWithBadIgnoreSelector', async function () {

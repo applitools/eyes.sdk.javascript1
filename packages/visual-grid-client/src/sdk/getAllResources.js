@@ -39,13 +39,11 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
 
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
       const resources = {};
-      for (const url in preResources) {
-        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(preResources[url])));
-      }
-
-      for (const url in preResources) {
+      for (const [url, resource] of Object.entries(preResources)) {
+        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(resource)));
         handledResources.add(url);
-        assignContentfulResources(resources, await processResource(preResources[url]));
+        const rGridResource = fromFetchedToRGridResource(resource);
+        assignContentfulResources(resources, {[url]: rGridResource});
       }
 
       const unhandledResourceUrls = resourceUrls.filter(url => !handledResources.has(url));

@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.20.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.20.1...@applitools/eyes-sdk-core@5.20.2) (2019-10-07)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core:** don't close batch if APPLITOOLS_DONT_CLOSE_BATCHES=true ([e07344f](https://github.com/applitools/eyes.sdk.javascript1/commit/e07344f))
+
+
+
+
+
+## [5.20.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.20.0...@applitools/eyes-sdk-core@5.20.1) (2019-10-07)
+
+
+### Bug Fixes
+
+* skip error inside `EyesBase.closeBatch()` (to work for all SDKs) ([b25d298](https://github.com/applitools/eyes.sdk.javascript1/commit/b25d298))
+
+
+
+
+
+# [5.20.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.19.0...@applitools/eyes-sdk-core@5.20.0) (2019-10-06)
+
+
+### Bug Fixes
+
+* **visual-grid-client, eyes-common, eyes-sdk-core, eyes-selenium:** renamed setAccessibilityLevel to setAccessibilityValidation ([77d60e8](https://github.com/applitools/eyes.sdk.javascript1/commit/77d60e8))
+
+
+### Features
+
+* **eyes-common:** move BrowserType, DeviceName, ScreenOrientation, StitchMode to common module ([7dbdb41](https://github.com/applitools/eyes.sdk.javascript1/commit/7dbdb41))
+
+
+
+
+
+# [5.19.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.18.1...@applitools/eyes-sdk-core@5.19.0) (2019-10-02)
+
+
+### Features
+
+* **eyes-sdk-common:** added accessibility status to TestResults ([c8d6273](https://github.com/applitools/eyes.sdk.javascript1/commit/c8d6273))
+
+
+
+
+
+## [5.18.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.18.0...@applitools/eyes-sdk-core@5.18.1) (2019-09-27)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core:** do not closeBatch in disabled mode ([454e306](https://github.com/applitools/eyes.sdk.javascript1/commit/454e306))
+
+
+
+
+
+# [5.18.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.17.3...@applitools/eyes-sdk-core@5.18.0) (2019-09-23)
+
+
+### Bug Fixes
+
+* add exports of accessibility constants ([a4c0bed](https://github.com/applitools/eyes.sdk.javascript1/commit/a4c0bed))
+* refactoring and fixing AccessibilityRegionByElement/Selector ([73dc022](https://github.com/applitools/eyes.sdk.javascript1/commit/73dc022))
+
+
+### Features
+
+* **eyes-sdk-core:** add `closeBatch` method to `EyesBase` and update close batch endpoint ([ae2d72d](https://github.com/applitools/eyes.sdk.javascript1/commit/ae2d72d))
+
+
+
+
+
+## [5.17.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.17.2...@applitools/eyes-sdk-core@5.17.3) (2019-09-23)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core, visual-grid-client:** removed getter and setter for accessibilityLevel from EyesAbstarct ([9bb7e39](https://github.com/applitools/eyes.sdk.javascript1/commit/9bb7e39))
+
+
+
+
+
+## [5.17.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.17.1...@applitools/eyes-sdk-core@5.17.2) (2019-09-22)
+
+
+### Bug Fixes
+
+* **eyes-common:** changed accessibilityRegionType API - removed None. ([b510014](https://github.com/applitools/eyes.sdk.javascript1/commit/b510014))
+
+
+
+
+
+## [5.17.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.17.0...@applitools/eyes-sdk-core@5.17.1) (2019-09-22)
+
+**Note:** Version bump only for package @applitools/eyes-sdk-core
+
+
+
+
+
+# [5.17.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.16.1...@applitools/eyes-sdk-core@5.17.0) (2019-09-18)
+
+
+### Features
+
+* **eyes-common, eyes-sdk-core, visual-grid-client:** Added accessibilityLevel to match request. ([df2a383](https://github.com/applitools/eyes.sdk.javascript1/commit/df2a383))
+* **eyes-common, eyes-sdk-core, visual-grid-client:** supporting accessibility regions to match request ([cc9ec8c](https://github.com/applitools/eyes.sdk.javascript1/commit/cc9ec8c))
+* **eyes-sdk-core:** add `deleteBatchSessions` request to ServerConnector ([0728e08](https://github.com/applitools/eyes.sdk.javascript1/commit/0728e08))
+
+
+
+
+
 ## [5.16.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-sdk-core@5.16.0...@applitools/eyes-sdk-core@5.16.1) (2019-09-04)
 
 

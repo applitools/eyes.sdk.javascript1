@@ -321,6 +321,7 @@ describe('getAllResources', () => {
 
     const preResources = {
       [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
+      [imgUrl]: {url: imgUrl, type: imgType, value: imgValue},
     };
 
     try {
@@ -334,6 +335,40 @@ describe('getAllResources', () => {
           [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
           [imgUrl]: {url: imgUrl, type: imgType, value: imgValue},
           [fontZillaUrl]: {url: fontZillaUrl, type: fontZillaType, value: fontZillaValue},
+        },
+        toRGridResource,
+      );
+
+      expect(resources).to.eql(expected);
+    } finally {
+      await closeServer();
+    }
+  });
+
+  it('doesnt process prefilled resources', async () => {
+    const server = await testServer();
+    closeServer = server.close;
+
+    const baseUrl = `http://localhost:${server.port}`;
+
+    const cssName = 'hasDependency.css'; // has smurfs4.jpg as dependecy
+    const cssValue = loadFixtureBuffer(cssName);
+    const cssUrl = `${baseUrl}/${cssName}`;
+    const cssType = 'text/css; charset=UTF-8';
+
+    const preResources = {
+      [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
+    };
+
+    try {
+      const resources = await getAllResources({
+        resourceUrls: [],
+        preResources,
+      });
+
+      const expected = mapValues(
+        {
+          [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
         },
         toRGridResource,
       );
