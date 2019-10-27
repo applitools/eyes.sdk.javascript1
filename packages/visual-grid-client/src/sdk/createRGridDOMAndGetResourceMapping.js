@@ -1,6 +1,5 @@
 'use strict';
 
-const {RGridResource} = require('@applitools/eyes-sdk-core');
 const createRGridDom = require('./createRGridDom');
 
 function makeCreateRGridDOMAndGetResourceMapping({getAllResources}) {
@@ -22,7 +21,8 @@ function makeCreateRGridDOMAndGetResourceMapping({getAllResources}) {
 
     frameDoms.forEach(({rGridDom: frameDom, allResources: frameAllResources}, i) => {
       const frameUrl = frames[i].url;
-      allResources[frameUrl] = resources[frameUrl] = createResourceFromFrame(frameUrl, frameDom);
+      frameDom.setUrl(frameUrl);
+      allResources[frameUrl] = resources[frameUrl] = frameDom;
       Object.assign(allResources, frameAllResources);
     });
 
@@ -32,14 +32,6 @@ function makeCreateRGridDOMAndGetResourceMapping({getAllResources}) {
 
     return {rGridDom, allResources};
   };
-
-  function createResourceFromFrame(frameUrl, frameDom) {
-    const frameAsResource = new RGridResource();
-    frameAsResource.setUrl(frameUrl);
-    frameAsResource.setContentType('x-applitools-html/cdt');
-    frameAsResource.setContent(frameDom._getContentAsCdt());
-    return frameAsResource;
-  }
 }
 
 module.exports = makeCreateRGridDOMAndGetResourceMapping;

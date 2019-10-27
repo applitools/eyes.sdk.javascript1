@@ -101,7 +101,12 @@ class FakeEyesWrapper extends EventEmitter {
       !actualResources.length ||
       this.getExpectedResources().every(er => !!actualResources.find(ar => compare(er, ar)));
 
-    const cdt = renderRequest.getDom().getDomNodes();
+    const cdt = JSON.parse(
+      renderRequest
+        .getDom()
+        .getContent()
+        .toString(),
+    ).domNodes;
     const isGoodCdt = cdt.length === 0 || compare(cdt, this.getExpectedCdt()); // allowing [] for easier testing (only need to pass `cdt:[]` in the test)
     const renderInfo = renderRequest.getRenderInfo();
     const sizeMode = renderInfo.getSizeMode();

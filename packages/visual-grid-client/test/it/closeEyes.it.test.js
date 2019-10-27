@@ -50,7 +50,8 @@ describe('closeEyes', () => {
       appName,
     });
     checkWindow({cdt: [], tag: 'good1', url: `${baseUrl}/basic.html`});
-    const result = (await presult(close()))[1];
+    const [err, result] = await presult(close());
+    expect(err).to.be.undefined;
     expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 
