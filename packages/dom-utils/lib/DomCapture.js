@@ -221,7 +221,8 @@ class DomCapture {
       const response = await axios(absHref);
       const css = response.data;
       this._logger.verbose(`downloading CSS in length of ${css.length} chars took ${timeStart.end().summary}`);
-      return { href: absHref, css };
+      const escapedCss = GeneralUtils.cleanStringForJSON(css);
+      return { href: absHref, css: escapedCss };
     } catch (ex) {
       this._logger.verbose(ex.toString());
       retriesCount -= 1;

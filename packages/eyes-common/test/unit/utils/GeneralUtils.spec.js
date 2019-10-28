@@ -220,4 +220,21 @@ describe('GeneralUtils', () => {
       assert.strictEqual(log[0], 'warning - "oldParam2" is deprectated and will be removed, please use "newParam2" instead.');
     });
   });
+
+  describe('cleanStringForJSON()', () => {
+    it('should return the same string', () => {
+      const str = 'hello world';
+      assert.strictEqual(GeneralUtils.cleanStringForJSON(str), str);
+    });
+
+    it('should escape some characters', () => {
+      const str = 'hello\tworld$"#';
+      assert.strictEqual(GeneralUtils.cleanStringForJSON(str), 'hello\\tworld$\\"#');
+    });
+
+    it('should convert to hex some characters', () => {
+      const str = 'hello world �';
+      assert.strictEqual(GeneralUtils.cleanStringForJSON(str), 'hello world &#13;');
+    });
+  });
 });
