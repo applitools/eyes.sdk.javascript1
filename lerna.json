@@ -4,6 +4,7 @@
     "publish": {
       "allowBranch": "master",
       "conventionalCommits": true,
+      "changelog": false,
       "message": "chore: version release",
       "ignoreChanges": [
         "**/*.md",
