@@ -50,6 +50,7 @@ const REQUEST_FAILED_CODES = [
   'ECONNABORTED',
   'ETIMEDOUT',
   'ENOTFOUND',
+  'EAI_AGAIN',
 ];
 
 let counter = 0;
@@ -100,6 +101,8 @@ async function sendRequest(self, name, options, retry = 1, delayBeforeRetry = fa
     self._logger.verbose(`ServerConnector.${name} - failure body:\n${err.response && err.response.data}`);
 
     if (retry > 0 && ((err.response && HTTP_FAILED_CODES.includes(err.response.status)) || REQUEST_FAILED_CODES.includes(err.code))) {
+      self._logger.verbose(`Request failed with status '${err.response.status}' and error code '${err.code}'. Retrying...`);
+
       if (delayBeforeRetry) {
         await GeneralUtils.sleep(RETRY_REQUEST_INTERVAL);
         return sendRequest(self, name, options, retry - 1, delayBeforeRetry);
