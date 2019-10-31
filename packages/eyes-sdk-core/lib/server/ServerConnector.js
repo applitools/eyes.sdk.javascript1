@@ -97,7 +97,7 @@ async function sendRequest(self, name, options, retry = 1, delayBeforeRetry = fa
     }
 
     // eslint-disable-next-line max-len
-    self._logger.log(`ServerConnector.${name} [${requestId}] - ${options.method} failed on ${options.url}: ${reasonMsg} with params ${JSON.stringify(options.params).slice(0, 100)} body:\n${err.response && err.response.data}`);
+    self._logger.log(`ServerConnector.${name} [${requestId}] - ${options.method} failed on ${options.url}: ${reasonMsg} with params ${JSON.stringify(options.params).slice(0, 100)}`);
     self._logger.verbose(`ServerConnector.${name} - failure body:\n${err.response && err.response.data}`);
 
     if (retry > 0 && ((err.response && HTTP_FAILED_CODES.includes(err.response.status)) || REQUEST_FAILED_CODES.includes(err.code))) {
