@@ -1202,19 +1202,11 @@ class EyesBase extends EyesAbstract {
   }
 
   /**
-   * @return {boolean}
-   * @private
-   */
-  _getDontCloseBatches() {
-    return GeneralUtils.getEnvValue('DONT_CLOSE_BATCHES', true) || false;
-  }
-
-  /**
    * @package
    * @return {Promise}
    */
   async closeBatch() {
-    if (this._configuration.getIsDisabled() || this._getDontCloseBatches()) {
+    if (this._configuration.getIsDisabled() || this._configuration.getDontCloseBatches()) {
       this._logger.verbose('closeBatch Ignored');
       return;
     }

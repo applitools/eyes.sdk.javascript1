@@ -212,4 +212,35 @@ describe('Configuration', () => {
     assert.strictEqual(config.getHostApp(), 'demo');
     assert.strictEqual(config.getWaitBeforeScreenshots(), 24062019);
   });
+
+  it('Server url by default', async function() {
+    const configuration = new Configuration();
+    assert.equal(configuration.getServerUrl(), 'https://eyesapi.applitools.com');
+  });
+
+  it('Bamboo env variables', async function () {
+    process.env.bamboo_APPLITOOLS_API_KEY = 'test_APPLITOOLS_API_KEY';
+    process.env.bamboo_APPLITOOLS_SERVER_URL = 'test_APPLITOOLS_SERVER_URL';
+    process.env.bamboo_APPLITOOLS_BATCH_ID = 'test_APPLITOOLS_BATCH_ID';
+    process.env.bamboo_APPLITOOLS_BATCH_NAME = 'test_APPLITOOLS_BATCH_NAME';
+    process.env.bamboo_APPLITOOLS_BATCH_SEQUENCE = 'test_APPLITOOLS_BATCH_SEQUENCE';
+    process.env.bamboo_APPLITOOLS_BATCH_NOTIFY = true;
+    process.env.bamboo_APPLITOOLS_BRANCH = 'test_APPLITOOLS_BRANCH';
+    process.env.bamboo_APPLITOOLS_PARENT_BRANCH = 'test_APPLITOOLS_PARENT_BRANCH';
+    process.env.bamboo_APPLITOOLS_BASELINE_BRANCH = 'test_APPLITOOLS_BASELINE_BRANCH';
+    process.env.bamboo_APPLITOOLS_DONT_CLOSE_BATCHES = true;
+
+    const configuration = new Configuration();
+
+    assert.equal(configuration.getApiKey(), 'test_APPLITOOLS_API_KEY');
+    assert.equal(configuration.getServerUrl(), 'test_APPLITOOLS_SERVER_URL');
+    assert.equal(configuration.getBatch().getId(), 'test_APPLITOOLS_BATCH_ID');
+    assert.equal(configuration.getBatch().getName(), 'test_APPLITOOLS_BATCH_NAME');
+    assert.equal(configuration.getBatch().getSequenceName(), 'test_APPLITOOLS_BATCH_SEQUENCE');
+    assert.equal(configuration.getBatch().getNotifyOnCompletion(), true);
+    assert.equal(configuration.getBranchName(), 'test_APPLITOOLS_BRANCH');
+    assert.equal(configuration.getParentBranchName(), 'test_APPLITOOLS_PARENT_BRANCH');
+    assert.equal(configuration.getBaselineBranchName(), 'test_APPLITOOLS_BASELINE_BRANCH');
+    assert.equal(configuration.getDontCloseBatches(), true);
+  });
 });

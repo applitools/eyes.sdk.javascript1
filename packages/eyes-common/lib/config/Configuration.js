@@ -27,6 +27,7 @@ const DEFAULT_VALUES = {
   saveNewTests: true,
   ignoreBaseline: false,
   sendDom: true,
+  dontCloseBatches: false,
 
   // classic (selenium)
   waitBeforeScreenshots: 100, // ms
@@ -144,6 +145,9 @@ class Configuration {
     this._isThrowExceptionOn = undefined;
     /** @type {RenderBrowserInfo[]|DeviceInfo[]} */
     this._browsersInfo = [];
+
+    /** @type {boolean} */
+    this._dontCloseBatches = undefined;
 
     if (configuration) {
       this.mergeConfig(configuration);
@@ -1043,6 +1047,24 @@ class Configuration {
     this._stitchOverlap = value;
     return this;
   }
+
+  /**
+   * @return {boolean}
+   */
+  getDontCloseBatches() {
+    return TypeUtils.getOrDefault(this._dontCloseBatches, GeneralUtils.getEnvValue('DONT_CLOSE_BATCHES', true) || DEFAULT_VALUES.dontCloseBatches);
+  }
+
+  /**
+   * @param {boolean} value
+   * @return {this}
+   */
+  setDontCloseBatches(value) {
+    ArgumentGuard.isBoolean(value, 'dontCloseBatches');
+    this._dontCloseBatches = value;
+    return this;
+  }
+
 
   /* ------------ Visual Grid properties ------------ */
 
