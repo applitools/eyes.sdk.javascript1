@@ -7,9 +7,7 @@
   "env": {
     "es6": true,
     "node": true,
-    "mocha": true,
-    "jest": true,
-    "protractor": true
+    "mocha": true
   },
   "parserOptions": {
     "ecmaVersion": 8,
@@ -78,6 +76,7 @@
   "overrides": [{
     "files": ["**/example/**/*.js", "**/test/**/*.js", "**/*.spec.js"],
     "rules": {
+      "no-unused-vars": ["off"],
       "prefer-arrow-callback": ["off"],
       "func-names": ["off"],
       "no-console": ["off"]

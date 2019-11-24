@@ -44,7 +44,7 @@ function createCheckSettings({
       }
     }
   }
-  
+
   if (accessibility) {
     accessibility = [].concat(accessibility);
     for (const region of accessibility) {
