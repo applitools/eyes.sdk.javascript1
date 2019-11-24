@@ -33,12 +33,12 @@
     "cosmiconfig": "^6.0.0",
     "dateformat": "^3.0.3",
     "debug": "^4.1.1",
-    "deepmerge": "^4.0.0",
+    "deepmerge": "^4.2.2",
     "png-async": "^0.9.4",
     "stack-trace": "^0.0.10"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",

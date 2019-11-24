@@ -36,7 +36,7 @@
     "es6-promise-pool": "^2.5.0"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",

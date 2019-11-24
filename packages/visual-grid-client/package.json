@@ -31,7 +31,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/dom-snapshot": "^3.1.2",
+    "@applitools/dom-snapshot": "^3.1.4",
     "@applitools/eyes-common": "^3.12.1",
     "@applitools/eyes-sdk-core": "^5.20.6",
     "@applitools/functional-commons": "^1.5.2",
@@ -52,7 +52,7 @@
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "express": "^4.17.1",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "morgan": "^1.9.1",
     "nock": "^11.3.5",
     "node-fetch": "^2.6.0",

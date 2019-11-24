@@ -35,8 +35,9 @@
     "@applitools/eyes-sdk-core": "^5.20.6"
   },
   "devDependencies": {
+    "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
