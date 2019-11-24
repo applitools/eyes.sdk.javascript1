@@ -30,7 +30,7 @@
   "main": "./index.js",
   "browser": "./browser.js",
   "dependencies": {
-    "cosmiconfig": "^5.2.1",
+    "cosmiconfig": "^6.0.0",
     "dateformat": "^3.0.3",
     "debug": "^4.1.1",
     "deepmerge": "^4.0.0",

@@ -1,6 +1,6 @@
 'use strict';
 
-const cosmiconfig = require('cosmiconfig');
+const { cosmiconfigSync } = require('cosmiconfig');
 
 const { GeneralUtils } = require('./GeneralUtils');
 const { Logger } = require('../logging/Logger');
@@ -10,13 +10,13 @@ const { Logger } = require('../logging/Logger');
  */
 class ConfigUtils {
   static getConfig({ configParams = [], configPath, logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS) } = {}) {
-    const explorer = cosmiconfig('applitools', {
+    const explorer = cosmiconfigSync('applitools', {
       searchPlaces: ['package.json', 'applitools.config.js', 'eyes.config.js', 'eyes.json'],
     });
 
     let defaultConfig = {};
     try {
-      const result = configPath ? explorer.loadSync(configPath) : explorer.searchSync();
+      const result = configPath ? explorer.load(configPath) : explorer.search();
       if (result) {
         const { config, filepath } = result;
         logger.log('Loading configuration from', filepath);
