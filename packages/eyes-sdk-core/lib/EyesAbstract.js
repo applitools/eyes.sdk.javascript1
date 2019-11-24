@@ -562,9 +562,19 @@ class EyesAbstract {
   /**
    * If not {@code null} specifies a name for the environment in which the application under test is running.
    *
+   * @deprecated use {@link setEnvironmentName} instead
    * @param {string} envName - The name of the environment of the baseline.
    */
   setEnvName(envName) {
+    this.setEnvironmentName(envName);
+  }
+
+  /**
+   * If not {@code null} specifies a name for the environment in which the application under test is running.
+   *
+   * @param {string} envName - The name of the environment of the baseline.
+   */
+  setEnvironmentName(envName) {
     this._logger.log(`Environment name: ${envName}`);
     this._configuration.setEnvironmentName(envName);
   }

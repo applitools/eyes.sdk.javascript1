@@ -1,0 +1,73 @@
+{
+  "AgentId": "agent",
+  "AppIdOrName": "some app",
+  "VerId": "1.0",
+  "ScenarioIdOrName": "some test",
+  "BatchInfo": {
+    "Id": "someBatchId",
+    "Name": "some batch",
+    "StartedAt": "2017-06-29T11:01:00+00:00",
+    "BatchSequenceName": null,
+    "NotifyOnCompletion": false
+  },
+  "BaselineEnvName": "baseline",
+  "EnvironmentName": "some environment",
+  "Environment": {
+    "OS": "windows",
+    "Inferred": null,
+    "HostingApp": "test suite",
+    "DisplaySize": {
+      "Width": 234,
+      "Height": 456
+    },
+    "DeviceInfo": "Some Mobile Device"
+  },
+  "DefaultMatchSettings": {
+    "MatchLevel": "Strict",
+    "Exact": null,
+    "Ignore": [],
+    "Strict": [],
+    "Content": [],
+    "Layout": [],
+    "Floating": [
+      {
+        "Top": 32,
+        "Left": 22,
+        "Width": 42,
+        "Height": 52,
+        "MaxUpOffset": 5,
+        "MaxDownOffset": 10,
+        "MaxLeftOffset": 15,
+        "MaxRightOffset": 20
+      }
+    ],
+    "Accessibility": [
+      {
+        "Left": 10,
+        "Top": 20,
+        "Width": 30,
+        "Height": 40,
+        "Type": "GraphicalObject"
+      }
+    ],
+    "AccessibilityLevel": "AA",
+    "UseDom": false,
+    "EnablePatterns": false,
+    "IgnoreDisplacements": false
+  },
+  "BranchName": "some branch",
+  "ParentBranchName": "parent branch",
+  "BaselineBranchName": "baseline branch",
+  "SaveDiffs": null,
+  "Render": null,
+  "Properties": [
+    {
+      "Name": "property 1",
+      "Value": "value 1"
+    },
+    {
+      "Name": null,
+      "Value": null
+    }
+  ]
+}

@@ -146,7 +146,7 @@ class MatchWindowData {
       throw new TypeError('Please, use object as a parameter to the constructor!');
     }
 
-    ArgumentGuard.notNull(userInputs, 'userInputs');
+    ArgumentGuard.notNull(appOutput, 'appOutput');
 
     this._userInputs = userInputs;
     this._appOutput = appOutput;
@@ -219,4 +219,5 @@ class MatchWindowData {
 }
 
 exports.Options = Options;
+exports.ImageMatchOptions = Options;
 exports.MatchWindowData = MatchWindowData;

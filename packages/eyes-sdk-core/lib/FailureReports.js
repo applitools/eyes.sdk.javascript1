@@ -10,12 +10,12 @@ const FailureReports = {
   /**
    * Failures are reported immediately when they are detected.
    */
-  IMMEDIATE: 'Immediate',
+  IMMEDIATE: 'IMMEDIATE',
 
   /**
    * Failures are reported when tests are completed (i.e., when {@link EyesBase#close()} is called).
    */
-  ON_CLOSE: 'OnClose',
+  ON_CLOSE: 'ON_CLOSE',
 };
 
 Object.freeze(FailureReports);

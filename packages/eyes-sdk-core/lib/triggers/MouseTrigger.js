@@ -18,6 +18,7 @@ class MouseTrigger extends Trigger {
 
     ArgumentGuard.notNull(mouseAction, 'mouseAction');
     ArgumentGuard.notNull(control, 'control');
+    ArgumentGuard.notNull(location, 'location');
 
     this._mouseAction = mouseAction;
     this._control = control;

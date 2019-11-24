@@ -187,7 +187,7 @@ class AppEnvironment {
    * @override
    */
   toString() {
-    return `AppEnvironment { ${JSON.stringify(this)} }`;
+    return `[OS = ${this._os == null ? '?' : `'${this._os}'`} HostingApp = ${this._hostingApp == null ? '?' : `'${this._hostingApp}'`} DisplaySize = ${this._displaySize}]`;
   }
 }
 

@@ -1020,3 +1020,4 @@ class TestResults {
 }
 
 exports.TestResults = TestResults;
+exports.TestAccessibilityStatus = TestAccessibilityStatus;

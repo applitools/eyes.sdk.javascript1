@@ -257,12 +257,22 @@ class EyesBase extends EyesAbstract {
    *
    * @param {CutProvider} [cutProvider] - the provider doing the cut.
    */
-  setImageCut(cutProvider) {
+  setCutProvider(cutProvider) {
     if (cutProvider) {
       this._cutProviderHandler = new ReadOnlyPropertyHandler(this._logger, cutProvider);
     } else {
       this._cutProviderHandler = new SimplePropertyHandler(new NullCutProvider());
     }
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Manually set the the sizes to cut from an image before it's validated.
+   *
+   * @param {CutProvider} [cutProvider] - the provider doing the cut.
+   */
+  setImageCut(cutProvider) {
+    this.setCutProvider(cutProvider);
   }
 
   /**
@@ -1094,6 +1104,18 @@ class EyesBase extends EyesAbstract {
 
     const trigger = new MouseTrigger(action, controlScreenshotIntersect, cursorInScreenshot);
     this._userInputs.push(trigger);
+  }
+
+  setAppEnvironment(hostOS, hostApp) {
+    if (this.getIsDisabled()) {
+      this._logger.verbose('Ignored');
+      return;
+    }
+
+    this._logger.verbose(`SetAppEnvironment(${hostOS}, ${hostApp})`);
+
+    this._configuration.setHostOS(hostOS);
+    this._configuration.setHostApp(hostApp);
   }
 
   /**

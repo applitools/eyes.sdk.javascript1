@@ -1,0 +1,9 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="combined">
+    <image id="logo"    xlink:href="logo.svg"          x="0"    y="10"   width="84.846"  height="110.785" />
+    <image id="company" xlink:href="company_name.png"  x="100"  y="0"    width="598.924" height="132.94" />
+    <image id="slogan"        href="slogan.svg"        x="100"  y="140"  width="594.951" height="29.093"/>
+  </g>
+</svg>

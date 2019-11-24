@@ -1,0 +1,36 @@
+{
+  "webhook": "https://some.uri.com",
+  "url": "https://another.url.co.il",
+  "dom": {
+    "hashFormat": "sha256",
+    "hash": "3bb208972d267b180e28c26301ca5aea686324d0df3a1b8acae9acea1553e01c"
+  },
+  "resources": {},
+  "renderInfo": {
+    "width": 1600,
+    "height": 1200,
+    "region": {
+      "x": 40,
+      "y": 50,
+      "width": 60,
+      "height": 70
+    },
+    "target": "full-page",
+    "emulationInfo": {
+      "deviceName": "Galaxy S5",
+      "serializedDeviceName": "Galaxy S5",
+      "screenOrientation": "portrait"
+    }
+  },
+  "selectorsToFindRegionsFor": [
+    {
+      "selector": "//html/body/some/path/to/some/element[@with:attribute]",
+      "type": "xpath"
+    }
+  ],
+  "sendDom": true,
+  "browser": {
+    "name": "ie10",
+    "platform": "android"
+  }
+}

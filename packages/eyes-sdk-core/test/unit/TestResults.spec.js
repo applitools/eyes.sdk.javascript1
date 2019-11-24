@@ -2,12 +2,77 @@
 
 const assert = require('assert');
 
-const { TestResults } = require('../../index');
+const { TestResults, TestAccessibilityStatus, AccessibilityLevel, AccessibilityStatus, TestResultsStatus } = require('../../index');
 
 describe('TestResults', () => {
   it('empty constructor', () => {
-    const testResults = new TestResults();
-    assert.strictEqual(testResults.toString(), 'TestResults of existing test {}');
+    const tr = new TestResults();
+    assert.strictEqual(tr.toString(), 'TestResults of existing test {}');
+
+    assert.strictEqual(undefined, tr.getContentMatches());
+    assert.strictEqual(undefined, tr.getExactMatches());
+    assert.strictEqual(undefined, tr.getLayoutMatches());
+    assert.strictEqual(undefined, tr.getMatches());
+    assert.strictEqual(undefined, tr.getMismatches());
+    assert.strictEqual(undefined, tr.getMissing());
+    assert.strictEqual(undefined, tr.getNoneMatches());
+    assert.strictEqual(undefined, tr.getSteps());
+    assert.strictEqual(undefined, tr.getStrictMatches());
+    // assert.strictEqual(undefined, tr.New);
+    assert.strictEqual(undefined, tr.getStatus());
+    assert.strictEqual(undefined, tr.getApiUrls());
+    assert.strictEqual(undefined, tr.getAppUrls());
+    assert.strictEqual(undefined, tr.getAppName());
+    assert.strictEqual(undefined, tr.getBatchId());
+    assert.strictEqual(undefined, tr.getBatchName());
+    assert.strictEqual(undefined, tr.getBranchName());
+    assert.strictEqual(undefined, tr.getDuration());
+    assert.strictEqual(undefined, tr.getHostApp());
+    assert.strictEqual(undefined, tr.getHostOS());
+    assert.strictEqual(undefined, tr.getHostDisplaySize());
+    assert.strictEqual(undefined, tr.getId());
+    assert.strictEqual(undefined, tr.getIsAborted());
+    assert.strictEqual(undefined, tr.getIsDifferent());
+    assert.strictEqual(undefined, tr.getIsNew());
+    assert.strictEqual(false, tr.isPassed());
+    assert.strictEqual(undefined, tr.getName());
+    assert.strictEqual(undefined, tr.getSecretToken());
+    assert.strictEqual(undefined, tr.getStartedAt());
+    assert.strictEqual(undefined, tr.getStepsInfo());
+    assert.strictEqual(undefined, tr.getAccessibilityStatus());
+
+
+    tr.setContentMatches(1);
+    tr.setExactMatches(2);
+    tr.setLayoutMatches(3);
+    tr.setMatches(4);
+    tr.setMismatches(5);
+    tr.setMissing(6);
+    tr.setNoneMatches(7);
+    tr.setSteps(8);
+    tr.setStrictMatches(9);
+    // tr.New = 10;
+    tr.setStatus(TestResultsStatus.Failed);
+    const tas = new TestAccessibilityStatus();
+    tas.setLevel(AccessibilityLevel.AAA);
+    tas.setStatus(AccessibilityStatus.Passed);
+    tr.setAccessibilityStatus(tas);
+
+    assert.strictEqual(1, tr.getContentMatches());
+    assert.strictEqual(2, tr.getExactMatches());
+    assert.strictEqual(3, tr.getLayoutMatches());
+    assert.strictEqual(4, tr.getMatches());
+    assert.strictEqual(5, tr.getMismatches());
+    assert.strictEqual(6, tr.getMissing());
+    assert.strictEqual(7, tr.getNoneMatches());
+    assert.strictEqual(8, tr.getSteps());
+    assert.strictEqual(9, tr.getStrictMatches());
+    // assert.strictEqual(10, tr.New);
+    assert.strictEqual(TestResultsStatus.Failed, tr.getStatus());
+
+    assert.ok(tr.getAccessibilityStatus());
+    assert.strictEqual(AccessibilityLevel.AAA, tr.getAccessibilityStatus().getLevel());
+    assert.strictEqual(AccessibilityStatus.Passed, tr.getAccessibilityStatus().getStatus());
   });
 
   it('constructor with object', () => {

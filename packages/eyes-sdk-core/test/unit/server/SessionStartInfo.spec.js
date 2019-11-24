@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const { getResourceAsText } = require('../../testUtils');
 
 const {
   AppEnvironment,
@@ -9,30 +10,49 @@ const {
   PropertyData,
   SessionStartInfo,
   ImageMatchSettings,
+  MatchLevel,
+  RectangleSize,
+  FloatingMatchSettings,
+  AccessibilityLevel,
+  AccessibilityRegionType,
+  AccessibilityRegionByRectangle,
+  EyesBase,
+  CheckTarget,
+  MatchWindowTask,
 } = require('../../../index');
 
 describe('SessionStartInfo', () => {
-  it('toJSON()', () => {
+  it('TestSerialization', () => {
     const properties = [];
-    properties.push(new PropertyData('property name', 'property value'));
+    properties.push(new PropertyData('property 1', 'value 1'));
 
-    const batchInfo = new BatchInfo('batch name');
+    const batchInfo = new BatchInfo('some batch', new Date(2017, 6, 29, 11, 1, 0), 'someBatchId');
 
-    const ssi = new SessionStartInfo({
-      agentId: 'some agent',
-      sessionType: SessionType.SEQUENTIAL,
-      appIdOrName: 'my app',
-      verId: '1.0.0',
-      scenarioIdOrName: 'some scenario',
-      displayName: 'display name',
+    const sessionStartInfo = new SessionStartInfo({
+      agentId: 'agent',
+      appIdOrName: 'some app',
+      verId: '1.0',
+      scenarioIdOrName: 'some test',
       batchInfo,
-      baselineEnvName: 'some baseline name',
-      environmentName: 'env name',
-      environment: new AppEnvironment(),
-      defaultMatchSettings: new ImageMatchSettings(),
-      branchName: 'some branch name',
-      parentBranchName: 'parent branch name',
-      baselineBranchName: 'base branch',
+      baselineEnvName: 'baseline',
+      environment: new AppEnvironment({
+        os: 'windows',
+        hostingApp: 'test suite',
+        displaySize: new RectangleSize(234, 456),
+        deviceInfo: 'Some Mobile Device',
+      }),
+      environmentName: 'some environment',
+      defaultMatchSettings: new ImageMatchSettings({
+        matchLevel: MatchLevel.Strict,
+        accessibility: [new AccessibilityRegionByRectangle({ left: 10, top: 20, width: 30, height: 40 }, AccessibilityRegionType.GraphicalObject)],
+        floating: [new FloatingMatchSettings({ left: 22, top: 32, width: 42, height: 52, maxUpOffset: 5, maxDownOffset: 10, maxLeftOffset: 15, maxRightOffset: 20 })],
+        accessibilityLevel: AccessibilityLevel.AA,
+      }),
+      branchName: 'some branch',
+      parentBranchName: 'parent branch',
+      baselineBranchName: 'baseline branch',
+      sessionType: SessionType.SEQUENTIAL,
+      displayName: 'display name',
       compareWithParentBranch: false,
       ignoreBaseline: false,
       render: false,
@@ -40,15 +60,72 @@ describe('SessionStartInfo', () => {
       properties,
     });
 
-    const actualSerialization = JSON.stringify(ssi);
-    const expectedSerialization = '{"agentId":"some agent","sessionType":"SEQUENTIAL","appIdOrName":"my app",' +
-      `"verId":"1.0.0","scenarioIdOrName":"some scenario","displayName":"display name","batchInfo":${JSON.stringify(batchInfo)},` +
-      '"baselineEnvName":"some baseline name","environmentName":"env name","environment":{},' +
-      '"defaultMatchSettings":{"matchLevel":"Strict","accessibilityLevel":"None","ignoreCaret":true,"useDom":false,"enablePatterns":false,"ignoreDisplacements":false,' +
-      '"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]},"branchName":"some branch name",' +
-      '"parentBranchName":"parent branch name","baselineBranchName":"base branch","compareWithParentBranch":false,' +
-      '"ignoreBaseline":false,"saveDiffs":false,"render":false,"properties":[{"name":"property name",' +
-      '"value":"property value"}]}';
+    const actualSerialization = JSON.stringify(sessionStartInfo);
+    const expectedSerialization = getResourceAsText('SessionStartInfo_Serialization.json');
     assert.strictEqual(actualSerialization, expectedSerialization, 'SessionStartInfo serialization does not match!');
+  });
+
+  [
+    { useDom: true, enablePatterns: true, ignoreDisplacements: true },
+    { useDom: true, enablePatterns: true, ignoreDisplacements: false },
+    { useDom: true, enablePatterns: false, ignoreDisplacements: true },
+    { useDom: true, enablePatterns: false, ignoreDisplacements: false },
+    { useDom: false, enablePatterns: true, ignoreDisplacements: true },
+    { useDom: false, enablePatterns: true, ignoreDisplacements: false },
+    { useDom: false, enablePatterns: false, ignoreDisplacements: true },
+    { useDom: false, enablePatterns: false, ignoreDisplacements: false },
+  ].forEach(({ useDom, enablePatterns, ignoreDisplacements }) => {
+    it(`TestFluentApiSerialization (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
+      const settings = CheckTarget.window()
+        .fully()
+        .useDom(useDom)
+        .enablePatterns(enablePatterns)
+        .ignoreDisplacements(ignoreDisplacements);
+
+      const eyes = new EyesBase();
+      const task = new MatchWindowTask(true, true, true, true, eyes, true);
+      const imageMatchSettings = await task.createImageMatchSettings(settings, null);
+
+      const actualSerialization = JSON.stringify(imageMatchSettings);
+      const expectedSerialization = getResourceAsText(`SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`);
+      assert.strictEqual(actualSerialization, expectedSerialization, 'ImageMatchSettings serialization does not match!');
+    });
+
+    it(`TestImageMatchSettingsSerialization_Global (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
+      const settings = CheckTarget.window()
+        .fully()
+        .useDom(useDom)
+        .enablePatterns(enablePatterns);
+
+      const eyes = new EyesBase();
+      const configuration = eyes.getConfiguration();
+      configuration.setIgnoreDisplacements(ignoreDisplacements);
+      eyes.setConfiguration(configuration);
+
+      const task = new MatchWindowTask(true, true, true, true, eyes, true);
+      const imageMatchSettings = await task.createImageMatchSettings(settings, null);
+
+      const actualSerialization = JSON.stringify(imageMatchSettings);
+      const expectedSerialization = getResourceAsText(`SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`);
+      assert.strictEqual(actualSerialization, expectedSerialization, 'ImageMatchSettings serialization does not match!');
+    });
+
+    it(`TestConfigurationSerialization (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
+      const settings = CheckTarget.window().fully();
+
+      const eyes = new EyesBase();
+      const configuration = eyes.getConfiguration();
+      configuration.setUseDom(useDom);
+      configuration.setEnablePatterns(enablePatterns);
+      configuration.setIgnoreDisplacements(ignoreDisplacements);
+      eyes.setConfiguration(configuration);
+
+      const task = new MatchWindowTask(true, true, true, true, eyes, true);
+      const imageMatchSettings = await task.createImageMatchSettings(settings, null);
+
+      const actualSerialization = JSON.stringify(imageMatchSettings);
+      const expectedSerialization = getResourceAsText(`SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`);
+      assert.strictEqual(actualSerialization, expectedSerialization, 'ImageMatchSettings serialization does not match!');
+    });
   });
 });
