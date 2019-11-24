@@ -45,6 +45,7 @@ exports.AppOutput = require('./lib/match/AppOutput').AppOutput;
 exports.MatchResult = require('./lib/match/MatchResult').MatchResult;
 exports.MatchSingleWindowData = require('./lib/match/MatchSingleWindowData').MatchSingleWindowData;
 exports.MatchWindowData = require('./lib/match/MatchWindowData').MatchWindowData;
+exports.ImageMatchOptions = require('./lib/match/MatchWindowData').ImageMatchOptions;
 exports.MatchWindowDataWithScreenshot = require('./lib/match/MatchWindowDataWithScreenshot').MatchWindowDataWithScreenshot;
 
 exports.metadata = require('./lib/metadata/index');
@@ -80,7 +81,6 @@ exports.RenderingInfo = require('./lib/server/RenderingInfo').RenderingInfo;
 exports.RunningSession = require('./lib/server/RunningSession').RunningSession;
 exports.ServerConnector = require('./lib/server/ServerConnector').ServerConnector;
 exports.SessionStartInfo = require('./lib/server/SessionStartInfo').SessionStartInfo;
-exports.SessionType = require('./lib/server/SessionType').SessionType;
 
 exports.MouseTrigger = require('./lib/triggers/MouseTrigger').MouseTrigger;
 exports.TextTrigger = require('./lib/triggers/TextTrigger').TextTrigger;
@@ -115,6 +115,7 @@ exports.MatchLevel = common.MatchLevel;
 exports.PropertyData = common.PropertyData;
 exports.ProxySettings = common.ProxySettings;
 exports.ScreenOrientation = common.ScreenOrientation;
+exports.SessionType = common.SessionType;
 exports.StitchMode = common.StitchMode;
 
 exports.DebugScreenshotsProvider = common.DebugScreenshotsProvider;

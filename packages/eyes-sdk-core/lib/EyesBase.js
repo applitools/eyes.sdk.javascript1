@@ -2,7 +2,7 @@
 
 const {
   ArgumentGuard, TypeUtils, EyesError, Region, Location, RectangleSize, CoordinatesType, ImageDeltaCompressor,
-  SimplePropertyHandler, ReadOnlyPropertyHandler, FileDebugScreenshotsProvider, NullDebugScreenshotProvider, GeneralUtils,
+  SimplePropertyHandler, ReadOnlyPropertyHandler, FileDebugScreenshotsProvider, NullDebugScreenshotProvider, SessionType,
 } = require('@applitools/eyes-common');
 
 const { AppOutputProvider } = require('./capture/AppOutputProvider');
@@ -36,7 +36,6 @@ const { CheckSettings } = require('./fluent/CheckSettings');
 const { RenderWindowTask } = require('./RenderWindowTask');
 
 const { SessionStartInfo } = require('./server/SessionStartInfo');
-const { SessionType } = require('./server/SessionType');
 const { TestResultsStatus } = require('./TestResultsStatus');
 const { TestResults } = require('./TestResults');
 const { ServerConnector } = require('./server/ServerConnector');

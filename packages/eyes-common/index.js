@@ -17,6 +17,7 @@ exports.MatchLevel = require('./lib/config/MatchLevel').MatchLevel;
 exports.PropertyData = require('./lib/config/PropertyData').PropertyData;
 exports.ProxySettings = require('./lib/config/ProxySettings').ProxySettings;
 exports.ScreenOrientation = require('./lib/config/ScreenOrientation').ScreenOrientation;
+exports.SessionType = require('./lib/config/SessionType').SessionType;
 exports.StitchMode = require('./lib/config/StitchMode').StitchMode;
 
 // debug
