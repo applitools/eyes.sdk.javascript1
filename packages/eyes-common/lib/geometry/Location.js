@@ -17,7 +17,7 @@ class Location {
    * @sigparam {Location} location - The Location instance to clone from.
    *
    * @signature `new Location(object)`
-   * @sigparam {{x: number, x: number}} object - The location object to clone from.
+   * @sigparam {{x: number, y: number}} object - The location object to clone from.
    *
    * @signature `new Location(x, y)`
    * @sigparam {number} x - The X coordinate of this location.
