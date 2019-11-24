@@ -57,7 +57,7 @@ describe('createRGridDOMAndGetResourceMapping', () => {
     const expectedTestResource = toRGridResource({
       url: testUrl,
       type: 'x-applitools-html/cdt',
-      value: testDom._getContentAsCdt(),
+      value: testDom.getContent(),
     });
 
     const innerFrameUrl = `${baseUrl}/iframes/inner/test.html`;
@@ -73,7 +73,7 @@ describe('createRGridDOMAndGetResourceMapping', () => {
     const expectedInnerFrameResource = toRGridResource({
       url: innerFrameUrl,
       type: 'x-applitools-html/cdt',
-      value: innerFrameDom._getContentAsCdt(),
+      value: innerFrameDom.getContent(),
     });
 
     const frameCdt = loadJsonFixture('inner-frame.cdt.json');
@@ -107,20 +107,18 @@ describe('createRGridDOMAndGetResourceMapping', () => {
       ],
     });
 
-    expect(rGridDom.getResources()).to.eql(expectedRGridDom.getResources());
+    expect(rGridDom.getContent()).to.eql(expectedRGridDom.getContent());
 
     // first, a sanity check
     expect(Object.keys(allResources).filter(url => url.endsWith('.html'))).to.not.be.empty;
 
     // The following expect is actually included in the expect after it, but it has a better output than the latter.
-    expect(JSON.parse(allResources[testUrl].toJSON().content)).to.eql(
-      JSON.parse(expectedTestResource.toJSON().content),
-    );
+    expect(allResources[testUrl].getContent()).to.eql(expectedTestResource.getContent());
     expect(allResources[testUrl]).to.eql(expectedTestResource);
 
     // The following expect is actually included in the expect after it, but it has a better output than the latter.
-    expect(JSON.parse(allResources[innerFrameUrl].toJSON().content)).to.eql(
-      JSON.parse(expectedInnerFrameResource.toJSON().content),
+    expect(allResources[innerFrameUrl].getContent()).to.eql(
+      expectedInnerFrameResource.getContent(),
     );
     expect(allResources[innerFrameUrl]).to.eql(expectedInnerFrameResource);
   });

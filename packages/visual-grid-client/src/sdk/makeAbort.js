@@ -1,7 +1,6 @@
 'use strict';
 const {presult} = require('@applitools/functional-commons');
 const makeWaitForTestEnd = require('./makeWaitForTestEnd');
-const storeBatchHandle = require('./storeBatchHandle');
 
 function makeAbort({
   getCheckWindowPromises,
@@ -9,15 +8,21 @@ function makeAbort({
   openEyesPromises,
   resolveTests,
   testController,
-  batches,
+  globalState,
+  logger,
 }) {
   const waitAndResolveTests = makeWaitForTestEnd({
     getCheckWindowPromises,
     openEyesPromises,
+    logger,
   });
 
   return async () => {
     testController.setIsAbortedByUser();
+
+    const batchId = wrappers[0].getExistingBatchId();
+    globalState.batchStore.addId(batchId);
+
     return waitAndResolveTests(async testIndex => {
       const [closeErr, closeResult] = await presult(wrappers[testIndex].abort());
       resolveTests[testIndex]();
@@ -25,9 +30,6 @@ function makeAbort({
         throw closeErr;
       }
       return closeResult;
-    }).then(res => {
-      storeBatchHandle(wrappers, batches);
-      return res;
     });
   };
 }

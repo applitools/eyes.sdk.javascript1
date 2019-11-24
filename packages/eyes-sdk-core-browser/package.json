@@ -1,7 +1,7 @@
 {
   "name": "@applitools/eyes-sdk-core-browser",
   "private": true,
-  "version": "4.5.47",
+  "version": "4.5.51",
   "description": "Applitools Eyes SDK for browser",
   "keywords": [
     "eyes-sdk-core",
@@ -31,7 +31,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "^5.20.2"
+    "@applitools/eyes-sdk-core": "^5.20.6"
   },
   "devDependencies": {
     "browserify": "^16.2.3",

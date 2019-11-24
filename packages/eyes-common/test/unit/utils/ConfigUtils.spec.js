@@ -41,6 +41,13 @@ describe('ConfigUtils', () => {
       assert.deepStrictEqual(config, expectedConfig);
     });
 
+    it('loads config with bamboo prefix variable', () => {
+      process.env.bamboo_APPLITOOLS_BLA = 'env kuku bamboo';
+      const config = getConfigAtConfigPath({ configParams: ['bla'] });
+      const expectedConfig = { bla: 'env kuku bamboo', it: 'works' };
+      assert.deepStrictEqual(config, expectedConfig);
+    });
+
     it('handles custom configParams', () => {
       const config = ConfigUtils.getConfig({ configParams: ['bla'], logger });
       assert.strictEqual(config.bla, undefined);

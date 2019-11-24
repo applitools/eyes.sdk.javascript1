@@ -36,6 +36,7 @@ describe('createRenderRequests', () => {
 
     const resourcesObj = {url1: 'hash1', url2: 'hash2'};
     const dom = {
+      contentType: 'x-applitools-html/cdt',
       hash: getSha256Hash(JSON.stringify({resources: resourcesObj, domNodes: 'cdt'})),
       hashFormat: 'sha256',
     };
@@ -95,6 +96,7 @@ describe('createRenderRequests', () => {
     });
 
     const dom = {
+      contentType: 'x-applitools-html/cdt',
       hash: getSha256Hash(JSON.stringify({resources: {}, domNodes: 'cdt'})),
       hashFormat: 'sha256',
     };
@@ -134,6 +136,7 @@ describe('createRenderRequests', () => {
     });
 
     const dom = {
+      contentType: 'x-applitools-html/cdt',
       hash: getSha256Hash(JSON.stringify({resources: {}, domNodes: 'cdt'})),
       hashFormat: 'sha256',
     };
@@ -189,6 +192,7 @@ describe('createRenderRequests', () => {
     });
 
     const dom = {
+      contentType: 'x-applitools-html/cdt',
       hash: getSha256Hash(JSON.stringify({resources: {}, domNodes: ''})),
       hashFormat: 'sha256',
     };

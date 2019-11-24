@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-images",
-  "version": "4.12.20",
+  "version": "4.12.24",
   "description": "The simplest implementation of Applitools Eyes SDK, uploads images for validation",
   "keywords": [
     "eyes-images",
@@ -31,8 +31,8 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-common": "^3.11.2",
-    "@applitools/eyes-sdk-core": "^5.20.2"
+    "@applitools/eyes-common": "^3.12.1",
+    "@applitools/eyes-sdk-core": "^5.20.6"
   },
   "devDependencies": {
     "axios": "^0.19.0",

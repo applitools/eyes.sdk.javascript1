@@ -8,24 +8,29 @@ function makeFetchResource({logger, retries = 5, fetchCache = createResourceCach
 
   function doFetchResource(url, opts) {
     return retryFetch(
-      retry => {
+      async retry => {
         const retryStr = retry ? `(retry ${retry}/${retries})` : '';
         const optsStr = JSON.stringify(opts) || '';
         logger.verbose(`fetching ${url} ${retryStr} ${optsStr}`);
 
-        return fetch(url, opts).then(resp =>
-          (resp.buffer ? resp.buffer() : resp.arrayBuffer().then(buff => Buffer.from(buff))).then(
-            buff => ({
-              url,
-              type: resp.headers.get('Content-Type'),
-              value: buff,
-            }),
-          ),
-        );
+        const resp = await fetch(url, opts);
+        if (!resp.ok) {
+          return {error: `failed to fetch ${url} status ${resp.status}`};
+        }
+
+        logger.verbose(`fetched ${url}`);
+        const buffer = await (resp.buffer ? resp.buffer() : resp.arrayBuffer());
+        return {
+          url,
+          type: resp.headers.get('Content-Type'),
+          value: Buffer.from(buffer),
+        };
       },
       {retries},
     ).then(result => {
-      logger.verbose(`fetched ${url}`);
+      if (result.error) {
+        throw new Error(result.error);
+      }
       return result;
     });
   }

@@ -1,8 +1,10 @@
 'use strict';
+const {
+  GeneralUtils: {backwardCompatible},
+} = require('@applitools/eyes-common');
 const makeCheckWindow = require('./checkWindow');
 const makeAbort = require('./makeAbort');
 const makeClose = require('./makeClose');
-const makeTestContorler = require('./makeTestContorler');
 const assumeEnvironment = require('./assumeEnvironment');
 
 const {
@@ -20,10 +22,12 @@ function makeOpenEyes({
   browser: _browser,
   saveDebugData: _saveDebugData,
   batchSequenceName: _batchSequenceName,
+  batchSequence: _batchSequence,
   batchName: _batchName,
   batchId: _batchId,
   properties: _properties,
   baselineBranchName: _baselineBranchName,
+  baselineBranch: _baselineBranch,
   baselineEnvName: _baselineEnvName,
   baselineName: _baselineName,
   envName: _envName,
@@ -35,7 +39,9 @@ function makeOpenEyes({
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
   parentBranchName: _parentBranchName,
+  parentBranch: _parentBranch,
   branchName: _branchName,
+  branch: _branch,
   saveFailedTests: _saveFailedTests,
   saveNewTests: _saveNewTests,
   compareWithParentBranch: _compareWithParentBranch,
@@ -55,21 +61,26 @@ function makeOpenEyes({
   getRenderInfo,
   agentId,
   notifyOnCompletion: _notifyOnCompletion,
-  batches,
+  batchNotify: _batchNotify,
+  globalState,
+  wrappers: _wrappers,
+  isSingleWindow = false,
 }) {
   return async function openEyes({
     testName,
     displayName,
-    wrappers,
+    wrappers = _wrappers,
     userAgent = _userAgent,
     appName = _appName,
     browser = _browser,
     saveDebugData = _saveDebugData,
     batchSequenceName = _batchSequenceName,
+    batchSequence = _batchSequence,
     batchName = _batchName,
     batchId = _batchId,
     properties = _properties,
     baselineBranchName = _baselineBranchName,
+    baselineBranch = _baselineBranch,
     baselineEnvName = _baselineEnvName,
     baselineName = _baselineName,
     envName = _envName,
@@ -81,12 +92,15 @@ function makeOpenEyes({
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
     parentBranchName = _parentBranchName,
+    parentBranch = _parentBranch,
     branchName = _branchName,
+    branch = _branch,
     saveFailedTests = _saveFailedTests,
     saveNewTests = _saveNewTests,
     compareWithParentBranch = _compareWithParentBranch,
     ignoreBaseline = _ignoreBaseline,
     notifyOnCompletion = _notifyOnCompletion,
+    batchNotify = _batchNotify,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser);
 
@@ -98,7 +112,7 @@ function makeOpenEyes({
       logger.verbose('openEyes: isDisabled=true, skipping checks');
       return {
         checkWindow: disabledFunc('checkWindow'),
-        close: disabledFunc('close'),
+        close: disabledFunc('close', []),
         abort: disabledFunc('abort'),
       };
     }
@@ -114,6 +128,15 @@ function makeOpenEyes({
       throw new Error(browserErr);
     }
 
+    ({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
+      [{batchSequenceName}, {batchSequence}],
+      [{baselineBranchName}, {baselineBranch}],
+      [{parentBranchName}, {parentBranch}],
+      [{branchName}, {branch}],
+      [{notifyOnCompletion}, {batchNotify}],
+      logger,
+    ));
+
     wrappers =
       wrappers ||
       initWrappers({count: browsers.length, apiKey, logHandler: logger.getLogHandler()});
@@ -123,11 +146,11 @@ function makeOpenEyes({
       browsers,
       isDisabled,
       displayName,
-      batchSequenceName,
+      batchSequence,
       batchName,
       batchId,
       properties,
-      baselineBranchName,
+      baselineBranch,
       baselineEnvName,
       baselineName,
       envName,
@@ -137,8 +160,8 @@ function makeOpenEyes({
       useDom,
       enablePatterns,
       ignoreDisplacements,
-      parentBranchName,
-      branchName,
+      parentBranch,
+      branch,
       proxy,
       saveFailedTests,
       saveNewTests,
@@ -147,8 +170,14 @@ function makeOpenEyes({
       serverUrl,
       agentId,
       assumeEnvironment,
-      notifyOnCompletion,
+      batchNotify,
     });
+
+    if (!globalState.batchStore.hasCloseBatch()) {
+      globalState.batchStore.setCloseBatch(
+        wrappers[0]._serverConnector.deleteBatchSessions.bind(wrappers[0]._serverConnector),
+      );
+    }
 
     const renderInfoPromise =
       getRenderInfoPromise() || getHandledRenderInfoPromise(getRenderInfo());
@@ -159,24 +188,31 @@ function makeOpenEyes({
       throw renderInfo;
     }
 
+    logger.verbose('openEyes: opening wrappers');
     const {openEyesPromises, resolveTests} = openWrappers({
       wrappers,
       browsers,
       appName,
       testName,
       eyesTransactionThroat,
+      skipStartingSession: isSingleWindow,
     });
 
     let stepCounter = 0;
 
     let checkWindowPromises = wrappers.map(() => Promise.resolve());
-    const testController = makeTestContorler({testName, numOfTests: wrappers.length, logger});
+    const testController = globalState.makeTestController({
+      testName,
+      numOfTests: wrappers.length,
+      logger,
+    });
 
     const headers = {'User-Agent': userAgent};
     const createRGridDOMAndGetResourceMapping = args =>
       _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, args));
 
     const checkWindow = makeCheckWindow({
+      globalState,
       testController,
       saveDebugData,
       createRGridDOMAndGetResourceMapping,
@@ -195,6 +231,7 @@ function makeOpenEyes({
       matchLevel,
       accessibilityLevel,
       fetchHeaders: headers,
+      isSingleWindow,
     });
 
     const close = makeClose({
@@ -202,17 +239,19 @@ function makeOpenEyes({
       openEyesPromises,
       wrappers,
       resolveTests,
+      globalState,
       testController,
       logger,
-      batches,
+      isSingleWindow,
     });
     const abort = makeAbort({
       getCheckWindowPromises,
       openEyesPromises,
       wrappers,
       resolveTests,
+      globalState,
       testController,
-      batches,
+      logger,
     });
 
     return {
@@ -229,9 +268,10 @@ function makeOpenEyes({
       checkWindowPromises = promises;
     }
 
-    function disabledFunc(name) {
+    function disabledFunc(name, rv) {
       return async () => {
         logger.verbose(`${name}: isDisabled=true, skipping checks`);
+        return rv;
       };
     }
 

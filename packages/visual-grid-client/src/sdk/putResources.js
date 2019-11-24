@@ -9,11 +9,11 @@ const DEFAULT_CONCURRENCY_LIMIT = 100;
 
 function makePutResources({concurrency = DEFAULT_CONCURRENCY_LIMIT, doPutResource}) {
   const putPromises = {};
-  return async function putResources(rGridDom, runningRender, allResources = []) {
+  return async function putResources(domResource, runningRender, allResources = []) {
     const resources = []; // this will contain all the resources that need to be PUT (asked for + not already sent)
     const existingPromises = [];
     if (runningRender.getNeedMoreDom()) {
-      processResource(rGridDom.asResource(), resources, existingPromises);
+      processResource(domResource, resources, existingPromises);
     }
 
     const needMoreResources = runningRender.getNeedMoreResources();

@@ -27,12 +27,20 @@ describe('getAllResources', () => {
       fetch,
     });
     resourceCache = createResourceCache();
-    getAllResources = makeGetAllResources({
+    const getAllResourcesOrig = makeGetAllResources({
       resourceCache,
       extractCssResources,
       fetchResource,
       logger: testLogger,
     });
+
+    getAllResources = async args => {
+      const r = await getAllResourcesOrig(args);
+      for (const resource of Object.values(r)) {
+        resource._sha256hash = undefined; // make sure all resources dont calculate the hash for simplicity.
+      }
+      return r;
+    };
   });
 
   it('works for absolute urls', async () => {
@@ -74,6 +82,36 @@ describe('getAllResources', () => {
     } finally {
       await closeServer();
     }
+  });
+
+  it('sets and gets css/svg resources from cache', async () => {
+    const url = 'https://google.com';
+    const type = 'text/css';
+    const value = 'value';
+    const rGridResource = toRGridResource({url, type, value});
+
+    let called = 0;
+    const fetchResource = async _url => (++called, {url, type, value});
+    resourceCache = createResourceCache();
+    getAllResources = makeGetAllResources({
+      resourceCache,
+      extractCssResources,
+      fetchResource,
+      logger: testLogger,
+    });
+
+    const expected = {
+      [url]: rGridResource,
+    };
+
+    const resourcesFromCache = await getAllResources({resourceUrls: [url]});
+    const resourcesFromCache2 = await getAllResources({resourceUrls: [url]});
+    expect(called).to.eql(1);
+
+    resourcesFromCache[url]._sha256hash = undefined;
+    resourcesFromCache2[url]._sha256hash = undefined;
+    expect(resourcesFromCache).to.eql(expected);
+    expect(resourcesFromCache2).to.eql(expected);
   });
 
   it('works for svg urls', async () => {
@@ -321,6 +359,7 @@ describe('getAllResources', () => {
 
     const preResources = {
       [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
+      [imgUrl]: {url: imgUrl, type: imgType, value: imgValue},
     };
 
     try {
@@ -334,6 +373,40 @@ describe('getAllResources', () => {
           [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
           [imgUrl]: {url: imgUrl, type: imgType, value: imgValue},
           [fontZillaUrl]: {url: fontZillaUrl, type: fontZillaType, value: fontZillaValue},
+        },
+        toRGridResource,
+      );
+
+      expect(resources).to.eql(expected);
+    } finally {
+      await closeServer();
+    }
+  });
+
+  it('doesnt process prefilled resources', async () => {
+    const server = await testServer();
+    closeServer = server.close;
+
+    const baseUrl = `http://localhost:${server.port}`;
+
+    const cssName = 'hasDependency.css'; // has smurfs4.jpg as dependecy
+    const cssValue = loadFixtureBuffer(cssName);
+    const cssUrl = `${baseUrl}/${cssName}`;
+    const cssType = 'text/css; charset=UTF-8';
+
+    const preResources = {
+      [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
+    };
+
+    try {
+      const resources = await getAllResources({
+        resourceUrls: [],
+        preResources,
+      });
+
+      const expected = mapValues(
+        {
+          [cssUrl]: {url: cssUrl, type: cssType, value: cssValue},
         },
         toRGridResource,
       );

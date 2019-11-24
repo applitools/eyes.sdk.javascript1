@@ -42,7 +42,7 @@ describe('wrapperUtils', () => {
     configureWrappers({
       wrappers: [wrapper],
       browsers: [{}],
-      notifyOnCompletion: true,
+      batchNotify: true,
       assumeEnvironment,
     });
     expect(wrapper._configuration.getBatch().getNotifyOnCompletion()).to.be.true;

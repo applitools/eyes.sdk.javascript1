@@ -42,10 +42,15 @@ declare namespace Eyes {
       batchName?:string
       
       /**
+       * DEPRECATED, use batchSequence.
+       */
+      batchSequenceName?:string
+
+      /**
        * Name for managing batch statistics.
        * Default value: undefined
        */
-      batchSequenceName?:string
+      batchSequence?:string
       
       /**
        * The name of the environment of the baseline.
@@ -73,16 +78,37 @@ declare namespace Eyes {
       matchLevel?:'Strict'|'Exact'|'Layout'|'Content'
       
       /**
+       * DEPRECATED, use baselineBranch.
+       */
+      baselineBranchName?:string
+
+      /**
        * The name of the baseline branch.
        * Default value: undefined
        */
-      baselineBranchName?:string
+      baselineBranch?:string
       
+      /**
+       * DEPRECATED, use parentBranch.
+       */
+      parentBranchName?:string
+
       /**
        * Sets the branch under which new branches are created.
        * Default value: undefined
        */
-      parentBranchName?:string
+      parentBranch?:string
+
+      /**
+       * DEPRECATED, use branch.
+       */
+      branchName?:string
+
+      /**
+       * Sets the branch name.
+       * Default value: undefined
+       */
+      branch?:string
       
       /**
        * Set whether or not failed tests are saved by default.
@@ -120,10 +146,15 @@ declare namespace Eyes {
       accessibilityLevel?:AccessibilityLevel
       
       /**
+       * DEPRECATED, use batchNotify.
+       */
+      notifyOnCompletion?:boolean
+
+      /**
        * Set wether batch completion notifications should be sent.
        * Default value: false
        */
-      notifyOnCompletion?:boolean
+      batchNotify?:boolean
 
       /**
        * Disable all eyes functionality.
@@ -145,11 +176,7 @@ declare namespace Eyes {
     }
   }
 
-  enum AccessibilityLevel {
-    None = "None",
-    AA = "AA",
-    AAA = "AAA",
-  }
+  type AccessibilityLevel = "None"|"AA"|"AAA"
 
   export namespace Check {
     interface Options {
@@ -267,13 +294,7 @@ declare namespace Eyes {
       maxRightOffset: number
     }
 
-    enum AccessibilityType {
-      IgnoreContrast = 'IgnoreContrast',
-      RegularText = 'RegularText',
-      LargeText = 'LargeText',
-      BoldText = 'BoldText',
-      GraphicalObject =  'GraphicalObject',
-    }
+    type AccessibilityType = "IgnoreContrast"|"RegularText"|"LargeText"|"BoldText"|"GraphicalObject"
 
     interface AccessibilityRegion extends Region {
       accessibilityType: AccessibilityType

@@ -5,14 +5,14 @@ const getBatch = require('../../../src/sdk/getBatch');
 
 describe('getBatch', () => {
   it('works with batchName', () => {
-    const {batchName, batchId, batchSequenceName} = getBatch({
+    const {batchName, batchId, batchSequence} = getBatch({
       batchName: 'bla',
       batchId: 'kuku',
-      batchSequenceName: 'tra',
+      batchSequence: 'tra',
     });
     expect(batchName).to.equal('bla');
     expect(batchId).to.equal('kuku');
-    expect(batchSequenceName).to.equal('tra');
+    expect(batchSequence).to.equal('tra');
   });
 
   it('works without batchName', () => {

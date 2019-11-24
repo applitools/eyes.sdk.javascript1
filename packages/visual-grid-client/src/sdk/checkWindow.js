@@ -11,6 +11,7 @@ const calculateMatchRegions = require('./calculateMatchRegions');
 const isInvalidAccessibility = require('./isInvalidAccessibility');
 
 function makeCheckWindow({
+  globalState,
   testController,
   saveDebugData,
   createRGridDOMAndGetResourceMapping,
@@ -29,6 +30,7 @@ function makeCheckWindow({
   fetchHeaders,
   matchLevel: _matchLevel,
   accessibilityLevel: _accessibilityLevel,
+  isSingleWindow,
 }) {
   return function checkWindow({
     resourceUrls = [],
@@ -251,14 +253,16 @@ function makeCheckWindow({
         `running wrapper.checkWindow for test ${testName} stepCount #${currStepCount}`,
       );
 
-      await wrapper.checkWindow({
+      const checkArgs = {
         screenshotUrl,
         tag,
         domUrl: domLocation,
         checkSettings,
         imageLocation,
         source,
-      });
+      };
+
+      return !isSingleWindow ? wrapper.checkWindow(checkArgs) : wrapper.testWindow(checkArgs);
     }
 
     async function startRender() {
@@ -289,8 +293,14 @@ function makeCheckWindow({
         sendDom,
       });
 
-      let renderIds = await renderThroat(() => renderBatch(renderRequests));
-      renderJobs = renderIds.map(createRenderJob);
+      globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() + 1);
+      const renderBatchPromise = renderThroat(() => {
+        logger.log(`starting to render test ${testName}`);
+        return renderBatch(renderRequests);
+      });
+      renderJobs = renderRequests.map(createRenderJob);
+      const renderIds = await renderBatchPromise;
+      globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() - 1);
 
       if (saveDebugData) {
         for (const renderId of renderIds) {

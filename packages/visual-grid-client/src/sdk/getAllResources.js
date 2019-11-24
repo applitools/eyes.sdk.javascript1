@@ -39,13 +39,11 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
 
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
       const resources = {};
-      for (const url in preResources) {
-        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(preResources[url])));
-      }
-
-      for (const url in preResources) {
+      for (const [url, resource] of Object.entries(preResources)) {
+        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(resource)));
         handledResources.add(url);
-        assignContentfulResources(resources, await processResource(preResources[url]));
+        const rGridResource = fromFetchedToRGridResource(resource);
+        assignContentfulResources(resources, {[url]: rGridResource});
       }
 
       const unhandledResourceUrls = resourceUrls.filter(url => !handledResources.has(url));
@@ -78,6 +76,20 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     async function processResource(resource) {
       let {dependentResources, fetchedResources} = await getDependantResources(resource);
       const rGridResource = fromFetchedToRGridResource(resource);
+      /*
+       * Note: We set the cache with resources only after we don't need their content anymore (to save up space);
+       * We set it in renderBatch() after all PUTs are done.
+       * ( toCacheEntry() removes the content of non css/svg resources )
+       *
+       * getAllresources calls before the render ends don't get the cache (it's ok fetch-wise since fetch is cached)
+       * but it is time consuming to do css/svg processing - and so we set these resources to cache here.
+       *
+       * Consider changing this, maybe setting all resources here (and keeping the cache entery content).
+       */
+      const contentType = rGridResource.getContentType();
+      if (resourceType(contentType)) {
+        resourceCache.setValue(resource.url, toCacheEntry(rGridResource));
+      }
       resourceCache.setDependencies(resource.url, dependentResources);
       return Object.assign({[resource.url]: rGridResource}, fetchedResources);
     }

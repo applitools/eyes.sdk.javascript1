@@ -2,13 +2,13 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const makeCheckWindow = require('../../../src/sdk/checkWindow');
-const makeTestContorler = require('../../../src/sdk/makeTestContorler');
+const makeTestController = require('../../../src/sdk/makeTestController');
 
 describe('checkWindow', () => {
   it('handles fetchHeaders correctly', async () => {
     const fetchHeaders = {['User-Agent']: 'some agent'};
     const checkWindow = makeCheckWindow({
-      testController: makeTestContorler({numOfTests: 0, logger: console}),
+      testController: makeTestController({numOfTests: 0, logger: console}),
       createRGridDOMAndGetResourceMapping: () => {},
       renderBatch: () => {},
       waitForRenderedStatus: () => {},

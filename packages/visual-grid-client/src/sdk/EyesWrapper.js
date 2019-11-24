@@ -1,5 +1,12 @@
 'use strict';
-const {EyesBase, NullRegionProvider} = require('@applitools/eyes-sdk-core');
+const {
+  EyesBase,
+  NullRegionProvider,
+  TestResultsStatus,
+  DiffsFoundError,
+  NewTestError,
+  TestFailedError,
+} = require('@applitools/eyes-sdk-core');
 const {presult} = require('@applitools/functional-commons');
 
 const VERSION = require('../../package.json').version;
@@ -11,8 +18,8 @@ class EyesWrapper extends EyesBase {
     logHandler && this.setLogHandler(logHandler);
   }
 
-  async open(appName, testName, viewportSize) {
-    await super.openBase(appName, testName);
+  async open({appName, testName, viewportSize, skipStartingSession}) {
+    await super.openBase(appName, testName, undefined, undefined, skipStartingSession);
 
     if (viewportSize) {
       this.setViewportSize(viewportSize);
@@ -130,6 +137,48 @@ class EyesWrapper extends EyesBase {
     this.domUrl = domUrl;
     this.imageLocation = imageLocation;
     return this.checkWindowBase(regionProvider, tag, false, checkSettings, source);
+  }
+
+  testWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {
+    this._logger.verbose(`EyesWrapper.testWindow() called`);
+    this.screenshotUrl = screenshotUrl;
+    this.domUrl = domUrl;
+    this.imageLocation = imageLocation;
+    const regionProvider = new NullRegionProvider();
+    return this.checkSingleWindowBase(regionProvider, tag, false, checkSettings);
+  }
+
+  closeTestWindow(results, throwEx) {
+    this._logger.verbose(`EyesWrapper.closeTestWindow() called`);
+    const status = results.getStatus();
+    if (status === TestResultsStatus.Unresolved) {
+      if (results.getIsNew()) {
+        if (throwEx) {
+          return Promise.reject(new NewTestError(results, this._sessionStartInfo));
+        }
+      } else {
+        if (throwEx) {
+          return Promise.reject(new DiffsFoundError(results, this._sessionStartInfo));
+        }
+      }
+    } else if (status === TestResultsStatus.Failed) {
+      if (throwEx) {
+        return Promise.reject(new TestFailedError(results, this._sessionStartInfo));
+      }
+    }
+
+    const sessionResultsUrl = results.getAppUrls().getSession();
+    results.setUrl(sessionResultsUrl);
+
+    this._isOpen = false;
+    this._lastScreenshot = null;
+    this.clearUserInputs();
+    this._initProviders(true);
+    this._logger.getLogHandler().close();
+    this._matchWindowTask = null;
+    this._autSessionId = undefined;
+    this._currentAppName = undefined;
+    return Promise.resolve(results);
   }
 
   setProxy(proxy) {

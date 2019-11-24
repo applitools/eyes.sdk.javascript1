@@ -27,12 +27,17 @@ const {makeVisualGridClient} = require('@applitools/visual-grid-client')
 const visualGridClient = makeVisualGridClient()
 ```
 
-The visualGridClient, returned by `makeVisualGridClient`, is an object with the following function:
+The visualGridClient, returned by `makeVisualGridClient`, is an object with the following functions:
 
 * `openEyes(configOverride)`: to start a set of tests, where each step is a set of renderings according to the browser
   stuff in the configuration.
   This function will return an object with functions (see below) allowing you to create renderings (or "steps" in
   Applitools parlance) for the test.
+
+* `testWindow({openParams, checkParams, throwEx})`
+
+* `closeBatch()`
+
 
 ### openEyes
 
@@ -81,7 +86,7 @@ defined in the `browser` property of the configuration.
   * `value`: a `Buffer` of the resource content.
 * `matchLevel`: The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match.
 * `accessibilityLevel`: The accessibility to use for the screenshots. Possible values are 'None', 'AA' and 'AAA'.
-* `notifyOnCompletion`.
+* `batchNotify`.
 
 ### close()
 
@@ -198,6 +203,65 @@ describe('visual-grid-client test', function() {
       resourceContents,
       frames
     })
+  })
+})
+```
+
+## Example testWindow()
+```js
+const {makeVisualGridClient} = require('@applitools/visual-grid-client')
+const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
+const puppeteer = require('puppeteer')
+
+describe('visual-grid-client test', function() {
+  let visualGridClient
+  let closePromises = []
+  let processPageAndSerialize
+  let browser
+  let page
+
+  before(async () => {
+    browser = await puppeteer.launch()
+    page = await browser.newPage()
+
+    visualGridClient = makeVisualGridClient({
+      showLogs: true,
+    })
+
+    processPageAndSerialize = `(${await getProcessPageAndSerializeScript()})()`
+  })
+
+  after(async () => {
+    await browser.close()
+    const results = await Promise.all(closePromises)
+  })
+
+  it('should work', async () => {
+    await page.goto('index.html')
+    const {cdt, url, resourceUrls, blobs, frames} = await page.evaluate(processPageAndSerialize)
+    const resourceContents = blobs.map(({url, type, value}) => ({
+      url,
+      type,
+      value: Buffer.from(value, 'base64'),
+    }));
+
+    const checkParams = {
+      tag: 'first test',
+      target: 'region',
+      fully: false,
+      url,
+      cdt,
+      resourceUrls,
+      resourceContents,
+      frames
+    };
+
+    const openParams = {
+      appName: 'visual grid client with a cat',
+      testName: 'visual-grid-client test',
+    }
+
+    const results = await testWindow({checkParams, openParams, throwEx: false})
   })
 })
 ```

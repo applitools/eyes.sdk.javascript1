@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.20](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.19...@applitools/eyes-selenium@4.31.20) (2019-11-18)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.19](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.18...@applitools/eyes-selenium@4.31.19) (2019-11-17)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.18](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.17...@applitools/eyes-selenium@4.31.18) (2019-11-14)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.17](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.16...@applitools/eyes-selenium@4.31.17) (2019-11-13)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.16](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.15...@applitools/eyes-selenium@4.31.16) (2019-11-05)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** fix css stitching for new chrome 78 (bug in chrome) ([e79bb49](https://github.com/applitools/eyes.sdk.javascript1/commit/e79bb49354cf3f763beef5fdd0e397531c029a9f))
+
+
+
+
+
+## [4.31.15](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.14...@applitools/eyes-selenium@4.31.15) (2019-11-04)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.14](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.13...@applitools/eyes-selenium@4.31.14) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.13](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.12...@applitools/eyes-selenium@4.31.13) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.12](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.11...@applitools/eyes-selenium@4.31.12) (2019-10-30)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.11](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.10...@applitools/eyes-selenium@4.31.11) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed package json versions ([f7164e7](https://github.com/applitools/eyes.sdk.javascript1/commit/f7164e7))
+* **visual-grid-client:** reverted testWindow ([db336c7](https://github.com/applitools/eyes.sdk.javascript1/commit/db336c7))
+
+
+
+
+
+## [4.31.9](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.8...@applitools/eyes-selenium@4.31.9) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
+## [4.31.8](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.7...@applitools/eyes-selenium@4.31.8) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium
+
+
+
+
+
 ## [4.31.7](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium@4.31.6...@applitools/eyes-selenium@4.31.7) (2019-10-16)
 
 **Note:** Version bump only for package @applitools/eyes-selenium

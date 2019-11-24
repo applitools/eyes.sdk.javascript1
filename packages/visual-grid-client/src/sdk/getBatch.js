@@ -1,11 +1,11 @@
 'use strict';
 const {BatchInfo} = require('@applitools/eyes-sdk-core');
 
-function getBatch({batchSequenceName, batchName, batchId}) {
-  const batchInfo = new BatchInfo({name: batchName, id: batchId, sequenceName: batchSequenceName});
+function getBatch({batchSequence, batchName, batchId}) {
+  const batchInfo = new BatchInfo({name: batchName, id: batchId, sequenceName: batchSequence});
 
   return {
-    batchSequenceName: batchInfo.getSequenceName(),
+    batchSequence: batchInfo.getSequenceName(),
     batchName: batchInfo.getName(),
     batchId: batchInfo.getId(),
   };

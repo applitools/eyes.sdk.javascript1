@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [unversioned]
+
+
+### Features
+
+* **eyes-common:** Add dontCloseBatches property to Configuration. [Trello_1238](https://trello.com/c/5Hy0nGkN)
+
+
+## [3.12.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.12.0...@applitools/eyes-common@3.12.1) (2019-11-17)
+
+
+### Bug Fixes
+
+* **eyes-common:** getting env variables of bamboo in ConfigUtils ([5e8e486](https://github.com/applitools/eyes.sdk.javascript1/commit/5e8e486))
+
+
+
+
+
+# [3.12.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.11.2...@applitools/eyes-common@3.12.0) (2019-11-13)
+
+
+### Features
+
+* **eyes-sdk-core, visual-grid-client:** supporting new params names for batch stuff ([586cd0e](https://github.com/applitools/eyes.sdk.javascript1/commit/586cd0e))
+
+
+
+
+
 ## [3.11.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-common@3.11.1...@applitools/eyes-common@3.11.2) (2019-10-07)
 
 

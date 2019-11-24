@@ -3,6 +3,154 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [13.3.3](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.3.2...@applitools/visual-grid-client@13.3.3) (2019-11-18)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** updated ds to latest ([6029e3d](https://github.com/applitools/eyes.sdk.javascript1/commit/6029e3d))
+
+
+
+
+
+## [13.3.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.3.1...@applitools/visual-grid-client@13.3.2) (2019-11-17)
+
+**Note:** Version bump only for package @applitools/visual-grid-client
+
+
+
+
+
+## [13.3.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.3.0...@applitools/visual-grid-client@13.3.1) (2019-11-14)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** closing batch in one server connector for all batches ([7d0ffc3](https://github.com/applitools/eyes.sdk.javascript1/commit/7d0ffc3))
+
+
+
+
+
+# [13.3.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.2.4...@applitools/visual-grid-client@13.3.0) (2019-11-13)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added logs for testWindow ([4bf4a40](https://github.com/applitools/eyes.sdk.javascript1/commit/4bf4a40))
+* **visual-grid-client:** fixed getAllresources test ([5cc55a3](https://github.com/applitools/eyes.sdk.javascript1/commit/5cc55a3))
+* **visual-grid-client:** now we process resources and set them to cache ([bfe5b1a](https://github.com/applitools/eyes.sdk.javascript1/commit/bfe5b1a))
+* **visual-grid-client:** reverted caching all resources for process ([0376cde](https://github.com/applitools/eyes.sdk.javascript1/commit/0376cde))
+* **visual-grid-client:** setting process resource cache with css/svg contents ([5100790](https://github.com/applitools/eyes.sdk.javascript1/commit/5100790))
+
+
+### Features
+
+* **eyes-sdk-core, visual-grid-client:** supporting new params names for batch stuff ([586cd0e](https://github.com/applitools/eyes.sdk.javascript1/commit/586cd0e))
+
+
+
+
+
+## [13.2.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.2.1...@applitools/visual-grid-client@13.2.4) (2019-11-05)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fix bug in global state ([b9ccb98](https://github.com/applitools/eyes.sdk.javascript1/commit/b9ccb984963919f5e018dfae5014750034162fa7))
+
+
+
+
+
+## [13.2.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.2.0...@applitools/visual-grid-client@13.2.1) (2019-11-04)
+
+
+### Bug Fixes
+
+* **eyes-sdk-core, visual-grid-client:** added skipStartingSession to openBase - fixed testWindow startSession calls. ([cd424cb](https://github.com/applitools/eyes.sdk.javascript1/commit/cd424cb))
+
+
+
+
+
+# [13.2.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.1.5...@applitools/visual-grid-client@13.2.0) (2019-11-03)
+
+
+### Features
+
+* **visual-grid-client:** Returned testWindow API ([c4b4e4e](https://github.com/applitools/eyes.sdk.javascript1/commit/c4b4e4e))
+
+
+
+
+
+## [13.1.5](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.1.4...@applitools/visual-grid-client@13.1.5) (2019-11-03)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** handle memory issues with RGridDom ([96f242f](https://github.com/applitools/eyes.sdk.javascript1/commit/96f242f))
+* **visual-grid-client:** handle render concurrency correctly ([da25706](https://github.com/applitools/eyes.sdk.javascript1/commit/da25706))
+
+
+
+
+
+## [13.1.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.1.2...@applitools/visual-grid-client@13.1.4) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed package json versions again ([aa425ec](https://github.com/applitools/eyes.sdk.javascript1/commit/aa425ec))
+
+
+
+
+
+## [13.1.2](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.1.0...@applitools/visual-grid-client@13.1.2) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed package json versions ([f7164e7](https://github.com/applitools/eyes.sdk.javascript1/commit/f7164e7))
+* **visual-grid-client:** reverted testWindow ([db336c7](https://github.com/applitools/eyes.sdk.javascript1/commit/db336c7))
+* **visual-grid-client:** small fixed for testWindow ([42534ae](https://github.com/applitools/eyes.sdk.javascript1/commit/42534ae))
+
+
+
+
+
+## [13.0.1](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@13.0.0...@applitools/visual-grid-client@13.0.1) (2019-10-27)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** added dom snapshot to 3.0.4 ([586c413](https://github.com/applitools/eyes.sdk.javascript1/commit/586c413))
+
+
+
+
+
+# [13.0.0](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.4...@applitools/visual-grid-client@13.0.0) (2019-10-27)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** changed enums to strings in ts defenition file ([b2fe5a9](https://github.com/applitools/eyes.sdk.javascript1/commit/b2fe5a9))
+* **visual-grid-client:** fix package json ([579c8c2](https://github.com/applitools/eyes.sdk.javascript1/commit/579c8c2))
+* **visual-grid-client:** removed unnessecery parsing of blobs ([8075058](https://github.com/applitools/eyes.sdk.javascript1/commit/8075058))
+
+
+### BREAKING CHANGES
+
+* **visual-grid-client:** MUST UPDATE dom snapshot to 3.0.4 - since dom snapshot had a bug that this bug fix in vgc covers for git status
+
+
+
+
+
 ## [12.36.4](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/visual-grid-client@12.36.2...@applitools/visual-grid-client@12.36.4) (2019-10-16)
 
 

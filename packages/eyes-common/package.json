@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-common",
-  "version": "3.11.2",
+  "version": "3.12.1",
   "description": "Utilities for working with Eyes JavaScript SDK and the visual grid",
   "keywords": [
     "applitools",
@@ -30,7 +30,7 @@
   "main": "./index.js",
   "browser": "./browser.js",
   "dependencies": {
-    "cosmiconfig": "^5.2.1",
+    "cosmiconfig": "^6.0.0",
     "dateformat": "^3.0.3",
     "debug": "^4.1.1",
     "deepmerge": "^4.0.0",

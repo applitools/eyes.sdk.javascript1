@@ -27,19 +27,19 @@ function configureWrappers({
   browsers,
   isDisabled,
   displayName,
-  batchSequenceName,
+  batchSequence,
   batchName,
   batchId,
   properties,
-  baselineBranchName,
+  baselineBranch,
   baselineEnvName,
   baselineName,
   envName,
   ignoreCaret,
   matchLevel,
   accessibilityLevel,
-  parentBranchName,
-  branchName,
+  parentBranch,
+  branch,
   proxy,
   saveFailedTests,
   saveNewTests,
@@ -51,13 +51,13 @@ function configureWrappers({
   enablePatterns,
   ignoreDisplacements,
   assumeEnvironment,
-  notifyOnCompletion,
+  batchNotify,
 }) {
   const batchInfo = new BatchInfo({
     id: batchId,
     name: batchName,
-    sequenceName: batchSequenceName,
-    notifyOnCompletion,
+    sequenceName: batchSequence,
+    notifyOnCompletion: batchNotify,
   });
 
   for (let i = 0, ii = wrappers.length; i < ii; i++) {
@@ -71,7 +71,7 @@ function configureWrappers({
     wrapper.setBatch(batchInfo);
 
     displayName !== undefined && wrapper.setDisplayName(displayName);
-    baselineBranchName !== undefined && wrapper.setBaselineBranchName(baselineBranchName);
+    baselineBranch !== undefined && wrapper.setBaselineBranchName(baselineBranch);
     baselineEnvName !== undefined && wrapper.setBaselineEnvName(baselineEnvName);
     baselineName !== undefined && wrapper.setBaselineName(baselineName);
     envName !== undefined && wrapper.setEnvName(envName);
@@ -82,8 +82,8 @@ function configureWrappers({
     useDom !== undefined && wrapper.setUseDom(useDom);
     enablePatterns !== undefined && wrapper.setEnablePatterns(enablePatterns);
     ignoreDisplacements !== undefined && wrapper.setIgnoreDisplacements(ignoreDisplacements);
-    parentBranchName !== undefined && wrapper.setParentBranchName(parentBranchName);
-    branchName !== undefined && wrapper.setBranchName(branchName);
+    parentBranch !== undefined && wrapper.setParentBranchName(parentBranch);
+    branch !== undefined && wrapper.setBranchName(branch);
     proxy !== undefined && wrapper.setProxy(proxy);
     saveFailedTests !== undefined && wrapper.setSaveFailedTests(saveFailedTests);
     saveNewTests !== undefined && wrapper.setSaveNewTests(saveNewTests);
@@ -98,7 +98,14 @@ function configureWrappers({
   }
 }
 
-function openWrappers({wrappers, browsers, appName, testName, eyesTransactionThroat}) {
+function openWrappers({
+  wrappers,
+  browsers,
+  appName,
+  testName,
+  eyesTransactionThroat,
+  skipStartingSession,
+}) {
   const openPromisesAndResolves = wrappers.map(() => {
     let resolve;
     const promise = new Promise(r => (resolve = r));
@@ -108,7 +115,9 @@ function openWrappers({wrappers, browsers, appName, testName, eyesTransactionThr
     .map((wrapper, i) => {
       const viewportSize = browsers[i].width && new RectangleSize(browsers[i]);
       return eyesTransactionThroat(() =>
-        wrapper.open(appName, testName, viewportSize).then(openPromisesAndResolves[i].resolve),
+        wrapper
+          .open({appName, testName, viewportSize, skipStartingSession})
+          .then(openPromisesAndResolves[i].resolve),
       );
     })
     .reduce(

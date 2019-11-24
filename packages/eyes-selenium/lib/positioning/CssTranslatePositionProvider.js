@@ -48,9 +48,8 @@ class CssTranslatePositionProvider extends PositionProvider {
     ArgumentGuard.notNull(location, 'location');
     this._logger.verbose(`CssTranslatePositionProvider - Setting position to: ${location}`);
 
-    const script = `arguments[0].style.transform='translate(-${location.getX()}px, -${location.getY()}px)';`;
-
-    await this._executor.executeScript(script, this._scrollRootElement);
+    await this._executor.executeScript(`arguments[0].style.transform = 'translate(10px, -${location.getY()}px)';`, this._scrollRootElement);
+    await this._executor.executeScript(`arguments[0].style.transform = 'translate(-${location.getX()}px, -${location.getY()}px)';`, this._scrollRootElement);
 
     this._logger.verbose('Done!');
     this._lastSetPosition = location;

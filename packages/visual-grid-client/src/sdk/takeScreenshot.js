@@ -40,9 +40,9 @@ async function takeScreenshot({
   const resourceContents = blobDataToResourceContents(blobs);
   const framesWithResources = createResourceContents(frames);
   const renderingInfo = new RenderingInfo({
-    serviceUrl: renderInfo.ServiceUrl,
-    accessToken: renderInfo.AccessToken,
-    resultsUrl: renderInfo.ResultsUrl,
+    serviceUrl: renderInfo.serviceUrl,
+    accessToken: renderInfo.accessToken,
+    resultsUrl: renderInfo.resultsUrl,
   });
 
   const {createRGridDOMAndGetResourceMapping, renderBatch, waitForRenderedStatus} = makeRenderer({

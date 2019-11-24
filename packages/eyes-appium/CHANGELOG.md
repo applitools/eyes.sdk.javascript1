@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.54](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.53...@applitools/eyes-appium@4.7.54) (2019-11-18)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.53](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.52...@applitools/eyes-appium@4.7.53) (2019-11-17)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.52](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.51...@applitools/eyes-appium@4.7.52) (2019-11-14)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.51](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.50...@applitools/eyes-appium@4.7.51) (2019-11-13)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.50](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.49...@applitools/eyes-appium@4.7.50) (2019-11-05)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.49](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.48...@applitools/eyes-appium@4.7.49) (2019-11-04)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.48](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.47...@applitools/eyes-appium@4.7.48) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.47](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.46...@applitools/eyes-appium@4.7.47) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.46](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.45...@applitools/eyes-appium@4.7.46) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** reverted testWindow ([db336c7](https://github.com/applitools/eyes.sdk.javascript1/commit/db336c7))
+
+
+
+
+
+## [4.7.45](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.45...@applitools/eyes-appium@4.7.45) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** reverted testWindow ([db336c7](https://github.com/applitools/eyes.sdk.javascript1/commit/db336c7))
+
+
+
+
+
+## [4.7.44](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.43...@applitools/eyes-appium@4.7.44) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
+## [4.7.43](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.42...@applitools/eyes-appium@4.7.43) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-appium
+
+
+
+
+
 ## [4.7.42](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-appium@4.7.41...@applitools/eyes-appium@4.7.42) (2019-10-16)
 
 **Note:** Version bump only for package @applitools/eyes-appium

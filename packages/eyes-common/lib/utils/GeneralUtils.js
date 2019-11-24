@@ -317,6 +317,88 @@ class GeneralUtils {
 
     return undefined;
   }
+
+  /**
+   * Make sure new param value is set with either backward compatible param or the new param.
+   *
+   * @param {...object[]} params The parameter map.
+   * @param {logger} logger to log errors
+   * @example
+   *
+   * foo({newParam, oldPram}) {
+   *    ({newParam} = backwardCompatible([{oldParam}, {newParam}], logger))
+   *    // now if oldParam is used we set it to oldParam and log a deprecation message.
+   * }
+   *
+   */
+  static backwardCompatible(...args) {
+    const results = {};
+    const logger = args.pop();
+    for (const [oldParam, newParam] of args) {
+      const oldParamName = Object.keys(oldParam)[0];
+      const newParamName = Object.keys(newParam)[0];
+      if (oldParam[oldParamName] === undefined) {
+        results[newParamName] = newParam[newParamName];
+      } else {
+        logger.log(
+          `warning - "${oldParamName}" is deprectated and will be removed, please use "${newParamName}" instead.`
+        );
+        results[newParamName] = oldParam[oldParamName];
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * @param {string} str
+   * @return {string}
+   */
+  static cleanStringForJSON(str) {
+    if (str == null || str.length === 0) {
+      return '';
+    }
+
+    let sb = '';
+    let char = '\0';
+    let tmp;
+
+    for (let i = 0, l = str.length; i < l; i += 1) {
+      char = str[i];
+      switch (char) {
+        case '\\':
+        case '"':
+        case '/':
+          sb += '\\' + char; // eslint-disable-line
+          break;
+        case '\b':
+          sb += '\\b';
+          break;
+        case '\t':
+          sb += '\\t';
+          break;
+        case '\n':
+          sb += '\\n';
+          break;
+        case '\f':
+          sb += '\\f';
+          break;
+        case '\r':
+          sb += '\\r';
+          break;
+        default:
+          if (char < ' ') {
+            tmp = '000' + char.toString(16); // eslint-disable-line
+            sb += '\\u' + tmp.substring(tmp.length - 4); // eslint-disable-line
+          } else {
+            sb += char;
+          }
+          break;
+      }
+    }
+
+    return sb;
+  }
 }
 
 exports.GeneralUtils = GeneralUtils;

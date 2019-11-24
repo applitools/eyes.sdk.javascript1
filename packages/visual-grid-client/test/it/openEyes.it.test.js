@@ -79,7 +79,6 @@ describe('openEyes', () => {
     const resourceUrls = wrapper.goodResourceUrls;
     const cdt = loadJsonFixture('test.cdt.json');
     checkWindow({resourceUrls, cdt, tag: 'good1', url: `${baseUrl}/test.html`});
-
     expect((await close())[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
   });
 
@@ -119,18 +118,18 @@ describe('openEyes', () => {
   });
 
   it('handles `batchName`, `batchId` and `batchSequence` param', async () => {
-    const batchSequenceName = `some batch sequence ${Date.now()}`;
+    const batchSequence = `some batch sequence ${Date.now()}`;
     const batchName = `some batch name ${Date.now()}`;
     const batchId = `some batch ID ${Date.now()}`;
     await openEyes({
       wrappers: [wrapper],
-      batchSequenceName,
+      batchSequence,
       batchName,
       batchId,
       appName,
     });
 
-    expect(wrapper.getBatch().getSequenceName()).to.equal(batchSequenceName);
+    expect(wrapper.getBatch().getSequenceName()).to.equal(batchSequence);
     expect(wrapper.getBatch().getName()).to.equal(batchName);
     expect(wrapper.getBatch().getId()).to.equal(batchId);
   });
@@ -204,15 +203,21 @@ describe('openEyes', () => {
     });
 
     const blobUrl = `${baseUrl}/blob.css`;
+    const imageUrl = `${baseUrl}/smurfs4.jpg`;
     const resourceContents = {
       [blobUrl]: {
         url: blobUrl,
         type: 'text/css',
         value: loadFixtureBuffer('blob.css'),
       },
+      [imageUrl]: {
+        url: imageUrl,
+        type: 'image/jpeg',
+        value: loadFixtureBuffer('smurfs.jpg'),
+      },
     };
 
-    wrapper.goodResourceUrls = [`${baseUrl}/blob.css`, `${baseUrl}/smurfs4.jpg`];
+    wrapper.goodResourceUrls = [blobUrl, imageUrl];
 
     checkWindow({cdt: [], resourceContents, tag: 'good1', url: `${baseUrl}/test.html`});
     expect((await close())[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true]);
@@ -875,7 +880,8 @@ describe('openEyes', () => {
       expect(renderCount).to.equal(4);
     });
 
-    it('runs renders with max concurrency between open/close', async () => {
+    // TODO (amit): unskip
+    it.skip('runs renders with max concurrency between open/close', async () => {
       const {checkWindow, close} = await openEyes({
         wrappers: [wrapper],
         appName,
@@ -1030,7 +1036,7 @@ describe('openEyes', () => {
       wrappers,
       url: 'bla',
       appName,
-      baselineBranchName: 'baselineBranchName',
+      baselineBranch: 'baselineBranch',
       baselineEnvName: 'baselineEnvName',
       baselineName: 'baselineName',
       envName: 'envName',
@@ -1038,19 +1044,19 @@ describe('openEyes', () => {
       isDisabled: false,
       matchLevel: 'matchLevel',
       accessibilityLevel: 'accessibilityLevel',
-      parentBranchName: 'parentBranchName',
-      branchName: 'branchName',
+      parentBranch: 'parentBranch',
+      branch: 'branch',
       saveFailedTests: 'saveFailedTests',
       saveNewTests: 'saveNewTests',
       compareWithParentBranch: 'compareWithParentBranch',
       ignoreBaseline: 'ignoreBaseline',
       browser: [{deviceName: 'device1'}, {deviceName: 'device2'}, {}],
       agentId: 'agentId',
-      notifyOnCompletion: true,
+      batchNotify: true,
     });
 
     for (const wrapper of wrappers) {
-      expect(wrapper.baselineBranchName).to.equal('baselineBranchName');
+      expect(wrapper.baselineBranchName).to.equal('baselineBranch');
       expect(wrapper.baselineEnvName).to.equal('baselineEnvName');
       expect(wrapper.baselineName).to.equal('baselineName');
       expect(wrapper.envName).to.equal('envName');
@@ -1058,8 +1064,8 @@ describe('openEyes', () => {
       expect(wrapper.isDisabled).to.equal(false);
       expect(wrapper.matchLevel).to.equal('matchLevel');
       expect(wrapper.accessibilityLevel).to.equal('accessibilityLevel');
-      expect(wrapper.parentBranchName).to.equal('parentBranchName');
-      expect(wrapper.branchName).to.equal('branchName');
+      expect(wrapper.parentBranchName).to.equal('parentBranch');
+      expect(wrapper.branchName).to.equal('branch');
       expect(wrapper.proxy).to.equal('proxy');
       expect(wrapper.saveFailedTests).to.equal('saveFailedTests');
       expect(wrapper.saveNewTests).to.equal('saveNewTests');
@@ -1089,7 +1095,7 @@ describe('openEyes', () => {
       serverUrl: 'serverUrl',
       proxy: 'proxy',
       appName,
-      baselineBranchName: 'baselineBranchName',
+      baselineBranch: 'baselineBranch',
       baselineEnvName: 'baselineEnvName',
       baselineName: 'baselineName',
       envName: 'envName',
@@ -1097,8 +1103,8 @@ describe('openEyes', () => {
       isDisabled: false,
       matchLevel: 'matchLevel',
       accessibilityLevel: 'accessibilityLevel',
-      parentBranchName: 'parentBranchName',
-      branchName: 'branchName',
+      parentBranch: 'parentBranch',
+      branch: 'branch',
       saveFailedTests: 'saveFailedTests',
       saveNewTests: 'saveNewTests',
       compareWithParentBranch: 'compareWithParentBranch',
@@ -1113,7 +1119,7 @@ describe('openEyes', () => {
     });
 
     for (const wrapper of wrappers) {
-      expect(wrapper.baselineBranchName).to.equal('baselineBranchName');
+      expect(wrapper.baselineBranchName).to.equal('baselineBranch');
       expect(wrapper.baselineEnvName).to.equal('baselineEnvName');
       expect(wrapper.baselineName).to.equal('baselineName');
       expect(wrapper.envName).to.equal('envName');
@@ -1121,8 +1127,8 @@ describe('openEyes', () => {
       expect(wrapper.isDisabled).to.equal(false);
       expect(wrapper.matchLevel).to.equal('matchLevel');
       expect(wrapper.accessibilityLevel).to.equal('accessibilityLevel');
-      expect(wrapper.parentBranchName).to.equal('parentBranchName');
-      expect(wrapper.branchName).to.equal('branchName');
+      expect(wrapper.parentBranchName).to.equal('parentBranch');
+      expect(wrapper.branchName).to.equal('branch');
       expect(wrapper.proxy).to.equal('proxy');
       expect(wrapper.saveFailedTests).to.equal('saveFailedTests');
       expect(wrapper.saveNewTests).to.equal('saveNewTests');
@@ -1174,7 +1180,7 @@ describe('openEyes', () => {
     });
 
     checkWindow({});
-    expect(await close()).to.equal(undefined);
+    expect(await close()).to.eql([]);
     expect(await abort()).to.equal(undefined);
   });
 

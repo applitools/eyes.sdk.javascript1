@@ -43,6 +43,7 @@ class BatchInfo {
         startedAt: varArg1.getStartedAt(),
         sequenceName: varArg1.getSequenceName(),
         notifyOnCompletion: varArg1.getNotifyOnCompletion(),
+        isCompleted: varArg1.getIsCompleted(),
       });
     }
 
@@ -50,11 +51,12 @@ class BatchInfo {
       return new BatchInfo({ id: varArg3, name: varArg1, startedAt: varArg2 });
     }
 
-    let { id, name, startedAt, sequenceName, notifyOnCompletion } = varArg1 || {};
+    let { id, name, startedAt, sequenceName, notifyOnCompletion, isCompleted } = varArg1 || {};
     ArgumentGuard.isString(id, 'batchId', false);
     ArgumentGuard.isString(name, 'batchName', false);
     ArgumentGuard.isString(sequenceName, 'sequenceName', false);
     ArgumentGuard.isBoolean(notifyOnCompletion, 'notifyOnCompletion', false);
+    ArgumentGuard.isBoolean(isCompleted, 'isCompleted', false);
 
     if (startedAt && !(startedAt instanceof Date)) {
       ArgumentGuard.isString(startedAt, 'startedAt', false);
@@ -66,6 +68,7 @@ class BatchInfo {
     this._startedAt = startedAt || new Date();
     this._sequenceName = sequenceName || GeneralUtils.getEnvValue('BATCH_SEQUENCE');
     this._notifyOnCompletion = notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY', true) || false;
+    this._isCompleted = isCompleted || false;
   }
 
   /**
@@ -157,10 +160,26 @@ class BatchInfo {
   }
 
   /**
+   * @return {boolean}
+   */
+  getIsCompleted() {
+    return this._isCompleted;
+  }
+
+  /**
+   * @param {boolean} isCompleted
+   * @return {this}
+   */
+  setIsCompleted(isCompleted) {
+    this._isCompleted = isCompleted;
+    return this;
+  }
+
+  /**
    * @override
    */
   toJSON() {
-    return GeneralUtils.toPlain(this, undefined, {
+    return GeneralUtils.toPlain(this, ['_isCompleted'], {
       sequenceName: 'batchSequenceName',
     });
   }

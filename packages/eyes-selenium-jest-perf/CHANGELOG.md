@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.94](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.93...@applitools/eyes-selenium-jest-perf@4.5.94) (2019-11-18)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.93](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.92...@applitools/eyes-selenium-jest-perf@4.5.93) (2019-11-17)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.92](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.91...@applitools/eyes-selenium-jest-perf@4.5.92) (2019-11-14)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.91](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.90...@applitools/eyes-selenium-jest-perf@4.5.91) (2019-11-13)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.90](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.89...@applitools/eyes-selenium-jest-perf@4.5.90) (2019-11-05)
+
+
+### Bug Fixes
+
+* **eyes-selenium:** fix css stitching for new chrome 78 (bug in chrome) ([e79bb49](https://github.com/applitools/eyes.sdk.javascript1/commit/e79bb49354cf3f763beef5fdd0e397531c029a9f))
+
+
+
+
+
+## [4.5.89](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.88...@applitools/eyes-selenium-jest-perf@4.5.89) (2019-11-04)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.88](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.87...@applitools/eyes-selenium-jest-perf@4.5.88) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.87](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.86...@applitools/eyes-selenium-jest-perf@4.5.87) (2019-11-03)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.86](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.85...@applitools/eyes-selenium-jest-perf@4.5.86) (2019-10-30)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.85](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.84...@applitools/eyes-selenium-jest-perf@4.5.85) (2019-10-30)
+
+
+### Bug Fixes
+
+* **visual-grid-client:** fixed package json versions ([f7164e7](https://github.com/applitools/eyes.sdk.javascript1/commit/f7164e7))
+* **visual-grid-client:** reverted testWindow ([db336c7](https://github.com/applitools/eyes.sdk.javascript1/commit/db336c7))
+
+
+
+
+
+## [4.5.83](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.82...@applitools/eyes-selenium-jest-perf@4.5.83) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
+## [4.5.82](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.81...@applitools/eyes-selenium-jest-perf@4.5.82) (2019-10-27)
+
+**Note:** Version bump only for package @applitools/eyes-selenium-jest-perf
+
+
+
+
+
 ## [4.5.81](https://github.com/applitools/eyes.sdk.javascript1/compare/@applitools/eyes-selenium-jest-perf@4.5.80...@applitools/eyes-selenium-jest-perf@4.5.81) (2019-10-16)
 
 **Note:** Version bump only for package @applitools/eyes-selenium-jest-perf

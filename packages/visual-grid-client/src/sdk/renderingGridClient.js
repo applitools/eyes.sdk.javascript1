@@ -2,7 +2,10 @@
 'use strict';
 
 const throatPkg = require('throat');
-const {Logger} = require('@applitools/eyes-common');
+const {
+  Logger,
+  GeneralUtils: {backwardCompatible},
+} = require('@applitools/eyes-common');
 const {ptimeoutWithError} = require('@applitools/functional-commons');
 const makeGetAllResources = require('./getAllResources');
 const extractCssResources = require('./extractCssResources');
@@ -16,8 +19,10 @@ const makeOpenEyes = require('./openEyes');
 const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping');
 const getBatch = require('./getBatch');
 const makeCloseBatch = require('./makeCloseBatch');
+const makeTestWindow = require('./makeTestWindow');
 const transactionThroat = require('./transactionThroat');
 const getRenderMethods = require('./getRenderMethods');
+const makeGlobalState = require('./globalState');
 
 const {
   createRenderWrapper,
@@ -41,10 +46,12 @@ function makeRenderingGridClient({
   apiKey,
   saveDebugData,
   batchSequenceName,
+  batchSequence,
   batchName,
   batchId,
   properties,
   baselineBranchName,
+  baselineBranch,
   baselineEnvName,
   baselineName,
   envName,
@@ -56,7 +63,9 @@ function makeRenderingGridClient({
   enablePatterns,
   ignoreDisplacements,
   parentBranchName,
+  parentBranch,
   branchName,
+  branch,
   proxy,
   saveFailedTests,
   saveNewTests,
@@ -67,7 +76,8 @@ function makeRenderingGridClient({
   fetchResourceTimeout = 120000,
   userAgent,
   notifyOnCompletion,
-  batches: _batches,
+  batchNotify,
+  globalState: _globalState,
   dontCloseBatches,
 }) {
   const openEyesConcurrency = Number(concurrency);
@@ -75,6 +85,15 @@ function makeRenderingGridClient({
   if (isNaN(openEyesConcurrency)) {
     throw new Error('concurrency is not a number');
   }
+
+  ({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
+    [{batchSequenceName}, {batchSequence}],
+    [{baselineBranchName}, {baselineBranch}],
+    [{parentBranchName}, {parentBranch}],
+    [{branchName}, {branch}],
+    [{notifyOnCompletion}, {batchNotify}],
+    logger,
+  ));
 
   let renderInfoPromise;
   const eyesTransactionThroat = transactionThroat(openEyesConcurrency);
@@ -133,20 +152,21 @@ function makeRenderingGridClient({
   const {
     batchId: defaultBatchId,
     batchName: defaultBatchName,
-    batchSequenceName: defaultBatchSequenceName,
-  } = getBatch({batchSequenceName, batchName, batchId});
+    batchSequence: defaultBatchSequence,
+  } = getBatch({batchSequence, batchName, batchId});
 
-  const batches = _batches || new Map();
-  const openEyes = makeOpenEyes({
+  const globalState = _globalState || makeGlobalState({logger});
+
+  const openConfig = {
     appName,
     browser,
     apiKey,
     saveDebugData,
-    batchSequenceName: defaultBatchSequenceName,
+    batchSequence: defaultBatchSequence,
     batchName: defaultBatchName,
     batchId: defaultBatchId,
     properties,
-    baselineBranchName,
+    baselineBranch,
     baselineEnvName,
     baselineName,
     envName,
@@ -157,8 +177,8 @@ function makeRenderingGridClient({
     useDom,
     enablePatterns,
     ignoreDisplacements,
-    parentBranchName,
-    branchName,
+    parentBranch,
+    branch,
     proxy,
     saveFailedTests,
     saveNewTests,
@@ -176,15 +196,19 @@ function makeRenderingGridClient({
     eyesTransactionThroat,
     agentId,
     userAgent,
-    notifyOnCompletion,
-    batches,
-  });
+    batchNotify,
+    globalState,
+  };
 
-  const closeBatch = !dontCloseBatches && !isDisabled ? makeCloseBatch(batches) : async () => {};
+  const openEyes = makeOpenEyes(openConfig);
+  const closeBatch = makeCloseBatch({globalState, dontCloseBatches, isDisabled});
+  const testWindow = makeTestWindow(openConfig);
 
   return {
     openEyes,
     closeBatch,
+    globalState,
+    testWindow,
   };
 
   function getRenderInfo() {

@@ -11,27 +11,17 @@ const debug = require('debug')('eyes:render');
   const website = process.argv[2];
 
   if (!website) {
-    console.log('no website passed');
+    console.log('No website passed');
     return;
   }
 
-  console.log('checking website:', website);
+  console.log('Checking website:', website);
 
-  const {openEyes, closeBatch} = makeVisualGridClient({
+  const {testWindow} = makeVisualGridClient({
     apiKey: process.env.APPLITOOLS_API_KEY,
     logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS, 'eyes:vgc'),
     proxy: process.env.APPLITOOLS_PROXY,
   });
-
-  const {checkWindow, close} = await openEyes({
-    appName: 'render script',
-    testName: `render script ${website}`,
-    batchName: 'Render VGC',
-    browser: [{width: 1024, height: 768, name: 'chrome'}],
-    notifyOnCompletion: true,
-  });
-
-  debug('open done');
 
   const browser = await puppeteer.launch({headless: true});
   const page = await browser.newPage();
@@ -42,41 +32,52 @@ const debug = require('debug')('eyes:render');
 
   debug('navigation done');
 
-  await _delay(2000);
+  await _delay(1000);
   const frame = await page.evaluate(processPageAndSerialize);
 
   debug('processPage done');
 
   const mapBlobs = f => {
-    f.resourceContents = f.blobs.map(({url, type, value}) => ({
-      url,
-      type,
-      value: Buffer.from(value, 'base64'),
-    }));
+    f.resourceContents = f.blobs.reduce((acc, {url, type, value}) => {
+      acc[url] = {
+        url,
+        type,
+        value: Buffer.from(value, 'base64'),
+      };
+      return acc;
+    }, {});
     f.frames.forEach(mapBlobs);
   };
   mapBlobs(frame);
 
   debug('decoding done');
 
-  frame.ignore = [
-    {selector: '.some-div-to-ignore'},
-    {selector: 'body > div > div:nth-child(1) > div.fancy.title.primary'},
-  ];
-  checkWindow(frame);
-  const results = await close(false);
-  await closeBatch();
+  const openParams = {
+    appName: 'render script',
+    testName: `render script ${website}`,
+    batchName: 'Render VGC',
+    browser: [{width: 1024, height: 768, name: 'chrome'}],
+  };
+
+  const results = await testWindow({openParams, checkParams: frame, throwEx: false});
+
+  debug('testWindow done');
 
   if (results.some(r => r instanceof Error)) {
     console.log(
-      '\nTest error:\n\t',
+      'Test error:\n\t',
       results.map(r => r.message || r).reduce((acc, m) => ((acc = `${acc}\n\t${m}`), acc), ''),
     );
   } else {
     console.log(
       '\nTest result:\n\t',
       results
-        .map(r => `${r.getStatus()} ${r.getUrl()} renderId: ${r.getStepsInfo()[0].getRenderId()}`)
+        .map(
+          r =>
+            `Status: ${r.getStatus()}\n\t RenderId: ${r
+              .getStepsInfo()[0]
+              .getRenderId()}\n\t Url: ${r.getUrl()}\n`,
+        )
         .join('\n\t'),
     );
   }
