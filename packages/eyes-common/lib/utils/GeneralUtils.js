@@ -304,7 +304,7 @@ class GeneralUtils {
     if (process !== undefined) {
       for (const prefix of ENV_PREFIXES) {
         const value = process.env[prefix + propName];
-        if (value !== undefined) {
+        if (value !== undefined && value !== 'null') {
           // for boolean values, cast string value
           if (isBoolean && !TypeUtils.isBoolean(value)) {
             return value === 'true';

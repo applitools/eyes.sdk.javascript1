@@ -2,9 +2,136 @@
 
 const assert = require('assert');
 
-const { Configuration, MatchLevel, AccessibilityLevel } = require('../../../index');
+const { Configuration, MatchLevel, AccessibilityLevel, RectangleSize, StitchMode, BatchInfo, ImageMatchSettings, SessionType, ProxySettings, PropertyData } = require('../../../index');
+
+const STRING_CONFIGS = [
+  '_appName',
+  '_testName',
+  '_displayName',
+  '_agentId',
+  '_serverUrl',
+  '_baselineEnvName',
+  '_environmentName',
+  '_branchName',
+  '_parentBranchName',
+  '_baselineBranchName',
+  '_hostApp',
+  '_hostOS',
+  '_hostAppInfo',
+  '_hostOSInfo',
+  '_deviceInfo',
+];
+
+const BOOLEAN_CONFIGS = [
+  '_showLogs',
+  '_saveDebugData',
+  '_isDisabled',
+  '_removeSession',
+  '_compareWithParentBranch',
+  '_saveFailedTests',
+  '_saveNewTests',
+  '_ignoreBaseline',
+  '_saveDiffs',
+  '_sendDom',
+  '_forceFullPageScreenshot',
+  '_hideScrollbars',
+  '_hideCaret',
+  '_isThrowExceptionOn',
+  '_dontCloseBatches',
+];
+
+const NUMBER_CONFIGS = [
+  '_waitBeforeScreenshots',
+  '_stitchOverlap',
+  '_concurrentSessions',
+  '_matchTimeout',
+  '_connectionTimeout',
+];
 
 describe('Configuration', () => {
+  function _getMethodName(propertyName) {
+    if (propertyName === '_proxySettings') {
+      return 'Proxy';
+    }
+
+    return `${propertyName.charAt(1).toUpperCase()}${propertyName.slice(2)}`;
+  }
+
+  it('EnsureSetMethodPerProperty', () => {
+    const config = new Configuration();
+    const properties = Object.getOwnPropertyNames(config);
+
+    for (const pi of properties) {
+      const methodName = _getMethodName(pi);
+
+      assert.strictEqual(typeof config[`set${methodName}`], 'function', `property '${pi}' doesn't have matching setter`);
+      assert.strictEqual(typeof config[`get${methodName}`], 'function', `property '${pi}' doesn't have matching getter`);
+    }
+  });
+
+  function _modifyValue(type, origValue) {
+    let modifiedValue = origValue;
+    if (STRING_CONFIGS.includes(type)) {
+      modifiedValue = `${origValue}_dummy`;
+    } else if (BOOLEAN_CONFIGS.includes(type)) {
+      modifiedValue = origValue !== true;
+    } else if (type === '_batch') {
+      modifiedValue = new BatchInfo(`${origValue.getName()}_dummy`);
+    } else if (type === '_defaultMatchSettings') {
+      modifiedValue = new ImageMatchSettings();
+    } else if (NUMBER_CONFIGS.includes(type)) {
+      modifiedValue = origValue == null ? 1 : parseInt(origValue, 10) + 1;
+    } else if (type === '_viewportSize') {
+      if (origValue == null) {
+        modifiedValue = new RectangleSize(0, 0);
+      } else {
+        modifiedValue = new RectangleSize(origValue.getWidth() + 1, origValue.getHeight() + 1);
+      }
+    } else if (type === '_stitchMode') {
+      modifiedValue = modifiedValue === StitchMode.SCROLL ? StitchMode.CSS : StitchMode.SCROLL;
+    } else if (type === '_sessionType') {
+      modifiedValue = origValue === SessionType.SEQUENTIAL ? SessionType.PROGRESSION : SessionType.SEQUENTIAL;
+    } else if (type === '_apiKey') {
+      modifiedValue = 'dummyapikey';
+    } else if (type === '_proxySettings') {
+      modifiedValue = new ProxySettings('http://localhost:8888');
+    } else if (type === '_properties') {
+      modifiedValue = [new PropertyData('dummy', 'value')];
+    } else if (type === '_browsersInfo') {
+      modifiedValue = [
+        {
+          width: 1333,
+          height: 1222,
+          name: 'chrome',
+        },
+      ];
+    }
+    return modifiedValue;
+  }
+
+  it('TestConfigurationCopyConstructor', () => {
+    const config = new Configuration();
+    const properties = Object.getOwnPropertyNames(config);
+
+    for (const pi of properties) {
+      const methodName = _getMethodName(pi);
+
+      const origValue = config[`get${methodName}`]();
+      const modifiedValue = _modifyValue(pi, origValue);
+      assert.notStrictEqual(origValue, modifiedValue, `Member not modified: ${pi}`);
+      config[`set${methodName}`](modifiedValue);
+    }
+
+    const copiedConfig = new Configuration(config);
+    for (const pi of properties) {
+      const methodName = _getMethodName(pi);
+
+      const origValue = config[`get${methodName}`]();
+      const copiedValue = copiedConfig[`get${methodName}`]();
+      assert.deepStrictEqual(origValue, copiedValue, `Member not copied: ${pi}`);
+    }
+  });
+
   describe('constructor', () => {
     it('clone', () => {
       const configuration = new Configuration();
@@ -15,6 +142,12 @@ describe('Configuration', () => {
 
       assert.strictEqual(configuration.getAppName(), configurationCopy.getAppName());
       assert.strictEqual(configuration.getApiKey(), configurationCopy.getApiKey());
+
+      configuration.setDisplayName('test name1');
+      configurationCopy.setDisplayName('test name2');
+
+      assert.strictEqual(configuration.getDisplayName(), 'test name1');
+      assert.strictEqual(configurationCopy.getDisplayName(), 'test name2');
     });
 
     it('from object', () => {
@@ -215,7 +348,7 @@ describe('Configuration', () => {
 
   it('Server url by default', async function() {
     const configuration = new Configuration();
-    assert.equal(configuration.getServerUrl(), 'https://eyesapi.applitools.com');
+    assert.strictEqual(configuration.getServerUrl(), 'https://eyesapi.applitools.com');
   });
 
   it('Bamboo env variables', async function () {
@@ -232,15 +365,15 @@ describe('Configuration', () => {
 
     const configuration = new Configuration();
 
-    assert.equal(configuration.getApiKey(), 'test_APPLITOOLS_API_KEY');
-    assert.equal(configuration.getServerUrl(), 'test_APPLITOOLS_SERVER_URL');
-    assert.equal(configuration.getBatch().getId(), 'test_APPLITOOLS_BATCH_ID');
-    assert.equal(configuration.getBatch().getName(), 'test_APPLITOOLS_BATCH_NAME');
-    assert.equal(configuration.getBatch().getSequenceName(), 'test_APPLITOOLS_BATCH_SEQUENCE');
-    assert.equal(configuration.getBatch().getNotifyOnCompletion(), true);
-    assert.equal(configuration.getBranchName(), 'test_APPLITOOLS_BRANCH');
-    assert.equal(configuration.getParentBranchName(), 'test_APPLITOOLS_PARENT_BRANCH');
-    assert.equal(configuration.getBaselineBranchName(), 'test_APPLITOOLS_BASELINE_BRANCH');
-    assert.equal(configuration.getDontCloseBatches(), true);
+    assert.strictEqual(configuration.getApiKey(), 'test_APPLITOOLS_API_KEY');
+    assert.strictEqual(configuration.getServerUrl(), 'test_APPLITOOLS_SERVER_URL');
+    assert.strictEqual(configuration.getBatch().getId(), 'test_APPLITOOLS_BATCH_ID');
+    assert.strictEqual(configuration.getBatch().getName(), 'test_APPLITOOLS_BATCH_NAME');
+    assert.strictEqual(configuration.getBatch().getSequenceName(), 'test_APPLITOOLS_BATCH_SEQUENCE');
+    assert.strictEqual(configuration.getBatch().getNotifyOnCompletion(), true);
+    assert.strictEqual(configuration.getBranchName(), 'test_APPLITOOLS_BRANCH');
+    assert.strictEqual(configuration.getParentBranchName(), 'test_APPLITOOLS_PARENT_BRANCH');
+    assert.strictEqual(configuration.getBaselineBranchName(), 'test_APPLITOOLS_BASELINE_BRANCH');
+    assert.strictEqual(configuration.getDontCloseBatches(), true);
   });
 });

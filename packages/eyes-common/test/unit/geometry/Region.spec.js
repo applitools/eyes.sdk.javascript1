@@ -190,6 +190,11 @@ describe('Region', () => {
     assert.deepStrictEqual(region2, Region.EMPTY, 'no overlap');
   });
 
+  it('toString()', () => {
+    const region = new Region(0, 0, 1, 1);
+    assert.strictEqual(`${region}`, '(0, 0) 1x1');
+  });
+
   it('toJSON()', () => {
     const expectedSerialization = `{"left":${left},"top":${top},"width":${width},"height":${height},"coordinatesType":"SCREENSHOT_AS_IS"}`;
 

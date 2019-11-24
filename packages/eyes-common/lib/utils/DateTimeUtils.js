@@ -4,7 +4,7 @@ const dateFormat = require('dateformat');
 
 const DATE_FORMAT_ISO8601 = "yyyy-mm-dd'T'HH:MM:ss'Z'";
 const DATE_FORMAT_RFC1123 = "ddd, dd mmm yyyy HH:MM:ss 'GMT'";
-const DATE_FORMAT_LOGFILE = 'yyyy_mm_dd_HH_MM_ss_l';
+const DATE_FORMAT_LOGFILE = 'yyyy_mm_dd__HH_MM_ss_l';
 
 /**
  * @ignore
@@ -35,7 +35,7 @@ class DateTimeUtils {
    *
    * @param {Date} [date] - Date which will be converted
    * @param {boolean} [utc=false] - If set to true, then will be used uct time instead of local
-   * @return {string} - string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
+   * @return {string} - string formatted for log files (yyyy_mm_dd__HH_MM_ss_l)
    */
   static toLogFileDateTime(date = new Date(), utc = false) {
     return dateFormat(date, DATE_FORMAT_LOGFILE, utc);

@@ -17,7 +17,7 @@ const colors = {
 const invColors = {};
 Object.keys(colors).forEach((key) => { invColors[colors[key]] = key; });
 
-const getResourcePath = fileName => path.resolve(__dirname, '..', '..', '..', 'test', 'fixtures', fileName);
+const getResourcePath = fileName => path.resolve(__dirname, 'fixtures', fileName);
 
 const getResource = fileName => fs.readFileSync(getResourcePath(fileName));
 

@@ -545,7 +545,7 @@ class Region {
       return `Error: ${this._error}`;
     }
 
-    return `(${this._left}, ${this._top}) ${this._width}x${this._height}, ${this._coordinatesType}`;
+    return `(${this._left}, ${this._top}) ${this._width}x${this._height}`;
   }
 }
 

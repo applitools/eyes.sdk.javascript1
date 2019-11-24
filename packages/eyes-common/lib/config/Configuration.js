@@ -21,7 +21,7 @@ const MIN_MATCH_TIMEOUT = 500;
 const DEFAULT_VALUES = {
   isDisabled: false,
   matchTimeout: 2000, // ms
-  serverUrl: 'https://eyesapi.applitools.com',
+  serverUrl: 'https://eyesapi.applitools.com/',
   compareWithParentBranch: false,
   saveFailedTests: false,
   saveNewTests: true,
