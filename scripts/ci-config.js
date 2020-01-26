@@ -3,6 +3,25 @@ const path = require('path')
 const yaml = require('js-yaml')
 
 const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '..', '.travis.yml'), 'utf8'))
+const pkgs = makePackagesList()
+
+config.jobs = {
+  include: [...makeJobsForLintStage(), ...makeJobsForUnitStage(), ...makeJobsForItStage()],
+}
+
+fs.writeFileSync(path.join(__dirname, '..', '.travis.yml'), yaml.safeDump(config))
+
+function makeJobsForLintStage() {
+  return makeStageWithSingleJob({stageName: 'lint', scriptName: 'lint'})
+}
+
+function makeJobsForUnitStage() {
+  return makeStageWithJobsForEachPackage({stageName: 'unit tests', scriptName: 'test:unit'})
+}
+
+function makeJobsForItStage() {
+  return makeStageWithJobsForEachPackage({stageName: 'end-to-end tests', scriptName: 'test:it'})
+}
 
 function makePackagesList() {
   const packages = require(path.join(__dirname, '..', 'package.json')).workspaces
@@ -17,48 +36,20 @@ function makePackagesList() {
   })
 }
 
-const pkgs = makePackagesList()
-
-function makeStageWithSingleJob(name, script) {
-  return {stage: name, script}
+function makeStageWithSingleJob({stageName, scriptName}) {
+  return [{stage: stageName, script: `yarn ${scriptName}`}]
 }
 
-function makeStageWithJobsForEachPackage(stageName, scriptName, script) {
+function makeStageWithJobsForEachPackage({stageName, scriptName}) {
   let jobs = []
   pkgs.forEach(pkg => {
-    const _script = script(pkg.path)
     if (pkg.scripts.hasOwnProperty(scriptName)) {
       jobs.push({
         name: pkg.name,
-        script: _script,
+        script: `cd ${pkg.path}; yarn ${scriptName}`,
       })
     }
   })
   if (jobs.length) jobs[0].stage = stageName
   return jobs
 }
-
-function makeJobsForLintStage() {
-  return [makeStageWithSingleJob('lint', 'yarn run lint')]
-}
-
-function makeJobsForUnitStage() {
-  return makeStageWithJobsForEachPackage(
-    'unit tests',
-    'test:unit',
-    pkgPath => `cd ${pkgPath}; yarn run test:unit`,
-  )
-}
-
-function makeJobsForItStage() {
-  return makeStageWithJobsForEachPackage(
-    'end-to-end tests',
-    'test:it',
-    pkgPath => `cd ${pkgPath}; yarn run test:it`,
-  )
-}
-
-config.jobs = {
-  include: [...makeJobsForLintStage(), ...makeJobsForUnitStage(), ...makeJobsForItStage()],
-}
-fs.writeFileSync(path.join(__dirname, '..', '.travis.yml'), yaml.safeDump(config))

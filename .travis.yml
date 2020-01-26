@@ -13,35 +13,35 @@ cache:
 before_install:
   - 'curl -o- -L https://yarnpkg.com/install.sh | bash'
   - 'export PATH="$HOME/.yarn/bin:$PATH"'
-  - 'yarn -v'
+  - yarn -v
 install:
   - yarn install
 jobs:
   include:
     - stage: lint
-      script: yarn run lint
+      script: yarn lint
     - name: '@applitools/eyes-common'
-      script: 'cd packages/eyes-common; yarn run test:unit'
+      script: 'cd packages/eyes-common; yarn test:unit'
       stage: unit tests
     - name: '@applitools/eyes-sdk-core'
-      script: 'cd packages/eyes-sdk-core; yarn run test:unit'
+      script: 'cd packages/eyes-sdk-core; yarn test:unit'
     - name: '@applitools/eyes-selenium'
-      script: 'cd packages/eyes-selenium; yarn run test:unit'
+      script: 'cd packages/eyes-selenium; yarn test:unit'
     - name: '@applitools/eyes-testcafe'
-      script: 'cd packages/eyes-testcafe; yarn run test:unit'
+      script: 'cd packages/eyes-testcafe; yarn test:unit'
     - name: '@applitools/visual-grid-client'
-      script: 'cd packages/visual-grid-client; yarn run test:unit'
+      script: 'cd packages/visual-grid-client; yarn test:unit'
     - name: '@applitools/dom-utils'
-      script: 'cd packages/dom-utils; yarn run test:it'
+      script: 'cd packages/dom-utils; yarn test:it'
       stage: end-to-end tests
     - name: '@applitools/eyes-images'
-      script: 'cd packages/eyes-images; yarn run test:it'
+      script: 'cd packages/eyes-images; yarn test:it'
     - name: '@applitools/eyes-selenium'
-      script: 'cd packages/eyes-selenium; yarn run test:it'
+      script: 'cd packages/eyes-selenium; yarn test:it'
     - name: '@applitools/eyes-testcafe'
-      script: 'cd packages/eyes-testcafe; yarn run test:it'
+      script: 'cd packages/eyes-testcafe; yarn test:it'
     - name: '@applitools/visual-grid-client'
-      script: 'cd packages/visual-grid-client; yarn run test:it'
+      script: 'cd packages/visual-grid-client; yarn test:it'
 notifications:
   slack:
     secure: >-
