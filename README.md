@@ -1,7 +1,7 @@
 # eyes-sdk-javascript 
 ## Building
 
-__NOTE: [yarn](https://yarnpkg.com/en/docs/install) is required.
+_NOTE: [yarn](https://yarnpkg.com/en/docs/install) is required.
 
 ### Getting Started
 
@@ -22,7 +22,7 @@ You can perform a focused installation of a package.
 > yarn install --focused
 ```
 
-__NOTE: this will only work for packages that are publicly available on `npm`. For details, read more [here](https://yarnpkg.com/blog/2018/05/18/focused-workspaces/).__
+_NOTE: this will only work for packages that are publicly available on `npm`. For details, read more [here](https://yarnpkg.com/blog/2018/05/18/focused-workspaces/)._
 
 ### Linting
 
@@ -31,14 +31,14 @@ Just like with `npm` you can run scripts.
 Case-in-point, linting can be run this way. Either for all packages from the project root, or from an individual package.
 
 ```sh
-> yarn run lint
+> yarn lint
 ```
 
 or
 
 ```sh
 > cd packages/package-name
-> yarn run lint
+> yarn lint
 ```
 
 ### Versioning
@@ -64,4 +64,4 @@ You can then release the package with the `publish` command.
 
 This will publish the package to `npm` and push the version and its tag to GitHub
 
-__NOTE: if you haven't run `version` before publishing then it will prompt you for the version information.__
+_NOTE: if you haven't run `version` before publishing then it will prompt you for the version information._
