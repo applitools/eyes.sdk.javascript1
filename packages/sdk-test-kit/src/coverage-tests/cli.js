@@ -2,6 +2,8 @@
 const yargs = require('yargs')
 const path = require('path')
 const {makeRunTests} = require('./index')
+const {makeCustomCoverageTests} = require('./tests-custom')
+const {makeCoverageTests} = require('./tests')
 const {sendReport} = require('./send-report')
 const {exec} = require('child_process')
 const {version} = require('../../package.json')
@@ -128,7 +130,10 @@ async function doRunTests(args, sdkImplementation) {
   if (needsChromeDriver(args, sdkImplementation))
     await startChromeDriver(sdkImplementation.options.chromeDriverOptions)
 
-  let supportedTests = sdkImplementation.supportedTests
+  const makeTestSet = args.custom ? makeCustomCoverageTests : makeCoverageTests
+  let supportedTests = args.custom
+    ? sdkImplementation.supportedCustomTests
+    : sdkImplementation.supportedTests
   supportedTests = filterTestsByName(args.filterName, supportedTests)
   supportedTests = filterTestsByMode(args.filterMode, supportedTests)
   supportedTests = filterTestsByIndexes(args.filterIndexes, supportedTests)
@@ -141,6 +146,7 @@ async function doRunTests(args, sdkImplementation) {
   const {report} = await makeRunTests(
     sdkImplementation.name,
     sdkImplementation.initialize,
+    makeTestSet,
   ).runTests(supportedTests, {
     host: args.remote,
     concurrency: args.concurrency,

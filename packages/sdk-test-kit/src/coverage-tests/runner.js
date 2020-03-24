@@ -1,7 +1,6 @@
 const throat = require('throat')
 const {getNameFromObject} = require('./common-util')
 const {makeSendReport} = require('./send-report-util')
-const {makeCoverageTests} = require('./tests')
 
 /**
  * Creates a coverage-test runner for a given SDK implementation.
@@ -13,7 +12,7 @@ const {makeCoverageTests} = require('./tests')
  *     optional functions the runner can use for lifecycle management (e.g., cleanup)
  * returns: a runTests function
  */
-function makeRunTests(sdkName, initializeSdkImplementation) {
+function makeRunTests(sdkName, initializeSdkImplementation, makeTestSet) {
   const p = []
   const errors = []
 
@@ -38,7 +37,7 @@ function makeRunTests(sdkName, initializeSdkImplementation) {
         let sdkImplementation
         try {
           sdkImplementation = initializeSdkImplementation()
-          const test = makeCoverageTests(sdkImplementation)[testName]
+          const test = makeTestSet(sdkImplementation)[testName]
           if (sdkImplementation._setup)
             await sdkImplementation._setup({
               // for consistent naming in the Eyes dashboard to pick up the correct baselines

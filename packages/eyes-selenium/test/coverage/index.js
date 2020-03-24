@@ -13,6 +13,7 @@ const {
 const sdkName = 'eyes-selenium'
 const batch = new BatchInfo(`JS Coverage Tests - ${sdkName}`)
 const supportedTests = require('./supported-tests')
+const supportedCustomTests = require('./supported-custom-tests')
 
 function initialize() {
   let eyes
@@ -170,8 +171,8 @@ function initialize() {
     await eyes.close(options)
   }
 
-  async function getAllTestResults() {
-    const resultsSummary = await runner.getAllTestResults()
+  async function getAllTestResults(throwEx) {
+    const resultsSummary = await eyes.getRunner().getAllTestResults(throwEx)
     return resultsSummary.getAllResults()
   }
 
@@ -226,5 +227,6 @@ module.exports = {
   name: sdkName,
   initialize,
   supportedTests,
+  supportedCustomTests,
   options: {needsChromeDriver: true, chromeDriverOptions: ['--silent']},
 }

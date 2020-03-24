@@ -34,9 +34,7 @@ describe('coverage-tests', () => {
         {name: 'TestCheckRegion', executionMode: {blah: true}},
         {name: 'TestCheckRegion', executionMode: {blahblah: true}},
       ]
-      const {runTests} = makeRunTests('blah', () => {
-        return {..._fakeSDK}
-      })
+      const {runTests} = makeRunTests('blah', () => ({..._fakeSDK}), makeCoverageTests)
       await runTests(supportedTests)
       assert.deepStrictEqual(count, 2)
     })
@@ -44,9 +42,7 @@ describe('coverage-tests', () => {
       let _fakeSDK = {...fakeSDK}
       delete _fakeSDK.cleanup
       const supportedTests = [{name: 'TestCheckRegion', executionMode: {blah: true}}]
-      const {runTests} = makeRunTests('blah', () => {
-        return {..._fakeSDK}
-      })
+      const {runTests} = makeRunTests('blah', () => ({..._fakeSDK}), makeCoverageTests)
       const {report} = await runTests(supportedTests)
       assert.ok(!Object.keys(report.errors).length)
     })
@@ -63,9 +59,7 @@ describe('coverage-tests', () => {
         {name: 'TestCheckRegion', executionMode: {blah2: true}},
         {name: 'TestCheckRegion', executionMode: {blah3: true}},
       ]
-      const {runTests} = makeRunTests('blah', () => {
-        return {..._fakeSDK}
-      })
+      const {runTests} = makeRunTests('blah', () => ({..._fakeSDK}), makeCoverageTests)
       const {report} = await runTests(supportedTests)
       _report = report
     })
