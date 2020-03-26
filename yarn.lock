@@ -300,6 +300,25 @@
     postcss-value-parser "^4.0.2"
     throat "^5.0.0"
 
+"@applitools/visual-grid-client@13.6.8":
+  version "13.6.8"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-13.6.8.tgz#1bcfd4569defd601c5ed83af74779061f2a5d028"
+  integrity sha512-S5KJm6r4NIX0Zas+9tYV4qusYx3CmKA5+LI+NO6kJkdf7PUCUmx+IKDVXL+Qwi9ks+CLUkRZoto52AHe5+rB0g==
+  dependencies:
+    "@applitools/dom-snapshot" "3.4.1"
+    "@applitools/eyes-common" "3.20.2"
+    "@applitools/eyes-sdk-core" "9.0.3"
+    "@applitools/functional-commons" "1.5.4"
+    "@applitools/http-commons" "2.3.12"
+    "@applitools/isomorphic-fetch" "3.0.0"
+    "@applitools/jsdom" "1.0.2"
+    he "1.2.0"
+    lodash.mapvalues "^4.6.0"
+    mime-types "^2.1.24"
+    mkdirp "^0.5.1"
+    postcss-value-parser "^4.0.2"
+    throat "^5.0.0"
+
 "@babel/code-frame@7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.5.5.tgz#bc0782f6d69f7b7d49531219699b988f669a8f9d"
