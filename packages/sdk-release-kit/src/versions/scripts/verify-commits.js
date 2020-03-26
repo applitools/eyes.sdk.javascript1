@@ -6,9 +6,9 @@ const {promisify} = require('util')
 const pexec = promisify(exec)
 const chalk = require('chalk')
 const {makePackagesList} = require('..')
-const pkgs = makePackagesList()
 
 async function verifyDependencies({pkgPath, isForce}) {
+  const pkgs = makePackagesList()
   const packageJson = require(path.resolve(pkgPath, 'package.json'))
   const {dependencies} = packageJson
   const workspaceDeps = pkgs.filter(pkg => pkg.name in dependencies)

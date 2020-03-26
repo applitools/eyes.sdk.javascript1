@@ -3,10 +3,10 @@
 const path = require('path')
 const fs = require('fs')
 const {makePackagesList, verifyDependencies} = require('..')
-const pkgs = makePackagesList()
-const results = []
 
 module.exports = ({isFix, pkgPath}) => {
+  const pkgs = makePackagesList()
+  const results = []
   verifyDependencies({pkgs, pkgPath, results})
 
   const errors = results.filter(({depVersion, sourceVersion}) => depVersion !== sourceVersion)

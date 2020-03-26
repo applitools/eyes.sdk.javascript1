@@ -3,10 +3,6 @@ const {readFileSync} = require('fs')
 const {sendNotification} = require('..')
 const {getLatestReleaseEntries} = require('../../changelog')
 
-const targetFolder = process.cwd()
-const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
-const pkgJson = JSON.parse(readFileSync(path.resolve(targetFolder, 'package.json'), 'utf8'))
-
 async function run({sdkName, sdkVersion, changeLog, testCoverageGap}, recipient) {
   const payload = {
     sdk: sdkName,
@@ -38,9 +34,16 @@ function convertSdkNameToReportName(sdkName) {
   }
 }
 
-module.exports = run.bind(undefined, {
-  sdkName: convertSdkNameToReportName(pkgJson.name),
-  sdkVersion: pkgJson.version,
-  changeLog: getLatestReleaseEntries(changelogContents).join('\n'),
-  testCoverageGap: 'TODO', // track in a file in the package, get it from there
-})
+module.exports = (targetFolder, recipient) => {
+  const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
+  const pkgJson = JSON.parse(readFileSync(path.resolve(targetFolder, 'package.json'), 'utf8'))
+  run(
+    {
+      sdkName: convertSdkNameToReportName(pkgJson.name),
+      sdkVersion: pkgJson.version,
+      changeLog: getLatestReleaseEntries(changelogContents).join('\n'),
+      testCoverageGap: 'TODO', // track in a file in the package, get it from there
+    },
+    recipient,
+  )
+}

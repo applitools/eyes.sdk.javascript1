@@ -4,6 +4,14 @@ const args = require('yargs').argv
 const chalk = require('chalk')
 const cwd = process.cwd()
 const path = require('path')
+const verifyChangelog = require('../changelog/scripts/verify-changelog')
+const updateChangelog = require('../changelog/scripts/update-changelog')
+const sendReleaseNotification = require('../send-report/scripts/send-release-notification')
+const verifyVersions = require('../versions/scripts/verify-versions')
+const verifyCommits = require('../versions/scripts/verify-commits')
+const createDotFolder = require('../setup/scripts/create-dot-folder')
+const packInstall = require('../dry-run/scripts/pack-install')
+const verifyInstalledVersions = require('../versions/scripts/verify-installed-versions')
 
 async function execute(cb) {
   try {
@@ -15,25 +23,17 @@ async function execute(cb) {
 }
 
 if (args['verify-changelog']) {
-  const verifyChangelog = require('../changelog/scripts/verify-changelog')
-  execute(verifyChangelog)
+  execute(verifyChangelog.bind(undefined, cwd))
 } else if (args['update-changelog']) {
-  const updateChangelog = require('../changelog/scripts/update-changelog')
-  execute(updateChangelog)
+  execute(updateChangelog.bind(undefined, cwd))
 } else if (args['send-release-notification']) {
-  const sendReleaseNotification = require('../send-report/scripts/send-release-notification')
   execute(sendReleaseNotification.bind(undefined, args.recipient))
 } else if (args['verify-versions']) {
-  const verifyVersions = require('../versions/scripts/verify-versions')
   execute(verifyVersions.bind(undefined, {isFix: args.fix, pkgPath: cwd}))
 } else if (args['verify-commits']) {
-  const verifyCommits = require('../versions/scripts/verify-commits')
   execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
 } else if (args['verify-installed-versions']) {
   const main = async () => {
-    const createDotFolder = require('../setup/scripts/create-dot-folder')
-    const packInstall = require('../dry-run/scripts/pack-install')
-    const verifyInstalledVersions = require('../versions/scripts/verify-installed-versions')
     execute(createDotFolder.bind(undefined, cwd))
     await execute(packInstall.bind(undefined, cwd))
     execute(
