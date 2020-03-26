@@ -31,15 +31,10 @@ if (args['verify-changelog']) {
   execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
 } else if (args['verify-installed-versions']) {
   const main = async () => {
-    console.log('setup start')
     const setupDotFolder = require('../setup/scripts/create-dot-folder')
     execute(setupDotFolder.bind(undefined, cwd))
-    console.log('setup finish')
-    console.log('pack-install')
     const packInstall = require('../dry-run/scripts/pack-install')
     await execute(packInstall.bind(undefined, cwd))
-    console.log('pack-install finish')
-    console.log('verify')
     const verifyInstalledVersions = require('../versions/scripts/verify-installed-versions')
     execute(
       verifyInstalledVersions.bind(undefined, {
@@ -47,7 +42,6 @@ if (args['verify-changelog']) {
         installedDirectory: path.join('.bongo', 'dry-run'),
       }),
     )
-    console.log('verify finish')
   }
   main()
   //} else if (args['release-pre-check']) {
