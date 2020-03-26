@@ -31,11 +31,11 @@ if (args['verify-changelog']) {
   execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
 } else if (args['verify-installed-versions']) {
   const main = async () => {
-    const setupDotFolder = require('../setup/scripts/create-dot-folder')
-    execute(setupDotFolder.bind(undefined, cwd))
+    const createDotFolder = require('../setup/scripts/create-dot-folder')
     const packInstall = require('../dry-run/scripts/pack-install')
-    await execute(packInstall.bind(undefined, cwd))
     const verifyInstalledVersions = require('../versions/scripts/verify-installed-versions')
+    execute(createDotFolder.bind(undefined, cwd))
+    await execute(packInstall.bind(undefined, cwd))
     execute(
       verifyInstalledVersions.bind(undefined, {
         pkgPath: cwd,
