@@ -18,3 +18,8 @@ node_modules
 tmp
 .env
 .vscode
+
+# sdk-release-kit
+.bongo
+dry-run.tgz
+
