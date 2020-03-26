@@ -25,6 +25,8 @@ const SUPPORTED_BROWSERS = {
   ie10: 'ie10',
   ie11: 'ie11',
   edge: 'edge',
+  edgelegacy: 'edgelegacy',
+  edgechromium: 'edgechromium',
   ie: 'ie',
   safari: 'safari',
   [translateBrowserNameVersion('chrome-1')]: 'chrome-1',
