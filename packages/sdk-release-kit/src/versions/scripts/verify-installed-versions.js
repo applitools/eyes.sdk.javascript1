@@ -2,7 +2,6 @@ const {exec} = require('child_process')
 const {promisify} = require('util')
 const pexec = promisify(exec)
 const path = require('path')
-const fs = require('fs')
 const {checkPackagesForUniqueVersions} = require('..')
 
 async function npmLs() {
