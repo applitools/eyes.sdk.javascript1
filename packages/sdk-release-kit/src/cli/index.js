@@ -33,7 +33,7 @@ if (args['verify-changelog']) {
 } else if (args['verify-commits']) {
   execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
 } else if (args['verify-installed-versions']) {
-  const main = async () => {
+  const run = async () => {
     execute(createDotFolder.bind(undefined, cwd))
     await execute(packInstall.bind(undefined, cwd))
     execute(
@@ -43,12 +43,22 @@ if (args['verify-changelog']) {
       }),
     )
   }
-  main()
-  //} else if (args['release-pre-check']) {
-  // - verify-changelog
-  // - verify versions
-  // - verify-commits
-  // - verify-installed-versions
+  run()
+} else if (args['release-pre-check']) {
+  const run = async () => {
+    execute(verifyChangelog.bind(undefined, cwd))
+    execute(verifyVersions.bind(undefined, {isFix: args.fix, pkgPath: cwd}))
+    execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
+    execute(createDotFolder.bind(undefined, cwd))
+    await execute(packInstall.bind(undefined, cwd))
+    execute(
+      verifyInstalledVersions.bind(undefined, {
+        pkgPath: cwd,
+        installedDirectory: path.join('.bongo', 'dry-run'),
+      }),
+    )
+  }
+  run()
 } else {
   execute(() => {
     throw new Error('Invalid option provided')
