@@ -3,8 +3,9 @@ const path = require('path')
 
 module.exports = packageDir => {
   const workingDir = path.join(packageDir, '.bongo')
-  if (fs.statSync(workingDir).isDirectory()) {
-    process.exit(0)
+  try {
+    fs.statSync(workingDir)
+  } catch (error) {
+    fs.mkdirSync(workingDir)
   }
-  fs.mkdirSync(workingDir)
 }
