@@ -1,8 +1,19 @@
 const assert = require('assert')
-const {checkPackagesForUniqueVersions} = require('../../src/versions')
+const {checkPackagesForUniqueVersions, findEntryByPackageName} = require('../../src/versions')
 
 describe('versions', () => {
   describe('verify-installed-versions', () => {
+    it('filters package name exactly', () => {
+      const npmLsOutput = `
+        └─┬ @applitools/eyes-webdriverio@5.9.21
+        ├─┬ selenium-webdriver@4.0.0-alpha.7
+        └─┬ webdriverio@5.22.4
+          └─┬ webdriver@5.22.4
+      `
+      assert.deepStrictEqual(findEntryByPackageName(npmLsOutput, 'webdriverio'), [
+        '        └─┬ webdriverio@5.22.4',
+      ])
+    })
     it('checks if different versions of the same package are installed', () => {
       const npmLsOutput = `
         ├─┬ @applitools/eyes-selenium@4.33.24
