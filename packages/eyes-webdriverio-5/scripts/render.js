@@ -25,8 +25,8 @@ if (!url) {
   console.log('Running WDIO 5 render for', url, '\n')
   await chromedriver.start()
 
-  // const runner = new ClassicRunner()
-  const runner = new VisualGridRunner()
+  const runner = new ClassicRunner()
+  // const runner = new VisualGridRunner()
   const eyes = new Eyes(runner)
 
   let batch = new BatchInfo('WDIO5 Render')

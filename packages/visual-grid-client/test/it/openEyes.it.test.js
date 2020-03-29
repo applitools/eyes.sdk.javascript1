@@ -138,6 +138,58 @@ describe('openEyes', () => {
     expect(wrapper.getBatch().getId()).to.equal(batchId)
   })
 
+  it('sets batch isGeneratedId property', async () => {
+    await openEyes({wrappers: [wrapper], appName})
+    const batch = wrapper.getBatch()
+    expect(batch.getIsGeneratedId()).to.be.true
+
+    await openEyes({wrappers: [wrapper], appName, batchId: `batchId_${Date.now()}`})
+    const userSetBatch = wrapper.getBatch()
+    expect(userSetBatch.getIsGeneratedId()).to.be.false
+  })
+
+  it('sets batch properties passed to makeRenderingGridClient', async () => {
+    const now = Date.now()
+    const batchId = `batchId_${now}`
+    const batchName = `batchName_${now}`
+    const batchSequence = `batchSequence_${now}`
+
+    openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      fetchResourceTimeout: 2000,
+      // logger: console,
+
+      // These are the properties that are relevant for the tests:
+      batchId,
+      batchName,
+      batchSequence,
+      batchNotify: true,
+    }).openEyes
+
+    await openEyes({wrappers: [wrapper], appName})
+    const batch = wrapper.getBatch()
+    expect(batch.getIsGeneratedId()).to.be.false
+    expect(batch.getId()).to.equal(batchId)
+    expect(batch.getName()).to.equal(batchName)
+    expect(batch.getSequenceName()).to.equal(batchSequence)
+    expect(batch.getNotifyOnCompletion()).to.be.true
+  })
+
+  it("doesn't create race condition on batch object", async () => {
+    const wrapper1 = createFakeWrapper(baseUrl)
+    const wrapper2 = createFakeWrapper(baseUrl)
+
+    await openEyes({appName, wrappers: [wrapper1], batchId: 'batch 1'})
+    await openEyes({appName, wrappers: [wrapper2], batchId: 'batch 2'})
+    const batch1 = wrapper1.getBatch()
+    const batch2 = wrapper2.getBatch()
+
+    expect(batch1.getId()).to.equal('batch 1')
+    expect(batch2.getId()).to.equal('batch 2')
+  })
+
   it('renders the correct target', async () => {
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],

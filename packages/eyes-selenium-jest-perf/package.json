@@ -6,8 +6,8 @@
     "vv": "bongo --verify-versions",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test:perf": "jest",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv"
+    "preversion": "yarn vv",
+    "postversion": "git push --follow-tags"
   },
   "jest": {
     "extraGlobals": [

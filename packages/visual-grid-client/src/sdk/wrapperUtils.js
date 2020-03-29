@@ -34,10 +34,6 @@ function configureWrappers({
   browsers,
   isDisabled,
   displayName,
-  batchSequence,
-  batchName,
-  batchId,
-  batchNotify,
   batch,
   properties,
   baselineBranch,
@@ -60,14 +56,6 @@ function configureWrappers({
   enablePatterns,
   ignoreDisplacements,
 }) {
-  const batchData = batch || {
-    id: batchId,
-    name: batchName,
-    sequenceName: batchSequence,
-    notifyOnCompletion: batchNotify,
-  }
-  const batchInfo = new BatchInfo(batchData)
-
   for (let i = 0, ii = wrappers.length; i < ii; i++) {
     const wrapper = wrappers[i]
     const browser = browsers[i]
@@ -76,7 +64,7 @@ function configureWrappers({
     wrapper.setDeviceInfo(deviceInfo)
 
     validateAndAddProperties(wrapper, properties)
-    wrapper.setBatch(batchInfo)
+    wrapper.setBatch(batch)
 
     displayName !== undefined && wrapper.setDisplayName(displayName)
     baselineBranch !== undefined && wrapper.setBaselineBranchName(baselineBranch)

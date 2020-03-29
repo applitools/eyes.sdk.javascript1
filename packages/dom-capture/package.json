@@ -16,9 +16,9 @@
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -c rollup.config.js --watch",
     "surge": "surge tests/fixtures applitools-dom-capture-origin-1.surge.sh && surge tests/fixtures applitools-dom-capture-origin-2.surge.sh",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "engines": {
     "node": ">=8.9.0"

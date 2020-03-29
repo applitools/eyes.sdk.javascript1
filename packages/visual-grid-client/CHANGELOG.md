@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+## 13.6.11
+
+- update @applitools/dom-snapshot@3.4.2
+
+## 13.6.10
+
+- avoid unnecessary requests to get batchInfo (due to wrong `isGeneratedId` value on batchInfo)
+
 ## 13.6.9
 
 - revert compatibility with untyped selectors in selectorsToFindRegionsFor

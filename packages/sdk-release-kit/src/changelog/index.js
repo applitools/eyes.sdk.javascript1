@@ -4,13 +4,17 @@ function getLatestReleaseEntries(changelogContents) {
   return entries.map(entry => entry.entry)
 }
 
-function updateChangelogContents({changelogContents, version}) {
+function updateChangelogContents({changelogContents, version, withDate}) {
   let _changelogContents = changelogContents
+  const now = new Date()
+  let _version = withDate
+    ? version + ` - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
+    : version
   _changelogContents = _addReleaseEntryForUnreleasedItems({
     changelogContents: _changelogContents,
-    version,
+    version: _version,
   })
-  _changelogContents = _removeUnreleasedItems({changelogContents: _changelogContents, version})
+  _changelogContents = _removeUnreleasedItems({changelogContents: _changelogContents})
   return _changelogContents
 }
 

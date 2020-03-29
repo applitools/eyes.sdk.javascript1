@@ -107,7 +107,7 @@ describe('processInlineCss', () => {
   });
 
   it('works for vendor specific selectors', async () => {
-    await page.goto('http://localhost:7373/cssom/vendor-selectorsh.html');
+    await page.goto('http://localhost:7373/cssom/vendor-selectors.html');
     const styles = await extract(page);
 
     expect(styles['vendor_specific_selectors'].cssom).to.be.eql(
@@ -116,6 +116,14 @@ describe('processInlineCss', () => {
     expect(styles['vendor_specific_selectors'].result).to.be.eql(
       'input:-moz-autofill{color:hotpink}input:-webkit-autofill{color:hotpink}',
     );
+  });
+
+  it('works for vendor specific shorthands', async () => {
+    await page.goto('http://localhost:7373/cssom/vendor-shorthands.html');
+    const styles = await extract(page);
+
+    expect(styles['vendor_specific_shorthands'].cssom).to.be.eql('body { -webkit-mask: none; }');
+    expect(styles['vendor_specific_shorthands'].result).to.be.eql('body{-webkit-mask:none}');
   });
 
   it('works for programmatically generated style tags', async () => {

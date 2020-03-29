@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- update @applitools/visual-grid-client@13.6.11
+
+## 5.9.22
+
+- fixed bug when target region wasn't cleared after check ([Trello](https://trello.com/c/gMwZw0C0/268-wdio5-cannot-read-property-offset-of-null-when-taking-window-screenshot-after-region))
+- fix exception when restoring scrollbars
 
 ## 5.9.21
 

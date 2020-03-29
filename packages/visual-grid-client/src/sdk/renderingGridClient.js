@@ -5,7 +5,8 @@ const throatPkg = require('throat')
 const {
   Logger,
   GeneralUtils: {backwardCompatible},
-} = require('@applitools/eyes-common')
+} = require('@applitools/eyes-common') // TODO import from eyes-sdk-core
+const {BatchInfo} = require('@applitools/eyes-sdk-core')
 const {ptimeoutWithError} = require('@applitools/functional-commons')
 const makeGetAllResources = require('./getAllResources')
 const extractCssResources = require('./extractCssResources')
@@ -18,7 +19,6 @@ const makeRenderBatch = require('./renderBatch')
 const makeGetUserAgents = require('./getUserAgents')
 const makeOpenEyes = require('./openEyes')
 const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping')
-const getBatch = require('./getBatch')
 const makeCloseBatch = require('./makeCloseBatch')
 const makeTestWindow = require('./makeTestWindow')
 const transactionThroat = require('./transactionThroat')
@@ -152,11 +152,12 @@ function makeRenderingGridClient({
   })
   const getUserAgents = makeGetUserAgents(doGetUserAgents)
 
-  const {
-    batchId: defaultBatchId,
-    batchName: defaultBatchName,
-    batchSequence: defaultBatchSequence,
-  } = getBatch({batchSequence, batchName, batchId})
+  const batch = new BatchInfo({
+    name: batchName,
+    id: batchId,
+    sequenceName: batchSequence,
+    notifyOnCompletion: batchNotify,
+  })
 
   const globalState = _globalState || makeGlobalState({logger})
 
@@ -165,9 +166,7 @@ function makeRenderingGridClient({
     browser,
     apiKey,
     saveDebugData,
-    batchSequence: defaultBatchSequence,
-    batchName: defaultBatchName,
-    batchId: defaultBatchId,
+    batch,
     properties,
     baselineBranch,
     baselineEnvName,
@@ -199,7 +198,6 @@ function makeRenderingGridClient({
     eyesTransactionThroat,
     agentId,
     userAgent,
-    batchNotify,
     globalState,
     getUserAgents,
   }

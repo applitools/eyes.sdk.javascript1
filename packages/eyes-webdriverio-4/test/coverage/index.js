@@ -56,6 +56,9 @@ function initialize() {
       logHandler.open()
       eyes.setLogHandler(logHandler)
     }
+    if (process.env.APPLITOOLS_API_KEY_SDK) {
+      eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)
+    }
   }
 
   async function _cleanup() {

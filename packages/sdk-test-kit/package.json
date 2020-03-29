@@ -1,5 +1,6 @@
 {
   "name": "@applitools/sdk-test-kit",
+  "private": true,
   "version": "1.0.17",
   "engines": {
     "node": ">=10.0.0"
@@ -19,16 +20,9 @@
     "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test": "mocha test/**/*.spec.js",
-    "build": "tsc src/coverage-tests/api.ts",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "build": "tsc src/coverage-tests/api.ts"
   },
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"

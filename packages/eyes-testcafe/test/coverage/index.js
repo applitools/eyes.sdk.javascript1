@@ -28,6 +28,11 @@ function makeCommands() {
       ? cache.setup.push(`eyes.setStitchMode(StitchMode.SCROLL)`)
       : undefined
     cache.setup.push(`eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
+    cache.setup.push(`
+      if (process.env.APPLITOOLS_API_KEY_SDK) {
+        eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)
+      }
+    `)
   }
   function abort() {}
   function visit(url) {

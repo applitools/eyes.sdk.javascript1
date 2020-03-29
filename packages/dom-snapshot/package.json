@@ -1,6 +1,6 @@
 {
   "name": "@applitools/dom-snapshot",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
@@ -16,9 +16,9 @@
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -c rollup.config.js --watch",
     "surge": "surge tests/fixtures applitools-dom-snapshot.surge.sh",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "engines": {
     "node": ">=8.9.0"

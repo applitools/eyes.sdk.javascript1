@@ -328,12 +328,12 @@ const webkitShorthandProperties = new Map([
   ],
 ]);
 
-mozShorthandProperties.forEach(([shorthand, longhands]) =>
-  shorthandProperties.set(shorthand, longhands),
+mozShorthandProperties.forEach((longhandSet, shorthand) =>
+  shorthandProperties.set(shorthand, longhandSet),
 );
 
-webkitShorthandProperties.forEach(([shorthand, longhands]) =>
-  shorthandProperties.set(shorthand, longhands),
+webkitShorthandProperties.forEach((longhandSet, shorthand) =>
+  shorthandProperties.set(shorthand, longhandSet),
 );
 
 const longhandProperties = new Set(

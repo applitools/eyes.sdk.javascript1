@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.9.19",
+  "version": "3.9.20",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -26,9 +26,9 @@
     "changelog": "git changelog -x -p -f v$npm_package_version > History.md && git add ./History.md && git commit -am 'changelog'",
     "changelog:init": "git config changelog.format \"* %s [[%h]($(echo $npm_package_repository_url|cut -d+ -f2|cut -d. -f1-2)/commit/%H)]\"",
     "changelog:install": "sudo apt-get install git-extras",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "files": [
     "src",
@@ -50,7 +50,7 @@
     "@applitools/eyes-common": "3.20.2",
     "@applitools/eyes-sdk-core": "9.0.3",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.6.8",
+    "@applitools/visual-grid-client": "13.6.10",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
     "cors": "^2.8.5",

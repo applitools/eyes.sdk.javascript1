@@ -40,6 +40,9 @@ function initialize() {
     options.executionMode.isScrollStitching ? eyes.setStitchMode(StitchMode.SCROLL) : undefined
     eyes.setBranchName(options.branchName)
     eyes.setBatch(batch)
+    if (process.env.APPLITOOLS_API_KEY_SDK) {
+      eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)
+    }
   }
 
   async function _cleanup() {

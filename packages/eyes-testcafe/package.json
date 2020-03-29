@@ -66,9 +66,9 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec2.js\"",
     "test:perf": "mocha --no-timeouts \"test/perf/**/*.spec.js\"",
     "test:coverage": "node test/coverage/index.js",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "devDependencies": {
     "@applitools/dom-capture": "^7.1.2",

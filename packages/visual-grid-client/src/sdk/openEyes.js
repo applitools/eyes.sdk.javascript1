@@ -1,7 +1,8 @@
 'use strict'
 const {
   GeneralUtils: {backwardCompatible, cachify},
-} = require('@applitools/eyes-common')
+} = require('@applitools/eyes-common') // TODO import from eyes-sdk-core
+const {BatchInfo} = require('@applitools/eyes-sdk-core')
 const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
@@ -41,11 +42,7 @@ function makeOpenEyes({
   appName: _appName,
   browser: _browser,
   saveDebugData: _saveDebugData,
-  batchSequenceName: _batchSequenceName,
-  batchSequence: _batchSequence,
-  batchName: _batchName,
-  batchId: _batchId,
-  batchNotify: _batchNotify,
+  batch: _batch,
   properties: _properties,
   baselineBranchName: _baselineBranchName,
   baselineBranch: _baselineBranch,
@@ -81,7 +78,6 @@ function makeOpenEyes({
   getHandledRenderInfoPromise,
   getRenderInfo,
   agentId,
-  notifyOnCompletion: _notifyOnCompletion,
   getUserAgents: _getUserAgents,
   globalState,
   wrappers: _wrappers,
@@ -95,12 +91,12 @@ function makeOpenEyes({
     appName = _appName,
     browser = _browser,
     saveDebugData = _saveDebugData,
-    batchSequenceName = _batchSequenceName,
-    batchSequence = _batchSequence,
-    batchName = _batchName,
-    batchId = _batchId,
-    batchNotify = _batchNotify,
-    batch,
+    batchSequenceName,
+    batchSequence,
+    batchName,
+    batchId,
+    batchNotify,
+    batch = _batch,
     properties = _properties,
     baselineBranchName = _baselineBranchName,
     baselineBranch = _baselineBranch,
@@ -122,7 +118,7 @@ function makeOpenEyes({
     saveNewTests = _saveNewTests,
     compareWithParentBranch = _compareWithParentBranch,
     ignoreBaseline = _ignoreBaseline,
-    notifyOnCompletion = _notifyOnCompletion,
+    notifyOnCompletion,
     getUserAgents = _getUserAgents,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser)
@@ -167,6 +163,14 @@ function makeOpenEyes({
       logger,
     ))
 
+    const mergedBatch = mergeBatchProperties({
+      batch,
+      batchId,
+      batchName,
+      batchSequence,
+      batchNotify,
+    })
+
     let doGetBatchInfoWithCache
     const getBatchInfoWithCache = batchId => {
       if (!doGetBatchInfoWithCache) {
@@ -190,11 +194,7 @@ function makeOpenEyes({
       browsers,
       isDisabled,
       displayName,
-      batchSequence,
-      batchName,
-      batchId,
-      batchNotify,
-      batch,
+      batch: mergedBatch,
       properties,
       baselineBranch,
       baselineEnvName,
@@ -343,6 +343,17 @@ function makeOpenEyes({
       return !browserName || /^chrome/.test(browserName)
     }
   }
+}
+
+function mergeBatchProperties({batch, batchId, batchName, batchSequence, batchNotify}) {
+  const isGeneratedId = batchId !== undefined ? false : batch.getIsGeneratedId()
+  return new BatchInfo({
+    id: batchId !== undefined ? batchId : batch.getId(),
+    name: batchName !== undefined ? batchName : batch.getName(),
+    sequenceName: batchSequence !== undefined ? batchSequence : batch.getSequenceName(),
+    notifyOnCompletion: batchNotify !== undefined ? batchNotify : batch.getNotifyOnCompletion(),
+    isGeneratedId,
+  })
 }
 
 module.exports = makeOpenEyes

@@ -76,7 +76,7 @@
     "test:coverage:custom": "mocha --no-timeouts \"test/coverage/custom/*.spec.js\"",
     "preversion": "yarn vv && yarn vc && yarn verify-commits && yarn test:coverage --send-report prod",
     "version": "yarn uc && git add CHANGELOG.md",
-    "postpublish": "git push && git push --tags && yarn send-release-notification"
+    "postversion": "git push --follow-tags && yarn send-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

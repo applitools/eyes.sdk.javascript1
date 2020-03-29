@@ -13,7 +13,9 @@ async function run({sdkName, sdkVersion, changeLog, testCoverageGap}, recipient)
   }
   const result = await sendNotification(payload)
   if (!result.isSuccessful)
-    throw `There was a problem sending the release notification: status ${result.status} with message ${result.message}`
+    throw new Error(
+      `There was a problem sending the release notification: status ${result.status} with message ${result.message}`,
+    )
 }
 
 function convertSdkNameToReportName(sdkName) {

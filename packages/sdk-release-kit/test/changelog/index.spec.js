@@ -12,8 +12,7 @@ describe('query-changelog', () => {
   it('should get entries for the latest release', () => {
     const changelogContents = `
       # Changelog
-
-      ## Unreleased
+## Unreleased
 
       ## 1.2.3 - date
 
@@ -111,6 +110,36 @@ describe('update-changelog', () => {
       ## Unreleased
 
       ## 1.2.4
+
+      - blah
+      - also blah
+
+      ## 1.2.3 - date
+
+      - more blah
+
+      ## [3.2.1] - date
+
+      - some more blah as well
+    `
+    assert.deepStrictEqual(updatedChangelog, expectedChangelogContents)
+  })
+  it('should add release entry with date', () => {
+    const updatedChangelog = updateChangelogContents({
+      changelogContents,
+      version: '1.2.4',
+      withDate: true,
+    })
+    const date = () => {
+      const now = new Date()
+      return `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
+    }
+    const expectedChangelogContents = `
+      # Changelog
+
+      ## Unreleased
+
+      ## 1.2.4 - ${date()}
 
       - blah
       - also blah

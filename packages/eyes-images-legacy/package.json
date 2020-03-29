@@ -65,9 +65,9 @@
     "browserify": "browserify eyes-browser-loader.js > dist/eyes-browser.js",
     "uglify": "uglifyjs dist/eyes-browser.js > dist/eyes-browser.min.js",
     "typings": "tsc --declaration",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

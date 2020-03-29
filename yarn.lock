@@ -16,12 +16,13 @@
   dependencies:
     "@applitools/functional-commons" "^1.5.4"
 
-"@applitools/dom-snapshot@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-3.4.0.tgz#890e7df3e3df7226863e4b8c6044a34b1a97e3e1"
-  integrity sha512-7i9OPV1pRA0hg2l9+H/XSwks2U/2EqHTLUWRhSbBWuST86KUmC3hbZ5KUr8KX3Yaj9VnFfZsuigvxD26Vl6NgQ==
+"@applitools/dom-snapshot@3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-3.4.1.tgz#ada21ed5a210f6e0b3be295a2c4607abb1974c94"
+  integrity sha512-oL1KAMjROyl/Lak991uIsIUZuf1jM2LYaRtdhWV61IlrFLStMKNSpTceUDjc2HE4UeGRnLLHKCsFDdBKfJlaow==
   dependencies:
     "@applitools/functional-commons" "^1.5.4"
+    css-tree "^1.0.0-alpha.39"
 
 "@applitools/dom-utils@4.7.7":
   version "4.7.7"
@@ -262,14 +263,14 @@
     postcss-value-parser "^4.0.2"
     throat "^5.0.0"
 
-"@applitools/visual-grid-client@13.6.5":
-  version "13.6.5"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-13.6.5.tgz#a0a13aee9c520107e528746fafa183f59c527d80"
-  integrity sha512-rq59cDf9Sg50wAvNBogBZQ8tJZVXnBQoqiMpmPMaO1JOa8K/Jstw6054lg++i5plHAOluCjpezQrsUlBDk1ylQ==
+"@applitools/visual-grid-client@13.6.10":
+  version "13.6.10"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-13.6.10.tgz#1c4f95574c86aa5847a4f4143c4fca7dcc555643"
+  integrity sha512-UuX9ejevVTDoHm79+92PSQ3Fckc+RKrHEOmJM8zCtDAnp/EfsuJWdc3wHVBXTXlCanXo9HxM/43vAmGIQqJ9QA==
   dependencies:
-    "@applitools/dom-snapshot" "3.4.0"
-    "@applitools/eyes-common" "3.20.1"
-    "@applitools/eyes-sdk-core" "9.0.2"
+    "@applitools/dom-snapshot" "3.4.1"
+    "@applitools/eyes-common" "3.20.2"
+    "@applitools/eyes-sdk-core" "9.0.3"
     "@applitools/functional-commons" "1.5.4"
     "@applitools/http-commons" "2.3.12"
     "@applitools/isomorphic-fetch" "3.0.0"
@@ -300,10 +301,10 @@
     postcss-value-parser "^4.0.2"
     throat "^5.0.0"
 
-"@applitools/visual-grid-client@13.6.8":
-  version "13.6.8"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-13.6.8.tgz#1bcfd4569defd601c5ed83af74779061f2a5d028"
-  integrity sha512-S5KJm6r4NIX0Zas+9tYV4qusYx3CmKA5+LI+NO6kJkdf7PUCUmx+IKDVXL+Qwi9ks+CLUkRZoto52AHe5+rB0g==
+"@applitools/visual-grid-client@13.6.9":
+  version "13.6.9"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-13.6.9.tgz#16895cb3b5b4f86fc128d1fb1add37d3f5e77c30"
+  integrity sha512-TYgKrp9XA98slOSrf8YFPDbQDxPfClC3iCnHMsOw9U3xmBjllferEOpIUKd7t/znuFjSh4+KY7Z8a863efH2Vg==
   dependencies:
     "@applitools/dom-snapshot" "3.4.1"
     "@applitools/eyes-common" "3.20.2"

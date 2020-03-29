@@ -8,5 +8,5 @@ module.exports = targetFolder => {
   const changelogContents = readFileSync(changeLogFilePath, 'utf8')
   const version = JSON.parse(readFileSync(path.resolve(targetFolder, 'package.json'), 'utf8'))
     .version
-  writeFileSync(changeLogFilePath, updateChangelogContents({changelogContents, version}))
+  writeFileSync(changeLogFilePath, updateChangelogContents({changelogContents, version, withDate: true}))
 }

@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.0.5
+
+- update `@applitools/eyes.webdriverio` version to 2.12.6
+
 ## 1.0.4
 
 - update `@applitools/eyes.webdriverio` version to 2.12.5

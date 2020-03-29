@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "13.6.9",
+  "version": "13.6.11",
   "description": "",
   "keywords": [
     "applitools",
@@ -31,7 +31,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/dom-snapshot": "3.4.1",
+    "@applitools/dom-snapshot": "3.4.2",
     "@applitools/eyes-common": "3.20.2",
     "@applitools/eyes-sdk-core": "9.0.3",
     "@applitools/functional-commons": "1.5.4",
@@ -77,9 +77,9 @@
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
     "test": "yarn build:browser && yarn test:mocha",
     "render": "node example/render.js",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

@@ -69,9 +69,9 @@
     "build": "webpack",
     "minify": "uglifyjs -c -m reserved=[module.exports] --warn bundle.js -o bundle.js",
     "prepublishOnly": "npm run build && npm run minify",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

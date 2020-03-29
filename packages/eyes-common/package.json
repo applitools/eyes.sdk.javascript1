@@ -51,9 +51,9 @@
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "postpublish": "git push; git push --tags",
     "preversion": "yarn vv && yarn vc && yarn verify-commits",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "version": "yarn uc && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 2.12.6
+
+- update @applitools/dom-utils@4.7.10, @applitools/eyes-common@3.20.2, @applitools/eyes-sdk-core@9.0.3, @applitools/visual-grid-client@13.6.11
+
 ## 2.12.5
 
 - handle stale elements during check operation ([Trello](https://trello.com/c/JJ5vm3wS/269-frames-shadow-dom-break-region-checking))

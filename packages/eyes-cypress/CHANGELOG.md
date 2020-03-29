@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 3.9.20
+
+- avoid unnecessary requests to get batchInfo (due to wrong `isGeneratedId` value on batchInfo)
+
 ## 3.9.19
 
 - update @applitools/dom-snapshot@3.4.1 to fix missing css-tree dependency issue

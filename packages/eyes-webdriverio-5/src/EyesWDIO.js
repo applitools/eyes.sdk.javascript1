@@ -385,16 +385,17 @@ class EyesWDIO extends EyesBase {
             ? targetElement
             : new EyesWebElement(this._logger, this._driver, targetElement)
         if (this._stitchContent) {
-          return this._checkElement(name, checkSettings)
+          result = await this._checkElement(name, checkSettings)
         } else {
-          return this._checkRegion(name, checkSettings)
+          result = await this._checkRegion(name, checkSettings)
         }
+        this._targetElement = null
       } else if (checkSettings.getFrameChain().length > 0) {
         this._logger.verbose('have frame chain')
         if (this._stitchContent) {
-          return this._checkFullFrameOrElement(name, checkSettings)
+          result = await this._checkFullFrameOrElement(name, checkSettings)
         } else {
-          return this._checkFrameFluent(name, checkSettings)
+          result = await this._checkFrameFluent(name, checkSettings)
         }
       } else {
         this._logger.verbose('default case')
@@ -1297,7 +1298,7 @@ class EyesWDIO extends EyesBase {
         while (fc.size() > 0) {
           const frame = fc.pop()
           await frame.returnToOriginalOverflow(this._driver)
-          await EyesTargetLocator.tryParentFrame(this._driver.getRemoteWebDriver().switchTo(), fc)
+          await EyesTargetLocator.tryParentFrame(this._driver.switchTo(), fc)
         }
       } else {
         this._logger.verbose('returning overflow of element to its original value')
