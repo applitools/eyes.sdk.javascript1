@@ -12,6 +12,7 @@ const verifyCommits = require('../versions/scripts/verify-commits')
 const createDotFolder = require('../setup/scripts/create-dot-folder')
 const packInstall = require('../dry-run/scripts/pack-install')
 const verifyInstalledVersions = require('../versions/scripts/verify-installed-versions')
+const lsDryRun = require('../dry-run/scripts/ls-dry-run.js')
 
 ;(async () => {
   async function execute(cb) {
@@ -56,6 +57,8 @@ const verifyInstalledVersions = require('../versions/scripts/verify-installed-ve
         installedDirectory: path.join('.bongo', 'dry-run'),
       }),
     )
+  } else if (args['ls-dry-run']) {
+    execute(lsDryRun)
   } else {
     execute(() => {
       throw new Error('Invalid option provided')
