@@ -61,15 +61,12 @@
     "leanft.sdk.wpf": "*"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "test": "mocha ./test/**/*.js",
     "build": "webpack",
     "minify": "uglifyjs -c -m reserved=[module.exports] --warn bundle.js -o bundle.js",
     "prepublishOnly": "npm run build && npm run minify",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
+    "preversion": "yarn release-pre-check",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },

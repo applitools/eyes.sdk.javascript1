@@ -53,10 +53,7 @@
     "testcafe"
   ],
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "lint": "eslint . --ext .js --config ../../.eslintrc",
     "build": "rollup -c ./build/rollup.config.js",
     "render": "node scripts/render.js",
@@ -66,7 +63,7 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec2.js\"",
     "test:perf": "mocha --no-timeouts \"test/perf/**/*.spec.js\"",
     "test:coverage": "node test/coverage/index.js",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
+    "preversion": "yarn release-pre-check",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },

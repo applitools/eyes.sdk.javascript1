@@ -63,10 +63,7 @@
     "ua-parser-js": "^0.7.20"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test:mocha": "mocha --no-timeouts \"test/**/*.test.js\"",
     "test:sanity": "mocha --no-timeouts 'test/!(browser||e2e)/**/*.test.js'",
@@ -77,7 +74,7 @@
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
     "test": "yarn build:browser && yarn test:mocha",
     "render": "node example/render.js",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
+    "preversion": "yarn release-pre-check",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },

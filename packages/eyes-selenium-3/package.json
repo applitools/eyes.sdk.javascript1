@@ -62,10 +62,7 @@
     "selenium-webdriver": "< 4.0.0"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "npm run test:selenium",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.js\"",
@@ -74,7 +71,7 @@
     "test:protractor": "protractor test/e2e/protractor/protractor.conf.js",
     "test:coverage:custom": "mocha --no-timeouts \"test/coverage/custom/*.spec.js\"",
     "typings": "tsc --declaration",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
+    "preversion": "yarn release-pre-check",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },

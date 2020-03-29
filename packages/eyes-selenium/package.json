@@ -59,10 +59,7 @@
     "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "send-release-notification": "bongo --send-release-notification",
     "test": "yarn test:unit && yarn test:it",
@@ -74,7 +71,7 @@
     "test:coverage:nuke": "coverage-tests nuke",
     "test:coverage:doctor": "coverage-tests doctor",
     "test:coverage:custom": "mocha --no-timeouts \"test/coverage/custom/*.spec.js\"",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits && yarn test:coverage --send-report prod",
+    "preversion": "yarn release-pre-check && yarn test:coverage --send-report prod",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags && yarn send-release-notification"
   },

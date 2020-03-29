@@ -39,15 +39,12 @@
     "uglify-es": "^3.3.9"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "verify-commits": "bongo --verify-commits",
+    "release-pre-check": "bongo --release-pre-check",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "browserify": "browserify index.js > dist/eyes-images.browser.js",
     "uglify": "uglifyjs dist/eyes-images.browser.js > dist/eyes-images.browser.min.js",
     "build": "npm run browserify && npm run uglify",
-    "preversion": "yarn vv && yarn vc && yarn verify-commits",
+    "preversion": "yarn release-pre-check",
     "version": "yarn uc && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },
