@@ -51,7 +51,7 @@
     "shared-examples-for": "^0.1.3"
   },
   "scripts": {
-    "release-pre-check": "bongo --relesae-pre-check",
+    "release-pre-check": "bongo --release-pre-check",
     "send-release-notification": "bongo --send-release-notification",
     "lint": "eslint '**/*.js'",
     "test": "yarn test:unit && yarn test:e2e",
