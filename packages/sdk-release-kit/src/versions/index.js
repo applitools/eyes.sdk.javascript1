@@ -10,7 +10,14 @@ function _isWorkspacePackage({pkgs, pkgName}) {
 }
 
 function makePackagesList() {
-  const packages = require(path.join(__dirname, '..', '..', '..', '..', 'package.json')).workspaces
+  const {packages} = require(path.join(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    'package.json',
+  )).workspaces
   return packages.map(pkgPath => {
     const pkgDir = path.join(__dirname, '..', '..', '..', '..', pkgPath)
     const packageJson = require(path.join(pkgDir, 'package.json'))

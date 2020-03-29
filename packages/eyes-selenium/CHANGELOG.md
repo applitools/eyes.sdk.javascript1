@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 4.33.30 - 29/3/2020
+
+- update @applitools/dom-utils@4.7.10, @applitools/eyes-common@3.20.2, @applitools/visual-grid-client@13.6.11, @applitools/eyes-sdk-core@9.0.3
+
 ## 4.33.29
 
 - update @applitools/dom-snapshot@3.4.0 to get correct css in DOM snapshots ([Trello](https://trello.com/c/3BFtM4hx/188-hidden-spinners-in-text-field-are-visible-in-firefox), [Trello](https://trello.com/c/S4XT7ONp/192-vg-dom-snapshot-deletes-duplicate-keys-from-css-rules), [Trello](https://trello.com/c/mz8CKKB7/173-selector-not-seen-as-it-should-be-issue-with-css-variable), [Trello](https://trello.com/c/KZ25vktg/245-edge-screenshot-different-from-chrome-and-ff))

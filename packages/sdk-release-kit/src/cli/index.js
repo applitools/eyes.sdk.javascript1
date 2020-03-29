@@ -32,7 +32,8 @@ const verifyInstalledVersions = require('../versions/scripts/verify-installed-ve
   } else if (args['verify-versions']) {
     execute(verifyVersions.bind(undefined, {isFix: args.fix, pkgPath: cwd}))
   } else if (args['verify-commits']) {
-    execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
+    const isForce = args.force || process.env.BONGO_VERIFY_COMMITS_FORCE
+    execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce}))
   } else if (args['verify-installed-versions']) {
     execute(createDotFolder.bind(undefined, cwd))
     await execute(packInstall.bind(undefined, cwd))
@@ -45,7 +46,8 @@ const verifyInstalledVersions = require('../versions/scripts/verify-installed-ve
   } else if (args['release-pre-check']) {
     execute(verifyChangelog.bind(undefined, cwd))
     execute(verifyVersions.bind(undefined, {isFix: args.fix, pkgPath: cwd}))
-    execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce: args.force}))
+    const isForce = args.force || process.env.BONGO_VERIFY_COMMITS_FORCE
+    execute(verifyCommits.bind(undefined, {pkgPath: cwd, isForce}))
     execute(createDotFolder.bind(undefined, cwd))
     await execute(packInstall.bind(undefined, cwd))
     await execute(

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 5.0.0 - 29/3/2020
+
 - support isNew flag in startSession response
 
 ## 4.0.5

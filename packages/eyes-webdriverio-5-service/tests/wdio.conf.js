@@ -19,6 +19,7 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
+  // specs: ['tests/app-name.spec.js'],
   specs: [path.join(__dirname, process.env.TEST_SPECS ? process.env.TEST_SPECS : '*.spec.js')],
   // Patterns to exclude.
   exclude: [
@@ -70,7 +71,7 @@ exports.config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: 'silent',
+  logLevel: 'error',
   // outputDir: '.',
   //
   // Set specific log levels per logger

@@ -1,6 +1,6 @@
 {
   "name": "eyes.sdk",
-  "version": "4.0.5",
+  "version": "5.0.0",
   "description": "Applitools Eyes SDK For JavaScript",
   "keywords": [
     "eyes.sdk",
@@ -39,7 +39,7 @@
   "main": "./index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "eyes.utils": "3.8.1",
+    "eyes.utils": "4.0.0",
     "request": "^2.88.0"
   },
   "devDependencies": {
