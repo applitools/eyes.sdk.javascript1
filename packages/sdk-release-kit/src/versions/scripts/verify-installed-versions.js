@@ -19,12 +19,7 @@ async function main({pkgPath, installedDirectory}) {
   if (installedDirectory) {
     process.chdir(installedDirectory)
   }
-  try {
-    checkPackagesForUniqueVersions(await npmLs(), packageNames)
-  } catch (error) {
-    process.chdir(pkgPath)
-    throw error
-  }
+  checkPackagesForUniqueVersions(await npmLs(), packageNames)
 }
 
 module.exports = main
