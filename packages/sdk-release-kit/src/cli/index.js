@@ -29,7 +29,7 @@ const lsDryRun = require('../dry-run/scripts/ls-dry-run.js')
   } else if (args['update-changelog']) {
     execute(updateChangelog.bind(undefined, cwd))
   } else if (args['send-release-notification']) {
-    execute(sendReleaseNotification.bind(undefined, args.recipient))
+    execute(sendReleaseNotification.bind(undefined, cwd, args.recipient))
   } else if (args['verify-versions']) {
     execute(verifyVersions.bind(undefined, {isFix: args.fix, pkgPath: cwd}))
   } else if (args['verify-commits']) {
