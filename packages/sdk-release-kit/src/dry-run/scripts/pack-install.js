@@ -5,10 +5,12 @@ const {promisify} = require('util')
 const pexec = promisify(exec)
 
 module.exports = async packageDir => {
-  const workingDir = path.join(packageDir, '.bongo', 'dry-run')
-  await pexec(`rm -rf ${workingDir}`)
-  await pexec(`rm -rf dry-run.tgz`)
-  fs.mkdirSync(workingDir)
-  await pexec(`yarn pack --filename dry-run.tgz`)
-  await pexec(`npm install dry-run.tgz --prefix ${workingDir}`)
+  const workingDir = path.join(packageDir, '.bongo')
+  const installDir = path.join(workingDir, 'dry-run')
+  const packFile = path.join(workingDir, `dry-run.tgz`)
+  await pexec(`rm -rf ${installDir}`)
+  await pexec(`rm -rf ${packFile}`)
+  fs.mkdirSync(installDir)
+  await pexec(`yarn pack --filename ${packFile}`)
+  await pexec(`npm install ${packFile} --prefix ${installDir}`)
 }
