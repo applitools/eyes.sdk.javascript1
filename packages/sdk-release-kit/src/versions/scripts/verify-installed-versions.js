@@ -2,7 +2,7 @@ const {exec} = require('child_process')
 const {promisify} = require('util')
 const pexec = promisify(exec)
 const path = require('path')
-const {checkPackagesForUniqueVersions} = require('..')
+const {checkPackagesForUniqueVersions, makePackagesList} = require('..')
 
 async function npmLs() {
   try {
@@ -14,12 +14,15 @@ async function npmLs() {
 }
 
 async function main({pkgPath, installedDirectory}) {
+  const internalPackages = makePackagesList()
   const {dependencies} = require(path.join(pkgPath, 'package.json'))
-  const packageNames = Object.keys(dependencies)
+  const filteredPackageNames = Object.keys(dependencies).filter(pkgName =>
+    internalPackages.find(({name}) => name === pkgName),
+  )
   if (installedDirectory) {
     process.chdir(installedDirectory)
   }
-  checkPackagesForUniqueVersions(await npmLs(), packageNames)
+  checkPackagesForUniqueVersions(await npmLs(), filteredPackageNames)
 }
 
 module.exports = main
