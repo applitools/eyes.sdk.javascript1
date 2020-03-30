@@ -14,7 +14,6 @@ async function npmLs() {
 }
 
 async function main({pkgPath, installedDirectory}) {
-  debugger
   const {dependencies} = require(path.join(pkgPath, 'package.json'))
   const packageNames = Object.keys(dependencies)
   if (installedDirectory) {
