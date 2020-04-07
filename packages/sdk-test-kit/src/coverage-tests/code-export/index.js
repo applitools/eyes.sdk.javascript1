@@ -14,7 +14,7 @@ function convertExecutionModeToSuffix(executionMode) {
 }
 
 function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCoverageTests) {
-  let output = {}
+  let output = []
   function emitTests(supportedTests, {branchName = 'master', host} = {}) {
     supportedTests.forEach(supportedTest => {
       const sdkImplementation = initializeSdkImplementation()
@@ -33,7 +33,7 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
       // test
       makeCoverageTests(sdkImplementation)[supportedTest.name]()
       // store
-      output[baselineTestName] = sdkImplementation.out
+      output.push({[baselineTestName]: sdkImplementation.out})
     })
     return output
   }

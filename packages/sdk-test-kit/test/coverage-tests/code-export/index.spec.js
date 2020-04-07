@@ -1,5 +1,5 @@
 const assert = require('assert')
-const {makeEmitTests} = require('../../../src/coverage-tests/code-export')
+const {makeEmitTests, createTestFileString} = require('../../../src/coverage-tests/code-export')
 
 const fakeSdkImplementation = () => {
   let result = {}
@@ -44,7 +44,20 @@ describe('Code Export', () => {
   it('returns tests broken out by their stringified parts', () => {
     const {emitTests} = makeEmitTests(fakeSdkImplementation, fakeCoverageTests)
     const supportedTests = [{name: 'test-a', executionMode: {isVisualGrid: true}}]
-    assert.deepStrictEqual(emitTests(supportedTests), {
+    assert.deepStrictEqual(emitTests(supportedTests), [
+      {
+        'test-a_VG': {
+          setup: 'setup',
+          cleanup: 'cleanup',
+          open: 'open',
+          checkWindow: 'checkWindow',
+          close: 'close',
+        },
+      },
+    ])
+  })
+  it.skip('returns a test wrapped in a test framework as a string to be written to a file', () => {
+    const emittedTest = {
       'test-a_VG': {
         setup: 'setup',
         cleanup: 'cleanup',
@@ -52,6 +65,9 @@ describe('Code Export', () => {
         checkWindow: 'checkWindow',
         close: 'close',
       },
-    })
+    }
+    const expectedTest = `
+    `
+    assert.deepStrictEqual(createTestFileString(emittedTest), expectedTest)
   })
 })
