@@ -18,12 +18,13 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
   function emitTests(supportedTests, {branchName = 'master', host} = {}) {
     supportedTests.forEach(supportedTest => {
       const sdkImplementation = initializeSdkImplementation()
+      const baselineTestName = `${supportedTest.name}${convertExecutionModeToSuffix(
+        supportedTest.executionMode,
+      )}`
       // hooks
       if (sdkImplementation._setup) {
         sdkImplementation._setup({
-          baselineTestName: `${supportedTest.name}${convertExecutionModeToSuffix(
-            supportedTest.executionMode,
-          )}`,
+          baselineTestName,
           branchName,
           host,
         })
@@ -32,7 +33,7 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
       // test
       makeCoverageTests(sdkImplementation)[supportedTest.name]()
       // store
-      output[supportedTest.name] = sdkImplementation.out
+      output[baselineTestName] = sdkImplementation.out
     })
     return output
   }
