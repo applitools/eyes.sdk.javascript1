@@ -41,7 +41,7 @@ const fakeCoverageTests = ({open, checkElement, checkWindow, close}) => {
 }
 
 describe('Code Export', () => {
-  it('returns strings to be written to file', () => {
+  it('returns tests broken out by their stringified parts', () => {
     const {emitTests} = makeEmitTests(fakeSdkImplementation, fakeCoverageTests)
     const supportedTests = [{name: 'test-a', executionMode: {isVisualGrid: true}}]
     assert.deepStrictEqual(emitTests(supportedTests), {
