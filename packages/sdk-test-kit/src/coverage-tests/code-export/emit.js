@@ -21,19 +21,21 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
       const baselineTestName = `${supportedTest.name}${convertExecutionModeToSuffix(
         supportedTest.executionMode,
       )}`
-      // hooks
-      if (sdkImplementation._setup) {
-        sdkImplementation._setup({
-          baselineTestName,
-          branchName,
-          host,
-        })
+      for (const hook in sdkImplementation.hooks) {
+        if (hook === 'beforeEach') {
+          sdkImplementation.hooks[hook]({
+            baselineTestName,
+            branchName,
+            host,
+          })
+        } else {
+          sdkImplementation.hooks[hook]()
+        }
       }
-      if (sdkImplementation._cleanup) sdkImplementation._cleanup()
       // test
       makeCoverageTests(sdkImplementation)[supportedTest.name]()
       // store
-      output.push({name: baselineTestName, body: sdkImplementation.out})
+      output.push({name: baselineTestName, ...sdkImplementation.out})
     })
     return output
   }
