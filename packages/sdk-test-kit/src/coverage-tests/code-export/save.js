@@ -3,10 +3,11 @@ const path = require('path')
 const {createTestFileString} = require('./render')
 
 function createTestFiles(emittedTests, testFrameworkTemplate) {
-  const targetDirectory = path.join(process.cwd, 'test', 'coverage')
+  const targetDirectory = path.join(process.cwd(), 'test', 'coverage', 'generic')
   emittedTests.forEach(test => {
     const payload = createTestFileString(test, testFrameworkTemplate)
-    writeFileSync(path.resolve(targetDirectory, `${test.name}.spec.js`), payload)
+    const filePath = path.resolve(targetDirectory, `${test.name}.spec.js`)
+    writeFileSync(filePath, payload)
   })
 }
 
