@@ -47,6 +47,7 @@ function makeEmitTracker() {
   return {
     hooks: {
       deps: [],
+      vars: [],
       beforeEach: [],
       afterEach: [],
     },

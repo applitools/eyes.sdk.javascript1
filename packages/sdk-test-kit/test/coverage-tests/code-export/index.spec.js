@@ -6,6 +6,9 @@ const fakeSdkImplementation = () => {
   let result = makeEmitTracker()
   return {
     hooks: {
+      vars: () => {
+        result.hooks.vars.push(`let x`)
+      },
       deps: () => {
         result.hooks.deps.push(`const {blah} = require('blah')`)
       },
@@ -55,6 +58,7 @@ describe('Code Export', () => {
       {
         name: 'test-a_VG',
         hooks: {
+          vars: [`let x`],
           deps: [`const {blah} = require('blah')`],
           beforeEach: ['setup'],
           afterEach: ['cleanup'],
@@ -67,6 +71,7 @@ describe('Code Export', () => {
     const emittedTest = {
       name: 'test-a_VG',
       hooks: {
+        vars: [`let x`],
         deps: [`const {blah} = require('blah')`],
         beforeEach: ['setup'],
         afterEach: ['cleanup'],
@@ -77,6 +82,7 @@ describe('Code Export', () => {
 const {blah} = require('blah')
 
 describe('Coverage Tests', () => {
+  let x
   beforeEach(async () => {
     setup
   })
