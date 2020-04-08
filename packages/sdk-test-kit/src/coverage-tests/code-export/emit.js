@@ -34,7 +34,12 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
         }
       }
       // test
-      makeCoverageTests(sdkImplementation)[supportedTest.name]()
+      try {
+        const coverageTests = makeCoverageTests(sdkImplementation)
+        coverageTests[supportedTest.name]()
+      } catch (error) {
+        debugger
+      }
       // store
       output.push({name: baselineTestName, ...sdkImplementation.out})
     })
