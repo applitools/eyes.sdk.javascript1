@@ -18,12 +18,14 @@ const {
 } = require('./cli-util')
 const os = require('os')
 const chalk = require('chalk')
+const {makeEmitTests, createTestFiles} = require('./code-export')
 
 yargs
   .usage(`Coverage Tests DSL (v${version})`)
   .usage('a.k.a. Da Schwartz Lang - accept no substitutes')
   .usage('\nUsage: coverage-tests run <options>')
   .command('run', 'run coverage tests for a given SDK')
+  .command('runv2', 'run coverage tests for a given SDK (v2)')
   .command('doctor', 'health check an implementation')
   .command('nuke', 'kill all ghost browser processes (POSIX only)')
   .option('path', {
@@ -76,6 +78,9 @@ async function run(args) {
   } else if (command === 'doctor' && args.path) {
     const sdkImplementation = require(path.join(path.resolve('.'), args.path))
     doHealthCheck(sdkImplementation)
+  } else if (command === 'runv2' && args.path) {
+    const sdkImplementation = require(path.join(path.resolve('.'), args.path))
+    doRunTestsV2(args, sdkImplementation)
   } else if (command === 'run' && args.path) {
     const sdkImplementation = require(path.join(path.resolve('.'), args.path))
     const report = await doRunTests(args, sdkImplementation)
@@ -157,6 +162,34 @@ async function doRunTests(args, sdkImplementation) {
   doKaboom()
 
   return report
+}
+
+async function doRunTestsV2(args, sdkImplementation) {
+  console.log(`Running coverage tests for ${sdkImplementation.name} (v2!)...\n`)
+
+  //if (needsChromeDriver(args, sdkImplementation))
+  //  await startChromeDriver(sdkImplementation.options.chromeDriverOptions)
+
+  let supportedTests = sdkImplementation.supportedTests
+  supportedTests = filterTestsByName(args.filterName, supportedTests)
+  supportedTests = filterTestsByMode(args.filterMode, supportedTests)
+  supportedTests = filterTestsByIndexes(args.filterIndexes, supportedTests)
+
+  const numberOfTestVariations = supportedTests.length
+  const numberOfUniqueTests = [...new Set(supportedTests.map(t => t.name))].length
+  console.log(
+    `Creating ${numberOfTestVariations} test files for ${numberOfUniqueTests} unique tests.`,
+  )
+  const start = new Date()
+  const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
+    host: args.remote,
+  })
+  createTestFiles(emittedTests)
+  const end = new Date()
+  console.log(`\nTest files created ${end - start}ms.`)
+
+  //if (needsChromeDriver(args, sdkImplementation)) stopChromeDriver()
+  //doKaboom()
 }
 
 async function doSendReport(args, report) {
