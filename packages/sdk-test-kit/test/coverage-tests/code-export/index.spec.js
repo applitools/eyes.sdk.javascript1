@@ -1,16 +1,9 @@
 const assert = require('assert')
-const {makeEmitTests} = require('../../../src/coverage-tests/code-export/emit')
+const {makeEmitTracker, makeEmitTests} = require('../../../src/coverage-tests/code-export/emit')
 const {createTestFileString} = require('../../../src/coverage-tests/code-export/render')
 
 const fakeSdkImplementation = () => {
-  let result = {
-    hooks: {
-      deps: [],
-      beforeEach: [],
-      afterEach: [],
-    },
-    commands: [],
-  }
+  let result = makeEmitTracker()
   return {
     hooks: {
       deps: () => {
@@ -38,6 +31,7 @@ const fakeSdkImplementation = () => {
     out: result,
   }
 }
+
 const fakeCoverageTests = ({open, checkElement, checkWindow, close}) => {
   return {
     'test-a': () => {

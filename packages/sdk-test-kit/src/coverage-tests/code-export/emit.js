@@ -21,6 +21,7 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
       const baselineTestName = `${supportedTest.name}${convertExecutionModeToSuffix(
         supportedTest.executionMode,
       )}`
+      // hooks
       for (const hook in sdkImplementation.hooks) {
         if (hook === 'beforeEach') {
           sdkImplementation.hooks[hook]({
@@ -42,6 +43,18 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
   return {emitTests}
 }
 
+function makeEmitTracker() {
+  return {
+    hooks: {
+      deps: [],
+      beforeEach: [],
+      afterEach: [],
+    },
+    commands: [],
+  }
+}
+
 module.exports = {
+  makeEmitTracker,
   makeEmitTests,
 }
