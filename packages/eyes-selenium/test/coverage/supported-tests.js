@@ -128,9 +128,9 @@ const supportedTests = [
   {name: 'TestCheckRegionWithIgnoreRegion_Fluent', executionMode: {isVisualGrid: true}},
   {name: 'TestCheckRegionWithIgnoreRegion_Fluent', executionMode: {isCssStitching: true}},
   {name: 'TestCheckRegionWithIgnoreRegion_Fluent', executionMode: {isScrollStitching: true}},
-  {name: 'TestCheckScrollableModal', executionMode: {isVisualGrid: true}},
-  {name: 'TestCheckScrollableModal', executionMode: {isCssStitching: true}},
-  {name: 'TestCheckScrollableModal', executionMode: {isScrollStitching: true}},
+  //{name: 'TestCheckScrollableModal', executionMode: {isVisualGrid: true}},
+  //{name: 'TestCheckScrollableModal', executionMode: {isCssStitching: true}},
+  //{name: 'TestCheckScrollableModal', executionMode: {isScrollStitching: true}},
   {name: 'TestCheckWindow', executionMode: {isVisualGrid: true}},
   {name: 'TestCheckWindow', executionMode: {isCssStitching: true}},
   {name: 'TestCheckWindow', executionMode: {isScrollStitching: true}},
@@ -202,7 +202,7 @@ const supportedTests = [
   {name: 'TestScrollbarsHiddenAndReturned_Fluent', executionMode: {isScrollStitching: true}},
   {name: 'Test Abort', executionMode: {isVisualGrid: true}},
   {name: 'Test Abort', executionMode: {isCssStitching: true}},
-  {name: 'Test_VGTestsCount_1', executionMode: {isVisualGrid: true, useStrictName: true}},
+  //{name: 'Test_VGTestsCount_1', executionMode: {isVisualGrid: true, useStrictName: true}},
 ]
 
 module.exports = supportedTests
