@@ -21,3 +21,6 @@ tmp
 
 # sdk-release-kit
 .bongo
+
+# sdk-test-kit
+**/test/coverage/generic/
