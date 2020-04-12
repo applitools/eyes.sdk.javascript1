@@ -28,6 +28,7 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
             baselineTestName,
             branchName,
             host,
+            ...supportedTest,
           })
         } else {
           sdkImplementation.hooks[hook]()
