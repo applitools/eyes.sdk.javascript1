@@ -164,21 +164,33 @@ async function doRunTests(args, sdkImplementation) {
   return report
 }
 
+function filterTests({tests, args}) {
+  let result = tests
+  result = filterTestsByName(args.filterName, result)
+  result = filterTestsByMode(args.filterMode, result)
+  result = filterTestsByIndexes(args.filterIndexes, result)
+  return result
+}
+
+function uniqueNumberOfTests(tests) {
+  return [...new Set(tests.map(t => t.name))].length
+}
+
+function numberOfTestVariations(tests) {
+  return tests.length
+}
+
 async function doRunTestsV2(args, sdkImplementation) {
   console.log(`Running coverage tests for ${sdkImplementation.name} (v2!)...\n`)
 
   //if (needsChromeDriver(args, sdkImplementation))
   //  await startChromeDriver(sdkImplementation.options.chromeDriverOptions)
 
-  let supportedTests = sdkImplementation.supportedTests
-  supportedTests = filterTestsByName(args.filterName, supportedTests)
-  supportedTests = filterTestsByMode(args.filterMode, supportedTests)
-  supportedTests = filterTestsByIndexes(args.filterIndexes, supportedTests)
-
-  const numberOfTestVariations = supportedTests.length
-  const numberOfUniqueTests = [...new Set(supportedTests.map(t => t.name))].length
+  const supportedTests = filterTests({tests: sdkImplementation.supportedTests, args})
   console.log(
-    `Creating ${numberOfTestVariations} test files for ${numberOfUniqueTests} unique tests.`,
+    `Creating ${numberOfTestVariations(supportedTests)} test files for ${uniqueNumberOfTests(
+      supportedTests,
+    )} unique tests.`,
   )
   const start = new Date()
   const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
