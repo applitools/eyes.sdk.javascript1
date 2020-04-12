@@ -22,8 +22,8 @@ function initialize() {
   //let runner
   //let baselineTestName
 
-  function _setup(options) {
-    result.hooks.beforeEach.push('setup')
+  function _setup(_options) {
+    result.storeHook('beforeEach', 'setup')
     //baselineTestName = options.baselineTestName
     //driver = await new Builder()
     //  .forBrowser('chrome')
@@ -42,21 +42,20 @@ function initialize() {
   }
 
   function _cleanup() {
-    result.hooks.afterEach.push('cleanup')
+    result.storeHook('afterEach', 'cleanup')
     //await driver.close()
     //await abort()
   }
 
   function abort() {
-    result.commands.push('abort')
+    result.storeCommand('abort')
     //eyes ? await eyes.abortIfNotClosed() : undefined
   }
 
-  function checkFrame(
-    target,
-    {isClassicApi = false, isFully = false, tag, matchTimeout, isLayout, floatingRegion} = {},
-  ) {
-    result.commands.push('checkFrame')
+  function checkFrame() {
+    //target,
+    //{isClassicApi = false, isFully = false, tag, matchTimeout, isLayout, floatingRegion} = {},
+    result.storeCommand('checkFrame')
     //if (isClassicApi) {
     //  await eyes.checkFrame(By.css(target), matchTimeout, tag)
     //} else {
@@ -87,20 +86,19 @@ function initialize() {
     //}
   }
 
-  function checkRegion(
-    target,
-    {
-      floatingRegion,
-      isClassicApi = false,
-      isFully = false,
-      inFrame,
-      ignoreRegion,
-      isLayout,
-      matchTimeout,
-      tag,
-    } = {},
-  ) {
-    result.commands.push('checkRegion')
+  function checkRegion() {
+    //target,
+    //{
+    //  floatingRegion,
+    //  isClassicApi = false,
+    //  isFully = false,
+    //  inFrame,
+    //  ignoreRegion,
+    //  isLayout,
+    //  matchTimeout,
+    //  tag,
+    //} = {},
+    result.storeCommand('checkRegion')
     //if (isClassicApi) {
     //  inFrame
     //    ? await eyes.checkRegionInFrame(By.css(inFrame), By.css(target), matchTimeout, tag, isFully)
@@ -143,15 +141,15 @@ function initialize() {
   }
 
   function checkWindow({
-    isClassicApi = false,
-    isFully = false,
-    ignoreRegion,
-    floatingRegion,
-    scrollRootElement,
-    tag,
-    matchTimeout,
+    //isClassicApi = false,
+    //isFully = false,
+    //ignoreRegion,
+    //floatingRegion,
+    //scrollRootElement,
+    //tag,
+    //matchTimeout,
   } = {}) {
-    result.commands.push('checkWindow')
+    result.storeCommand('checkWindow')
     //if (isClassicApi) {
     //  await eyes.checkWindow(tag, matchTimeout, isFully)
     //} else {
@@ -178,22 +176,22 @@ function initialize() {
   }
 
   function close(options) {
-    result.commands.push('close')
+    result.storeCommand('close')
     //await eyes.close(options)
   }
 
   function getAllTestResults() {
-    result.commands.push('getAllTestResults')
+    result.storeCommand('getAllTestResults')
     //const resultsSummary = await runner.getAllTestResults()
     //return resultsSummary.getAllResults()
   }
 
-  function _makeRegionLocator(target) {
+  function _makeRegionLocator(_target) {
     //return typeof target === 'string' ? By.css(target) : new Region(target)
   }
 
-  function open(options) {
-    result.commands.push('open')
+  function open(_options) {
+    result.storeCommand('open')
     //driver = await eyes.open(
     //  driver,
     //  options.appName,
@@ -202,24 +200,24 @@ function initialize() {
     //)
   }
 
-  function scrollDown(pixels) {
-    result.commands.push('scrollDown')
+  function scrollDown(_pixels) {
+    result.storeCommand('scrollDown')
     //await driver.executeScript(`window.scrollBy(0,${pixels})`)
   }
 
-  function switchToFrame(selector) {
-    result.commands.push('switchToFrame')
+  function switchToFrame(_selector) {
+    result.storeCommand('switchToFrame')
     //const element = await driver.findElement(By.css(selector))
     //await driver.switchTo().frame(element)
   }
 
-  function type(locator, inputText) {
-    result.commands.push('type')
+  function type(_locator, _inputText) {
+    result.storeCommand('type')
     //await driver.findElement(By.css(locator)).sendKeys(inputText)
   }
 
-  function visit(url) {
-    result.commands.push('visit')
+  function visit(_url) {
+    result.storeCommand('visit')
     //await driver.get(url)
   }
 

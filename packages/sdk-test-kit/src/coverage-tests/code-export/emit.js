@@ -48,16 +48,47 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
   return {emitTests}
 }
 
-function makeEmitTracker() {
-  return {
-    hooks: {
+class EmitTracker {
+  constructor() {
+    this.hooks = {
       deps: [],
       vars: [],
       beforeEach: [],
       afterEach: [],
-    },
-    commands: [],
+    }
+    this.commands = []
   }
+
+  storeCommand(value) {
+    this.commands.push(value)
+  }
+
+  storeHook(name, value) {
+    switch (name) {
+      case 'deps':
+      case 'vars':
+      case 'beforeEach':
+      case 'afterEach':
+        return this.hooks[name].push(value)
+      default:
+        throw new Error(
+          `Unsupported hook ${name}. Please specify one of either ${Object.keys(this.hooks).join(
+            ', ',
+          )}`,
+        )
+    }
+  }
+
+  out() {
+    return {
+      hooks: this.hooks,
+      commands: this.commands,
+    }
+  }
+}
+
+function makeEmitTracker() {
+  return new EmitTracker()
 }
 
 module.exports = {
