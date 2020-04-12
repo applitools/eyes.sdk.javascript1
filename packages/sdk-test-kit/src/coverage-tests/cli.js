@@ -15,6 +15,10 @@ const {
 const os = require('os')
 const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
+const {runCLI} = require('jest')
+//const {exec} = require('child_process')
+//const {promisify} = require('util')
+//const pexec = promisify(exec)
 
 yargs
   .usage(`Coverage Tests DSL (v${version})`)
@@ -148,9 +152,19 @@ async function doRunTests(args, sdkImplementation) {
   console.log(`\nTest files created ${end - start}ms.`)
 
   // run
+  await runCLI(
+    {
+      reporters: ['default', 'jest-junit'],
+      testEnvironment: 'node',
+      rootDir: path.resolve(path.join(process.cwd())),
+      roots: ['<rootDir>/test/coverage/generic'], //, '<rootDir>/test/coverage/custom'],
+      testTimeout: 180000,
+    },
+    [path.resolve(path.join(process.cwd()))], // also rootDir ¯\_(ツ)_/¯
+  )
 
   if (needsChromeDriver(args, sdkImplementation)) stopChromeDriver()
-  doKaboom()
+  //doKaboom()
 }
 
 async function doSendReport(args, report) {
