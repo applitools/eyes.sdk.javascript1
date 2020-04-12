@@ -3,8 +3,7 @@ const {makeCoverageTests} = require('./index')
 const {supportedCommands} = require('./tests')
 const {isMatch} = require('micromatch')
 
-function findUnsupportedTests(sdkImplementation) {
-  const allTests = makeCoverageTests()
+function findUnsupportedTests(sdkImplementation) { const allTests = makeCoverageTests()
   const sdkSupportedTests = sdkImplementation.supportedTests.map(test => test.name)
   return findDifferencesBetweenCollections(allTests, sdkSupportedTests)
 }
@@ -40,6 +39,22 @@ function filterTestsByIndexes(indexes, tests) {
   return _tests
 }
 
+function filterTests({tests, args}) {
+  let result = tests
+  result = filterTestsByName(args.filterName, result)
+  result = filterTestsByMode(args.filterMode, result)
+  result = filterTestsByIndexes(args.filterIndexes, result)
+  return result
+}
+
+function numberOfUniqueTests(tests) {
+  return [...new Set(tests.map(t => t.name))].length
+}
+
+function numberOfTestVariations(tests) {
+  return tests.length
+}
+
 function sortErrorsByType(errors) {
   return errors.sort((a, b) => {
     const nameA = a.name.toLowerCase()
@@ -73,10 +88,13 @@ function getPassedTestIndexes({tests, errors}) {
 module.exports = {
   findUnsupportedTests,
   findUnimplementedCommands,
+  filterTests,
   filterTestsByName,
   filterTestsByMode,
   filterTestsByIndexes,
   getTestIndexesFromErrors,
   sortErrorsByType,
   getPassedTestIndexes,
+  numberOfUniqueTests,
+  numberOfTestVariations,
 }

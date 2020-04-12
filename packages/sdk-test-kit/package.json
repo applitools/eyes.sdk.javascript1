@@ -7,7 +7,7 @@
   },
   "main": "src/index.js",
   "description": "Test Kit for Applitools SDKs",
-  "author": "David Haeffner <dhaeffner@gmail.com>",
+  "author": "Applitools <team@applitools.com>",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "license": "SEE LICENSE IN LICENSE",
   "directories": {
@@ -33,7 +33,8 @@
     "node-fetch": "^2.6.0",
     "throat": "^5.0.0",
     "yargs": "^15.0.2",
-    "chalk": "^3.0.0"
+    "chalk": "^3.0.0",
+    "jest": "25.3.0"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^2.14.0",
