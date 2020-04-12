@@ -34,7 +34,8 @@
     "throat": "^5.0.0",
     "yargs": "^15.0.2",
     "chalk": "^3.0.0",
-    "jest": "25.3.0"
+    "jest": "25.3.0",
+    "jest-junit": "10.0.0"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^2.14.0",
