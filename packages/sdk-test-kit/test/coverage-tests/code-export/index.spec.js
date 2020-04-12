@@ -7,29 +7,29 @@ const fakeSdkImplementation = () => {
   return {
     hooks: {
       vars: () => {
-        result.hooks.vars.push(`let x`)
+        result.storeHook('vars', 'let x')
       },
       deps: () => {
-        result.hooks.deps.push(`const {blah} = require('blah')`)
+        result.storeHook('deps', `const {blah} = require('blah')`)
       },
       beforeEach: () => {
-        result.hooks.beforeEach.push('setup')
+        result.storeHook('beforeEach', 'setup')
       },
       afterEach: () => {
-        result.hooks.afterEach.push('cleanup')
+        result.storeHook('afterEach', 'cleanup')
       },
     },
     open: () => {
-      result.commands.push('open')
+      result.storeCommand('open')
     },
     checkElement: () => {
-      result.commands.push('checkElement')
+      result.storeCommand('checkElement')
     },
     checkWindow: () => {
-      result.commands.push('checkWindow')
+      result.storeCommand('checkWindow')
     },
     close: () => {
-      result.commands.push('close')
+      result.storeCommand('close')
     },
     out: result,
   }
