@@ -1,55 +1,72 @@
-//const {Builder, By} = require('selenium-webdriver')
-//const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
-//const {
-//  Eyes,
-//  BatchInfo,
-//  RectangleSize,
-//  Target,
-//  StitchMode,
-//  VisualGridRunner,
-//  Region,
-//} = require('../../index')
-//
-//const sdkName = 'eyes-selenium'
-//const batch = new BatchInfo(`JS Coverage Tests - ${sdkName}`)
 const supportedTests = require('./supported-tests')
 const {makeEmitTracker} = require('@applitools/sdk-test-kit').coverageTests
+const sdkName = 'eyes-selenium'
+//const batch = new BatchInfo(`JS Coverage Tests - ${sdkName}`)
 
 function initialize() {
   const result = makeEmitTracker()
-  //let eyes
-  //let driver
-  //let runner
-  //let baselineTestName
+  result.storeHook('deps', `const {Builder, By} = require('selenium-webdriver')`)
+  result.storeHook('deps', `const {Options: ChromeOptions} = require('selenium-webdriver/chrome')`)
+  result.storeHook(
+    'deps',
+    `const {
+  Eyes,
+  BatchInfo,
+  RectangleSize,
+  Target,
+  StitchMode,
+  VisualGridRunner,
+  Region,
+} = require('../../../index')`,
+  )
+  result.storeHook('vars', 'let eyes')
+  result.storeHook('vars', 'let driver')
+  result.storeHook('vars', 'let runner')
+  result.storeHook('vars', 'let baselineTestName')
+  result.storeHook(
+    'vars',
+    `const _makeRegionLocator = target => {
+      return typeof target === 'string' ? By.css(target) : new Region(target)
+    }`,
+  )
 
-  function _setup(_options) {
-    result.storeHook('beforeEach', 'setup')
-    //baselineTestName = options.baselineTestName
-    //driver = await new Builder()
-    //  .forBrowser('chrome')
-    //  .setChromeOptions(new ChromeOptions().headless())
-    //  .usingServer(options.host)
-    //  .build()
-    //runner = options.executionMode.isVisualGrid ? (runner = new VisualGridRunner(10)) : undefined
-    //eyes = options.executionMode.isVisualGrid ? new Eyes(runner) : new Eyes()
-    //options.executionMode.isCssStitching ? eyes.setStitchMode(StitchMode.CSS) : undefined
-    //options.executionMode.isScrollStitching ? eyes.setStitchMode(StitchMode.SCROLL) : undefined
-    //eyes.setBranchName(options.branchName)
+  function _setup(options) {
+    result.storeHook('beforeEach', `baselineTestName = '${options.baselineTestName}'`)
+    result.storeHook(
+      'beforeEach',
+      `driver = await new Builder()
+      .forBrowser('chrome')
+      .setChromeOptions(new ChromeOptions().headless())
+      .usingServer(${options.host ? "'" + options.host + "'" : undefined})
+      .build()`,
+    )
+    debugger
+    result.storeHook(
+      'beforeEach',
+      `runner = ${options.executionMode.isVisualGrid ? 'new VisualGridRunner(10)' : 'undefined'}`,
+    )
+    result.storeHook(
+      'beforeEach',
+      `eyes = ${options.executionMode.isVisualGrid ? 'new Eyes(runner)' : 'new Eyes()'}`,
+    )
+    if (options.executionMode.isCssStitching)
+      result.storeHook('beforeEach', 'eyes.setStitchMode(StitchMode.CSS)')
+    if (options.executionMode.isScrollStitching)
+      result.storeHook('beforeEach', 'eyes.setStitchMode(StitchMode.SCROLL)')
+    result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
+    if (process.env.APPLITOOLS_API_KEY_SDK) {
+      result.storeHook('beforeEach', `eyes.setApiKey(${process.env.APPLITOOLS_API_KEY_SDK})`)
+    }
     //eyes.setBatch(batch)
-    //if (process.env.APPLITOOLS_API_KEY_SDK) {
-    //  eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)
-    //}
   }
 
   function _cleanup() {
-    result.storeHook('afterEach', 'cleanup')
-    //await driver.close()
-    //await abort()
+    result.storeHook('afterEach', 'await driver.close()')
+    result.storeHook('afterEach', 'await eyes.abort()')
   }
 
   function abort() {
-    result.storeCommand('abort')
-    //eyes ? await eyes.abortIfNotClosed() : undefined
+    result.storeCommand('eyes ? await eyes.abortIfNotClosed() : undefined')
   }
 
   function checkFrame() {
@@ -141,43 +158,44 @@ function initialize() {
   }
 
   function checkWindow({
-    //isClassicApi = false,
-    //isFully = false,
-    //ignoreRegion,
-    //floatingRegion,
-    //scrollRootElement,
-    //tag,
-    //matchTimeout,
+    isClassicApi = false,
+    isFully = false,
+    ignoreRegion,
+    floatingRegion,
+    scrollRootElement,
+    tag,
+    matchTimeout,
   } = {}) {
-    result.storeCommand('checkWindow')
-    //if (isClassicApi) {
-    //  await eyes.checkWindow(tag, matchTimeout, isFully)
-    //} else {
-    //  let _checkSettings = Target.window()
-    //    .fully(isFully)
-    //    .ignoreCaret()
-    //  if (scrollRootElement) {
-    //    _checkSettings.scrollRootElement(By.css(scrollRootElement))
-    //  }
-    //  if (ignoreRegion) {
-    //    _checkSettings.ignoreRegions(_makeRegionLocator(ignoreRegion))
-    //  }
-    //  if (floatingRegion) {
-    //    _checkSettings.floatingRegion(
-    //      _makeRegionLocator(floatingRegion.target),
-    //      floatingRegion.maxUp,
-    //      floatingRegion.maxDown,
-    //      floatingRegion.maxLeft,
-    //      floatingRegion.maxRight,
-    //    )
-    //  }
-    //  await eyes.check(undefined, _checkSettings)
-    //}
+    if (isClassicApi) {
+      result.storeCommand(`await eyes.checkWindow(${tag}, ${matchTimeout}, ${isFully})`)
+    } else {
+      result.storeCommand(
+        `let _checkSettings = Target.window()
+        .fully(${isFully})
+        .ignoreCaret()`,
+      )
+      if (scrollRootElement) {
+        result.storeCommand(`_checkSettings.scrollRootElement(By.css(${scrollRootElement}))`)
+      }
+      if (ignoreRegion) {
+        result.storeCommand(`_checkSettings.ignoreRegions(_makeRegionLocator(${ignoreRegion}))`)
+      }
+      if (floatingRegion) {
+        result.storeCommand(`
+        _checkSettings.floatingRegion(
+          _makeRegionLocator(${floatingRegion.target}),
+          ${floatingRegion.maxUp},
+          ${floatingRegion.maxDown},
+          ${floatingRegion.maxLeft},
+          ${floatingRegion.maxRight},
+        )`)
+      }
+      result.storeCommand(`await eyes.check(undefined, _checkSettings)`)
+    }
   }
 
   function close(options) {
-    result.storeCommand('close')
-    //await eyes.close(options)
+    result.storeCommand(`await eyes.close(${options})`)
   }
 
   function getAllTestResults() {
@@ -190,14 +208,13 @@ function initialize() {
     //return typeof target === 'string' ? By.css(target) : new Region(target)
   }
 
-  function open(_options) {
-    result.storeCommand('open')
-    //driver = await eyes.open(
-    //  driver,
-    //  options.appName,
-    //  baselineTestName,
-    //  RectangleSize.parse(options.viewportSize),
-    //)
+  function open(options) {
+    result.storeCommand(`driver = await eyes.open(
+      driver,
+      '${options.appName}',
+      baselineTestName,
+      RectangleSize.parse('${options.viewportSize}'),
+    )`)
   }
 
   function scrollDown(_pixels) {
@@ -216,9 +233,8 @@ function initialize() {
     //await driver.findElement(By.css(locator)).sendKeys(inputText)
   }
 
-  function visit(_url) {
-    result.storeCommand('visit')
-    //await driver.get(url)
+  function visit(url) {
+    result.storeCommand(`await driver.get('${url}')`)
   }
 
   return {
@@ -242,7 +258,7 @@ function initialize() {
 }
 
 module.exports = {
-  //name: sdkName,
+  name: sdkName,
   initialize,
   supportedTests,
   options: {needsChromeDriver: true, chromeDriverOptions: ['--silent']},
