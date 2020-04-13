@@ -2,8 +2,7 @@
 const yargs = require('yargs')
 const path = require('path')
 const {sendReport} = require('./send-report')
-const {exec, spawn} = require('child_process')
-const {version} = require('../../package.json')
+const {exec} = require('child_process')
 const chromedriver = require('chromedriver')
 const {
   findUnsupportedTests,
@@ -16,12 +15,13 @@ const os = require('os')
 const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
 const {runCLI} = require('jest')
-const {promisify} = require('util')
-const pspawn = promisify(spawn)
+//const {promisify} = require('util')
+//const pspawn = promisify(spawn)
+const {spawn} = require('promisify-child-process')
 
+const cliName = 'SAT - SDK Agnostic Test-framework'
 yargs
-  .usage(`Coverage Tests DSL (v${version})`)
-  .usage('a.k.a. Da Schwartz Lang - accept no substitutes')
+  .usage(cliName)
   .usage('\nUsage: coverage-tests run <options>')
   .command('run', 'run coverage tests for a given SDK')
   .command('doctor', 'health check an implementation')
@@ -63,11 +63,12 @@ yargs
   .demandCommand(1, 'You need to specify a command before moving on')
 
 async function run(args) {
-  console.log(`Coverage Tests DSL (v${version})`)
-  console.log('a.k.a. Da Schwartz Lang - accept no substitutes\n')
+  console.log(cliName)
   if (!process.env.APPLITOOLS_API_KEY_SDK) {
+    console.log('\n')
     console.log(chalk.yellow(`You're running without APPLITOOLS_API_KEY_SDK set!`))
     console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
+    console.log('\n')
   }
   const command = args._[0]
   if (command === 'nuke') {
@@ -131,31 +132,28 @@ function doKaboom() {
 }
 
 async function doRunTests(args, sdkImplementation) {
-  console.log(`Running coverage tests for ${sdkImplementation.name} (v2!)...\n`)
+  console.log(`Running coverage tests for ${sdkImplementation.name}...`)
 
   if (needsChromeDriver(args, sdkImplementation))
     await startChromeDriver(sdkImplementation.options.chromeDriverOptions)
 
   const supportedTests = filterTests({tests: sdkImplementation.supportedTests, args})
-  console.log(
-    `Creating ${numberOfTestVariations(supportedTests)} test files for ${numberOfUniqueTests(
-      supportedTests,
-    )} unique tests.`,
-  )
-  const start = new Date()
   const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
     host: args.remote,
   })
   createTestFiles(emittedTests, sdkImplementation.testFrameworkTemplate)
-  const end = new Date()
-  console.log(`\nTest files created ${end - start}ms.`)
-
-  console.log(`\nRunning ${numberOfTestVariations(supportedTests)} test executions now:\n`)
+  console.log(
+    `\nCreated ${numberOfTestVariations(supportedTests)} test files for ${numberOfUniqueTests(
+      supportedTests,
+    )} unique tests.`,
+  )
   if (sdkImplementation.execute) {
-    await pspawn(sdkImplementation.execute.command, sdkImplementation.execute.args, {
+    console.log(`\nRunning them now with ${sdkImplementation.execute.command}:\n`)
+    await spawn(sdkImplementation.execute.command, sdkImplementation.execute.args, {
       stdio: 'inherit',
     })
   } else {
+    console.log(`\nRunning them now with jest:\n`)
     process.env.JEST_JUNIT_OUTPUT_NAME = 'coverage-test-report.xml'
     await runCLI(
       {
