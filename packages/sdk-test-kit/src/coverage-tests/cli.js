@@ -149,6 +149,8 @@ async function doRunTests(args, sdkImplementation) {
   )
   if (sdkImplementation.execute) {
     console.log(`\nRunning them now with ${sdkImplementation.execute.command}:\n`)
+    // TODO: check what happens on test failures
+    // assuming this needs a try/catch
     await spawn(sdkImplementation.execute.command, sdkImplementation.execute.args, {
       stdio: 'inherit',
     })
