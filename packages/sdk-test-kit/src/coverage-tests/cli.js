@@ -147,24 +147,27 @@ async function doRunTests(args, sdkImplementation) {
   const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
     host: args.remote,
   })
-  createTestFiles(emittedTests)
+  createTestFiles(emittedTests, sdkImplementation.testFrameworkTemplate)
   const end = new Date()
   console.log(`\nTest files created ${end - start}ms.`)
 
-  // run
-  await runCLI(
-    {
-      reporters: ['default', 'jest-junit'],
-      testEnvironment: 'node',
-      rootDir: path.resolve(path.join(process.cwd())),
-      roots: ['<rootDir>/test/coverage/generic'], //, '<rootDir>/test/coverage/custom'],
-      testTimeout: 180000,
-    },
-    [path.resolve(path.join(process.cwd()))], // also rootDir ¯\_(ツ)_/¯
-  )
+  if (sdkImplementation.execute) {
+    // TODO
+  } else {
+    await runCLI(
+      {
+        reporters: ['default', 'jest-junit'],
+        testEnvironment: 'node',
+        rootDir: path.resolve(path.join(process.cwd())),
+        roots: ['<rootDir>/test/coverage/generic'], //, '<rootDir>/test/coverage/custom'],
+        testTimeout: 180000,
+      },
+      [path.resolve(path.join(process.cwd()))], // also rootDir ¯\_(ツ)_/¯
+    )
+  }
 
   if (needsChromeDriver(args, sdkImplementation)) stopChromeDriver()
-  //doKaboom()
+  doKaboom()
 }
 
 async function doSendReport(args, report) {
