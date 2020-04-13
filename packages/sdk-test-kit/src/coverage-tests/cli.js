@@ -16,9 +16,8 @@ const os = require('os')
 const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
 const {runCLI} = require('jest')
-//const {exec} = require('child_process')
-//const {promisify} = require('util')
-//const pexec = promisify(exec)
+const {promisify} = require('util')
+const pexec = promisify(exec)
 
 yargs
   .usage(`Coverage Tests DSL (v${version})`)
@@ -152,8 +151,9 @@ async function doRunTests(args, sdkImplementation) {
   console.log(`\nTest files created ${end - start}ms.`)
 
   if (sdkImplementation.execute) {
-    // TODO
+    await pexec(sdkImplementation.execute)
   } else {
+    process.env.JEST_JUNIT_OUTPUT_NAME = 'coverage-test-report.xml'
     await runCLI(
       {
         reporters: ['default', 'jest-junit'],

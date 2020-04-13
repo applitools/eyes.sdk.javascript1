@@ -8,8 +8,7 @@ function initialize() {
   function _setup(options) {
     baselineTestName = options.baselineTestName
     result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
-    options.executionMode.isCssStitching
-      ? result.storeHook('beforeEach', `eyes.setStitchMode(StitchMode.CSS)`)
+    options.executionMode.isCssStitching ? result.storeHook('beforeEach', `eyes.setStitchMode(StitchMode.CSS)`)
       : undefined
     options.executionMode.isScrollStitching
       ? result.storeHook('beforeEach', `eyes.setStitchMode(StitchMode.SCROLL)`)
@@ -95,5 +94,5 @@ module.exports = {
   initialize,
   supportedTests,
   testFrameworkTemplate: createTestCafeTestString,
-  execute: `tbd`,
+  execute: `npx testcafe chrome:headless test/coverage/generic --concurrency 5 --reporter spec,xunit:coverage-test-report.xml`,
 }
