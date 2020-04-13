@@ -24,4 +24,4 @@ tmp
 
 # sdk-test-kit
 **/test/coverage/generic/
-junit.xml
+coverage-test-report.xml
