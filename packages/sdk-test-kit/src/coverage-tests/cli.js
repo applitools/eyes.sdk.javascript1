@@ -2,7 +2,7 @@
 const yargs = require('yargs')
 const path = require('path')
 const {sendReport} = require('./send-report')
-const {exec} = require('child_process')
+const {exec, spawn} = require('child_process')
 const {version} = require('../../package.json')
 const chromedriver = require('chromedriver')
 const {
@@ -17,7 +17,7 @@ const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
 const {runCLI} = require('jest')
 const {promisify} = require('util')
-const pexec = promisify(exec)
+const pspawn = promisify(spawn)
 
 yargs
   .usage(`Coverage Tests DSL (v${version})`)
@@ -150,8 +150,11 @@ async function doRunTests(args, sdkImplementation) {
   const end = new Date()
   console.log(`\nTest files created ${end - start}ms.`)
 
+  console.log(`\nRunning ${numberOfTestVariations(supportedTests)} test executions now:\n`)
   if (sdkImplementation.execute) {
-    await pexec(sdkImplementation.execute)
+    await pspawn(sdkImplementation.execute.command, sdkImplementation.execute.args, {
+      stdio: 'inherit',
+    })
   } else {
     process.env.JEST_JUNIT_OUTPUT_NAME = 'coverage-test-report.xml'
     await runCLI(
@@ -165,6 +168,8 @@ async function doRunTests(args, sdkImplementation) {
       [path.resolve(path.join(process.cwd()))], // also rootDir ¯\_(ツ)_/¯
     )
   }
+
+  console.log('Tests complete!')
 
   if (needsChromeDriver(args, sdkImplementation)) stopChromeDriver()
   doKaboom()
