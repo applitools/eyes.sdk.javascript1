@@ -102,6 +102,8 @@ module.exports = {
       'chrome:headless',
       'test/coverage/generic',
       '--concurrency 5',
+      // NOTE: something odd is happening w/ concurrency -- additional browser sessions are spawned but tests are still run in series
+      // TODO: investigate
       '--reporter spec,xunit:coverage-test-report.xml',
     ],
   },
