@@ -33,13 +33,13 @@
   "main": "./index.js",
   "dependencies": {
     "@applitools/dom-utils": "4.7.10",
-    "@applitools/eyes-sdk-core": "9.0.3",
-    "@applitools/visual-grid-client": "13.6.12",
+    "@applitools/eyes-sdk-core": "9.1.0",
+    "@applitools/visual-grid-client": "13.6.13",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "webdriverio": "^5.18.6"
   },
   "devDependencies": {
-    "@applitools/sdk-fake-eyes-server": "1.1.1",
+    "@applitools/sdk-fake-eyes-server": "1.1.3",
     "@applitools/sdk-release-kit": "0.1.0",
     "@applitools/sdk-test-kit": "1.0.17",
     "chromedriver": "^80.0.0",
