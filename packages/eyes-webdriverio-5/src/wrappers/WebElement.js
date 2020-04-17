@@ -203,7 +203,7 @@ class WebElement {
   }
 
   get jsonElement() {
-    return {[WEB_ELEMENT_IDENTIFIER]: this.elementId}
+    return {[WEB_ELEMENT_IDENTIFIER]: this.elementId, ELEMENT: this.elementId}
   }
 
   /**
