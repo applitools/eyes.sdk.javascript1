@@ -21,7 +21,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
-    "test": "mocha test/**/*.spec.js",
+    "test": "mocha 'test/**/*.spec.js'",
     "build": "tsc src/coverage-tests/api.ts"
   },
   "bugs": {
