@@ -25,6 +25,7 @@ function getSupportedBrowsers() {
   if (isFeatureEnabled('vg-cli-edge')) {
     supportedBrowsers['edgelegacy'] = 'edgelegacy'
     supportedBrowsers['edgechromium'] = 'edgechromium'
+    supportedBrowsers[translateBrowserNameVersion('edgechromium-1')]: 'edgechromium-1',
   }
 
   return supportedBrowsers
