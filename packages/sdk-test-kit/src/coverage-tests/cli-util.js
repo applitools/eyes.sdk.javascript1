@@ -3,7 +3,8 @@ const {makeCoverageTests} = require('./index')
 const {supportedCommands} = require('./tests')
 const {isMatch} = require('micromatch')
 
-function findUnsupportedTests(sdkImplementation) { const allTests = makeCoverageTests()
+function findUnsupportedTests(sdkImplementation) {
+  const allTests = makeCoverageTests()
   const sdkSupportedTests = sdkImplementation.supportedTests.map(test => test.name)
   return findDifferencesBetweenCollections(allTests, sdkSupportedTests)
 }
