@@ -15,9 +15,9 @@ const os = require('os')
 const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
 const {runCLI} = require('jest')
-//const {promisify} = require('util')
-//const pspawn = promisify(spawn)
 const {spawn} = require('promisify-child-process')
+const {readFileSync} = require('fs')
+const {createReport} = require('./report')
 
 const cliName = 'SAT - SDK Agnostic Test-framework'
 yargs
@@ -171,20 +171,21 @@ async function doRunTests(args, sdkImplementation) {
 
   console.log('Tests complete!')
 
+  await processReport({sdkName: sdkImplementation.name, args})
   if (needsChromeDriver(args, sdkImplementation)) stopChromeDriver()
   doKaboom()
 }
 
-async function doSendReport(args, report) {
-  if (args.sendReport) {
-    process.stdout.write('\nSending report to QA dashboard... ')
-    const isSandbox = args.sendReport !== 'sandbox' ? false : true
-    const _report = report.toSendReportSchema()
-    _report.sandbox = isSandbox
-    const result = await sendReport(_report)
-    process.stdout.write(result.isSuccessful ? 'Done!\n' : 'Failed!\n')
-    return result
-  }
+async function processReport({sdkName, args}) {
+  const results = readFileSync(path.resolve(process.cwd(), 'coverage-test-report.xml'), {
+    encoding: 'utf-8',
+  })
+  const isSandbox = args.sendReport === 'sandbox' ? true : false
+  process.stdout.write(`\nSending report to QA dashboard ${isSandbox ? '(sandbox)' : ''}... `)
+  const report = createReport({sdkName, xmlResult: results, sandbox: isSandbox})
+  if (process.env.DEBUG) console.dir(report, {depth: null})
+  const result = await sendReport(report)
+  process.stdout.write(result.isSuccessful ? 'Done!\n' : 'Failed!\n')
 }
 
 async function startChromeDriver(options = []) {
