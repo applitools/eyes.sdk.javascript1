@@ -15,7 +15,7 @@ const os = require('os')
 const chalk = require('chalk')
 const {makeEmitTests, createTestFiles} = require('./code-export')
 const {runCLI} = require('jest')
-const {spawn} = require('promisify-child-process')
+const {exec: pexec, _spawn} = require('promisify-child-process')
 const {readFileSync} = require('fs')
 const {createReport} = require('./report')
 
@@ -78,14 +78,13 @@ async function run(args) {
     const sdkImplementation = require(path.join(path.resolve('.'), args.path))
     doHealthCheck(sdkImplementation)
   } else if (command === 'run' && args.path) {
-    const sdkImplementation = require(path.join(path.resolve('.'), args.path))
-    doRunTests(args, sdkImplementation)
-    //} else if (command === 'run' && args.path) {
-    //  const sdkImplementation = require(path.join(path.resolve('.'), args.path))
-    //  const report = await doRunTests(args, sdkImplementation)
-    //  const sendReportResponse = await doSendReport(args, report)
-    //  doDisplayResults({args, report, sendReportResponse, tests: sdkImplementation.supportedTests})
-    //  doExitCode(report.errors)
+    try {
+      const sdkImplementation = require(path.join(path.resolve('.'), args.path))
+      await doRunTests(args, sdkImplementation)
+    } catch (error) {
+      console.log(chalk.red(error.message))
+      return process.exit(1)
+    }
   } else {
     console.log('Nothing to run.')
     doExitCode(1)
@@ -149,11 +148,8 @@ async function doRunTests(args, sdkImplementation) {
   )
   if (sdkImplementation.execute) {
     console.log(`\nRunning them now with ${sdkImplementation.execute.command}:\n`)
-    // TODO: check what happens on test failures
-    // assuming this needs a try/catch
-    await spawn(sdkImplementation.execute.command, sdkImplementation.execute.args, {
-      stdio: 'inherit',
-    })
+    if (process.env.DEBUG) console.dir(sdkImplementation, {depth: null})
+    await pexec(sdkImplementation.execute.command + ' ' + sdkImplementation.execute.args.join(' '))
   } else {
     console.log(`\nRunning them now with jest:\n`)
     process.env.JEST_JUNIT_OUTPUT_NAME = 'coverage-test-report.xml'
