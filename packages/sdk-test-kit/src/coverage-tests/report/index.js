@@ -1,4 +1,4 @@
-const {convertJunitXmlToResultSchema, parseBareTestName, parseExecutionMode} = require('./xml')
+const {convertJunitXmlToResultSchema} = require('./xml')
 
 function convertSdkNameToReportName(sdkName) {
   switch (sdkName) {
@@ -12,6 +12,8 @@ function convertSdkNameToReportName(sdkName) {
       return 'js_wdio_4'
     case 'eyes-images':
       return 'js_images'
+    case 'eyes-testcafe':
+      return 'testcafe'
     default:
       throw new Error('Unsupported SDK')
   }
@@ -30,6 +32,4 @@ module.exports = {
   createReport,
   convertJunitXmlToResultSchema,
   convertSdkNameToReportName,
-  parseBareTestName,
-  parseExecutionMode,
 }
