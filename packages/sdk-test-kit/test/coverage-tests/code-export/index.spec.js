@@ -51,6 +51,11 @@ const fakeCoverageTests = ({open, checkElement, checkWindow, close}) => {
 }
 
 describe('Code Export', () => {
+  it('skips a test marked as disabled', () => {
+    const {emitTests} = makeEmitTests(fakeSdkImplementation, fakeCoverageTests)
+    const supportedTests = [{name: 'test-a', executionMode: {isVisualGrid: true}, disabled: true}]
+    assert.deepStrictEqual(emitTests(supportedTests), [])
+  })
   it('returns tests broken out by their stringified parts', () => {
     const {emitTests} = makeEmitTests(fakeSdkImplementation, fakeCoverageTests)
     const supportedTests = [{name: 'test-a', executionMode: {isVisualGrid: true}}]

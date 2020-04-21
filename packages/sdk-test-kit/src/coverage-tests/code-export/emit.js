@@ -17,6 +17,7 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
   let output = []
   function emitTests(supportedTests, {branchName = 'master', host} = {}) {
     supportedTests.forEach(supportedTest => {
+      if (supportedTest.disabled) return
       const sdkImplementation = initializeSdkImplementation()
       const baselineTestName = `${supportedTest.name}${convertExecutionModeToSuffix(
         supportedTest.executionMode,
