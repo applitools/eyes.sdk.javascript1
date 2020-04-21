@@ -53,7 +53,8 @@
     "mocha-parallel-tests": "^2.2.2",
     "node-fetch": "^2.6.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
-    "yargs": "^15.3.1"
+    "yargs": "^15.3.1",
+    "uuid": "^3.3.3"
   },
   "peerDependencies": {
     "selenium-webdriver": "^4.0.0-alpha.5"
