@@ -2,9 +2,12 @@ const {
   createReport,
   convertJunitXmlToResultSchema,
   convertSdkNameToReportName,
+} = require('../../../src/coverage-tests/report')
+const {
   parseBareTestName,
   parseExecutionMode,
-} = require('../../../src/coverage-tests/report')
+  parseJunitXmlForTests,
+} = require('../../../src/coverage-tests/report/xml')
 const assert = require('assert')
 
 const xmlResult = `<?xml version="1.0" encoding="UTF-8"?>
@@ -30,6 +33,30 @@ const xmlResult = `<?xml version="1.0" encoding="UTF-8"?>
 </testsuites>`
 
 describe('Report', () => {
+  describe('JUnit XML Parser', () => {
+    it('should throw if parsing an unsupported xml', () => {
+      assert.throws(() => {
+        parseJunitXmlForTests(`<?xml version="1.0" encoding="UTF-8"?>`)
+      }, /Unsupported XML format provided/)
+    })
+    it('should support multiple test suites', () => {
+      const result = parseJunitXmlForTests(xmlResult)
+      assert(Array.isArray(result))
+      assert(result.length)
+      assert(typeof result[0] === 'object')
+    })
+    it('should support a single test suite', () => {
+      const altXmlResult = `<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TestCafe Tests: Chrome 81.0.4044.113 / macOS 10.15.4" tests="1" failures="0" skipped="0" errors="0" time="23.818" timestamp="Mon, 20 Apr 2020 17:46:36 GMT" >
+  <testcase classname="TestCheckWindow_Fluent" name="TestCheckWindow_Fluent (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-abe4123e-d970-44da-8c3c-220fb9b47640/screenshot.png)" time="23.788">
+  </testcase>
+</testsuite>`
+      const result = parseJunitXmlForTests(altXmlResult)
+      assert(Array.isArray(result))
+      assert(result.length)
+      assert(typeof result[0] === 'object')
+    })
+  })
   it('should parse the bare test name', () => {
     assert.deepStrictEqual(parseBareTestName('Coverage Tests TestCheckWindow'), 'TestCheckWindow')
   })

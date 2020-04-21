@@ -2,10 +2,9 @@ const convert = require('xml-js')
 
 function convertJunitXmlToResultSchema({xmlResult, browser}) {
   let result = []
-  const jsonResult = JSON.parse(convert.xml2json(xmlResult, {compact: true, spaces: 2}))
-  const tests = jsonResult.testsuites.testsuite.map(suite => suite.testcase)
+  const tests = parseJunitXmlForTests(xmlResult)
   tests.forEach(test => {
-    const testName = parseBareTestName(test._attributes.name)
+    const testName = parseBareTestName(test._attributes.classname)
     result.push({
       test_name: testName,
       parameters: {
@@ -16,11 +15,6 @@ function convertJunitXmlToResultSchema({xmlResult, browser}) {
     })
   })
   return result
-}
-
-function parseBareTestName(testCaseName) {
-  const parsedTestCaseName = testCaseName.split(' ')
-  return parsedTestCaseName[parsedTestCaseName.length - 1]
 }
 
 function convertSuffixToExecutionMode(suffix) {
@@ -34,6 +28,11 @@ function convertSuffixToExecutionMode(suffix) {
   }
 }
 
+function parseBareTestName(testCaseName) {
+  const parsedTestCaseName = testCaseName.split(' ')
+  return parsedTestCaseName[parsedTestCaseName.length - 1]
+}
+
 function parseExecutionMode(bareTestName) {
   const parsedBareTestName = bareTestName.split('_')
   const suffix =
@@ -41,8 +40,18 @@ function parseExecutionMode(bareTestName) {
   return convertSuffixToExecutionMode(suffix)
 }
 
+function parseJunitXmlForTests(xmlResult) {
+  const jsonResult = JSON.parse(convert.xml2json(xmlResult, {compact: true, spaces: 2}))
+  if (jsonResult.hasOwnProperty('testsuites'))
+    return jsonResult.testsuites.testsuite.map(suite => suite.testcase)
+  else if (jsonResult.hasOwnProperty('testsuite')) {
+    return [jsonResult.testsuite.testcase]
+  } else throw new Error('Unsupported XML format provided')
+}
+
 module.exports = {
   convertJunitXmlToResultSchema,
   parseBareTestName,
   parseExecutionMode,
+  parseJunitXmlForTests,
 }
