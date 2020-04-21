@@ -1105,6 +1105,8 @@ class EyesWDIO extends EyesBase {
         )
         this._effectiveViewport = new Region(Location.ZERO, viewportSize)
       } catch (e) {
+        const actualViewportSize = await this._driver.getDefaultContentViewportSize()
+        this._viewportSizeHandler.set(actualViewportSize)
         await this._driver.switchTo().frames(originalFrame)
         throw new TestFailedError('Failed to set the viewport size', e)
       }
