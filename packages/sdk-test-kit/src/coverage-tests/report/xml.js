@@ -29,8 +29,7 @@ function convertSuffixToExecutionMode(suffix) {
 }
 
 function parseBareTestName(testCaseName) {
-  const parsedTestCaseName = testCaseName.split(' ')
-  return parsedTestCaseName[parsedTestCaseName.length - 1]
+  return testCaseName.replace(/Coverage Tests /, '')
 }
 
 function parseExecutionMode(bareTestName) {

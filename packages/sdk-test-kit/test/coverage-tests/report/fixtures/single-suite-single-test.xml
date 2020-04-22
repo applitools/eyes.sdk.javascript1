@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TestCafe Tests: Chrome 81.0.4044.113 / macOS 10.15.4" tests="1" failures="0" skipped="0" errors="0" time="23.818" timestamp="Mon, 20 Apr 2020 17:46:36 GMT" >
+  <testcase classname="TestCheckWindow_Fluent" name="TestCheckWindow_Fluent (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-abe4123e-d970-44da-8c3c-220fb9b47640/screenshot.png)" time="23.788">
+  </testcase>
+</testsuite>
