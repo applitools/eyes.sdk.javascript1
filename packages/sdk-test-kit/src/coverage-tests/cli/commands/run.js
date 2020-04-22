@@ -30,9 +30,9 @@ async function doRunTests(args, sdkImplementation) {
       supportedTests,
     )} unique tests.`,
   )
+  logDebug(sdkImplementation)
   if (sdkImplementation.execute) {
     console.log(`\nRunning them now with ${sdkImplementation.execute.command}:\n`)
-    logDebug(sdkImplementation)
     await pexec(sdkImplementation.execute.command + ' ' + sdkImplementation.execute.args.join(' '))
   } else {
     console.log(`\nRunning them now with jest:\n`)

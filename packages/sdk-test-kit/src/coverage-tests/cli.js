@@ -37,7 +37,7 @@ yargs
     default: 'sandbox',
   })
   .option('verbose', {
-    alias: 'r',
+    alias: 'v',
     describe: 'log debug output',
   })
   .demandCommand(1, 'You need to specify a command before moving on')
@@ -51,15 +51,15 @@ yargs
       console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
       console.log('\n')
     }
-    if (args.verbose) process.env.DEBUG = true
+    if (args.verbose) process.env.COVERAGE_TESTS_DEBUG = true
     const command = args._[0]
     if (command === 'nuke') {
       nuke()
     } else if (command === 'doctor' && args.path) {
       doctor(args)
     } else if (command === 'run' && args.path) {
-      nuke()
       await run(args)
+      nuke()
     } else {
       console.log('Nothing to run.')
       process.exit(1)

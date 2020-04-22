@@ -1,5 +1,5 @@
 function logDebug(thingToLog) {
-  if (process.env.DEBUG) console.dir(thingToLog, {depth: null})
+  if (process.env.COVERAGE_TESTS_DEBUG) console.dir(thingToLog, {depth: null})
 }
 
 module.exports = {
