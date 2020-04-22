@@ -46,7 +46,8 @@ function parseJunitXmlForTests(xmlResult) {
   if (jsonResult.hasOwnProperty('testsuites'))
     return jsonResult.testsuites.testsuite.map(suite => suite.testcase)
   else if (jsonResult.hasOwnProperty('testsuite')) {
-    return [jsonResult.testsuite.testcase]
+    const testCase = jsonResult.testsuite.testcase
+    return testCase.hasOwnProperty('_attributes') ? [testCase] : testCase
   } else throw new Error('Unsupported XML format provided')
 }
 

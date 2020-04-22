@@ -25,25 +25,19 @@ describe('Report', () => {
         parseJunitXmlForTests(`<?xml version="1.0" encoding="UTF-8"?>`)
       }, /Unsupported XML format provided/)
     })
-    it('should support multiple test suites with multiple tests', () => {
+    it('should support multiple suites with multiple tests', () => {
       const result = parseJunitXmlForTests(xmlResult)
-      assert(Array.isArray(result))
-      assert(result.length)
-      assert(typeof result[0] === 'object')
+      assert(result[0].hasOwnProperty('_attributes'))
     })
-    it('should support a single test suite with a single test', () => {
+    it('should support a single suite with a single test', () => {
       const altXmlResult = loadFixture('single-suite-single-test.xml')
       const result = parseJunitXmlForTests(altXmlResult)
-      assert(Array.isArray(result))
-      assert(result.length)
-      assert(typeof result[0] === 'object')
+      assert(result[0].hasOwnProperty('_attributes'))
     })
-    it('should support a single test suite with multiple tests', () => {
+    it('should support a single suite with multiple tests', () => {
       const altXmlResult = loadFixture('single-suite-multiple-tests.xml')
       const result = parseJunitXmlForTests(altXmlResult)
-      assert(Array.isArray(result))
-      assert(result.length)
-      assert(typeof result[0] === 'object')
+      assert(result[0].hasOwnProperty('_attributes'))
     })
   })
   it('should parse the bare test name', () => {
