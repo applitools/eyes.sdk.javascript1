@@ -24,12 +24,6 @@ function initialize() {
   result.storeHook('vars', 'let driver')
   result.storeHook('vars', 'let runner')
   result.storeHook('vars', 'let baselineTestName')
-  result.storeHook(
-    'vars',
-    `const _makeRegionLocator = target => {
-      return typeof target === 'string' ? By.css(target) : new Region(target)
-    }`,
-  )
 
   function _setup(options) {
     result.storeHook('beforeEach', `baselineTestName = '${options.baselineTestName}'`)
@@ -55,7 +49,7 @@ function initialize() {
       result.storeHook('beforeEach', 'eyes.setStitchMode(StitchMode.SCROLL)')
     result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
     if (process.env.APPLITOOLS_API_KEY_SDK) {
-      result.storeHook('beforeEach', `eyes.setApiKey(${process.env.APPLITOOLS_API_KEY_SDK})`)
+      result.storeHook('beforeEach', `eyes.setApiKey('${process.env.APPLITOOLS_API_KEY_SDK}')`)
     }
     result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
   }
@@ -69,6 +63,12 @@ function initialize() {
     result.storeCommand('eyes ? await eyes.abortIfNotClosed() : undefined')
   }
 
+  function makeRegionLocator(target) {
+    return typeof target === 'string'
+      ? `By.css('${target}')`
+      : `new Region(${JSON.stringify(target)})`
+  }
+
   function checkFrame(
     target,
     {isClassicApi = false, isFully = false, tag, matchTimeout, isLayout, floatingRegion} = {},
@@ -80,7 +80,7 @@ function initialize() {
         })`,
       )
     } else {
-      result.storeCommand(`;async () => {`)
+      result.storeCommand(`{`)
       result.storeCommand(`let _checkSettings`)
       if (Array.isArray(target)) {
         target.forEach((entry, index) => {
@@ -93,7 +93,7 @@ function initialize() {
       }
       if (floatingRegion) {
         result.storeCommand(`_checkSettings.floatingRegion(
-          _makeRegionLocator('${floatingRegion.target}'),
+          ${makeRegionLocator(floatingRegion.target)},
           ${floatingRegion.maxUp},
           ${floatingRegion.maxDown},
           ${floatingRegion.maxLeft},
@@ -135,7 +135,7 @@ function initialize() {
             }, ${matchTimeout}, ${isFully})`,
           )
     } else {
-      result.storeCommand(`;async () => {`)
+      result.storeCommand(`{`)
       result.storeCommand(`let _checkSettings`)
       if (inFrame) {
         result.storeCommand(`_checkSettings = Target.frame(By.css('${inFrame}'))`)
@@ -143,24 +143,22 @@ function initialize() {
         if (Array.isArray(target)) {
           target.forEach((entry, index) => {
             index === 0
-              ? result.storeCommand(
-                  `(_checkSettings = Target.region(_makeRegionLocator('${entry}')))`,
-                )
-              : result.storeCommand(`_checkSettings.region(_makeRegionLocator('${entry}'))`)
+              ? result.storeCommand(`(_checkSettings = Target.region(${makeRegionLocator(entry)}))`)
+              : result.storeCommand(`_checkSettings.region(${makeRegionLocator(entry)})`)
           })
         } else {
           result.storeCommand(`_checkSettings
-            ? _checkSettings.region(_makeRegionLocator('${target}'))
-            : (_checkSettings = Target.region(_makeRegionLocator('${target}')))`)
+            ? _checkSettings.region(${makeRegionLocator(target)})
+            : (_checkSettings = Target.region(${makeRegionLocator(target)}))`)
         }
       }
       if (ignoreRegion) {
-        result.storeCommand(`_checkSettings.ignoreRegions(_makeRegionLocator('${ignoreRegion}'))`)
+        result.storeCommand(`_checkSettings.ignoreRegions(${makeRegionLocator(ignoreRegion)})`)
       }
       if (floatingRegion) {
         result.storeCommand(
           `_checkSettings.floatingRegion(
-            _makeRegionLocator('${floatingRegion.target}'),
+            ${makeRegionLocator(floatingRegion.target)},
             ${floatingRegion.maxUp},
             ${floatingRegion.maxDown},
             ${floatingRegion.maxLeft},
@@ -191,7 +189,7 @@ function initialize() {
         `await eyes.checkWindow(${tag ? '"' + tag + '"' : undefined}, ${matchTimeout}, ${isFully})`,
       )
     } else {
-      result.storeCommand(`;async () => {`)
+      result.storeCommand(`{`)
       result.storeCommand(
         `let _checkSettings = Target.window()
         .fully(${isFully})
@@ -201,12 +199,12 @@ function initialize() {
         result.storeCommand(`_checkSettings.scrollRootElement(By.css('${scrollRootElement}'))`)
       }
       if (ignoreRegion) {
-        result.storeCommand(`_checkSettings.ignoreRegions(_makeRegionLocator('${ignoreRegion}'))`)
+        result.storeCommand(`_checkSettings.ignoreRegions(${makeRegionLocator(ignoreRegion)})`)
       }
       if (floatingRegion) {
         result.storeCommand(`
         _checkSettings.floatingRegion(
-          _makeRegionLocator('${floatingRegion.target}'),
+          ${makeRegionLocator(floatingRegion.target)},
           ${floatingRegion.maxUp},
           ${floatingRegion.maxDown},
           ${floatingRegion.maxLeft},
@@ -223,7 +221,7 @@ function initialize() {
   }
 
   function getAllTestResults() {
-    result.storeCommand(`;async () => {`)
+    result.storeCommand(`{`)
     result.storeCommand(`const resultsSummary = await runner.getAllTestResults()`)
     result.storeCommand(`return resultsSummary.getAllResults()`)
     result.storeCommand(`}`)
@@ -243,7 +241,7 @@ function initialize() {
   }
 
   function switchToFrame(selector) {
-    result.storeCommand(`;async () => {`)
+    result.storeCommand(`{`)
     result.storeCommand(`const element = await driver.findElement(By.css('${selector}'))`)
     result.storeCommand(`return driver.switchTo().frame(element)`)
     result.storeCommand(`}`)
