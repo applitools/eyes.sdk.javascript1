@@ -1,8 +1,10 @@
 const convert = require('xml-js')
+const {logDebug} = require('../log')
 
 function convertJunitXmlToResultSchema({xmlResult, browser}) {
   let result = []
   const tests = parseJunitXmlForTests(xmlResult)
+  logDebug(tests)
   tests.forEach(test => {
     const testName = parseBareTestName(test._attributes.classname)
     result.push({

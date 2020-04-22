@@ -12,6 +12,7 @@ const {createReport} = require('../../report')
 const {sendReport} = require('../../send-report')
 const {runCLI} = require('jest')
 const {exec: pexec, _spawn} = require('promisify-child-process')
+const {logDebug} = require('../../log')
 
 async function doRunTests(args, sdkImplementation) {
   console.log(`Running coverage tests for ${sdkImplementation.name}...`)
@@ -31,7 +32,7 @@ async function doRunTests(args, sdkImplementation) {
   )
   if (sdkImplementation.execute) {
     console.log(`\nRunning them now with ${sdkImplementation.execute.command}:\n`)
-    if (process.env.DEBUG) console.dir(sdkImplementation, {depth: null})
+    logDebug(sdkImplementation)
     await pexec(sdkImplementation.execute.command + ' ' + sdkImplementation.execute.args.join(' '))
   } else {
     console.log(`\nRunning them now with jest:\n`)
@@ -59,7 +60,7 @@ async function processReport({sdkName, args}) {
   const isSandbox = args.sendReport === 'sandbox' ? true : false
   process.stdout.write(`\nSending report to QA dashboard ${isSandbox ? '(sandbox)' : ''}... `)
   const report = createReport({sdkName, xmlResult: results, sandbox: isSandbox})
-  if (process.env.DEBUG) console.dir(report, {depth: null})
+  logDebug(report)
   const result = await sendReport(report)
   process.stdout.write(result.isSuccessful ? 'Done!\n' : 'Failed!\n')
 }
