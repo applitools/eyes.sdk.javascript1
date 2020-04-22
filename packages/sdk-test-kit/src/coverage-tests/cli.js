@@ -36,6 +36,10 @@ yargs
     describe: 'send a result report to the sandbox QA dashboard',
     default: 'sandbox',
   })
+  .option('verbose', {
+    alias: 'r',
+    describe: 'log debug output',
+  })
   .demandCommand(1, 'You need to specify a command before moving on')
 ;(async () => {
   try {
@@ -47,6 +51,7 @@ yargs
       console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
       console.log('\n')
     }
+    if (args.verbose) process.env.DEBUG = true
     const command = args._[0]
     if (command === 'nuke') {
       nuke()
