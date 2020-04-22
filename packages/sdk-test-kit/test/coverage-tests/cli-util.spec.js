@@ -8,7 +8,7 @@ const {
   getTestIndexesFromErrors,
   sortErrorsByType,
   getPassedTestIndexes,
-} = require('../../src/coverage-tests/cli-util')
+} = require('../../src/coverage-tests/cli/cli-util')
 const {makeCoverageTests} = require('../../src/coverage-tests/index')
 const {supportedCommands} = require('../../src/coverage-tests/tests')
 

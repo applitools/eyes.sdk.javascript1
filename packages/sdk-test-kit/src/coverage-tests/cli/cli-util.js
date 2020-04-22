@@ -1,6 +1,6 @@
-const {findDifferencesBetweenCollections} = require('./common-util')
-const {makeCoverageTests} = require('./index')
-const {supportedCommands} = require('./tests')
+const {findDifferencesBetweenCollections} = require('../common-util')
+const {makeCoverageTests} = require('../index')
+const {supportedCommands} = require('../tests')
 const {isMatch} = require('micromatch')
 
 function findUnsupportedTests(sdkImplementation) {
@@ -86,6 +86,10 @@ function getPassedTestIndexes({tests, errors}) {
   return testIndexes.length ? testIndexes : undefined
 }
 
+function needsChromeDriver(args, sdkImplementation) {
+  return !args.remote && sdkImplementation.options && sdkImplementation.options.needsChromeDriver
+}
+
 module.exports = {
   findUnsupportedTests,
   findUnimplementedCommands,
@@ -98,4 +102,5 @@ module.exports = {
   getPassedTestIndexes,
   numberOfUniqueTests,
   numberOfTestVariations,
+  needsChromeDriver,
 }
