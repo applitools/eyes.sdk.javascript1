@@ -29,6 +29,11 @@ describe('Report', () => {
       const result = parseJunitXmlForTests(xmlResult)
       assert(result[0].hasOwnProperty('_attributes'))
     })
+    it('should support multiple suites with a single test', () => {
+      const altXmlResult = loadFixture('multiple-suites-single-test.xml')
+      const result = parseJunitXmlForTests(altXmlResult)
+      assert(result[0].hasOwnProperty('_attributes'))
+    })
     it('should support a single suite with a single test', () => {
       const altXmlResult = loadFixture('single-suite-single-test.xml')
       const result = parseJunitXmlForTests(altXmlResult)
