@@ -40,6 +40,11 @@ yargs
     alias: 'v',
     describe: 'log debug output',
   })
+  .option('concurrency', {
+    alias: 'c',
+    describe: 'number of parallel executions to run at once',
+    default: 15,
+  })
   .demandCommand(1, 'You need to specify a command before moving on')
 ;(async () => {
   try {

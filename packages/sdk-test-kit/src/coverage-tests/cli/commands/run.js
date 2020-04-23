@@ -42,6 +42,7 @@ async function doRunTests(args, sdkImplementation) {
         reporters: ['default', 'jest-junit'],
         testEnvironment: 'node',
         rootDir: path.resolve(path.join(process.cwd())),
+        maxWorkers: args.concurrency,
         roots: ['<rootDir>/test/coverage/generic'], //, '<rootDir>/test/coverage/custom'],
         testTimeout: 180000,
       },
