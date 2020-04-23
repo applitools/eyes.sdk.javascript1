@@ -50,12 +50,6 @@ yargs
   try {
     const args = yargs.argv
     console.log(cliName)
-    if (!process.env.APPLITOOLS_API_KEY_SDK) {
-      console.log('\n')
-      console.log(chalk.yellow(`You're running without APPLITOOLS_API_KEY_SDK set!`))
-      console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
-      console.log('\n')
-    }
     if (args.verbose) process.env.COVERAGE_TESTS_DEBUG = true
     const command = args._[0]
     if (command === 'nuke') {
@@ -63,6 +57,12 @@ yargs
     } else if (command === 'doctor' && args.path) {
       doctor(args)
     } else if (command === 'run' && args.path) {
+      if (!process.env.APPLITOOLS_API_KEY_SDK) {
+        console.log('\n')
+        console.log(chalk.yellow(`You're running without APPLITOOLS_API_KEY_SDK set!`))
+        console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
+        console.log('\n')
+      }
       await run(args)
       nuke()
     } else {
