@@ -52,10 +52,11 @@ function initialize() {
       result.storeHook('beforeEach', `eyes.setApiKey('${process.env.APPLITOOLS_API_KEY_SDK}')`)
     }
     result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
+    result.storeHook('beforeEach', `eyes.setMatchTimeout(0)`)
   }
 
   function _cleanup() {
-    result.storeHook('afterEach', 'await driver.close()')
+    result.storeHook('afterEach', 'await driver.quit()')
     result.storeHook('afterEach', 'await eyes.abort()')
   }
 
