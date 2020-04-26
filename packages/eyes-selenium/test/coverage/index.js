@@ -49,7 +49,7 @@ function initialize() {
       result.storeHook('beforeEach', 'eyes.setStitchMode(StitchMode.SCROLL)')
     result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
     if (process.env.APPLITOOLS_API_KEY_SDK) {
-      result.storeHook('beforeEach', `eyes.setApiKey('${process.env.APPLITOOLS_API_KEY_SDK}')`)
+      result.storeHook('beforeEach', `eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)`)
     }
     result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
     result.storeHook('beforeEach', `eyes.setMatchTimeout(0)`)
