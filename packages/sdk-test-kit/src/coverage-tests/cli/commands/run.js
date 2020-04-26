@@ -24,7 +24,7 @@ async function doRunTests(args, sdkImplementation) {
   const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
     host: args.remote,
   })
-  createTestFiles(emittedTests, sdkImplementation.testFrameworkTemplate)
+  await createTestFiles(emittedTests, sdkImplementation.testFrameworkTemplate)
   console.log(
     `\nCreated ${numberOfTestVariations(supportedTests)} test files for ${numberOfUniqueTests(
       supportedTests,
