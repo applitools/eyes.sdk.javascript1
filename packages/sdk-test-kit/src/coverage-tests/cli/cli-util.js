@@ -53,7 +53,7 @@ function numberOfUniqueTests(tests) {
 }
 
 function numberOfTestVariations(tests) {
-  return tests.length
+  return tests.map(t => !t.disabled).length
 }
 
 function sortErrorsByType(errors) {
