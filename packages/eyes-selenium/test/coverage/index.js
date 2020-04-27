@@ -224,7 +224,7 @@ function initialize() {
   function getAllTestResults() {
     result.storeCommand(`{`)
     result.storeCommand(`const resultsSummary = await runner.getAllTestResults()`)
-    result.storeCommand(`return resultsSummary.getAllResults()`)
+    result.storeCommand(`resultsSummary = resultsSummary.getAllResults()`)
     result.storeCommand(`}`)
   }
 
@@ -244,7 +244,7 @@ function initialize() {
   function switchToFrame(selector) {
     result.storeCommand(`{`)
     result.storeCommand(`const element = await driver.findElement(By.css('${selector}'))`)
-    result.storeCommand(`return driver.switchTo().frame(element)`)
+    result.storeCommand(`await driver.switchTo().frame(element)`)
     result.storeCommand(`}`)
   }
 
