@@ -6,7 +6,7 @@ function convertJunitXmlToResultSchema({xmlResult, browser}) {
   const tests = parseJunitXmlForTests(xmlResult)
   logDebug(tests)
   tests.forEach(test => {
-    const testName = parseBareTestName(test._attributes.classname)
+    const testName = parseBareTestName(test._attributes.name)
     result.push({
       test_name: testName,
       parameters: {
@@ -31,7 +31,10 @@ function convertSuffixToExecutionMode(suffix) {
 }
 
 function parseBareTestName(testCaseName) {
-  return testCaseName.replace(/Coverage Tests /, '')
+  return testCaseName
+    .replace(/Coverage Tests /, '')
+    .replace(/\(.*\)/, '')
+    .trim()
 }
 
 function parseExecutionMode(bareTestName) {
