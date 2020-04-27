@@ -52,7 +52,9 @@ describe('Report', () => {
       'Test Check Window',
     )
     assert.deepStrictEqual(
-      parseBareTestName('TestCheckWindow_Fluent (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-abe4123e-d970-44da-8c3c-220fb9b47640/screenshot.png)'),
+      parseBareTestName(
+        'TestCheckWindow_Fluent (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-abe4123e-d970-44da-8c3c-220fb9b47640/screenshot.png)',
+      ),
       'TestCheckWindow_Fluent',
     )
   })

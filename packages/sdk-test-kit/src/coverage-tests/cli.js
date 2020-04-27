@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 const yargs = require('yargs')
 const chalk = require('chalk')
-const {run, doctor, nuke} = require('./cli/commands')
+const {createTests, processReport, doctor} = require('./cli/commands')
 
 const cliName = 'SAT - SDK Agnostic Test-framework'
 yargs
   .usage(cliName)
   .usage('\nUsage: coverage-tests run <options>')
-  .command('run', 'run coverage tests for a given SDK')
-  .command('doctor', 'health check an implementation')
-  .command('nuke', 'kill all ghost browser processes (POSIX only)')
+  .command('doctor', 'health check an SDK implementation')
+  .command('process-report', 'process & send XML result file to QA dashboard')
+  .command('create-tests', 'create test files for a given SDK implementation')
   .option('path', {
     alias: 'p',
     describe: 'path to implementation file',
@@ -52,19 +52,18 @@ yargs
     console.log(cliName)
     if (args.verbose) process.env.COVERAGE_TESTS_DEBUG = true
     const command = args._[0]
-    if (command === 'nuke') {
-      nuke()
-    } else if (command === 'doctor' && args.path) {
+    if (command === 'doctor' && args.path) {
       doctor(args)
-    } else if (command === 'run' && args.path) {
+    } else if (command === 'create-tests' && args.path) {
       if (!process.env.APPLITOOLS_API_KEY_SDK) {
         console.log('\n')
         console.log(chalk.yellow(`You're running without APPLITOOLS_API_KEY_SDK set!`))
         console.log(chalk.yellow(`To test with the correct baselines, be sure to set it.`))
         console.log('\n')
       }
-      await run(args)
-      nuke()
+      await createTests(args)
+    } else if (command === 'process-report') {
+      await processReport(args)
     } else {
       console.log('Nothing to run.')
       process.exit(1)

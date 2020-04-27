@@ -1,9 +1,9 @@
 const {doctor} = require('./doctor')
-const {nuke} = require('./nuke')
-const {run} = require('./run')
+const {createTests} = require('./create-tests')
+const {processReport} = require('./process-report')
 
 module.exports = {
   doctor,
-  nuke,
-  run,
+  createTests,
+  processReport,
 }
