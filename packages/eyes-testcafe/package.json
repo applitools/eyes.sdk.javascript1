@@ -60,16 +60,18 @@
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec2.js\"",
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec2.js\"",
     "test:perf": "mocha --no-timeouts \"test/perf/**/*.spec.js\"",
-    "test:coverage": "node test/coverage/index.js",
-    "preversion": "bongo preversion",
+    "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
+    "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
+    "test:coverage": "testcafe chrome:headless test/coverage/generic --concurrency 15 --reporter spec,xunit:coverage-test-report.xml",
+    "preversion": "bongo preversion && coverage:prod",
     "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification"
+    "postversion": "bongo postversion"
   },
   "devDependencies": {
     "@applitools/dom-capture": "^7.1.2",
     "@applitools/sdk-fake-eyes-server": "1.1.1",
     "@applitools/sdk-release-kit": "0.1.0",
-    "@applitools/sdk-test-kit": "^1.0.17",
+    "@applitools/sdk-coverage-tests": "1.0.0",
     "@babel/plugin-transform-async-to-generator": "^7.7.4",
     "@babel/plugin-transform-regenerator": "^7.7.5",
     "@babel/plugin-transform-runtime": "^7.7.6",

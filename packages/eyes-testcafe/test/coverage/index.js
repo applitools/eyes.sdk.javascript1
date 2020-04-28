@@ -1,4 +1,4 @@
-const {makeEmitTracker} = require('@applitools/sdk-test-kit').coverageTests
+const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
 const uuidv4 = require('uuid/v4')
 const branchId = uuidv4()
 const sdkName = 'eyes-testcafe'
@@ -99,15 +99,4 @@ module.exports = {
   initialize,
   supportedTests,
   testFrameworkTemplate: createTestCafeTestString,
-  execute: {
-    command: 'testcafe',
-    args: [
-      'chrome:headless',
-      'test/coverage/generic',
-      '--concurrency 5',
-      // NOTE: something odd is happening w/ concurrency -- additional browser sessions are spawned but tests are still run in series
-      // TODO: investigate
-      '--reporter spec,xunit:coverage-test-report.xml',
-    ],
-  },
 }
