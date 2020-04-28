@@ -280,5 +280,4 @@ module.exports = {
   name: sdkName,
   initialize,
   supportedTests,
-  //options: {needsChromeDriver: true, chromeDriverOptions: ['--silent']},
 }
