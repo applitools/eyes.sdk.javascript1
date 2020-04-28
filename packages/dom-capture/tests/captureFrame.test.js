@@ -58,7 +58,7 @@ describe('captureFrame', () => {
     expect(domStr).to.eql(expected);
     const metrics = getPerformanceMetrics(output);
     expect(metrics).to.exist;
-    expect(metrics.doCaptureFrame).to.exist;
+    expect(metrics.doCaptureDoc).to.exist;
     expect(metrics.prefetchCss).to.exist;
     expect(metrics.waitForImages).to.exist;
   });
@@ -105,6 +105,21 @@ describe('captureFrame', () => {
       fs.writeFileSync('tests/fixtures/testWithSrcdocIframe.dom.json', domStr);
     }
     const expected = loadFixture('testWithSrcdocIframe.dom.json', {
+      replaceSource: /\"scriptVersion\": \"\d+\.\d+\.\d+\"/,
+      replaceTarget: `"scriptVersion": "${version}"`,
+    });
+    expect(domStr).to.eql(expected);
+  });
+
+  it('works with shadow dom', async () => {
+    await page.goto(`${baseUrl}/shadow-dom.html`);
+
+    const domStr = beautifyOutput(await page.evaluate(captureFrameWithMetrics));
+
+    if (process.env.APPLITOOLS_UPDATE_FIXTURES) {
+      fs.writeFileSync('tests/fixtures/shadow-dom.dom.json', domStr);
+    }
+    const expected = loadFixture('shadow-dom.dom.json', {
       replaceSource: /\"scriptVersion\": \"\d+\.\d+\.\d+\"/,
       replaceTarget: `"scriptVersion": "${version}"`,
     });

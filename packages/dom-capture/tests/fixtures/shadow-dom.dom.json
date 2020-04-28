@@ -1,0 +1,656 @@
+{"separator":"-----","cssStartToken":"#####","cssEndToken":"#####","iframeStartToken":"\"@@@@@","iframeEndToken":"@@@@@\""}
+http://localhost:50993/shadow.css
+-----
+-----
+{
+  "tagName": "HTML",
+  "style": {
+    "background-repeat": "repeat",
+    "background-origin": "padding-box",
+    "background-position": "0% 0%",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "background-image": "none",
+    "background-size": "auto",
+    "border-width": "0px",
+    "border-color": "rgb(0, 0, 0)",
+    "border-style": "none",
+    "color": "rgb(0, 0, 0)",
+    "display": "block",
+    "font-size": "16px",
+    "font-weight": "400",
+    "line-height": "normal",
+    "margin": "0px",
+    "opacity": "1",
+    "overflow": "visible",
+    "padding": "0px",
+    "visibility": "visible"
+  },
+  "rect": {
+    "width": 800,
+    "height": 600,
+    "top": 0,
+    "left": 0
+  },
+  "childNodes": [
+    {
+      "tagName": "#text",
+      "text": "\n\n\n"
+    },
+    {
+      "tagName": "BODY",
+      "style": {
+        "background-repeat": "repeat",
+        "background-origin": "padding-box",
+        "background-position": "0% 0%",
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "background-size": "auto",
+        "border-width": "0px",
+        "border-color": "rgb(0, 0, 0)",
+        "border-style": "none",
+        "color": "rgb(0, 0, 0)",
+        "display": "block",
+        "font-size": "16px",
+        "font-weight": "400",
+        "line-height": "normal",
+        "margin": "8px",
+        "opacity": "1",
+        "overflow": "visible",
+        "padding": "0px",
+        "visibility": "visible"
+      },
+      "rect": {
+        "width": 784,
+        "height": 584,
+        "top": 8,
+        "left": 8
+      },
+      "childNodes": [
+        {
+          "tagName": "#text",
+          "text": "\n  "
+        },
+        {
+          "tagName": "DIV",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "rgba(0, 0, 0, 0)",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px",
+            "border-color": "rgb(0, 0, 0)",
+            "border-style": "none",
+            "color": "rgb(0, 0, 0)",
+            "display": "block",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "normal",
+            "margin": "0px",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "0px",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 784,
+            "height": 281.4375,
+            "top": 8,
+            "left": 8
+          },
+          "attributes": {
+            "class": "host"
+          },
+          "childNodes": [
+            {
+              "tagName": "#text",
+              "text": "\n    "
+            },
+            {
+              "tagName": "SPAN",
+              "style": {
+                "background-repeat": "repeat",
+                "background-origin": "padding-box",
+                "background-position": "0% 0%",
+                "background-color": "rgba(0, 0, 0, 0)",
+                "background-image": "none",
+                "background-size": "auto",
+                "border-width": "0px",
+                "border-color": "rgb(0, 0, 0)",
+                "border-style": "none",
+                "color": "rgb(0, 0, 0)",
+                "display": "inline",
+                "font-size": "16px",
+                "font-weight": "400",
+                "line-height": "normal",
+                "margin": "0px",
+                "opacity": "1",
+                "overflow": "visible",
+                "padding": "0px",
+                "visibility": "visible"
+              },
+              "rect": {
+                "width": 0,
+                "height": 0,
+                "top": 0,
+                "left": 0
+              },
+              "childNodes": [
+                {
+                  "tagName": "#text",
+                  "text": "NORMAL DOM IN HOST"
+                }
+              ]
+            },
+            {
+              "tagName": "#text",
+              "text": "\n  "
+            }
+          ],
+          "shadowRoot": {
+            "childNodes": [
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "DIV",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "none",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "none",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "block",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 784,
+                  "height": 18,
+                  "top": 8,
+                  "left": 8
+                },
+                "childNodes": [
+                  {
+                    "tagName": "#text",
+                    "text": "\n          IN SHADOW\n    "
+                  }
+                ]
+              },
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "DIV",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "url(\"http://localhost:50993/smurfs.jpg\")",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(255, 165, 0)",
+                  "border-style": "none",
+                  "color": "rgb(255, 165, 0)",
+                  "display": "block",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 784,
+                  "height": 50,
+                  "top": 26,
+                  "left": 8
+                },
+                "attributes": {
+                  "style": "background-image: url(\"smurfs.jpg\");color: orange; height: 50px;"
+                },
+                "childNodes": [
+                  {
+                    "tagName": "#text",
+                    "text": "\n        via style attribute inside shadow - smurfs.jpg\n    "
+                  }
+                ]
+              },
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "DIV",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "url(\"http://localhost:50993/smurfs1.jpg\")",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "none",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "block",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 784,
+                  "height": 0,
+                  "top": 76,
+                  "left": 8
+                },
+                "attributes": {
+                  "class": "one"
+                },
+                "childNodes": []
+              },
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "STYLE",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "none",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "none",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "none",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 0,
+                  "height": 0,
+                  "top": 0,
+                  "left": 0
+                },
+                "childNodes": [
+                  {
+                    "tagName": "#text",
+                    "text": "\n      .one {\n        background-image: url(\"smurfs1.jpg\");\n      }\n    "
+                  }
+                ]
+              },
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "LINK",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "none",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "none",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "none",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 0,
+                  "height": 0,
+                  "top": 0,
+                  "left": 0
+                },
+                "attributes": {
+                  "rel": "stylesheet",
+                  "type": "text/css",
+                  "href": "shadow.css"
+                },
+                "childNodes": []
+              },
+              {
+                "tagName": "#text",
+                "text": "\n\n    "
+              },
+              {
+                "tagName": "H3",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "none",
+                  "background-size": "auto",
+                  "border-width": "0px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "none",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "block",
+                  "font-size": "18.72px",
+                  "font-weight": "700",
+                  "line-height": "normal",
+                  "margin": "18.72px 0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 784,
+                  "height": 22,
+                  "top": 94.71875,
+                  "left": 8
+                },
+                "childNodes": [
+                  {
+                    "tagName": "#text",
+                    "text": "Iframe inside shadow"
+                  }
+                ]
+              },
+              {
+                "tagName": "#text",
+                "text": "\n    "
+              },
+              {
+                "tagName": "IFRAME",
+                "style": {
+                  "background-repeat": "repeat",
+                  "background-origin": "padding-box",
+                  "background-position": "0% 0%",
+                  "background-color": "rgba(0, 0, 0, 0)",
+                  "background-image": "none",
+                  "background-size": "auto",
+                  "border-width": "2px",
+                  "border-color": "rgb(0, 0, 0)",
+                  "border-style": "inset",
+                  "color": "rgb(0, 0, 0)",
+                  "display": "inline",
+                  "font-size": "16px",
+                  "font-weight": "400",
+                  "line-height": "normal",
+                  "margin": "0px",
+                  "opacity": "1",
+                  "overflow": "visible",
+                  "padding": "0px",
+                  "visibility": "visible"
+                },
+                "rect": {
+                  "width": 304,
+                  "height": 154,
+                  "top": 135.4375,
+                  "left": 8
+                },
+                "attributes": {
+                  "src": "shadow-dom-frame.html"
+                },
+                "childNodes": [
+                  {
+                    "tagName": "HTML",
+                    "style": {
+                      "background-repeat": "repeat",
+                      "background-origin": "padding-box",
+                      "background-position": "0% 0%",
+                      "background-color": "rgba(0, 0, 0, 0)",
+                      "background-image": "none",
+                      "background-size": "auto",
+                      "border-width": "0px",
+                      "border-color": "rgb(0, 0, 0)",
+                      "border-style": "none",
+                      "color": "rgb(0, 0, 0)",
+                      "display": "block",
+                      "font-size": "16px",
+                      "font-weight": "400",
+                      "line-height": "normal",
+                      "margin": "0px",
+                      "opacity": "1",
+                      "overflow": "visible",
+                      "padding": "0px",
+                      "visibility": "visible"
+                    },
+                    "rect": {
+                      "width": 300,
+                      "height": 338.4375,
+                      "top": 0,
+                      "left": 0
+                    },
+                    "childNodes": [
+                      {
+                        "tagName": "#text",
+                        "text": "\n\n"
+                      },
+                      {
+                        "tagName": "BODY",
+                        "style": {
+                          "background-repeat": "repeat",
+                          "background-origin": "padding-box",
+                          "background-position": "0% 0%",
+                          "background-color": "rgba(0, 0, 0, 0)",
+                          "background-image": "none",
+                          "background-size": "auto",
+                          "border-width": "0px",
+                          "border-color": "rgb(0, 0, 0)",
+                          "border-style": "none",
+                          "color": "rgb(0, 0, 0)",
+                          "display": "block",
+                          "font-size": "16px",
+                          "font-weight": "400",
+                          "line-height": "normal",
+                          "margin": "8px",
+                          "opacity": "1",
+                          "overflow": "visible",
+                          "padding": "0px",
+                          "visibility": "visible"
+                        },
+                        "rect": {
+                          "width": 284,
+                          "height": 322.4375,
+                          "top": 8,
+                          "left": 8
+                        },
+                        "childNodes": [
+                          {
+                            "tagName": "#text",
+                            "text": "\n  "
+                          },
+                          {
+                            "tagName": "H1",
+                            "style": {
+                              "background-repeat": "repeat",
+                              "background-origin": "padding-box",
+                              "background-position": "0% 0%",
+                              "background-color": "rgba(0, 0, 0, 0)",
+                              "background-image": "none",
+                              "background-size": "auto",
+                              "border-width": "0px",
+                              "border-color": "rgb(0, 0, 0)",
+                              "border-style": "none",
+                              "color": "rgb(0, 0, 0)",
+                              "display": "block",
+                              "font-size": "32px",
+                              "font-weight": "700",
+                              "line-height": "normal",
+                              "margin": "21.44px 0px",
+                              "opacity": "1",
+                              "overflow": "visible",
+                              "padding": "0px",
+                              "visibility": "visible"
+                            },
+                            "rect": {
+                              "width": 284,
+                              "height": 74,
+                              "top": 8,
+                              "left": 8
+                            },
+                            "childNodes": [
+                              {
+                                "tagName": "#text",
+                                "text": "Hello inside frame - smurfs.jpg"
+                              }
+                            ]
+                          },
+                          {
+                            "tagName": "#text",
+                            "text": "\n  "
+                          },
+                          {
+                            "tagName": "IMG",
+                            "style": {
+                              "background-repeat": "repeat",
+                              "background-origin": "padding-box",
+                              "background-position": "0% 0%",
+                              "background-color": "rgba(0, 0, 0, 0)",
+                              "background-image": "none",
+                              "background-size": "auto",
+                              "border-width": "0px",
+                              "border-color": "rgb(0, 0, 0)",
+                              "border-style": "none",
+                              "color": "rgb(0, 0, 0)",
+                              "display": "inline",
+                              "font-size": "16px",
+                              "font-weight": "400",
+                              "line-height": "normal",
+                              "margin": "0px",
+                              "opacity": "1",
+                              "overflow": "visible",
+                              "padding": "0px",
+                              "visibility": "visible"
+                            },
+                            "rect": {
+                              "width": 151,
+                              "height": 227,
+                              "top": 103.4375,
+                              "left": 8
+                            },
+                            "attributes": {
+                              "src": "smurfs.jpg"
+                            },
+                            "childNodes": []
+                          },
+                          {
+                            "tagName": "#text",
+                            "text": "\n\n\n"
+                          }
+                        ]
+                      }
+                    ],
+                    "css": "",
+                    "images": {}
+                  }
+                ]
+              },
+              {
+                "tagName": "#text",
+                "text": "\n  "
+              }
+            ],
+            "css": "\n/** http://localhost:50993/shadow-dom.html **/\n\n      .one {\n        background-image: url(\"smurfs1.jpg\");\n      }\n    #####http://localhost:50993/shadow.css#####",
+            "images": {
+              "http://localhost:50993/smurfs.jpg": {
+                "width": 151,
+                "height": 227
+              },
+              "http://localhost:50993/smurfs1.jpg": {
+                "width": 151,
+                "height": 227
+              }
+            }
+          }
+        },
+        {
+          "tagName": "#text",
+          "text": "\n\n  "
+        },
+        {
+          "tagName": "TEMPLATE",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "rgba(0, 0, 0, 0)",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px",
+            "border-color": "rgb(0, 0, 0)",
+            "border-style": "none",
+            "color": "rgb(0, 0, 0)",
+            "display": "none",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "normal",
+            "margin": "0px",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "0px",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "left": 0
+          },
+          "attributes": {
+            "id": "in-shadow"
+          },
+          "childNodes": []
+        },
+        {
+          "tagName": "#text",
+          "text": "\n\n  "
+        },
+        {
+          "tagName": "#text",
+          "text": "\n\n\n"
+        }
+      ]
+    }
+  ],
+  "css": "\n/** http://localhost:50993/shadow-dom.html **/\n\n  .someClass {\n    color: paleturquoise;\n  }\n",
+  "images": {},
+  "version": "1.3.0",
+  "scriptVersion": "7.1.5"
+}

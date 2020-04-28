@@ -13,7 +13,7 @@ const makeCaptureNodeCss = require('./captureNodeCss');
 const makePrefetchAllCss = require('./prefetchAllCss');
 const {NODE_TYPES} = require('./nodeTypes');
 
-const API_VERSION = '1.2.0';
+const API_VERSION = '1.3.0';
 
 async function captureFrame(
   {styleProps, rectProps, ignoredTagNames} = defaultDomProps,
@@ -21,13 +21,13 @@ async function captureFrame(
   addStats = false,
   fetchTimeLimit = 30000,
 ) {
-  const performance = {total: {}, prefetchCss: {}, doCaptureFrame: {}, waitForImages: {}};
+  const performance = {total: {}, prefetchCss: {}, doCaptureDoc: {}, waitForImages: {}};
   function startTime(obj) {
     obj.startTime = Date.now();
   }
   function endTime(obj) {
     obj.endTime = Date.now();
-    obj.ellapsedTime = obj.endTime - obj.startTime;
+    obj.elapsedTime = obj.endTime - obj.startTime;
   }
   const promises = [];
   startTime(performance.total);
@@ -56,9 +56,9 @@ async function captureFrame(
     unfetchedToken,
   });
 
-  startTime(performance.doCaptureFrame);
-  const capturedFrame = doCaptureFrame(doc);
-  endTime(performance.doCaptureFrame);
+  startTime(performance.doCaptureDoc);
+  const capturedFrame = doCaptureDoc(doc);
+  endTime(performance.doCaptureDoc);
 
   startTime(performance.waitForImages);
   await Promise.all(promises);
@@ -95,10 +95,6 @@ async function captureFrame(
   console.log('[captureFrame]', JSON.stringify(performance));
   return ret;
 
-  function filter(x) {
-    return !!x;
-  }
-
   function notEmptyObj(obj) {
     return Object.keys(obj).length ? obj : undefined;
   }
@@ -110,10 +106,10 @@ async function captureFrame(
     };
   }
 
-  function doCaptureFrame(frameDoc, baseUrl = frameDoc.location.href) {
+  function doCaptureDoc(docFrag, baseUrl = docFrag.location && docFrag.location.href) {
     const bgImages = new Set();
     let bundledCss = '';
-    const ret = captureNode(frameDoc.documentElement);
+    const ret = captureNode(docFrag.documentElement || docFrag);
     ret.css = bundledCss;
     promises.push(getImageSizes({bgImages}).then(images => (ret.images = images)));
     return ret;
@@ -138,6 +134,11 @@ async function captureFrame(
             return elementToJSON(node);
           }
         }
+        case NODE_TYPES.DOCUMENT_FRAGMENT: {
+          return {
+            childNodes: Array.prototype.map.call(node.childNodes, captureNode).filter(Boolean),
+          };
+        }
         default: {
           return null;
         }
@@ -145,7 +146,8 @@ async function captureFrame(
     }
 
     function elementToJSON(el) {
-      const childNodes = Array.prototype.map.call(el.childNodes, captureNode).filter(filter);
+      const childNodes = Array.prototype.map.call(el.childNodes, captureNode).filter(Boolean);
+      const shadowRoot = el.shadowRoot && doCaptureDoc(el.shadowRoot, baseUrl);
 
       const tagName = el.tagName.toUpperCase();
       if (ignoredTagNames.indexOf(tagName) > -1) return null;
@@ -178,13 +180,17 @@ async function captureFrame(
         bgImages.add(bgImage);
       }
 
-      return {
+      const result = {
         tagName,
         style: notEmptyObj(style),
         rect: notEmptyObj(rect),
         attributes: notEmptyObj(attributes),
         childNodes,
       };
+      if (shadowRoot) {
+        result.shadowRoot = shadowRoot;
+      }
+      return result;
     }
 
     function iframeToJSON(el) {
@@ -198,9 +204,7 @@ async function captureFrame(
       }
       try {
         if (doc) {
-          obj.childNodes = [
-            doCaptureFrame(doc, isInlineFrame(el) ? el.baseURI : doc.location.href),
-          ];
+          obj.childNodes = [doCaptureDoc(doc, isInlineFrame(el) ? el.baseURI : doc.location.href)];
         } else {
           markFrameAsCors();
         }

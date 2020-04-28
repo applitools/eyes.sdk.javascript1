@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <title>shadow dom test</title>
+</head>
+<style>
+  .someClass {
+    color: paleturquoise;
+  }
+</style>
+
+<body>
+  <div class="host">
+    <span>NORMAL DOM IN HOST</span>
+  </div>
+
+  <template id="in-shadow">
+    <div>
+          IN SHADOW
+    </div>
+    <div style='background-image: url("smurfs.jpg");color: orange; height: 50px;'>
+        via style attribute inside shadow - smurfs.jpg
+    </div>
+    <div class="one"></div>
+    <style>
+      .one {
+        background-image: url("smurfs1.jpg");
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="shadow.css">
+
+    <h3>Iframe inside shadow</h3>
+    <iframe src="shadow-dom-frame.html">
+      <p>Your browser does not support iframes.</p>
+    </iframe>
+  </template>
+
+  <script>
+    const host = document.querySelector('.host');
+    const shadow = host.attachShadow({ mode: 'open' });
+  
+    const template = document.querySelector('#in-shadow');
+    const inShadow = document.importNode(template.content, true);
+    shadow.appendChild(inShadow);
+  </script>
+</body>
+
+</html>

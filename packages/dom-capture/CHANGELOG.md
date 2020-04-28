@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- added shadow dom support ** Dom Capture version 1.3.0 ** 
 
  ## 7.1.5 - 2020/4/19
 

@@ -30,7 +30,7 @@ This function can then be bundled together with other client-side code so they a
 
 ### From non-JavaScript code
 
-This package's `dist` folder contains a script that can be sent to the browser regradless of driver and language. An agent that wishes to extract information from a webpage can read the contents of `dist/captureDom` and send that to the browser as an async script. **There's still the need to wrap it in a way that invokes it**.
+This package's `dist` folder contains a script that can be sent to the browser regardless of driver and language. An agent that wishes to extract information from a webpage can read the contents of `dist/captureDom` and send that to the browser as an async script. **There's still the need to wrap it in a way that invokes it**.
 
 For example in `Java`:
 
@@ -43,7 +43,7 @@ For example in `Java`:
 This script receives information about what should be captured, and a document from which to capture the information. The first argument is an object with the following properties: `{styleProps, rectProps, ignoredTagNames}`:
 
 - `styleProps` - an array containing the css properties that should be captured for computed style. E.g. `['background']`.
-- `rectProps` - an array containig the bounding client rect properties that should be captured. E.g. `['top', 'left']`.
+- `rectProps` - an array containing the bounding client rect properties that should be captured. E.g. `['top', 'left']`.
 - `ignoredTagNames` - an array containing tag names that should not be captured. E.g. `['head']`.
 
 The script returns an object representing the DOM in hierarchical structure (as opposed to the flat structure of CDT), with computed style and bounding client rect information for each element.
@@ -55,6 +55,7 @@ Each element has the following properties:
 - `rect`
 - `attributes`
 - `childNodes`
+- `shadowRoot`
 
 Text nodes have the following properties:
 
@@ -72,7 +73,12 @@ In addition, in the object representing the `HTML` element there are 2 other spe
 }
 ```
 
-The return value is a **string** that consists of a prefix specifying unfetched css resources and iframes, followed by the actual DOM structure.
+ShadowRoot nodes have `childNodes`, `css` and `images` attributes:
+* notice that the `css` applies only to the dom tree starting from this `shadowRoot` (i.e. starting from it's childNodes), also note that `css` from outside this dom tree (i.e. `css` from a containing HTML or `shadowRoot`) does not apply to this tree.
+* `images` is also relevant only in the current `shadowRoot` dom tree context.
+
+
+The return value is a **string** that consists of a prefix specifying un fetched css resources and iframes, followed by the actual DOM structure.
 For example:
 
 ```js
@@ -87,7 +93,10 @@ html[1]/body[1]/div[10]/div[3]/iframe[2],html[1]/body[1]/div[4]/iframe[6]
 {"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
   {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
     {"tagName":"DIV","style":{...},"rect":{...},"childNodes":[
-      {"tagName":"#text","text":"hello"}]},
+      {"tagName":"#text","text":"hello"}],"shadowRoot": { "childNodes": [{"tagName": "DIV","style": {...},"rect":{...},"childNodes":[]}],"css": `/** http://some/url.css **/
+      div.inShadow{border: 5px solid salmon;}`,
+      "images": {}}
+    },
     {"tagName":"IFRAME","style":{...},"rect":{...},"attributes":{"src":"some/url.html"},"childNodes":[
       {"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
         {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
@@ -107,22 +116,22 @@ html[1]/body[1]/div[10]/div[3]/iframe[2],html[1]/body[1]/div[4]/iframe[6]
   "total": {
     "startTime": 1573131315953,
     "endTime": 1573131315964,
-    "ellapsedTime": 11
+    "elapsedTime": 11
   },
   "prefetchCss": {
     "startTime": 1573131315953,
     "endTime": 1573131315961,
-    "ellapsedTime": 8
+    "elapsedTime": 8
   },
-  "doCaptureFrame": {
+  "doCaptureDoc": {
     "startTime": 1573131315961,
     "endTime": 1573131315964,
-    "ellapsedTime": 3
+    "elapsedTime": 3
   },
   "waitForImages": {
     "startTime": 1573131315964,
     "endTime": 1573131315964,
-    "ellapsedTime": 0
+    "elapsedTime": 0
   }
 }
 ```
