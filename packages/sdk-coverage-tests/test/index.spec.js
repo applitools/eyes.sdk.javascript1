@@ -1,5 +1,5 @@
 const assert = require('assert')
-const {makeCoverageTests} = require('../../src/coverage-tests/index')
+const {makeCoverageTests} = require('../src/index')
 
 const fakeSDK = {
   visit: () => {},

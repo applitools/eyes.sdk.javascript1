@@ -15,7 +15,7 @@
       "packages/eyes-selenium",
       "packages/eyes-testcafe",
       "packages/sdk-fake-eyes-server",
-      "packages/sdk-test-kit",
+      "packages/sdk-coverage-tests",
       "packages/sdk-release-kit",
       "packages/visual-grid-client",
       "packages/eyes-webdriverio-4",

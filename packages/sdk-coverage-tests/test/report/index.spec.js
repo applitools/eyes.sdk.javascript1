@@ -4,12 +4,12 @@ const {
   createReport,
   convertJunitXmlToResultSchema,
   convertSdkNameToReportName,
-} = require('../../../src/coverage-tests/report')
+} = require('../../src/report')
 const {
   parseBareTestName,
   parseExecutionMode,
   parseJunitXmlForTests,
-} = require('../../../src/coverage-tests/report/xml')
+} = require('../../src/report/xml')
 const assert = require('assert')
 
 function loadFixture(fileName) {

@@ -43,7 +43,7 @@
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "1.1.1",
     "@applitools/sdk-release-kit": "0.1.0",
-    "@applitools/sdk-test-kit": "1.0.17",
+    "@applitools/sdk-coverage-tests": "1.0.0",
     "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",
     "chai": "^4.2.0",

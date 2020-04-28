@@ -1,5 +1,5 @@
 const assert = require('assert')
-const {sendReport} = require('../../src/coverage-tests/send-report')
+const {sendReport} = require('../src/send-report')
 
 describe.skip('send-report', async () => {
   it('should send a payload and get a successful response from the report server', async () => {

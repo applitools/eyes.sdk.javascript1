@@ -1,4 +1,4 @@
-const {findDifferencesBetweenCollections} = require('../../src/coverage-tests/common-util')
+const {findDifferencesBetweenCollections} = require('../src/common-util')
 const assert = require('assert')
 
 describe('common-util', () => {

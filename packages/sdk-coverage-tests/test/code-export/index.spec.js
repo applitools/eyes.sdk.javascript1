@@ -1,6 +1,6 @@
 const assert = require('assert')
-const {makeEmitTracker, makeEmitTests} = require('../../../src/coverage-tests/code-export/emit')
-const {createTestFileString} = require('../../../src/coverage-tests/code-export/render')
+const {makeEmitTracker, makeEmitTests} = require('../../src/code-export/emit')
+const {createTestFileString} = require('../../src/code-export/render')
 
 const fakeSdkImplementation = () => {
   let result = makeEmitTracker()

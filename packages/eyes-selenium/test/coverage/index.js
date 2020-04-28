@@ -1,5 +1,5 @@
 const supportedTests = require('./supported-tests')
-const {makeEmitTracker} = require('@applitools/sdk-test-kit').coverageTests
+const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
 const uuidv4 = require('uuid/v4')
 const sdkName = 'eyes-selenium'
 const branchId = uuidv4()

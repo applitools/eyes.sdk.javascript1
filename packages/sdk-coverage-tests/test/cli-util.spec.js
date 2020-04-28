@@ -8,9 +8,9 @@ const {
   getTestIndexesFromErrors,
   sortErrorsByType,
   getPassedTestIndexes,
-} = require('../../src/coverage-tests/cli/cli-util')
-const {makeCoverageTests} = require('../../src/coverage-tests/index')
-const {supportedCommands} = require('../../src/coverage-tests/tests')
+} = require('../src/cli/cli-util')
+const {makeCoverageTests} = require('../src/index')
+const {supportedCommands} = require('../src/tests')
 
 describe('cli-util', () => {
   describe('doRunTests', () => {

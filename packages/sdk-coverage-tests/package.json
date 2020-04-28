@@ -1,12 +1,12 @@
 {
-  "name": "@applitools/sdk-test-kit",
+  "name": "@applitools/sdk-coverage-tests",
   "private": true,
-  "version": "1.0.17",
+  "version": "1.0.0",
   "engines": {
     "node": ">=10.0.0"
   },
   "main": "src/index.js",
-  "description": "Test Kit for Applitools SDKs",
+  "description": "Coverage Tests for Applitools SDKs",
   "author": "Applitools <team@applitools.com>",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "license": "SEE LICENSE IN LICENSE",
@@ -40,6 +40,6 @@
     "typescript": "^3.7.4"
   },
   "bin": {
-    "coverage-tests": "./src/coverage-tests/cli.js"
+    "coverage-tests": "./src/cli.js"
   }
 }
