@@ -17,7 +17,8 @@
     "screenshots/",
     "applitools.config.js",
     "logs",
-    "tmp/"
+    "tmp/",
+    "**/test/coverage/generic/"
   ],
   "rules": {
     "prettier/prettier": "error",
