@@ -1,6 +1,4 @@
 const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
-const uuidv4 = require('uuid/v4')
-const branchId = uuidv4()
 const sdkName = 'eyes-testcafe'
 
 function initialize() {
@@ -17,7 +15,6 @@ function initialize() {
     options.executionMode.isScrollStitching
       ? result.storeHook('beforeEach', `eyes.setStitchMode(StitchMode.SCROLL)`)
       : undefined
-    result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
     result.storeHook(
       'beforeEach',
       `if (process.env.APPLITOOLS_API_KEY_SDK) {

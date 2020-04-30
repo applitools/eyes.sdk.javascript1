@@ -11,7 +11,7 @@
     "test:unit": "mocha \"test/unit/**/*.js\"",
     "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "yarn start-chromedriver && env XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 test/coverage/generic/*.spec.js",
+    "test:coverage": "yarn start-chromedriver && env APPLITOOLS_BATCH_ID=uuidgen XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 test/coverage/generic/*.spec.js",
     "preversion": "bongo preversion && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion",
@@ -41,7 +41,6 @@
     "mocha": "4.0.1",
     "mocha-parallel-tests": "^2.1.0",
     "shared-examples-for": "^0.1.3",
-    "uuid": "^3.3.3",
     "mocha-parallel-tests": "^2.2.2",
     "spec-xunit-file": "0.0.1-3"
   },

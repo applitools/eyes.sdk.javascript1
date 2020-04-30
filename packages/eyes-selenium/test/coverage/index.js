@@ -1,8 +1,6 @@
 const supportedTests = require('./supported-tests')
 const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
-const uuidv4 = require('uuid/v4')
 const sdkName = 'eyes-selenium'
-const branchId = uuidv4()
 
 function initialize() {
   const result = makeEmitTracker()
@@ -51,7 +49,6 @@ function initialize() {
     if (process.env.APPLITOOLS_API_KEY_SDK) {
       result.storeHook('beforeEach', `eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)`)
     }
-    result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
     result.storeHook('beforeEach', `eyes.setMatchTimeout(0)`)
   }
 

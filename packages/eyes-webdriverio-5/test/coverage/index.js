@@ -1,8 +1,6 @@
 const supportedTests = require('./supported-tests')
 const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
-const uuidv4 = require('uuid/v4')
 const sdkName = 'eyes.webdriverio.javascript5'
-const branchId = uuidv4()
 
 function initialize() {
   const result = makeEmitTracker()
@@ -67,7 +65,6 @@ function initialize() {
       }`,
     )
     result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
-    result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
     if (!options.executionMode.isVisualGrid) {
       result.storeHook('beforeEach', `eyes.setHideScrollbars(true)`)
     }
