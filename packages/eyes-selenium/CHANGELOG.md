@@ -2,11 +2,25 @@
 
 ## Unreleased
 
+
+## 4.35.0 - 2020/4/27
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- updated to @applitools/dom-utils@4.7.13
+- updated to @applitools/eyes-sdk-core@9.2.1
+- updated to @applitools/visual-grid-client@13.7.2
+- updated to @applitools/dom-utils@4.7.14
+
+## 4.34.0 - 2020/4/26
+
+- added emulation devices
 - support typed selectors
 - support ignore, floating, strict, layout, content, accessibility regions for VG
 - fix returned value from `close` method ([Trello](https://trello.com/c/m6K2Ftd5/277-wdio5-difficulty-getting-test-results-object))
-- updated to @applitools/eyes-sdk-core@9.1.0
-- updated to @applitools/visual-grid-client@13.6.13
+- updated to @applitools/eyes-sdk-core@9.1.1
+- updated to @applitools/dom-utils@4.7.12
+- updated to @applitools/eyes-sdk-core@9.1.2
+- updated to @applitools/visual-grid-client@13.6.15
 
 ## 4.33.31 - 2020/3/31
 

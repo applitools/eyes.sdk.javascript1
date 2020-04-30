@@ -33,8 +33,8 @@ const supportedTests = [
   {name: 'TestCheckFrame', executionMode: {isCssStitching: true}},
   {name: 'TestCheckFrame', executionMode: {isScrollStitching: true}},
   {name: 'TestCheckFrame_Fluent', executionMode: {isVisualGrid: true}},
-  {name: 'TestCheckFrame_Fluent', executionMode: {isCssStitching: true}},
-  {name: 'TestCheckFrame_Fluent', executionMode: {isScrollStitching: true}},
+  {name: 'TestCheckFrame_Fluent', executionMode: {isCssStitching: true}}, // should be failing, instead TestCheckFrameHideScrollbars_Fluent should pass until all SDK's implemenet this and then the baseline for this tests should be updated
+  {name: 'TestCheckFrame_Fluent', executionMode: {isScrollStitching: true}}, // should be failing, instead TestCheckFrameHideScrollbars_Fluent should pass until all SDK's implemenet this and then the baseline for this tests should be updated
   {name: 'TestCheckFrameFully_Fluent', executionMode: {isVisualGrid: true}},
   {name: 'TestCheckFrameFully_Fluent', executionMode: {isCssStitching: true}},
   {name: 'TestCheckFrameFully_Fluent', executionMode: {isScrollStitching: true}},
@@ -203,6 +203,8 @@ const supportedTests = [
   {name: 'Test Abort', executionMode: {isVisualGrid: true}},
   {name: 'Test Abort', executionMode: {isCssStitching: true}},
   {name: 'Test_VGTestsCount_1', executionMode: {isVisualGrid: true, useStrictName: true}},
+  {name: 'TestCheckFrameHideScrollbars_Fluent', executionMode: {isCssStitching: true}},
+  {name: 'TestCheckFrameHideScrollbars_Fluent', executionMode: {isScrollStitching: true}},
 ]
 
 module.exports = supportedTests

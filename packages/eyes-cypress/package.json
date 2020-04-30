@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.9.21",
+  "version": "3.10.3",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -19,9 +19,6 @@
     "cypress": "cd tests/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js",
     "cypress:run": "cd tests/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js",
     "cypress:play": "cd tests/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
-    "changelog": "git changelog -x -p -f v$npm_package_version > History.md && git add ./History.md && git commit -am 'changelog'",
-    "changelog:init": "git config changelog.format \"* %s [[%h]($(echo $npm_package_repository_url|cut -d+ -f2|cut -d. -f1-2)/commit/%H)]\"",
-    "changelog:install": "sudo apt-get install git-extras",
     "preversion": "bongo preversion",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
@@ -42,10 +39,10 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "3.4.2",
-    "@applitools/eyes-sdk-core": "9.0.3",
+    "@applitools/dom-snapshot": "3.5.0",
+    "@applitools/eyes-sdk-core": "9.2.1",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.6.11",
+    "@applitools/visual-grid-client": "13.7.3",
     "body-parser": "^1.19.0",
     "chalk": "3.0.0",
     "cors": "^2.8.5",

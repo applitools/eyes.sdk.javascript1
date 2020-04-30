@@ -1,19 +1,25 @@
 'use strict'
 
 const assert = require('assert')
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {ServerConnector, Logger, Configuration, GeneralUtils} = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
+function getServerConnector(config = {}) {
+  return new ServerConnector({
+    getAgentId: () => '',
+    logger,
+    configuration: new Configuration(config),
+  })
+}
+
 describe('ServerConnector', () => {
   it('sends startSession request', async () => {
-    const {port, close} = await fakeEyesServer({logger})
+    const {port, close} = await startFakeEyesServer({logger})
     try {
       const serverUrl = `http://localhost:${port}`
-      const configuration = new Configuration()
-      configuration.setServerUrl(serverUrl)
-      const serverConnector = new ServerConnector(logger, configuration)
+      const serverConnector = getServerConnector({serverUrl})
       const appIdOrName = 'ServerConnector unit test'
       const scenarioIdOrName = "doesn't throw exception on server failure"
       const batchId = String(Date.now())
@@ -42,12 +48,10 @@ describe('ServerConnector', () => {
 
   // [trello] https://trello.com/c/qjmAw1Sc/160-storybook-receiving-an-inconsistent-typeerror
   it("doesn't throw exception on server failure", async () => {
-    const {port, close} = await fakeEyesServer({logger, hangUp: true})
+    const {port, close} = await startFakeEyesServer({logger, hangUp: true})
     try {
       const serverUrl = `http://localhost:${port}`
-      const configuration = new Configuration()
-      configuration.setServerUrl(serverUrl)
-      const serverConnector = new ServerConnector(logger, configuration)
+      const serverConnector = getServerConnector({serverUrl})
       const [err] = await presult(serverConnector.startSession({}))
       assert.deepStrictEqual(err, new Error('socket hang up'))
     } finally {
@@ -56,12 +60,10 @@ describe('ServerConnector', () => {
   })
 
   it('getUserAgents works', async () => {
-    const {port, close} = await fakeEyesServer({logger})
+    const {port, close} = await startFakeEyesServer({logger})
     try {
       const serverUrl = `http://localhost:${port}`
-      const configuration = new Configuration()
-      configuration.setServerUrl(serverUrl)
-      const serverConnector = new ServerConnector(logger, configuration)
+      const serverConnector = getServerConnector({serverUrl})
       await serverConnector.renderInfo()
       const userAgents = await serverConnector.getUserAgents()
       assert.deepStrictEqual(userAgents, {
@@ -84,8 +86,7 @@ describe('ServerConnector', () => {
   })
 
   it('uploadScreenshot uploads to resultsUrl webhook', async () => {
-    const configuration = new Configuration()
-    const serverConnector = new ServerConnector(logger, configuration)
+    const serverConnector = getServerConnector()
     const renderingInfo = await serverConnector.renderInfo()
     const id = GeneralUtils.guid()
     const buffer = Buffer.from('something')
@@ -94,8 +95,7 @@ describe('ServerConnector', () => {
   })
 
   it('postDomSnapshot uploads to resultsUrl webhook', async () => {
-    const configuration = new Configuration()
-    const serverConnector = new ServerConnector(logger, configuration)
+    const serverConnector = getServerConnector()
     const renderingInfo = await serverConnector.renderInfo()
     const buffer = Buffer.from('something')
     const id = GeneralUtils.guid()
@@ -104,8 +104,7 @@ describe('ServerConnector', () => {
   })
 
   it('long request waits right amount of time', async () => {
-    const configuration = new Configuration()
-    const serverConnector = new ServerConnector(logger, configuration)
+    const serverConnector = getServerConnector()
     const ANSWER_AFTER = 8 // requests
     const timeouts = []
     let timestampBefore
@@ -136,8 +135,7 @@ describe('ServerConnector', () => {
   })
 
   it('check polling protocol', async () => {
-    const configuration = new Configuration()
-    const serverConnector = new ServerConnector(logger, configuration)
+    const serverConnector = getServerConnector()
     const MAX_POLLS_COUNT = 2
     const RES_DATA = {createdAt: Date.now()}
     let pollingWasStarted = false
@@ -176,7 +174,7 @@ describe('ServerConnector', () => {
 
   // NOTE: this can be deleted when Eyes server stops being backwards compatible with old SDK's that don't support long running tasks
   it('sends special request headers for all requests', async () => {
-    const serverConnector = new ServerConnector(logger, new Configuration())
+    const serverConnector = getServerConnector()
     serverConnector._axios.defaults.adapter = async config => ({
       status: 200,
       config,
@@ -193,7 +191,7 @@ describe('ServerConnector', () => {
 
   // NOTE: this can be deleted when Eyes server stops being backwards compatible with old SDK's that don't support long running tasks
   it("doesn't send special request headers for polling requests", async () => {
-    const serverConnector = new ServerConnector(logger, new Configuration())
+    const serverConnector = getServerConnector()
     serverConnector._axios.defaults.adapter = async config => ({
       status: 202,
       config,
@@ -212,7 +210,7 @@ describe('ServerConnector', () => {
   })
 
   it('does NOT mark RunningSession as new if there is no isNew in the payload and response status is 200', async () => {
-    const serverConnector = new ServerConnector(logger, new Configuration())
+    const serverConnector = getServerConnector()
     serverConnector._axios.defaults.adapter = async config => ({
       status: 200,
       data: {},
@@ -224,7 +222,7 @@ describe('ServerConnector', () => {
   })
 
   it('marks RunningSession as new if there is no isNew in the payload and response status is 201', async () => {
-    const serverConnector = new ServerConnector(logger, new Configuration())
+    const serverConnector = getServerConnector()
     serverConnector._axios.defaults.adapter = async config => ({
       status: 201,
       data: {},
@@ -236,7 +234,7 @@ describe('ServerConnector', () => {
   })
 
   it('sets RunningSession.isNew with the value of isNew in the payload', async () => {
-    const serverConnector = new ServerConnector(logger, new Configuration())
+    const serverConnector = getServerConnector()
     serverConnector._axios.defaults.adapter = async config => ({
       status: 200,
       data: {isNew: true},

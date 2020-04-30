@@ -42,7 +42,6 @@ describe('VisualGrid Resources', () => {
     configuration.setTestName('Open Concurrency with Batch 2')
     configuration.setAppName('RenderingGridIntegration')
     configuration.addBrowser(800, 600, BrowserType.CHROME)
-    configuration.addBrowser(800, 600, BrowserType.CHROME)
     configuration.addBrowser(700, 500, BrowserType.CHROME)
     configuration.addBrowser(400, 300, BrowserType.CHROME)
     eyes.setConfiguration(configuration)

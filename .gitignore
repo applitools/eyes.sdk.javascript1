@@ -13,7 +13,7 @@ node_modules
 .eslintcache
 *.swp
 *~
-
+.tmp-changelogs.html
 *.log
 tmp
 .env

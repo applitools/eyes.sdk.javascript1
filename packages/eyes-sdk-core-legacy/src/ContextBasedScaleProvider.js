@@ -1,7 +1,7 @@
 ;(function() {
   'use strict'
 
-  var ArgumentGuard = require('eyes.utils').ArgumentGuard
+  var ArgumentGuard = require('@applitools/eyes-common-legacy').ArgumentGuard
   var ScaleProvider = require('./ScaleProvider').ScaleProvider
 
   // Allowed deviations for viewport size and default content entire size.

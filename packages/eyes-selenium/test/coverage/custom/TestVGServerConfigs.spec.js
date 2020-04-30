@@ -8,7 +8,11 @@ const {
   MatchLevel,
 } = require('../../../index')
 const {assertDefaultMatchSettings, assertImageMatchSettings} = require('./util/ApiAssertions')
-const {expect} = require('chai')
+const util = require('util')
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+chai.use(chaiAsPromised)
+const expect = chai.expect
 const batch = getBatch()
 
 describe('TestVGServerConfigs', () => {
@@ -35,7 +39,7 @@ describe('TestVGServerConfigs', () => {
     await expect(eyes.close()).to.be.rejectedWith(Error, 'IllegalState: Eyes not open')
   })
 
-  it('TestVGChangeConfigAfterOpen', async () => {
+  it.skip('TestVGChangeConfigAfterOpen', async () => {
     let conf = new Configuration()
     conf.setBatch(batch)
     conf.setAppName('app')
@@ -89,6 +93,36 @@ describe('TestVGServerConfigs', () => {
         },
         1,
       )
+    }
+  })
+})
+
+describe('Miscellaneous VG tests', () => {
+  let driver
+  before(async () => {
+    driver = await getDriver('CHROME')
+  })
+
+  // This needs to be implemented in all other SDK's as well
+  it('TestWarningForEDGE', async () => {
+    const origConsoleLog = console.log
+    const logOutput = []
+    console.log = (...args) => logOutput.push(util.format(...args))
+    const yellowStart = '\u001b[33m'
+    const yellowEnd = '\u001b[39m'
+    const edgeWarningText = `The 'edge' option that is being used in your browsers' configuration will soon be deprecated. Please change it to either 'edgelegacy' for the legacy version or to 'edgechromium' for the new Chromium-based version. Please note, when using the built-in BrowserType enum, then the values are BrowserType.EDGE_LEGACY and BrowserType.EDGE_CHROMIUM, respectively.`
+    const edgeWarning = `${yellowStart}${edgeWarningText}${yellowEnd}`
+
+    try {
+      const {eyes} = getEyes('VG')
+      const configuration = eyes.getConfiguration()
+      configuration.addBrowser(1000, 900, BrowserType.EDGE)
+      configuration.addBrowser(1000, 900, BrowserType.FIREFOX)
+      eyes.setConfiguration(configuration)
+      await eyes.open(driver, 'some app', 'some test', {width: 800, height: 600})
+      expect(logOutput).to.eql([edgeWarning])
+    } finally {
+      console.log = origConsoleLog
     }
   })
 })

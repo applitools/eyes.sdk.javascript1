@@ -1,6 +1,6 @@
 'use strict'
 
-const ONE_VERSION_REGEX = /^(chrome|firefox|safari)\-1$/
+const ONE_VERSION_REGEX = /^(chrome|firefox|safari|edgechromium)\-1$/
 const TWO_VERSIONS_REGEX = /^(chrome|firefox|safari)\-2$/
 
 function translateBrowserNameVersion(browserName) {

@@ -3,6 +3,18 @@
 ## Unreleased
 
 
+## 3.22.1 - 2020/4/26
+
+- fix bug with config: handle configPath (including env var) as full path to config file
+
+## 3.22.0 - 2020/4/26
+
+- add EDGE_CHROMIUM, EDGE_LEGACY and EDGE_CHROMIUM_ONE_VERSION_BACK to `BrowserType`
+
+## 3.21.1 - 2020/4/23
+
+- added device names to the emulation device list
+
  ## 3.21.0 - 2020/4/5
 
 - supporting env variable for setting applitools config file path 

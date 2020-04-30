@@ -4,7 +4,7 @@
  * The extent in which two images match (or are expected to match).
  *
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const MatchLevel = {
   /**

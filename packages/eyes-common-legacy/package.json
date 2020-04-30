@@ -1,8 +1,9 @@
 {
-  "name": "eyes.utils",
-  "version": "4.0.0",
+  "name": "@applitools/eyes-common-legacy",
+  "version": "1.0.1",
   "description": "General purpose Javascript utilities.",
   "keywords": [
+    "eyes-common-legacy",
     "eyes.utils",
     "applitools",
     "eyes",

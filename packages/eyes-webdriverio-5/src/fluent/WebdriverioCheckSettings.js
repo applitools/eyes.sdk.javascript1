@@ -125,7 +125,7 @@ class WebdriverioCheckSettings extends CheckSettings {
    * Adds one or more ignore regions.
    *
    * @override
-   * @param {(GetRegion|Region|By|WebElement|EyesWebElement)...} regionsOrContainers One or more regions or region containers to ignore when validating the screenshot.
+   * @param {...(GetRegion|Region|By|WebElement|EyesWebElement)} regionsOrContainers - One or more regions or region containers to ignore when validating the screenshot.
    * @return {WebdriverioCheckSettings} This instance of the settings object.
    */
   ignores(...regionsOrContainers) {
@@ -217,7 +217,7 @@ class WebdriverioCheckSettings extends CheckSettings {
    *
    * @override
    * @param {int} maxOffset How much each of the content rectangles can move in any direction.
-   * @param {(GetFloatingRegion|Region|By|WebElement|EyesWebElement)...} regionsOrContainers One or more content rectangles or region containers
+   * @param {...(GetFloatingRegion|Region|By|WebElement|EyesWebElement)} regionsOrContainers One or more content rectangles or region containers
    * @return {WebdriverioCheckSettings} This instance of the settings object.
    */
   floatings(maxOffset, ...regionsOrContainers) {
@@ -227,8 +227,7 @@ class WebdriverioCheckSettings extends CheckSettings {
 
   /**
    * @inheritDoc
-   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings|By|WebElement|EyesWebElement} regionOrContainer -
-   *   The content rectangle or region container
+   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings|By|WebElement|EyesWebElement} regionOrContainer - The content rectangle or region container
    * @param {AccessibilityRegionType} [regionType] - Type of accessibility.
    * @return {this}
    */
@@ -247,7 +246,7 @@ class WebdriverioCheckSettings extends CheckSettings {
 
   /**
    *
-   * @param [timeoutMilliseconds]
+   * @param {number} [timeoutMilliseconds]
    * @returns {WebdriverioCheckSettings}
    */
   timeout(timeoutMilliseconds = USE_DEFAULT_MATCH_TIMEOUT) {
@@ -377,28 +376,36 @@ class WebdriverioCheckSettings extends CheckSettings {
   getScriptHooks() {
     return this._scriptHooks
   }
-
+  /**
+   * @param {...TBDTYPE} regions
+   */
   strictRegions(...regions) {
     regions.forEach(region => {
       this._processStrictRegions(region)
     })
     return this
   }
-
+  /**
+   * @param {...TBDTYPE} regions
+   */
   layoutRegions(...regions) {
     regions.forEach(region => {
       this._processLayoutRegions(region)
     })
     return this
   }
-
+  /**
+   * @param {...TBDTYPE} regions
+   */
   contentRegions(...regions) {
     regions.forEach(region => {
       this._processContentRegions(region)
     })
     return this
   }
-
+  /*
+   * @private
+   */
   _processStrictRegions(regionOrContainer) {
     if (regionOrContainer instanceof By) {
       this._strictRegions.push(new IgnoreRegionBySelector(regionOrContainer))
@@ -408,7 +415,9 @@ class WebdriverioCheckSettings extends CheckSettings {
       super.strictRegions(regionOrContainer)
     }
   }
-
+  /*
+   * @private
+   */
   _processLayoutRegions(regionOrContainer) {
     if (regionOrContainer instanceof By) {
       this._layoutRegions.push(new IgnoreRegionBySelector(regionOrContainer))
@@ -418,7 +427,9 @@ class WebdriverioCheckSettings extends CheckSettings {
       super.layoutRegions(regionOrContainer)
     }
   }
-
+  /*
+   * @private
+   */
   _processContentRegions(regionOrContainer) {
     if (regionOrContainer instanceof By) {
       this._contentRegions.push(new IgnoreRegionBySelector(regionOrContainer))

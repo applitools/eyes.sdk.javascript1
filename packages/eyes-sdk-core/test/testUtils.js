@@ -11,14 +11,16 @@ const getResource = fileName => fs.readFileSync(getResourcePath(fileName))
 
 const getResourceAsText = fileName => fs.readFileSync(getResourcePath(fileName), 'utf8').trim()
 
-function FakeEyes(...args) {
-  const eyes = new EyesBase(...args)
-  eyes.getAndSetBatchInfo = eyes.getAndSaveRenderingInfo = eyes.getInferredEnvironment = () => {}
-  eyes.getBaseAgentId = () => 'agentId'
-  return eyes
+class EyesBaseImpl extends EyesBase {
+  getBaseAgentId() {
+    return 'implBaseAgent'
+  }
+  getAndSetBatchInfo() {}
+  getAndSaveRenderingInfo() {}
+  getInferredEnvironment() {}
 }
 
 exports.getResourcePath = getResourcePath
 exports.getResource = getResource
 exports.getResourceAsText = getResourceAsText
-exports.FakeEyes = FakeEyes
+exports.EyesBaseImpl = EyesBaseImpl

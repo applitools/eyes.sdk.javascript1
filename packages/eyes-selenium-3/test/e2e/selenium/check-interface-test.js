@@ -16,7 +16,12 @@ describe('Eyes.Selenium.JavaScript - Selenium', function() {
 
   before(function() {
     driver = new Builder()
-      .forBrowser('chrome')
+      .withCapabilities({
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ['headless'],
+        },
+      })
       //.usingServer('http://localhost:4444/wd/hub')
       .build()
 
@@ -37,8 +42,8 @@ describe('Eyes.Selenium.JavaScript - Selenium', function() {
     })
   })
 
-  it('check interface', function() {
-    driver.get('https://astappiev.github.io/test-html-pages/')
+  it('check interface', async function() {
+    await driver.get('https://astappiev.github.io/test-html-pages/')
 
     // Entire window, equivalent to eyes.checkWindow()
     eyes.check(

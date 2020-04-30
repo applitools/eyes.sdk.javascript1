@@ -1,8 +1,8 @@
 ;(function() {
   'use strict'
 
-  var EyesSDK = require('eyes.sdk'),
-    EyesUtils = require('eyes.utils')
+  var EyesSDK = require('@applitools/eyes-sdk-core-legacy'),
+    EyesUtils = require('@applitools/eyes-common-legacy')
   var MouseAction = EyesSDK.Triggers.MouseAction,
     GeneralUtils = EyesUtils.GeneralUtils,
     GeometryUtils = EyesUtils.GeometryUtils

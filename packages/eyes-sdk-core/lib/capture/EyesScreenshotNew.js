@@ -1,0 +1,487 @@
+'use strict'
+
+const {
+  ArgumentGuard,
+  BrowserNames,
+  CoordinatesType,
+  Region,
+  Location,
+  RectangleSize,
+} = require('@applitools/eyes-common')
+const CoordinatesTypeConversionError = require('../errors/CoordinatesTypeConversionError')
+const OutOfBoundsError = require('../errors/OutOfBoundsError').OutOfBoundsError
+const FrameChain = require('../frames/FrameChain')
+const EyesUtils = require('../EyesUtils')
+
+/**
+ * @readonly
+ * @enum {number}
+ */
+const ScreenshotType = {
+  VIEWPORT: 1,
+  ENTIRE_FRAME: 2,
+}
+
+class EyesScreenshot {
+  /**
+   * !WARNING! After creating new instance of EyesScreenshot, it should be initialized by calling to init or initFromFrameSize method
+   *
+   * @param {Logger} logger A Logger instance.
+   * @param {Eyes} eyes The web eyes used to get the screenshot.
+   * @param {MutableImage} image The actual screenshot image.
+   */
+  constructor(logger, eyes, image) {
+    ArgumentGuard.notNull(logger, 'logger')
+    ArgumentGuard.notNull(eyes, 'eyes')
+    ArgumentGuard.notNull(image, 'image')
+    this._logger = logger
+    this._image = image
+    this._eyes = eyes
+    /** @type {FrameChain} */
+    this._frameChain = eyes._context.frameChain
+    /** @type {ScreenshotType} */
+    this._screenshotType = null
+    /** @type {Location} */
+    this._currentFrameScrollPosition = null
+    /**
+     * The top/left coordinates of the frame window(!) relative to the top/left
+     * of the screenshot. Used for calculations, so can also be outside(!) the screenshot.
+     *
+     * @type {Location}
+     */
+    this._frameLocationInScreenshot = null
+
+    this._frameSize = null
+
+    /**
+     * The top/left coordinates of the frame window(!) relative to the top/left
+     * of the screenshot. Used for calculations, so can also be outside(!) the screenshot.
+     *
+     * @type {Region}
+     */
+    this._frameRect = null
+  }
+
+  /**
+   * @private
+   * @param {ScreenshotType} screenshotType
+   * @param {MutableImage} image
+   * @return {Promise.<ScreenshotType>}
+   */
+  static async getScreenshotType(image, eyes) {
+    let viewportSize = await eyes.getViewportSize()
+    const scaleViewport = eyes.shouldStitchContent()
+    if (scaleViewport) {
+      const pixelRatio = eyes.getDevicePixelRatio()
+      viewportSize = viewportSize.scale(pixelRatio)
+    }
+
+    if (
+      (image.getWidth() <= viewportSize.getWidth() &&
+        image.getHeight() <= viewportSize.getHeight()) ||
+      (eyes._checkSettings.getFrameChain().length > 0 && // workaround: define screenshotType as VIEWPORT
+        eyes._userAgent.getBrowser() === BrowserNames.Firefox &&
+        Number.parseInt(eyes._userAgent.getBrowserMajorVersion(), 10) < 48)
+    ) {
+      return ScreenshotType.VIEWPORT
+    } else {
+      return ScreenshotType.ENTIRE_FRAME
+    }
+  }
+
+  /**
+   * Creates a frame(!) window screenshot.
+   *
+   * @param {Logger} logger A Logger instance.
+   * @param {EyesWDIO} eyes The eyes instance used to get the screenshot.
+   * @param {MutableImage} image The actual screenshot image.
+   * @param {RectangleSize} entireFrameSize The full internal size of the frame.
+   * @return {Promise<EyesScreenshot>}
+   */
+  static async fromFrameSize(logger, eyes, image, entireFrameSize) {
+    const screenshot = new EyesScreenshot(logger, eyes, image)
+    return screenshot.initFromFrameSize(entireFrameSize)
+  }
+
+  /**
+   * Creates a frame(!) window screenshot from screenshot type and location.
+   *
+   * @param {Logger} logger A Logger instance.
+   * @param {EyesWDIO} eyes The eyes instance used to get the screenshot.
+   * @param {MutableImage} image The actual screenshot image.
+   * @param {ScreenshotType} [screenshotType] The screenshot's type (e.g., viewport/full page).
+   * @param {Location} [frameLocationInScreenshot[ The current frame's location in the screenshot.
+   * @return {Promise<EyesScreenshot>}
+   */
+  static async fromScreenshotType(logger, eyes, image, screenshotType, frameLocationInScreenshot) {
+    const screenshot = new EyesScreenshot(logger, eyes, image)
+    return screenshot.init(screenshotType, frameLocationInScreenshot)
+  }
+
+  /**
+   * Creates a frame(!) window screenshot.
+   *
+   * @param {RectangleSize} entireFrameSize The full internal size of the frame.
+   * @return {Promise<EyesScreenshot>}
+   */
+  async initFromFrameSize(entireFrameSize) {
+    // The frame comprises the entire screenshot.
+    this._screenshotType = ScreenshotType.ENTIRE_FRAME
+
+    this._currentFrameScrollPosition = Location.ZERO
+    this._frameLocationInScreenshot = Location.ZERO
+    this._frameSize = entireFrameSize
+    this._frameRect = new Region(Location.ZERO, entireFrameSize)
+    return this
+  }
+
+  /**
+   * @param {ScreenshotType} [screenshotType] The screenshot's type (e.g., viewport/full page).
+   * @param {Location} [frameLocationInScreenshot] The current frame's location in the screenshot.
+   * @return {Promise<EyesScreenshot>}
+   */
+  async init(screenshotType, frameLocationInScreenshot) {
+    this._screenshotType =
+      screenshotType || (await EyesScreenshot.getScreenshotType(this._image, this._eyes))
+    const positionProvider = this._eyes.getPositionProvider()
+    this._currentFrameScrollPosition = await positionProvider
+      .getCurrentPosition()
+      .then(location => location || Location.ZERO)
+      .catch(() => Location.ZERO)
+
+    this._frameChain = this._eyes._context.frameChain
+    if (this._frameChain.size > 0) {
+      this._frameLocationInScreenshot = this._frameChain.getCurrentFrameLocationInViewport()
+      if (this._screenshotType === ScreenshotType.ENTIRE_FRAME) {
+        this._frameLocationInScreenshot = this._frameLocationInScreenshot.offsetByLocation(
+          this._frameChain.getTopFrameScrollLocation(),
+        )
+      }
+      this._frameSize = this._frameChain.getCurrentFrameInnerSize()
+    } else {
+      this._frameLocationInScreenshot = frameLocationInScreenshot || Location.ZERO
+      // get entire page size might throw an exception for applications which don't support Javascript (e.g., Appium).
+      // In that case we'll use the viewport size as the frame's size.
+      this._frameSize = await positionProvider
+        .getEntireSize()
+        .catch(() => EyesUtils.getTopContextViewportSize(this._logger, this._eyes.getDriver()))
+    }
+
+    this._logger.verbose('Calculating frame window...')
+    this._frameRect = new Region(this._frameLocationInScreenshot, this._frameSize)
+    this._frameRect.intersect(new Region(0, 0, this._image.getWidth(), this._image.getHeight()))
+    if (this._frameRect.isSizeEmpty()) {
+      throw new Error('Got empty frame window for screenshot!')
+    }
+
+    this._logger.verbose('Done!')
+    return this
+  }
+
+  /**
+   * @return {MutableImage} - the screenshot image.
+   */
+  getImage() {
+    return this._image
+  }
+
+  /**
+   * @return {Region} The region of the frame which is available in the screenshot, in screenshot coordinates.
+   */
+  getFrameWindow() {
+    return this._frameRect
+  }
+
+  /**
+   * @return {FrameChain} A copy of the frame chain which was available when the screenshot was created.
+   */
+  getFrameChain() {
+    return new FrameChain(this._logger, this._frameChain)
+  }
+
+  /**
+   * @override
+   * @param {Location} location
+   * @param {CoordinatesType} coordinatesType
+   * @return {Location}
+   */
+  getLocationInScreenshot(location, coordinatesType) {
+    this._location = this.convertLocation(
+      location,
+      coordinatesType,
+      CoordinatesType.SCREENSHOT_AS_IS,
+    )
+
+    // Making sure it's within the screenshot bounds
+    if (!this._frameRect.contains(location)) {
+      throw new OutOfBoundsError(
+        `Location ${location} ('${coordinatesType}') is not visible in screenshot!`,
+      )
+    }
+    return this._location
+  }
+
+  /**
+   * @override
+   * @param {Region} region
+   * @param {CoordinatesType} resultCoordinatesType
+   * @return {Region}
+   */
+  getIntersectedRegion(region, resultCoordinatesType) {
+    if (region.isSizeEmpty()) {
+      return new Region(region)
+    }
+
+    const originalCoordinatesType = region.getCoordinatesType()
+    let intersectedRegion = this.convertRegionLocation(
+      region,
+      originalCoordinatesType,
+      CoordinatesType.SCREENSHOT_AS_IS,
+    )
+
+    switch (originalCoordinatesType) {
+      // If the request was context based, we intersect with the frame window.
+      case CoordinatesType.CONTEXT_AS_IS:
+      case CoordinatesType.CONTEXT_RELATIVE:
+        intersectedRegion.intersect(this._frameRect)
+        break
+      // If the request is screenshot based, we intersect with the image
+      case CoordinatesType.SCREENSHOT_AS_IS:
+        intersectedRegion.intersect(
+          new Region(0, 0, this._image.getWidth(), this._image.getHeight()),
+        )
+        break
+      default:
+        throw new CoordinatesTypeConversionError(
+          `Unknown coordinates type: '${originalCoordinatesType}'`,
+        )
+    }
+
+    // If the intersection is empty we don't want to convert the coordinates.
+    if (intersectedRegion.isEmpty()) {
+      return intersectedRegion
+    }
+
+    // Converting the result to the required coordinates type.
+    intersectedRegion = this.convertRegionLocation(
+      intersectedRegion,
+      CoordinatesType.SCREENSHOT_AS_IS,
+      resultCoordinatesType,
+    )
+    return intersectedRegion
+  }
+
+  /**
+   *
+   * @param {Region} region The region which location's coordinates needs to be converted.
+   * @param {CoordinatesType} from The current coordinates type for {@code region}.
+   * @param {CoordinatesType} to The target coordinates type for {@code region}.
+   * @return {Region} A new region which is the transformation of {@code region} to the {@code to} coordinates type.
+   */
+  convertRegionLocation(region, from, to) {
+    ArgumentGuard.notNull(region, 'region')
+
+    if (region.isSizeEmpty()) {
+      return new Region(region)
+    }
+
+    ArgumentGuard.notNull(from, 'from')
+    ArgumentGuard.notNull(to, 'to')
+
+    const updatedLocation = this.convertLocation(region.getLocation(), from, to)
+
+    return new Region(updatedLocation, region.getSize())
+  }
+
+  /**
+   * Converts a location's coordinates with the {@code from} coordinates type to the {@code to} coordinates type.
+   *
+   * @override
+   * @param {Location} location The location which coordinates needs to be converted.
+   * @param {CoordinatesType} from The current coordinates type for {@code location}.
+   * @param {CoordinatesType} to The target coordinates type for {@code location}.
+   * @return {Location} A new location which is the transformation of {@code location} to the {@code to} coordinates type.
+   */
+  convertLocation(location, from, to) {
+    ArgumentGuard.notNull(location, 'location')
+    ArgumentGuard.notNull(from, 'from')
+    ArgumentGuard.notNull(to, 'to')
+
+    let result = new Location(location)
+
+    if (from === to) {
+      return result
+    }
+
+    // If we're not inside a frame, and the screenshot is the entire page, then the context as-is/relative are the same (notice
+    // screenshot as-is might be different, e.g., if it is actually a sub-screenshot of a region).
+    if (this._frameChain.size === 0 && this._screenshotType === ScreenshotType.ENTIRE_FRAME) {
+      if (
+        (from === CoordinatesType.CONTEXT_RELATIVE || from === CoordinatesType.CONTEXT_AS_IS) &&
+        to === CoordinatesType.SCREENSHOT_AS_IS
+      ) {
+        // If this is not a sub-screenshot, this will have no effect.
+        result = result.offset(
+          this._frameLocationInScreenshot.getX(),
+          this._frameLocationInScreenshot.getY(),
+        )
+
+        // FIXME: 18/03/2018 Region workaround
+        // If this is not a region subscreenshot, this will have no effect.
+        // result = result.offset(-this._regionWindow.getLeft(), -this._regionWindow.getTop());
+      } else if (
+        from === CoordinatesType.SCREENSHOT_AS_IS &&
+        (to === CoordinatesType.CONTEXT_RELATIVE || to === CoordinatesType.CONTEXT_AS_IS)
+      ) {
+        result = result.offset(
+          -this._frameLocationInScreenshot.getX(),
+          -this._frameLocationInScreenshot.getY(),
+        )
+      }
+      return result
+    }
+
+    switch (from) {
+      case CoordinatesType.CONTEXT_AS_IS:
+        switch (to) {
+          case CoordinatesType.CONTEXT_RELATIVE:
+            result = result.offset(
+              this._currentFrameScrollPosition.getX(),
+              this._currentFrameScrollPosition.getY(),
+            )
+            break
+          case CoordinatesType.SCREENSHOT_AS_IS:
+            result = result.offset(
+              this._frameLocationInScreenshot.getX(),
+              this._frameLocationInScreenshot.getY(),
+            )
+            break
+          default:
+            throw new CoordinatesTypeConversionError(from, to)
+        }
+        break
+
+      case CoordinatesType.CONTEXT_RELATIVE:
+        switch (to) {
+          case CoordinatesType.SCREENSHOT_AS_IS:
+            // First, convert context-relative to context-as-is.
+            result = result.offset(
+              -this._currentFrameScrollPosition.getX(),
+              -this._currentFrameScrollPosition.getY(),
+            )
+            // Now convert context-as-is to screenshot-as-is.
+            result = result.offset(
+              this._frameLocationInScreenshot.getX(),
+              this._frameLocationInScreenshot.getY(),
+            )
+            break
+          case CoordinatesType.CONTEXT_AS_IS:
+            result = result.offset(
+              -this._currentFrameScrollPosition.getX(),
+              -this._currentFrameScrollPosition.getY(),
+            )
+            break
+          default:
+            throw new CoordinatesTypeConversionError(from, to)
+        }
+        break
+
+      case CoordinatesType.SCREENSHOT_AS_IS:
+        switch (to) {
+          case CoordinatesType.CONTEXT_RELATIVE:
+            // First convert to context-as-is.
+            result = result.offset(
+              -this._frameLocationInScreenshot.getX(),
+              -this._frameLocationInScreenshot.getY(),
+            )
+            // Now convert to context-relative.
+            result = result.offset(
+              this._currentFrameScrollPosition.getX(),
+              this._currentFrameScrollPosition.getY(),
+            )
+            break
+          case CoordinatesType.CONTEXT_AS_IS:
+            result = result.offset(
+              -this._frameLocationInScreenshot.getX(),
+              -this._frameLocationInScreenshot.getY(),
+            )
+            break
+          default:
+            throw new CoordinatesTypeConversionError(from, to)
+        }
+        break
+
+      default:
+        throw new CoordinatesTypeConversionError(from, to)
+    }
+    return result
+  }
+
+  /**
+   * Gets the elements region in the screenshot.
+   *
+   * @param {WDIOElement} element The element which region we want to intersect.
+   * @return {Promise.<Region>} The intersected region, in {@code SCREENSHOT_AS_IS} coordinates type.
+   */
+  async getIntersectedRegionFromElement(element) {
+    ArgumentGuard.notNull(element, 'element')
+
+    let region = await element.getRect()
+
+    // Since the element coordinates are in context relative
+    region = this.getIntersectedRegion(region, CoordinatesType.CONTEXT_RELATIVE)
+
+    if (!region.isEmpty()) {
+      region = this.convertRegionLocation(
+        region,
+        CoordinatesType.CONTEXT_RELATIVE,
+        CoordinatesType.SCREENSHOT_AS_IS,
+      )
+    }
+
+    return region
+  }
+
+  /**
+   * Returns a part of the screenshot based on the given region.
+   *
+   * @override
+   * @param {Region} region The region for which we should get the sub screenshot.
+   * @param {Boolean} throwIfClipped Throw an EyesException if the region is not fully contained in the screenshot.
+   * @return {Promise<EyesScreenshot>} A screenshot instance containing the given region.
+   */
+  async getSubScreenshot(region, throwIfClipped) {
+    this._logger.verbose(`getSubScreenshot([${region}], ${throwIfClipped})`)
+
+    ArgumentGuard.notNull(region, 'region')
+
+    // We calculate intersection based on as-is coordinates.
+    const asIsSubScreenshotRegion = this.getIntersectedRegion(
+      region,
+      CoordinatesType.SCREENSHOT_AS_IS,
+    )
+
+    if (
+      asIsSubScreenshotRegion.isSizeEmpty() ||
+      (throwIfClipped && !asIsSubScreenshotRegion.getSize().equals(region.getSize()))
+    ) {
+      throw new OutOfBoundsError(
+        `Region [${region}] is out of screenshot bounds [${this._frameRect}]`,
+      )
+    }
+
+    const imagePart = await this._image.getImagePart(asIsSubScreenshotRegion)
+    const screenshot = await EyesScreenshot.fromFrameSize(
+      this._logger,
+      this._eyes,
+      imagePart,
+      new RectangleSize(imagePart.getWidth(), imagePart.getHeight()),
+    )
+    screenshot._frameLocationInScreenshot = new Location(-region.getLeft(), -region.getTop())
+    this._logger.verbose('Done!')
+    return screenshot
+  }
+}
+
+EyesScreenshot.ScreenshotType = Object.freeze(ScreenshotType)
+module.exports = EyesScreenshot

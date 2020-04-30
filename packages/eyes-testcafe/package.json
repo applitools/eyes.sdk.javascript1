@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@applitools/dom-capture": "^7.1.2",
-    "@applitools/sdk-fake-eyes-server": "1.1.1",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
     "@applitools/sdk-test-kit": "^1.0.17",
     "@babel/plugin-transform-async-to-generator": "^7.7.4",

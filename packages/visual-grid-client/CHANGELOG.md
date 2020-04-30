@@ -3,6 +3,40 @@
 ## Unreleased
 
 
+## 13.7.5 - 2020/4/30
+
+- updated to @applitools/eyes-sdk-core@10.0.0
+
+## 13.7.4 - 2020/4/30
+
+- updated to @applitools/eyes-sdk-core@9.3.0
+
+## 13.7.3 - 2020/4/30
+
+- updated to @applitools/dom-snapshot@3.5.0
+
+## 13.7.2 - 2020/4/27
+
+- add edgechromium to types
+
+## 13.7.1 - 2020/4/26
+
+- updated to @applitools/eyes-sdk-core@9.2.1
+
+## 13.7.0 - 2020/4/26
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- updated to @applitools/eyes-sdk-core@9.2.0
+
+## 13.6.15 - 2020/4/23
+
+- updated to @applitools/eyes-sdk-core@9.1.2
+
+## 13.6.14 - 2020/4/19
+
+- updated to @applitools/dom-snapshot@3.4.5
+- updated to @applitools/eyes-sdk-core@9.1.1
+
 ## 13.6.13 - 2020/4/7
 
 - add edgelegacy and edgechromium under flag

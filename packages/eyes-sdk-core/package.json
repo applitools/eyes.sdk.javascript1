@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "9.1.0",
+  "version": "10.0.0",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -31,7 +31,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-common": "3.21.0",
+    "@applitools/eyes-common": "3.22.1",
     "@applitools/isomorphic-fetch": "3.0.0",
     "axios": "0.19.2",
     "chalk": "3.0.0",
@@ -39,7 +39,7 @@
     "tunnel": "0.0.6"
   },
   "devDependencies": {
-    "@applitools/sdk-fake-eyes-server": "1.1.1",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",

@@ -1,5 +1,5 @@
 'use strict'
-const {Eyes, Target, StitchMode, ConsoleLogHandler} = require('../../../index')
+const {Eyes, Target, StitchMode} = require('../../../index')
 const {Builder} = require('selenium-webdriver')
 const {sauceUrl, getBatch} = require('./util/TestSetup')
 const batch = getBatch()
@@ -166,7 +166,6 @@ describe.skip('TestMobileDevices', () => {
             eyes.StitchMode = StitchMode.SCROLL
             eyes.addProperty('Orientation', device.orientation.toLowerCase())
             eyes.addProperty('Page', page)
-            eyes.setLogHandler(new ConsoleLogHandler(false))
             webDriver.get(
               `https://applitools.github.io/demo/TestPages/DynamicResolution/${page}.html`,
             )
@@ -200,7 +199,6 @@ describe.skip('TestMobileDevices', () => {
       eyes.StitchMode = StitchMode.CSS
       eyes.addProperty('Orientation', 'portrait')
       eyes.addProperty('Page', page)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
       webDriver.get(`https://applitools.github.io/demo/TestPages/DynamicResolution/${page}.html`)
       await eyes.open(
         webDriver,

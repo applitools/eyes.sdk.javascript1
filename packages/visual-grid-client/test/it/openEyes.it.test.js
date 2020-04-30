@@ -12,7 +12,6 @@ const {promisify: p} = require('util')
 const nock = require('nock')
 const psetTimeout = p(setTimeout)
 const {presult} = require('@applitools/functional-commons')
-const {nonEnvironmentVariableSource} = require('@applitools/feature-flags')
 const {
   RenderStatus,
   RenderStatusResults,
@@ -357,7 +356,8 @@ describe('openEyes', () => {
 * firefox
 * ie10
 * ie11
-* edge
+* edgechromium
+* edgelegacy
 * ie
 * safari
 * chrome-one-version-back
@@ -366,36 +366,13 @@ describe('openEyes', () => {
 * firefox-two-versions-back
 * safari-one-version-back
 * safari-two-versions-back
+* edgechromium-one-version-back
 
 Received: 'firefox-1'.`,
     )
   })
 
-  it('allows edgelegacy and edgechromium under flag', async () => {
-    const [errEdgeLegacy] = await presult(
-      openEyes({
-        wrappers: [wrapper],
-        browser: {width: 320, height: 480, name: 'edgelegacy'},
-        url: `${baseUrl}/test.html`,
-        appName,
-      }),
-    )
-
-    expect(errEdgeLegacy).not.to.be.undefined
-
-    const [errEdgeChromium] = await presult(
-      openEyes({
-        wrappers: [wrapper],
-        browser: {width: 320, height: 480, name: 'edgechromium'},
-        url: `${baseUrl}/test.html`,
-        appName,
-      }),
-    )
-
-    expect(errEdgeChromium).not.to.be.undefined
-
-    nonEnvironmentVariableSource({'vg-cli-edge': true})
-
+  it('allows edgelegacy and edgechromium', async () => {
     const [noErr] = await presult(
       openEyes({
         wrappers: [wrapper],
@@ -1273,7 +1250,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.compareWithParentBranch).to.equal('compareWithParentBranch')
       expect(wrapper.ignoreBaseline).to.equal('ignoreBaseline')
       expect(wrapper.serverUrl).to.equal('serverUrl')
-      expect(wrapper.agentId).to.equal('agentId')
+      expect(wrapper.baseAgentId).to.equal('agentId')
       expect(wrapper.batch.getNotifyOnCompletion()).to.be.true
     }
 
@@ -1336,7 +1313,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.compareWithParentBranch).to.equal('compareWithParentBranch')
       expect(wrapper.ignoreBaseline).to.equal('ignoreBaseline')
       expect(wrapper.serverUrl).to.equal('serverUrl')
-      expect(wrapper.agentId).to.equal('agentId')
+      expect(wrapper.baseAgentId).to.equal('agentId')
     }
 
     expect(wrappers[0].deviceInfo).to.equal('device1 (Chrome emulation)')
@@ -2333,18 +2310,21 @@ Received: 'firefox-1'.`,
   it('translates previous browser versions', async () => {
     const wrapper1 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
     const wrapper2 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
+    const wrapper3 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
     const {checkWindow, close} = await openEyes({
       appName,
-      wrappers: [wrapper1, wrapper2],
+      wrappers: [wrapper1, wrapper2, wrapper3],
       browser: [
         {width: 1, height: 2, name: 'chrome-one-version-back'},
         {width: 3, height: 4, name: 'chrome-two-versions-back'},
+        {width: 1, height: 2, name: 'edgechromium-one-version-back'},
       ],
     })
     checkWindow({cdt: [], url: ''})
     await close()
     expect(wrapper1.results[0].__browserName).to.equal('chrome-1')
     expect(wrapper2.results[0].__browserName).to.equal('chrome-2')
+    expect(wrapper3.results[0].__browserName).to.equal('edgechromium-1')
   })
 
   it('sends the user agent even in case of render failure', async () => {

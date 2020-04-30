@@ -12,7 +12,6 @@ exports.WebdriverioCheckSettings = require('./src/fluent/WebdriverioCheckSetting
 exports.EyesWDIOScreenshot = require('./src/capture/EyesWDIOScreenshot')
 exports.EyesWDIOUtils = require('./src/EyesWDIOUtils')
 exports.NetHelper = require('./src/services/NetHelper')
-exports.StitchMode = require('./src/StitchMode')
 
 // eyes-common
 exports.AccessibilityLevel = core.AccessibilityLevel

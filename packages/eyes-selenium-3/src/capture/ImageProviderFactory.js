@@ -1,6 +1,6 @@
 'use strict'
 
-const {BrowserNames} = require('eyes.utils')
+const {BrowserNames} = require('@applitools/eyes-common-legacy')
 
 const {TakesScreenshotImageProvider} = require('./TakesScreenshotImageProvider')
 const {FirefoxScreenshotImageProvider} = require('./FirefoxScreenshotImageProvider')

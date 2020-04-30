@@ -144,4 +144,49 @@ describe('EyesBase', () => {
     assert.deepStrictEqual(originalConfig.getViewportSize().toJSON(), {width: 500, height: 500})
     assert.deepStrictEqual(eyesConfig.getViewportSize().toJSON(), {width: 300, height: 300})
   })
+
+  describe('getFullAgentId', () => {
+    it('works with base agent id only', () => {
+      const origGetBaseAgentID = EyesBase.prototype.getBaseAgentId
+      try {
+        EyesBase.prototype.getBaseAgentId = () => 'base id'
+        const eyes = new EyesBase()
+        assert.strictEqual(eyes.getFullAgentId(), 'base id')
+      } finally {
+        EyesBase.prototype.getBaseAgentId = origGetBaseAgentID
+      }
+    })
+
+    it('works with base agent and user set agent id', () => {
+      const origGetBaseAgentID = EyesBase.prototype.getBaseAgentId
+      try {
+        EyesBase.prototype.getBaseAgentId = () => 'base id'
+        const eyes = new EyesBase()
+        eyes.setAgentId('custom')
+        assert.strictEqual(eyes.getFullAgentId(), 'custom [base id]')
+      } finally {
+        EyesBase.prototype.getBaseAgentId = origGetBaseAgentID
+      }
+    })
+
+    it('thorws when no base agent id was not set', () => {
+      const eyes = new EyesBase()
+      assert.throws(() => {
+        eyes.getFullAgentId()
+      })
+    })
+
+    it('sets agent id via configuration', () => {
+      const origGetBaseAgentID = EyesBase.prototype.getBaseAgentId
+      try {
+        EyesBase.prototype.getBaseAgentId = () => 'base id'
+        const eyes = new EyesBase()
+        eyes.setAgentId('custom-wrong')
+        eyes.setConfiguration(new Configuration({agentId: 'custom'}))
+        assert.strictEqual(eyes.getFullAgentId(), 'custom [base id]')
+      } finally {
+        EyesBase.prototype.getBaseAgentId = origGetBaseAgentID
+      }
+    })
+  })
 })

@@ -1,10 +1,10 @@
 'use strict'
 const {By} = require('selenium-webdriver')
 const {getDriver, getEyes, getBatch} = require('./util/TestSetup')
-const {ConsoleLogHandler, StitchMode} = require('../../../index')
+const {StitchMode} = require('../../../index')
 const appName = 'Eyes Selenium SDK - Classic API'
 const batch = getBatch()
-describe(appName, () => {
+describe.skip(appName, () => {
   let webDriver, eyes
 
   afterEach(async () => {
@@ -17,7 +17,6 @@ describe(appName, () => {
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       ;({eyes} = await getEyes('classic', StitchMode.CSS))
       eyes.setBatch(batch)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
     })
 
     it('TestCheckInnerFrame', async () => {
@@ -41,7 +40,6 @@ describe(appName, () => {
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       ;({eyes} = await getEyes('classic', StitchMode.SCROLL))
       eyes.setBatch(batch)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
     })
 
     it('TestCheckInnerFrame_SCROLL', async () => {
@@ -65,7 +63,6 @@ describe(appName, () => {
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       ;({eyes} = await getEyes('VG'))
       eyes.setBatch(batch)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
     })
 
     it('TestCheckInnerFrame_VG', async () => {

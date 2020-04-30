@@ -1,1 +1,1 @@
-// import EyesUtils = require('eyes.utils');
+// import EyesUtils = require('@applitools/eyes-common-legacy');

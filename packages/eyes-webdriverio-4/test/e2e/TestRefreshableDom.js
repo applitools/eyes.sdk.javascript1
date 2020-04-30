@@ -3,7 +3,7 @@
 const assert = require('assert')
 const chromedriver = require('chromedriver')
 const {remote} = require('webdriverio')
-const {Eyes, ConsoleLogHandler, Target, By} = require('../../index')
+const {Eyes, ConsoleLogHandler, Target} = require('../../index')
 
 let browser, eyes, driver
 
@@ -45,13 +45,12 @@ describe('TestRefreshableDom', function() {
 
   it('refresh element inside iframe after StaleElementReference', async () => {
     await driver.url('https://applitools.github.io/demo/TestPages/RefreshDomPage/iframe')
-    const switchTo = driver.switchTo()
-    await switchTo.defaultContent()
-    await switchTo.frame('frame')
-    const region = await driver.findElement(By.css('#inner-img'))
-    const button = await driver.findElement(By.css('#refresh-button'))
-    await button.click()
-    await switchTo.defaultContent()
+    await driver.frame()
+    await driver.frame('frame')
+    const region = await driver.$('#inner-img')
+    await driver.$('#refresh-button').click()
+
+    await driver.frame()
 
     await eyes.check('Handle', Target.frame('frame').region(region))
     return eyes.close()
@@ -59,9 +58,8 @@ describe('TestRefreshableDom', function() {
 
   it('refresh element after StaleElementReference', async () => {
     await driver.url('https://applitools.github.io/demo/TestPages/RefreshDomPage')
-    const region = await driver.findElement(By.css('#inner-img'))
-    const button = await driver.findElement(By.css('#refresh-button'))
-    await button.click()
+    const region = await driver.$('#inner-img')
+    await driver.$('#refresh-button').click()
 
     await eyes.check('Handle', Target.region(region))
     return eyes.close()
@@ -70,9 +68,8 @@ describe('TestRefreshableDom', function() {
   it('throw after unhandled StaleElementReference', async () => {
     await driver.url('https://applitools.github.io/demo/TestPages/RefreshDomPage')
 
-    const region = await driver.findElement(By.css('#inner-img'))
-    const button = await driver.findElement(By.css('#invalidate-button'))
-    await button.click()
+    const region = await driver.element('#inner-img')
+    await driver.$('#invalidate-button').click()
     try {
       await eyes.check('Throw', Target.region(region))
       assert.fail()

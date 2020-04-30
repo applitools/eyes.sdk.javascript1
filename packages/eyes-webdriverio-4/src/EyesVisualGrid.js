@@ -9,19 +9,16 @@ const {
   CorsIframeHandle,
   CorsIframeHandler,
   TypeUtils,
-  IgnoreRegionByRectangle,
   BrowserType,
   Configuration,
   RectangleSize,
   VisualGridRunner,
+  EyesUtils,
 } = require('@applitools/eyes-sdk-core')
 
-const {Target} = require('../index')
+const Target = require('./WDIOCheckSettings')
 
-const EyesWebDriver = require('./wrappers/EyesWebDriver')
-const EyesWDIOUtils = require('./EyesWDIOUtils')
-const WDIOJSExecutor = require('./WDIOJSExecutor')
-const WebDriver = require('./wrappers/WebDriver')
+const WDIODriver = require('./wrappers/WDIODriver')
 
 const VERSION = require('../package.json').version
 
@@ -39,7 +36,7 @@ class EyesVisualGrid extends EyesBase {
    * @param {EyesRunner} [runner] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
    */
   constructor(serverUrl, isDisabled, runner = new VisualGridRunner()) {
-    super(serverUrl, isDisabled, new Configuration())
+    super(serverUrl, isDisabled)
     this._runner = runner
     this._runner.attachEyes(this, this._serverConnector)
     this._runner.makeGetVisualGridClient(makeVisualGridClient)
@@ -67,12 +64,16 @@ class EyesVisualGrid extends EyesBase {
    * @param {RectangleSize|object} [optArg3] The required browser's viewport size
    *   (i.e., the visible part of the document's body) or to use the current window's viewport.
    * @param {Configuration} [optArg4] The Configuration for the test
-   * @return {Promise<EyesWebDriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   * @return {Promise<WDIODriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
    */
   async open(driver, optArg1, optArg2, optArg3, optArg4) {
     ArgumentGuard.notNull(driver, 'driver')
 
-    await this._initDriver(driver)
+    this._driver = new WDIODriver(this._logger, driver)
+    this._executor = this._driver.executor
+    this._finder = this._driver.finder
+    this._context = this._driver.context
+    this._controller = this._driver.controller
 
     if (optArg1 instanceof Configuration) {
       this._configuration.mergeConfig(optArg1)
@@ -109,7 +110,7 @@ class EyesVisualGrid extends EyesBase {
       }
     }
     if (!this._configuration.getViewportSize()) {
-      const vs = await this._driver.getDefaultContentViewportSize()
+      const vs = await EyesUtils.getTopContextViewportSize(this._logger, this._driver)
       this._configuration.setViewportSize(vs)
     }
 
@@ -151,19 +152,6 @@ class EyesVisualGrid extends EyesBase {
     this._abortCommand = abort
 
     return this._driver
-  }
-
-  /**
-   * @private
-   * @param {object} driver
-   */
-  async _initDriver(driver) {
-    if (driver instanceof EyesWebDriver) {
-      this._driver = driver
-    } else {
-      this._driver = new EyesWebDriver(this._logger, new WebDriver(driver), this)
-    }
-    this._jsExecutor = new WDIOJSExecutor(this._driver)
   }
 
   /**
@@ -259,7 +247,7 @@ class EyesVisualGrid extends EyesBase {
     this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`)
 
     const pageDomResults = await takeDomSnapshot({
-      executeScript: this._jsExecutor.executeScript.bind(this._jsExecutor),
+      executeScript: this._executor.executeScript.bind(this._executor),
     })
     const {cdt, url, resourceContents, resourceUrls, frames} = pageDomResults
 
@@ -269,7 +257,7 @@ class EyesVisualGrid extends EyesBase {
 
     this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
 
-    const source = await this._driver.getCurrentUrl()
+    const source = await this._controller.getSource()
 
     const [config, {region, selector}] = await Promise.all([
       checkSettings.toCheckWindowConfiguration(this._driver),
@@ -277,7 +265,7 @@ class EyesVisualGrid extends EyesBase {
     ])
     const overrideConfig = {
       fully: this.getForceFullPageScreenshot() || config.fully,
-      sendDom: this.getSendDom() || config.sendDom,
+      sendDom: (await this.getSendDom()) || config.sendDom,
       matchLevel: this.getMatchLevel() || config.matchLevel,
     }
 
@@ -313,6 +301,15 @@ class EyesVisualGrid extends EyesBase {
     return {region, selector}
   }
 
+  async checkWindow(tag, matchTimeout, fully = false) {
+    return this.check(
+      tag,
+      Target.window()
+        .timeout(matchTimeout)
+        .fully(fully),
+    )
+  }
+
   /**
    * Visually validates a region in the screenshot.
    *
@@ -341,21 +338,7 @@ class EyesVisualGrid extends EyesBase {
     this._configuration.setViewportSize(viewportSize)
 
     if (this._driver) {
-      const originalFrame = this._driver.getFrameChain()
-      await this._driver.switchTo().defaultContent()
-
-      await EyesWDIOUtils.setViewportSize(this._logger, this._driver, viewportSize)
-
-      /*
-            try {
-              await EyesWDIOUtils.setViewportSize(this._logger, this._driver, viewportSize);
-            } catch (err) {
-              await this._driver.switchTo().frames(originalFrame); // Just in case the user catches that error
-              throw new TestFailedError('Failed to set the viewport size', err);
-            }
-      */
-
-      await this._driver.switchTo().frames(originalFrame)
+      await EyesUtils.setViewportSize(this._logger, this._driver, viewportSize)
     }
   }
 
@@ -413,7 +396,7 @@ class EyesVisualGrid extends EyesBase {
    * @return {EyesJsExecutor}
    */
   get jsExecutor() {
-    return this._jsExecutor
+    return this._driver.executor
   }
 
   setApiKey(apiKey) {

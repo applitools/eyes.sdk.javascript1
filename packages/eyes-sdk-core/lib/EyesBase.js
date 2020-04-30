@@ -28,7 +28,7 @@ const {NullScaleProvider} = require('./scaling/NullScaleProvider')
 
 const {NullCutProvider} = require('./cropping/NullCutProvider')
 
-const {InvalidPositionProvider} = require('./positioning/InvalidPositionProvider')
+const InvalidPositionProvider = require('./positioning/InvalidPositionProvider')
 
 const {TextTrigger} = require('./triggers/TextTrigger')
 const {MouseTrigger} = require('./triggers/MouseTrigger')
@@ -84,7 +84,11 @@ class EyesBase {
     this._configuration.setIsDisabled(isDisabled)
 
     /** @type {ServerConnector} */
-    this._serverConnector = new ServerConnector(this._logger, this._configuration)
+    this._serverConnector = new ServerConnector({
+      logger: this._logger,
+      configuration: this._configuration,
+      getAgentId: this.getFullAgentId.bind(this),
+    })
 
     if (this._configuration.getIsDisabled()) {
       this._userInputs = []
@@ -983,12 +987,9 @@ class EyesBase {
    * @return {string} - The full agent id composed of both the base agent id and the user given agent id.
    */
   getFullAgentId() {
-    const agentId = this._configuration.getAgentId()
-    if (!agentId) {
-      return this.getBaseAgentId()
-    }
-
-    return `${agentId} [${this.getBaseAgentId()}]`
+    return this.getAgentId()
+      ? `${this.getAgentId()} [${this.getBaseAgentId()}]`
+      : this.getBaseAgentId()
   }
 
   /**
@@ -2170,7 +2171,7 @@ class EyesBase {
     const imageLocation = await this.getImageLocation()
     this._logger.verbose('Done getting title, domUrl, imageLocation!')
 
-    if (!domUrl && TypeUtils.getOrDefault(checkSettings.getSendDom(), this.getSendDom())) {
+    if (!domUrl && TypeUtils.getOrDefault(checkSettings.getSendDom(), await this.getSendDom())) {
       // START NOTE (amit): the following is something I'm not proud nor confident of. I copied it from EyesSelenium::getScreenshot, and it is to solve https://trello.com/c/O5sTPAU1. This should be rewritten asap.
       const forceFullPageScreenshot = this._configuration.getForceFullPageScreenshot()
       if ((forceFullPageScreenshot || this._stitchContent) && !isMobileDevice) {
@@ -2240,7 +2241,7 @@ class EyesBase {
    * @return {string} - The base agent id of the SDK.
    */
   getBaseAgentId() {
-    throw new TypeError('The method is not implemented!')
+    throw new TypeError('The method "getBaseAgentId" is not implemented!')
   }
 
   /**

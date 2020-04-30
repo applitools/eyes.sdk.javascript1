@@ -11,6 +11,7 @@ const styleProps = [
   'color',
   'display',
   'font-size',
+  'font-weight',
   'line-height',
   'margin',
   'opacity',

@@ -13,7 +13,7 @@ const makeCaptureNodeCss = require('./captureNodeCss');
 const makePrefetchAllCss = require('./prefetchAllCss');
 const {NODE_TYPES} = require('./nodeTypes');
 
-const API_VERSION = '1.1.0';
+const API_VERSION = '1.2.0';
 
 async function captureFrame(
   {styleProps, rectProps, ignoredTagNames} = defaultDomProps,

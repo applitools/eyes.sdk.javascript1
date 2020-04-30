@@ -165,7 +165,6 @@ describe('TestMobileDevices', () => {
             eyes.StitchMode = StitchMode.CSS
             eyes.addProperty('Orientation', device.orientation.toLowerCase())
             eyes.addProperty('Page', page)
-            eyes.setLogHandler(new ConsoleLogHandler(false))
             webDriver.get(
               `https://applitools.github.io/demo/TestPages/DynamicResolution/${page}.html`,
             )

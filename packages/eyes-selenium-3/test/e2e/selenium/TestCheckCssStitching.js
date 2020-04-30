@@ -11,7 +11,12 @@ describe('TestCheckCssStitching', function() {
 
   before(async function() {
     driver = new Builder()
-      .forBrowser('chrome')
+      .withCapabilities({
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ['headless'],
+        },
+      })
       .setChromeOptions(new ChromeOptions().headless())
       .build()
 

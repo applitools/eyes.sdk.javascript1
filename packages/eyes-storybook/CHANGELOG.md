@@ -3,6 +3,22 @@
 ## Unreleased
 
 
+## 3.5.2 - 2020/4/27
+
+- add edgechromium to types
+- updated to @applitools/visual-grid-client@13.7.2
+
+## 3.5.1 - 2020/4/27
+
+- add edgechromium to readme
+
+## 3.5.0 - 2020/4/26
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- updated to @applitools/dom-snapshot@3.4.5
+- updated to @applitools/eyes-sdk-core@9.2.1
+- updated to @applitools/visual-grid-client@13.7.1
+
 ## 3.4.0 - 2020/4/1
 
 - Add capability to specify `ignoreDisplacements` (both via global and local configuration). ([Trello](https://trello.com/c/IfkEZ4V3/45-storybook-add-set-get-ignoredisplacements-to-eyes-global-and-fluent))

@@ -2,8 +2,7 @@
 
 const path = require('path')
 const assert = require('assert')
-const fetch = require('node-fetch')
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
 const {fakeDriverServer} = require('../../util/fake-driver-server')
 const {Eyes, Logger, Target, ConsoleLogHandler, TestResultsStatus} = require('../../../index')
 const {Builder} = require('selenium-webdriver')
@@ -15,7 +14,7 @@ describe('SessionStartInfo', () => {
   let server, serverUrl, driver
 
   before(async () => {
-    server = await fakeEyesServer({
+    server = await startFakeEyesServer({
       logger,
       expectedFolder: fixturesPath,
       updateFixtures: process.env.APPLITOOLS_UPDATE_FIXTURES,
@@ -50,7 +49,7 @@ describe('SessionStartInfo', () => {
     const testResults = await eyes.close(false)
     assert.strictEqual(testResults.getStatus(), TestResultsStatus.Passed) // sanity check
 
-    const {startInfo} = await getSession(testResults)
+    const {startInfo} = await getSession(testResults, serverUrl)
 
     assert.strictEqual(startInfo.defaultMatchSettings.ignoreDisplacements, true)
     assert.strictEqual(startInfo.defaultMatchSettings.accessibilityLevel, 'AA')
@@ -67,13 +66,5 @@ describe('SessionStartInfo', () => {
     }
     eyes.setMatchTimeout(0)
     return eyes
-  }
-
-  async function getSession(testResults) {
-    const sessionUrl = `${serverUrl}/api/sessions/batches/${encodeURIComponent(
-      testResults.getBatchId(),
-    )}/${encodeURIComponent(testResults.getId())}`
-    const session = await fetch(sessionUrl).then(r => r.json())
-    return session
   }
 })

@@ -2,7 +2,7 @@
   'use strict'
 
   var fs = require('fs'),
-    ImageUtils = require('eyes.utils').ImageUtils
+    ImageUtils = require('@applitools/eyes-common-legacy').ImageUtils
 
   var disabled = !fs.open
 

@@ -1,0 +1,17 @@
+body {
+  background-color: #643973;
+  color: white;
+}
+iframe {
+  display: block;
+  width: 320px;
+}
+.cors-0 {
+  border: 2px solid #0991e0;
+}
+.cors-2 {
+  border: 2px solid #039e08;
+}
+.no-cors {
+  border: 2px solid white;
+}

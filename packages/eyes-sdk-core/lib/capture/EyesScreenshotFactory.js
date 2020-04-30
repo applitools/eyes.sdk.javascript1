@@ -1,21 +1,19 @@
 'use strict'
 
-/* eslint-disable no-unused-vars */
+const EyesScreenshot = require('./EyesScreenshotNew')
 
 /**
- * Encapsulates the instantiation of an EyesScreenshot object.
- *
- * @ignore
- * @abstract
+ * Encapsulates the instantiation of an {@link EyesScreenshot}
  */
 class EyesScreenshotFactory {
-  /**
-   * @param {MutableImage} image
-   * @return {Promise<EyesScreenshot>}
-   */
+  constructor(logger, eyes) {
+    this._logger = logger
+    this._eyes = eyes
+  }
+
   async makeScreenshot(image) {
-    throw new TypeError('The method is not implemented!')
+    return EyesScreenshot.fromScreenshotType(this._logger, this._eyes, image)
   }
 }
 
-exports.EyesScreenshotFactory = EyesScreenshotFactory
+module.exports = EyesScreenshotFactory

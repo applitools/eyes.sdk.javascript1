@@ -1,7 +1,7 @@
 ;(function() {
   'use strict'
 
-  var GeometryUtils = require('eyes.utils').GeometryUtils
+  var GeometryUtils = require('@applitools/eyes-common-legacy').GeometryUtils
 
   /**
    * @typedef {{left: number, top: number, width: number, height: number}} Region

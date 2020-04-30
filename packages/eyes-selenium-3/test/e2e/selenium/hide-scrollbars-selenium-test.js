@@ -13,7 +13,14 @@ describe('Eyes.Selenium.JavaScript - Selenium', function() {
   this.timeout(5 * 60 * 1000)
 
   before(function() {
-    driver = new Builder().forBrowser('chrome').build()
+    driver = new Builder()
+      .withCapabilities({
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ['headless'],
+        },
+      })
+      .build()
 
     eyes = new Eyes()
     eyes.setApiKey(process.env.APPLITOOLS_API_KEY)

@@ -1,14 +1,7 @@
 'use strict'
 const assert = require('assert')
 const {getDriver, getEyes, getBatch} = require('./util/TestSetup')
-const {
-  Target,
-  ConsoleLogHandler,
-  StitchMode,
-  ClassicRunner,
-  VisualGridRunner,
-  Eyes,
-} = require('../../../index')
+const {Target, StitchMode, ClassicRunner, VisualGridRunner, Eyes} = require('../../../index')
 const appName = 'Eyes Selenium SDK - Double Open Close'
 const batch = getBatch()
 describe(appName, () => {
@@ -24,7 +17,6 @@ describe(appName, () => {
       webDriver = await getDriver('CHROME')
       ;({eyes, runner} = await getEyes('classic', StitchMode.CSS))
       eyes.setBatch(batch)
-      eyes.setLogHandler(new ConsoleLogHandler(false))
     })
 
     it('TestDoubleOpenCheckClose', async () => {
@@ -53,7 +45,7 @@ describe(appName, () => {
       )
       await eyes.close(false)
 
-      let allTestResults = await runner.getAllTestResults(true)
+      let allTestResults = await runner.getAllTestResults(false)
       assert.deepStrictEqual(allTestResults.getAllResults().length, 2)
     })
 
@@ -93,10 +85,9 @@ describe(appName, () => {
       webDriver = await getDriver('CHROME')
       ;({eyes, runner} = await getEyes('VG'))
       eyes.setBatch(batch)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
     })
 
-    it('TestDoubleOpenCheckClose', async () => {
+    it.skip('TestDoubleOpenCheckClose', async () => {
       await webDriver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage/')
       await eyes.open(webDriver, appName, 'TestDoubleOpenCheckClose_VG', {
         width: 1200,
@@ -151,35 +142,53 @@ describe(appName, () => {
     await webDriver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage/')
     let runner = new ClassicRunner()
 
-    let eyes1 = new Eyes(runner)
-    eyes1.setBatch(batch)
-    eyes1.setHostOS('Linux')
-    await eyes1.open(webDriver, appName, 'TestDoubleOpenCheckCloseAsyncWithDifferentInstances', {
-      width: 1200,
-      height: 800,
-    })
-    await eyes1.check(
+    let eyes1 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseAsyncWithDifferentInstances',
       'Step 1',
-      Target.window()
-        .fully()
-        .ignoreDisplacements(false),
     )
     await eyes1.closeAsync(false)
 
-    let eyes2 = new Eyes(runner)
-    eyes2.setBatch(batch)
-    eyes2.setHostOS('Linux')
-    await eyes2.open(webDriver, appName, 'TestDoubleOpenCheckCloseAsyncWithDifferentInstances', {
-      width: 1200,
-      height: 800,
-    })
-    await eyes2.check(
+    let eyes2 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseAsyncWithDifferentInstances',
       'Step 1',
-      Target.window()
-        .fully()
-        .ignoreDisplacements(false),
     )
     await eyes2.closeAsync(false)
+
+    let allTestResults = await runner.getAllTestResults(false)
+    assert.deepStrictEqual(allTestResults.getAllResults().length, 2)
+  })
+
+  it('TestDoubleOpenCheckAsyncWithDifferentInstances', async () => {
+    await webDriver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage/')
+    let runner = new ClassicRunner()
+
+    let eyes1 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseWithDifferentInstances',
+      'Step 1',
+    )
+    await eyes1.close(false)
+
+    let eyes2 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseWithDifferentInstances',
+      'Step 1',
+    )
+    await eyes2.close(false)
 
     let allTestResults = await runner.getAllTestResults(false)
     assert.deepStrictEqual(allTestResults.getAllResults().length, 2)
@@ -189,37 +198,69 @@ describe(appName, () => {
     await webDriver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage/')
     let runner = new VisualGridRunner()
 
-    let eyes1 = new Eyes(runner)
-    eyes1.setBatch(batch)
-    eyes1.setHostOS('Linux')
-    await eyes1.open(webDriver, appName, 'TestDoubleOpenCheckCloseAsyncWithDifferentInstances_VG', {
-      width: 1200,
-      height: 800,
-    })
-    await eyes1.check(
+    let eyes1 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseAsyncWithDifferentInstances_VG',
       'Step 1',
-      Target.window()
-        .fully()
-        .ignoreDisplacements(false),
     )
     await eyes1.closeAsync(false)
 
-    let eyes2 = new Eyes(runner)
-    eyes2.setBatch(batch)
-    eyes2.setHostOS('Linux')
-    await eyes2.open(webDriver, appName, 'TestDoubleOpenCheckCloseAsyncWithDifferentInstances_VG', {
-      width: 1200,
-      height: 800,
-    })
-    await eyes2.check(
+    let eyes2 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseAsyncWithDifferentInstances_VG',
       'Step 1',
-      Target.window()
-        .fully()
-        .ignoreDisplacements(false),
     )
     await eyes2.closeAsync(false)
 
     let allTestResults = await runner.getAllTestResults(false)
     assert.deepStrictEqual(allTestResults.getAllResults().length, 2)
   })
+
+  it('TestDoubleOpenCheckCloseWithDifferentInstances_VG', async () => {
+    await webDriver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage/')
+    let runner = new VisualGridRunner()
+
+    let eyes1 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseWithDifferentInstances_VG',
+      'Step 1',
+    )
+    await eyes1.close(false)
+
+    let eyes2 = await makeCheck(
+      runner,
+      batch,
+      webDriver,
+      appName,
+      'TestDoubleOpenCheckCloseWithDifferentInstances_VG',
+      'Step 1',
+    )
+    await eyes2.close(false)
+
+    let allTestResults = await runner.getAllTestResults(false)
+    assert.deepStrictEqual(allTestResults.getAllResults().length, 2)
+  })
 })
+
+async function makeCheck(runner, batch, driver, appName, testName, checkName) {
+  let eyes = new Eyes(runner)
+  eyes.setBatch(batch)
+  eyes.setHostOS('Linux')
+  await eyes.open(driver, appName, testName, {width: 1200, height: 800})
+  await eyes.check(
+    checkName,
+    Target.window()
+      .fully()
+      .ignoreDisplacements(false),
+  )
+  return eyes
+}

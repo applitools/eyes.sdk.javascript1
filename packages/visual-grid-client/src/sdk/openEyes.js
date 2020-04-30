@@ -3,12 +3,14 @@
 const {
   BatchInfo,
   GeneralUtils: {backwardCompatible, cachify},
+  BrowserType,
 } = require('@applitools/eyes-sdk-core')
 const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
 const isEmulation = require('./isEmulation')
 const getSupportedBrowsers = require('./supportedBrowsers')
+const chalk = require('chalk')
 
 const {
   initWrappers,
@@ -122,7 +124,9 @@ function makeOpenEyes({
 
     const supportedBrowsers = getSupportedBrowsers()
     const supportedBrowserKeys = Object.keys(supportedBrowsers)
-    const supportedBrowserKeysStr = `\n* ${supportedBrowserKeys.join('\n* ')}\n`
+    const supportedBrowserKeysStr = `\n* ${supportedBrowserKeys
+      .filter(x => x !== BrowserType.EDGE)
+      .join('\n* ')}\n`
 
     const browsersArray = Array.isArray(browser) ? browser : [browser]
     const browserError = browsersArray.length
@@ -132,6 +136,8 @@ function makeOpenEyes({
       console.log('\x1b[31m', `\nInvalid browser: ${browserError}\n`)
       throw new Error(browserError)
     }
+
+    showBrowserWarning(browsersArray)
 
     const browsers = browsersArray.map(browser => ({
       ...browser,
@@ -325,6 +331,16 @@ function makeOpenEyes({
 
     function isSupportsDeviceEmulation(browserName) {
       return !browserName || /^chrome/.test(browserName)
+    }
+
+    function showBrowserWarning(browsersArr) {
+      if (browsersArr.some(({name}) => name === BrowserType.EDGE)) {
+        console.log(
+          chalk.yellow(
+            `The 'edge' option that is being used in your browsers' configuration will soon be deprecated. Please change it to either 'edgelegacy' for the legacy version or to 'edgechromium' for the new Chromium-based version. Please note, when using the built-in BrowserType enum, then the values are BrowserType.EDGE_LEGACY and BrowserType.EDGE_CHROMIUM, respectively.`,
+          ),
+        )
+      }
     }
   }
 }

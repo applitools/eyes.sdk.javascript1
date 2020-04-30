@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+  ## 3.5.0 - 2020/4/30
+
+- added data-applitools-disabled attribute to scripts and fixed disabled attribute for links  
+
 ## 3.4.5 - 2020/4/7
 
 - fix missing audio tag src attribute resources

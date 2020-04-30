@@ -1,7 +1,6 @@
 'use strict'
 
 const {makeVisualGridClient, takeDomSnapshot} = require('@applitools/visual-grid-client')
-
 const {
   ArgumentGuard,
   TypeUtils,
@@ -10,7 +9,6 @@ const {
   BrowserType,
   CorsIframeHandle,
   CorsIframeHandler,
-  IgnoreRegionByRectangle,
   VisualGridRunner,
 } = require('@applitools/eyes-sdk-core')
 

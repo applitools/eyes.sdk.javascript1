@@ -4,7 +4,8 @@ const {deepStrictEqual} = require('assert')
 const webdriverio = require('webdriverio')
 const chromedriver = require('chromedriver')
 const geckodriver = require('geckodriver')
-const {Eyes, NetHelper, StitchMode} = require('../../index')
+const {Eyes, StitchMode} = require('../../index')
+const fetch = require('node-fetch')
 const {
   BatchInfo,
   ConsoleLogHandler,
@@ -211,8 +212,7 @@ class Common {
       // apiSessionUri.searchParams.append('AccessToken', results.getSecretToken());
       // apiSessionUri.searchParams.append('apiKey', this.eyes.getApiKey());
 
-      const res = await NetHelper.get(apiSessionUri)
-      const resultObject = JSON.parse(res)
+      const resultObject = await fetch(apiSessionUri).then(r => r.json())
       /** @type {SessionResults} */
       const sessionResults = new SessionResults(resultObject)
       /** @type {ActualAppOutput} */

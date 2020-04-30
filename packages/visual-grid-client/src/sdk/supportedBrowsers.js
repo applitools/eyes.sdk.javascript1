@@ -1,5 +1,4 @@
 'use strict'
-const isFeatureEnabled = require('@applitools/feature-flags')
 const translateBrowserNameVersion = require('./translateBrowserNameVersion')
 
 function getSupportedBrowsers() {
@@ -11,7 +10,9 @@ function getSupportedBrowsers() {
     firefox: 'firefox',
     ie10: 'ie10',
     ie11: 'ie11',
-    edge: 'edge',
+    edge: 'edge', // excluded in openEyes for the supported browsers message to the user
+    edgechromium: 'edgechromium',
+    edgelegacy: 'edgelegacy',
     ie: 'ie',
     safari: 'safari',
     [translateBrowserNameVersion('chrome-1')]: 'chrome-1',
@@ -20,11 +21,7 @@ function getSupportedBrowsers() {
     [translateBrowserNameVersion('firefox-2')]: 'firefox-2',
     [translateBrowserNameVersion('safari-1')]: 'safari-1',
     [translateBrowserNameVersion('safari-2')]: 'safari-2',
-  }
-
-  if (isFeatureEnabled('vg-cli-edge')) {
-    supportedBrowsers['edgelegacy'] = 'edgelegacy'
-    supportedBrowsers['edgechromium'] = 'edgechromium'
+    [translateBrowserNameVersion('edgechromium-1')]: 'edgechromium-1',
   }
 
   return supportedBrowsers

@@ -1,6 +1,6 @@
 'use strict'
 
-const {EyesScreenshotFactory} = require('./EyesScreenshotFactory')
+const EyesScreenshotFactory = require('./EyesScreenshotFactory')
 const {EyesSimpleScreenshot} = require('./EyesSimpleScreenshot')
 
 /**

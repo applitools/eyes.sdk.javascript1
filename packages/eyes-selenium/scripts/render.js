@@ -1,5 +1,5 @@
 'use strict'
-
+const chromedriver = require('chromedriver')
 const {URL} = require('url')
 const {Builder, By} = require('selenium-webdriver')
 const {
@@ -11,6 +11,8 @@ const {
   Configuration,
   StitchMode,
   EyesSeleniumUtils,
+  DeviceName,
+  ScreenOrientation,
   // BatchInfo,
   // FileDebugScreenshotsProvider,
 } = require('../index')
@@ -59,6 +61,17 @@ const args = yargs
     type: 'string',
     coerce: parseBrowser,
   })
+  .option('device-emulation', {
+    describe: 'the device emulation to render to when in vg mode',
+    type: 'string',
+    choices: Object.keys(DeviceName),
+  })
+  .option('screen-orientation', {
+    describe: 'the device emulation screen oriantation to render to when in device-emulation mode',
+    type: 'string',
+    choices: Object.keys(ScreenOrientation),
+    default: 'PORTRAIT',
+  })
   .option('ignore-displacements', {
     describe: 'when specified, ignore displaced content',
     type: 'boolean',
@@ -98,6 +111,11 @@ const args = yargs
     describe: 'proxy string, e.g. http://localhost:8888',
     type: 'string',
   })
+  .option('webdriver-proxy', {
+    describe:
+      'whether to use charles as a proxy to webdriver calls (works on port 8888, need to start Charles manually prior to running this script',
+    type: 'boolean',
+  })
 
   .help().argv
 
@@ -114,7 +132,11 @@ if (!url) {
       .map(key => (!['_', '$0'].includes(key) ? `* ${key}: ${args[key]}` : ''))
       .join('\n  '),
   )
-  const driver = await buildDriver({headless: args.headless})
+
+  if (args.webdriverProxy) {
+    await chromedriver.start(['--whitelisted-ips=127.0.0.1'], true)
+  }
+  const driver = await buildDriver({headless: args.headless, webdriverProxy: args.webdriverProxy})
 
   const runner = args.vg ? new VisualGridRunner() : new ClassicRunner()
   const eyes = new Eyes(runner)
@@ -127,6 +149,13 @@ if (!url) {
   if (args.browser) {
     configuration.addBrowsers(args.browser)
   }
+  if (args.deviceEmulation) {
+    const orientation = args.screenOrientation || 'PORTRAIT'
+    configuration.addDeviceEmulation(
+      DeviceName[args.deviceEmulation],
+      ScreenOrientation[orientation],
+    )
+  }
   if (args.serverUrl) {
     configuration.setServerUrl(args.serverUrl)
   }
@@ -137,6 +166,7 @@ if (!url) {
     configuration.setProxy(args.proxy)
   }
   eyes.setConfiguration(configuration)
+
   const {logger, logFilePath} = initLog(eyes, new URL(url).hostname.replace(/\./g, '-'))
   logger.log('[render script] Running Selenium render for', url)
   logger.log(`[render script] process versions: ${JSON.stringify(process.versions)}`)
@@ -177,7 +207,7 @@ if (!url) {
     }
 
     await eyes.check('selenium render', target)
-    await eyes.close(false)
+    await eyes.close(true)
 
     const testResultsSummary = await runner.getAllTestResults(false)
     const resultsStr = testResultsSummary
@@ -191,22 +221,25 @@ if (!url) {
     console.log('\nRender results:\n', resultsStr)
   } finally {
     await driver.quit()
+    if (args.webdriverProxy) {
+      await chromedriver.stop()
+    }
   }
 })()
 
-function buildDriver({headless} = {}) {
-  return (
-    new Builder()
-      .withCapabilities({
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          args: headless ? ['--headless'] : [],
-        },
-      })
-      // .usingServer('http://localhost.charlesproxy.com:9515')
-      // .usingWebDriverProxy('http://localhost:8888')
-      .build()
-  )
+function buildDriver({headless, webdriverProxy} = {}) {
+  let builder = new Builder().withCapabilities({
+    browserName: 'chrome',
+    'goog:chromeOptions': {
+      args: headless ? ['--headless'] : [],
+    },
+  })
+  if (webdriverProxy) {
+    builder = builder
+      .usingServer('http://localhost.charlesproxy.com:9515')
+      .usingWebDriverProxy('http://localhost:8888')
+  }
+  return builder.build()
 }
 
 function initLog(eyes, filename) {
