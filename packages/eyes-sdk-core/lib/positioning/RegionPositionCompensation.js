@@ -15,4 +15,4 @@ class RegionPositionCompensation {
   compensateRegionPosition(region, pixelRatio) {}
 }
 
-exports.RegionPositionCompensation = RegionPositionCompensation
+module.exports = RegionPositionCompensation

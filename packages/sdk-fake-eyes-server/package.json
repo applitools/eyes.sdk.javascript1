@@ -1,6 +1,6 @@
 {
   "name": "@applitools/sdk-fake-eyes-server",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Fake eyes server",
   "author": {
     "name": "Applitools Team",
@@ -8,16 +8,20 @@
   },
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1",
   "license": "SEE LICENSE IN LICENSE",
-  "main": "lib/sdk-fake-eyes-server.js",
+  "bin": {
+    "fake-eyes-server": "./scripts/run-fake-eyes-server.js"
+  },
+  "main": "sdk-fake-eyes-server.js",
   "directories": {
     "lib": "lib",
     "test": "test"
   },
   "files": [
+    "scripts",
     "lib"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   },
   "repository": {
     "type": "git",
@@ -31,6 +35,9 @@
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
+  "engines": {
+    "node": ">=8.9.0"
+  },
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
@@ -39,7 +46,8 @@
     "filenamify": "^4.1.0",
     "node-fetch": "^2.6.0",
     "ua-parser-js": "^0.7.21",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",

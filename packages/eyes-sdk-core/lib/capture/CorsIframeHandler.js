@@ -4,7 +4,7 @@ const {URL} = require('url')
 
 /**
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const CorsIframeHandle = {
   /**

@@ -69,7 +69,7 @@ function initialize() {
 
   function checkFrame(
     target,
-    {isClassicApi = false, isFully = false, tag, matchTimeout, isLayout, floatingRegion} = {},
+    {isClassicApi = false, isFully = false, tag, matchTimeout = 0, isLayout, floatingRegion} = {},
   ) {
     if (isClassicApi) {
       result.storeCommand(
@@ -101,7 +101,7 @@ function initialize() {
       if (isLayout) {
         result.storeCommand(`_checkSettings.layout()`)
       }
-      result.storeCommand(`_checkSettings.fully(${isFully})`)
+      result.storeCommand(`_checkSettings.fully(${isFully}).timeout(${matchTimeout})`)
       result.storeCommand(`await eyes.check(${tag ? '"' + tag + '"' : undefined}, _checkSettings)`)
       result.storeCommand(`}`)
     }
@@ -116,7 +116,7 @@ function initialize() {
       inFrame,
       ignoreRegion,
       isLayout,
-      matchTimeout,
+      matchTimeout = 0,
       tag,
     } = {},
   ) {
@@ -167,9 +167,14 @@ function initialize() {
       if (isLayout) {
         result.storeCommand(`_checkSettings.layout()`)
       }
+<<<<<<< HEAD
       result.storeCommand(`_checkSettings.fully(${isFully})`)
       result.storeCommand(`await eyes.check(${tag ? '"' + tag + '"' : undefined}, _checkSettings)`)
       result.storeCommand(`}`)
+=======
+      _checkSettings.fully(isFully).timeout(matchTimeout)
+      await eyes.check(tag, _checkSettings)
+>>>>>>> master
     }
   }
 
@@ -180,19 +185,26 @@ function initialize() {
     floatingRegion,
     scrollRootElement,
     tag,
-    matchTimeout,
+    matchTimeout = 0,
   } = {}) {
     if (isClassicApi) {
       result.storeCommand(
         `await eyes.checkWindow(${tag ? '"' + tag + '"' : undefined}, ${matchTimeout}, ${isFully})`,
       )
     } else {
+<<<<<<< HEAD
       result.storeCommand(`{`)
       result.storeCommand(
         `let _checkSettings = Target.window()
         .fully(${isFully})
         .ignoreCaret()`,
       )
+=======
+      let _checkSettings = Target.window()
+        .fully(isFully)
+        .ignoreCaret()
+        .timeout(matchTimeout)
+>>>>>>> master
       if (scrollRootElement) {
         result.storeCommand(`_checkSettings.scrollRootElement(By.css('${scrollRootElement}'))`)
       }

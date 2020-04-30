@@ -1,7 +1,7 @@
 // Trello 211
 // https://trello.com/c/jRumCWJp/211-wdio4-the-checkregion-for-ie11-is-not-captured-correctly
 const {remote} = require('webdriverio')
-const {By, Target, Eyes, ConsoleLogHandler} = require('../../../index')
+const {By, Target, Eyes /* , ConsoleLogHandler */} = require('../../../index')
 
 describe('Check Region IE11', () => {
   let eyes
@@ -22,13 +22,13 @@ describe('Check Region IE11', () => {
     driver = remote(browserOptions)
     await driver.init()
     eyes = new Eyes()
-    eyes.setLogHandler(new ConsoleLogHandler(true))
+    // eyes.setLogHandler(new ConsoleLogHandler(true))
     eyes.setApiKey(process.env.APPLITOOLS_API_KEY)
   })
 
   afterEach(async () => {
-    await driver.end()
-    await eyes.abortIfNotClosed()
+    driver & (await driver.end())
+    eyes && (await eyes.abortIfNotClosed())
   })
 
   it('captures an image of the element', async function() {

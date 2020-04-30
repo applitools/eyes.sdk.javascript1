@@ -1,6 +1,6 @@
 {
   "name": "@applitools/dom-capture",
-  "version": "7.1.4",
+  "version": "7.1.5",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {

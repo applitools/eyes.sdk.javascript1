@@ -6,7 +6,7 @@ const {Logger} = require('@applitools/eyes-sdk-core')
 const {Builder, Capabilities} = require('selenium-webdriver')
 const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
 
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
@@ -118,7 +118,7 @@ describe('Eyes', function() {
     let checkTimestamp, networkTimestamp, duration
     const thrownScreenshotDone = Symbol()
     before(async () => {
-      server = await fakeEyesServer({logger})
+      server = await startFakeEyesServer({logger})
       driver = await new Builder()
         .withCapabilities(Capabilities.chrome())
         .setChromeOptions(new ChromeOptions().addArguments('disable-infobars').headless())

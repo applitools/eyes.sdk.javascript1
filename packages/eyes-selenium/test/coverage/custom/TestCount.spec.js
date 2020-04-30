@@ -12,16 +12,6 @@ describe('TestCounts', () => {
     await eyes.setSendDom(false)
   })
 
-  it('Test_VGTestsCount_1', async () => {
-    await eyes.setBatch(batch)
-    await eyes.setBranchName('master')
-    await eyes.open(driver, 'Test Count', 'Test_VGTestsCount_1', {width: 640, height: 480})
-    await eyes.check('Test', Target.window())
-    await eyes.close()
-    let results = await runner.getAllTestResults()
-    assert.deepStrictEqual(1, results.getAllResults().length)
-  })
-
   it('Test_VGTestsCount_2', async () => {
     let conf = new Configuration()
     conf.setBatch(batch)

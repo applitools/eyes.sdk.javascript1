@@ -2,13 +2,14 @@
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const {JSDOM} = require('jsdom');
+const path = require('path');
 const domNodesToCdt = require('../src/browser/domNodesToCdt');
 const {loadFixture, loadJsonFixture} = require('./util/loadFixture');
 const fs = require('fs');
 const {resolve} = require('path');
 
 function getDocNode(htmlStr) {
-  const dom = new JSDOM(htmlStr, {url: 'http://something.org/'});
+  const dom = new JSDOM(htmlStr, {url: 'http://something.org/', resources: 'usable'});
   return dom.window.document;
 }
 
@@ -1204,6 +1205,121 @@ describe('domNodesToCdt', () => {
       {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [2, 3]},
     ];
     expect(cdt).to.deep.equal(expectedCdt);
+  });
+
+  it('returns links with having disabled attribute', done => {
+    const absolutePath = path.join(__dirname, 'fixtures/test.css');
+    const docNode = getDocNode(`
+      <link id="lnk1" rel="stylesheet" type="text/css" href="file://${absolutePath}">
+      <link id="lnk2" rel="stylesheet" type="text/css" href="file://${absolutePath}" disabled>
+      <link id="lnk3" rel="stylesheet" type="text/css" href="file://${absolutePath}" disabled>
+    `);
+
+    const expectedCdt = [
+      {nodeType: 9, childNodeIndexes: [9]},
+      {
+        nodeType: 1,
+        nodeName: 'LINK',
+        attributes: [
+          {name: 'id', value: 'lnk1'},
+          {name: 'rel', value: 'stylesheet'},
+          {name: 'type', value: 'text/css'},
+          {
+            name: 'href',
+            value:
+              'file:///home/daniel/dev/eyes.sdk.javascript1/packages/dom-snapshot/tests/fixtures/test.css',
+          },
+          {name: 'disabled', value: ''},
+        ],
+        childNodeIndexes: [],
+      },
+      {nodeType: 3, nodeValue: '\n      '},
+      {
+        nodeType: 1,
+        nodeName: 'LINK',
+        attributes: [
+          {name: 'id', value: 'lnk2'},
+          {name: 'rel', value: 'stylesheet'},
+          {name: 'type', value: 'text/css'},
+          {
+            name: 'href',
+            value:
+              'file:///home/daniel/dev/eyes.sdk.javascript1/packages/dom-snapshot/tests/fixtures/test.css',
+          },
+          {name: 'disabled', value: ''},
+        ],
+        childNodeIndexes: [],
+      },
+      {nodeType: 3, nodeValue: '\n      '},
+      {
+        nodeType: 1,
+        nodeName: 'LINK',
+        attributes: [
+          {name: 'id', value: 'lnk3'},
+          {name: 'rel', value: 'stylesheet'},
+          {name: 'type', value: 'text/css'},
+          {
+            name: 'href',
+            value:
+              'file:///home/daniel/dev/eyes.sdk.javascript1/packages/dom-snapshot/tests/fixtures/test.css',
+          },
+        ],
+        childNodeIndexes: [],
+      },
+      {nodeType: 3, nodeValue: '\n    '},
+      {nodeType: 1, nodeName: 'HEAD', attributes: [], childNodeIndexes: [1, 2, 3, 4, 5, 6]},
+      {nodeType: 1, nodeName: 'BODY', attributes: [], childNodeIndexes: []},
+      {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [7, 8]},
+    ];
+
+    docNode.defaultView.onload = () => {
+      docNode.getElementById('lnk1').sheet.disabled = true;
+      docNode.getElementById('lnk3').removeAttribute('disabled');
+      const {cdt} = domNodesToCdt(docNode);
+      expect(cdt).to.eql(expectedCdt);
+      done();
+    };
+  });
+
+  it('returns style tags with a disabled styleSheet', () => {
+    const docNode = getDocNode(`
+      <style id="stl"></style>
+    `);
+    docNode.getElementById('stl').sheet.disabled = true;
+    const {cdt} = domNodesToCdt(docNode);
+
+    const expectedCdt = [
+      {nodeType: 9, childNodeIndexes: [5]},
+      {
+        nodeType: 1,
+        nodeName: 'STYLE',
+        attributes: [
+          {name: 'id', value: 'stl'},
+          {name: 'data-applitools-disabled', value: ''},
+        ],
+        childNodeIndexes: [],
+      },
+      {nodeType: 3, nodeValue: '\n    '},
+      {
+        nodeType: 1,
+        nodeName: 'HEAD',
+        attributes: [],
+        childNodeIndexes: [1, 2],
+      },
+      {
+        nodeType: 1,
+        nodeName: 'BODY',
+        attributes: [],
+        childNodeIndexes: [],
+      },
+      {
+        nodeType: 1,
+        nodeName: 'HTML',
+        attributes: [],
+        childNodeIndexes: [3, 4],
+      },
+    ];
+    expect(cdt).to.eql(expectedCdt);
   });
 
   //this is for generating the cdt files

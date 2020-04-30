@@ -28,7 +28,11 @@ const Utils = {
     let server
     return () => {
       if (!server) {
-        server = new ServerConnector({verbose: () => {}, log: () => {}}, _configuration)
+        server = new ServerConnector({
+          logger: {verbose: () => {}, log: () => {}},
+          configuration: _configuration,
+          getAgentId: () => 'core/util',
+        })
       }
       return server
     }

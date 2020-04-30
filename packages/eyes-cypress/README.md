@@ -520,7 +520,8 @@ Possible values are:
 
 - `chrome`
 - `firefox`
-- `edge`
+- `edgechromium`
+- `edgelegacy`
 - `ie10`
 - `ie11`
 - `safari`
@@ -530,6 +531,7 @@ Possible values are:
 - `firefox-two-versions-back`
 - `safari-one-version-back`
 - `safari-two-versions-back`
+- `edgechromium-one-version-back`
 
 ### Previous browser versions
 

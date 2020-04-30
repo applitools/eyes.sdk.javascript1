@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-webdriverio",
-  "version": "5.9.23",
+  "version": "5.10.1",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "keywords": [
     "eyes-webdriverio",
@@ -32,17 +32,19 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/dom-utils": "4.7.10",
-    "@applitools/eyes-sdk-core": "9.0.3",
-    "@applitools/visual-grid-client": "13.6.12",
+    "@applitools/dom-utils": "4.7.14",
+    "@applitools/eyes-sdk-core": "9.2.1",
+    "@applitools/visual-grid-client": "13.7.2",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "webdriverio": "^5.18.6"
   },
   "devDependencies": {
-    "@applitools/sdk-fake-eyes-server": "1.1.1",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
     "@applitools/sdk-coverage-tests": "1.0.0",
     "chromedriver": "^80.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^6.8.0",
     "geckodriver": "^1.19.1",
     "mocha": "^6.2.2",

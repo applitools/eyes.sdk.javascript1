@@ -1,7 +1,7 @@
 ;(function() {
   'use strict'
 
-  var GeneralUtils = require('eyes.utils').GeneralUtils
+  var GeneralUtils = require('@applitools/eyes-common-legacy').GeneralUtils
 
   /**
    * Encapsulates the information for the validation about to execute.

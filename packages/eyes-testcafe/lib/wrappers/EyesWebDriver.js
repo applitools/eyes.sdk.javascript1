@@ -399,7 +399,7 @@ class EyesWebDriver {
     this._logger.verbose('Extracting viewport size...')
     this._defaultContentViewportSize = await EyesTestcafeUtils.getViewportSizeOrDisplaySize(
       this._logger,
-      this._driver,
+      this,
     )
     this._logger.verbose('Done! Viewport size: ', this._defaultContentViewportSize)
 
@@ -422,8 +422,7 @@ class EyesWebDriver {
    */
   async getUserAgent() {
     try {
-      // eslint-disable-next-line no-undef
-      const userAgent = await this._evalWithDriver(() => navigator.userAgent, 'getUserAgent')()
+      const userAgent = this._driver.browser.userAgent
       this._logger.verbose(`user agent: ${userAgent}`)
       return userAgent
     } catch (err) {

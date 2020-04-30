@@ -809,8 +809,9 @@ class EyesSelenium extends Eyes {
         if (this._runner) {
           this._runner._allTestResult.push(results)
         }
-        if (throwEx && isErrorCaught) {
-          throw results
+        if (isErrorCaught) {
+          if (throwEx) throw results
+          else return results.getTestResults()
         }
         return results
       })

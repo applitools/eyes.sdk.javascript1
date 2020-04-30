@@ -32,12 +32,12 @@ class EyesVisualGrid extends EyesBase {
   /**
    * Creates a new (possibly disabled) Eyes instance that interacts with the Eyes Server at the specified url.
    *
-   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] The Eyes server URL.
-   * @param {boolean} [isDisabled=false] Set to true to disable Applitools Eyes and use the webdriver directly.
+   * @param {string} [serverUrl=EyesBase.getDefaultServerUrl()] - The Eyes server URL.
+   * @param {boolean} [isDisabled=false] - Set to true to disable Applitools Eyes and use the webdriver directly.
    * @param {EyesRunner} [runner] - Set {@code true} to disable Applitools Eyes and use the WebDriver directly.
    */
   constructor(serverUrl, isDisabled, runner = new VisualGridRunner()) {
-    super(serverUrl, isDisabled, new Configuration())
+    super(serverUrl, isDisabled)
     this._runner = runner
     this._runner.attachEyes(this, this._serverConnector)
     this._runner.makeGetVisualGridClient(makeVisualGridClient)
@@ -55,16 +55,19 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
-   * @signature `open(driver, configuration)`
-   * @signature `open(driver, appName, testName, ?viewportSize, ?configuration)`
+   * @signature `open(driver, appName, testName, viewportSize)`
+   * @sigparam {object} driver
+   * @sigparam {string} [appName]
+   * @sigparam {string} [testName]
+   * @sigparam {RectangleSize|RectangleSizeObject} [viewportSize]
    *
-   * @param {object} driver The web driver that controls the browser hosting the application under test.
-   * @param {Configuration|string} optArg1 The Configuration for the test or the name of the application under the test.
-   * @param {string} [optArg2] The test name.
-   * @param {RectangleSize|RectangleSizeObject} [optArg3] The required browser's viewport size
+   * @param {object} driver - The web driver that controls the browser hosting the application under test.
+   * @param {Configuration|string} optArg1 - The Configuration for the test or the name of the application under the test.
+   * @param {string} [optArg2] - The test name.
+   * @param {RectangleSize|RectangleSizeObject} [optArg3] - The required browser's viewport size
    *   (i.e., the visible part of the document's body) or to use the current window's viewport.
-   * @param {Configuration} [optArg4] The Configuration for the test
-   * @return {Promise<EyesWebDriver>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   * @param {Configuration} [optArg4] - The Configuration for the test
+   * @return {Promise<EyesWebDriver>} - A wrapped WebDriver which enables Eyes trigger recording and frame handling.
    */
   async open(driver, optArg1, optArg2, optArg3, optArg4) {
     ArgumentGuard.notNull(driver, 'driver')
@@ -181,10 +184,12 @@ class EyesVisualGrid extends EyesBase {
         if (this._runner) {
           this._runner._allTestResult.push(...results)
         }
-        if (throwEx && isErrorCaught) {
-          throw TypeUtils.isArray(results) ? results[0] : results
+        if (isErrorCaught) {
+          const error = TypeUtils.isArray(results) ? results[0] : results
+          if (throwEx) throw error
+          else return error.getTestResults()
         }
-        return results
+        return TypeUtils.isArray(results) ? results[0] : results
       })
 
     return this._closePromise
@@ -298,11 +303,11 @@ class EyesVisualGrid extends EyesBase {
   /**
    * Matches the frame given as parameter, by switching into the frame and using stitching to get an image of the frame.
    *
-   * @param {Integer|String|By|WebElement|EyesWebElement} element The element which is the frame to switch to. (as
+   * @param {Integer|String|By|WebElement|EyesWebElement} element - The element which is the frame to switch to. (as
    * would be used in a call to driver.switchTo().frame() ).
-   * @param {int|null} matchTimeout The amount of time to retry matching (milliseconds).
-   * @param {String} tag An optional tag to be associated with the match.
-   * @return {Promise} A promise which is resolved when the validation is finished.
+   * @param {int|null} matchTimeout - The amount of time to retry matching (milliseconds).
+   * @param {String} tag - An optional tag to be associated with the match.
+   * @return {Promise} -  promise which is resolved when the validation is finished.
    */
   checkFrame(element, matchTimeout, tag) {
     return this.check(
@@ -328,9 +333,9 @@ class EyesVisualGrid extends EyesBase {
   /**
    * Takes a snapshot of the application under test and matches it with the expected output.
    *
-   * @param {String} tag An optional tag to be associated with the snapshot.
-   * @param {int} matchTimeout The amount of time to retry matching (Milliseconds).
-   * @return {Promise} A promise which is resolved when the validation is finished.
+   * @param {String} tag - An optional tag to be associated with the snapshot.
+   * @param {int} matchTimeout - The amount of time to retry matching (Milliseconds).
+   * @return {Promise} - A promise which is resolved when the validation is finished.
    */
   checkWindow(tag, matchTimeout) {
     return this.check(tag, Target.window().timeout(matchTimeout))
@@ -370,6 +375,11 @@ class EyesVisualGrid extends EyesBase {
     }
   }
 
+  /**
+   * @param {TBDTYPE} action
+   * @param {TBDTYPE} control
+   * @param {TBDTYPE} cursor
+   */
   async addMouseTrigger(action, control, cursor) {
     if (this._configuration.getIsDisabled()) {
       this._logger.verbose(`Ignoring ${action} (disabled)`)
@@ -396,6 +406,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * @return {boolean}
    */
   isVisualGrid() {
@@ -403,6 +414,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * @param {CorsIframeHandle} corsIframeHandle
    */
   setCorsIframeHandle(corsIframeHandle) {
@@ -410,6 +422,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * @return {CorsIframeHandle}
    */
   getCorsIframeHandle() {
@@ -418,12 +431,14 @@ class EyesVisualGrid extends EyesBase {
 
   /**
    * @inheritDoc
+   * @return {String}
    */
   getBaseAgentId() {
     return `eyes.webdriverio.visualgrid/${VERSION}`
   }
 
   /**
+   * @private
    * @inheritDoc
    */
   async getInferredEnvironment() {
@@ -431,6 +446,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * @inheritDoc
    */
   async getScreenshot() {
@@ -438,6 +454,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * @inheritDoc
    */
   async getTitle() {
@@ -445,6 +462,7 @@ class EyesVisualGrid extends EyesBase {
   }
 
   /**
+   * @private
    * Get jsExecutor
    * @return {EyesJsExecutor}
    */
@@ -452,10 +470,15 @@ class EyesVisualGrid extends EyesBase {
     return this._jsExecutor
   }
 
+  /**
+   * @param {String} apiKey
+   */
   setApiKey(apiKey) {
     this._configuration.setApiKey(apiKey)
   }
-
+  /**
+   * @return {String}
+   */
   getApiKey() {
     return this._configuration.getApiKey()
   }
@@ -463,19 +486,22 @@ class EyesVisualGrid extends EyesBase {
   /**
    * Forces a full page screenshot (by scrolling and stitching) if the browser only supports viewport screenshots).
    *
-   * @param {boolean} shouldForce Whether to force a full page screenshot or not.
+   * @param {boolean} shouldForce - Whether to force a full page screenshot or not.
    */
   setForceFullPageScreenshot(shouldForce) {
     this._configuration.setForceFullPageScreenshot(shouldForce)
   }
 
   /**
-   * @return {boolean} Whether Eyes should force a full page screenshot.
+   * @return {boolean} - Whether Eyes should force a full page screenshot.
    */
   getForceFullPageScreenshot() {
     return this._configuration.getForceFullPageScreenshot()
   }
 
+  /*
+   * @private
+   */
   async _getAndSaveBatchInfoFromServer(batchId) {
     ArgumentGuard.notNullOrEmpty(batchId, 'batchId')
     return this._runner.getBatchInfoWithCache(batchId)

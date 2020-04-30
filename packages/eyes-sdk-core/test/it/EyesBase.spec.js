@@ -4,7 +4,7 @@ const assert = require('assert')
 const {
   GeneralUtils: {sleep},
 } = require('@applitools/eyes-common')
-const {FakeEyes} = require('../testUtils')
+const {EyesBaseImpl} = require('../testUtils')
 const {EyesBase, Configuration, RunningSession, BatchInfo} = require('../../index')
 
 process.env.APPLITOOLS_COMPARE_TO_BRANCH_BASE = true
@@ -13,7 +13,7 @@ describe('EyesBase', () => {
   let eyes
   describe('getAndSetBatchInfo()', () => {
     beforeEach(() => {
-      eyes = new EyesBase()
+      eyes = new EyesBaseImpl()
       eyes._getScmMergeBaseTime = async (branchName, parentBranchName) =>
         `some-datetime-of-${branchName}-${parentBranchName}`
       eyes._getAndSaveBatchInfoFromServer = async batchId => ({
@@ -95,7 +95,7 @@ describe('EyesBase', () => {
     let startSessionArgs
 
     beforeEach(async () => {
-      eyes = new FakeEyes()
+      eyes = new EyesBaseImpl()
       eyes.handleScmMergeBaseTime = async () => {
         await sleep(10)
         return 'some-datetime'
@@ -159,5 +159,22 @@ describe('EyesBase', () => {
       const batchId = eyes.getUserSetBatchId()
       assert.strictEqual(batchId, undefined)
     })
+  })
+
+  it('sends request headers for all requests', async () => {
+    const eyes = new EyesBaseImpl()
+    const serverConnector = eyes._serverConnector
+    serverConnector._axios.defaults.adapter = async config => ({
+      status: 200,
+      config,
+      data: config.headers,
+      headers: {},
+      request: {},
+    })
+    eyes.setAgentId('custom')
+
+    const {data} = await serverConnector._axios.request({url: 'http://bla.url'})
+    assert.strictEqual(data['x-applitools-eyes-client'], 'custom [implBaseAgent]')
+    assert.ok(data['x-applitools-eyes-client-request-id'])
   })
 })

@@ -167,6 +167,50 @@ describe('processPage', () => {
     });
   });
 
+  it('rerturns all CDT resources while having a fake shadow root element', async () => {
+    const url = 'http://localhost:7373/fakeShadow.html';
+    await page.goto(url);
+    await delay(500);
+    const result = await processPage();
+
+    const blobUrlMap = {};
+
+    for (const el of result.cdt) {
+      const attr = el.attributes && el.attributes.find(x => x.name === 'data-blob');
+      if (attr) {
+        if (el.nodeName === 'LINK') {
+          const hrefAttr = el.attributes.find(x => x.name === 'href');
+          blobUrlMap[hrefAttr.value] = attr.value;
+          hrefAttr.value = attr.value;
+        }
+      }
+    }
+
+    if (process.env.APPLITOOLS_UPDATE_FIXTURES) {
+      const cdtStr = JSON.stringify(result.cdt, null, 2);
+      fs.writeFileSync(resolve(__dirname, 'fixtures/fake-shadow.puppeteer.cdt.json'), cdtStr);
+    }
+
+    const cdt = loadJsonFixture('fake-shadow.puppeteer.cdt.json');
+    const blobs = [
+      {
+        url: 'http://localhost:7373/smurfs.jpg',
+        type: 'image/jpeg',
+        value: loadFixtureBuffer('smurfs.jpg'),
+      },
+      {
+        url: 'http://localhost:7373/test.css',
+        type: 'text/css; charset=UTF-8',
+        value: loadFixtureBuffer('test.css'),
+      },
+    ];
+    const resourceUrls = [];
+
+    expect(result.blobs.map(b => b.url)).to.eql(blobs.map(b => b.url));
+    expect(result.cdt).to.eql(cdt);
+    expect(result.resourceUrls).to.eql(resourceUrls);
+  });
+
   it('works for iframes', async () => {
     const url = 'http://localhost:7373/test-iframe.html';
     await page.goto(url);

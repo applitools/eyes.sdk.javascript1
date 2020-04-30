@@ -34,6 +34,15 @@ describe('Eyes TestCafe e2e', () => {
     expect(failedCount).to.equal(0)
   })
 
+  it('runs chrome emulation test', async () => {
+    const browser = ['chrome:emulation:device=iphone X']
+    const failedCount = await runFileInTestCafe(
+      path.resolve(__dirname, 'testcafe/browsers/*.emulation.testcafe.js'),
+      browser,
+    )
+    expect(failedCount).to.equal(0)
+  })
+
   it('runs all e2e Edge tests', async () => {
     const browser = [
       ['saucelabs:MicrosoftEdge@79.0:macOS 10.13'],

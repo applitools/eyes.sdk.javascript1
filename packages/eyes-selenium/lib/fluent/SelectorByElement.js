@@ -1,6 +1,5 @@
 'use strict'
-
-const {GetSelector, GeneralUtils} = require('@applitools/eyes-sdk-core')
+const {GetSelector, GeneralUtils, EyesJsBrowserUtils} = require('@applitools/eyes-sdk-core')
 
 const EYES_SELECTOR_TAG = 'data-eyes-selector'
 
@@ -29,6 +28,11 @@ class SelectorByElement extends GetSelector {
       this._element,
     )
     return `[${EYES_SELECTOR_TAG}="${randId}"]`
+  }
+
+  async toPersistedRegions(driver) {
+    const xpath = await EyesJsBrowserUtils.getElementXpath(driver, this._element.element)
+    return [{type: 'xpath', selector: xpath}]
   }
 }
 

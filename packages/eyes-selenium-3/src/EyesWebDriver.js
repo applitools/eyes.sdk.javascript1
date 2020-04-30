@@ -2,7 +2,7 @@
   'use strict'
 
   var webdriver = require('selenium-webdriver'),
-    GeneralUtils = require('eyes.utils').GeneralUtils,
+    GeneralUtils = require('@applitools/eyes-common-legacy').GeneralUtils,
     Frame = require('./Frame').Frame,
     FrameChain = require('./FrameChain').FrameChain,
     EyesSeleniumUtils = require('./EyesSeleniumUtils').EyesSeleniumUtils,

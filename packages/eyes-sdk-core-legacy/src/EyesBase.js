@@ -26,7 +26,7 @@
 ;(function() {
   'use strict'
 
-  var EyesUtils = require('eyes.utils'),
+  var EyesUtils = require('@applitools/eyes-common-legacy'),
     MatchSettings = require('./MatchSettings'),
     ServerConnector = require('./ServerConnector').ServerConnector,
     MatchWindowTask = require('./MatchWindowTask').MatchWindowTask,
@@ -196,7 +196,12 @@
     this._userInputs = []
     this._saveNewTests = true
     this._saveFailedTests = false
-    this._serverConnector = new ServerConnector(promiseFactory, this._serverUrl, this._logger)
+    this._serverConnector = new ServerConnector({
+      promiseFactory,
+      serverUrl: this._serverUrl,
+      logger: this._logger,
+      getAgentId: this._getFullAgentId.bind(this),
+    })
     this._positionProvider = null
     this._scaleProviderHandler = new SimplePropertyHandler(new NullScaleProvider())
     this._cutProviderHandler = new SimplePropertyHandler(new NullCutProvider())

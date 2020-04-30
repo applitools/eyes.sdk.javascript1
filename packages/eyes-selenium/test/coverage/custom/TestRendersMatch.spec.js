@@ -14,7 +14,7 @@ describe(appName, async () => {
     let runner = new VisualGridRunner(10)
 
     let driver = await getDriver('CHROME')
-    driver.get('https://applitools.com/helloworld')
+    await driver.get('https://applitools.com/helloworld')
     let eyes
     try {
       for (let viewport of viewportList) {
@@ -34,11 +34,11 @@ describe(appName, async () => {
     }
   })
 
-  it('TestFailure', async () => {
+  it.skip('TestFailure', async () => {
     let runner = new VisualGridRunner(10)
 
     let driver = await getDriver('CHROME')
-    driver.get('https://applitools.com/helloworld')
+    await driver.get('https://applitools.com/helloworld')
     let eyes
     try {
       let resultsTotal = 0

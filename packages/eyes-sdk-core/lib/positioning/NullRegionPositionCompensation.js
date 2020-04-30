@@ -1,6 +1,6 @@
 'use strict'
 
-const {RegionPositionCompensation} = require('./RegionPositionCompensation')
+const RegionPositionCompensation = require('./RegionPositionCompensation')
 
 /**
  * @ignore
@@ -14,4 +14,4 @@ class NullRegionPositionCompensation extends RegionPositionCompensation {
   }
 }
 
-exports.NullRegionPositionCompensation = NullRegionPositionCompensation
+module.exports = NullRegionPositionCompensation

@@ -2,7 +2,7 @@
   'use strict'
 
   var CutProvider = require('./CutProvider').CutProvider,
-    GeometryUtils = require('eyes.utils').GeometryUtils
+    GeometryUtils = require('@applitools/eyes-common-legacy').GeometryUtils
 
   /**
    * @constructor

@@ -7,17 +7,17 @@ const assert = require('assert')
 const {
   MatchWindowTask,
   CheckSettings,
-  EyesBase,
   Logger,
   GeneralUtils,
   AppOutput,
   AppOutputWithScreenshot,
 } = require('../../index')
+const {EyesBaseImpl} = require('../testUtils')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
 describe('MatchWindowTask', () => {
   describe('createImageMatchSettings', () => {
-    const eyes = new EyesBase()
+    const eyes = new EyesBaseImpl()
     const task = new MatchWindowTask(true, true, true, true, eyes, true)
     const checkSettings = new CheckSettings()
 

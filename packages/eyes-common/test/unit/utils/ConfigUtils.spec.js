@@ -65,11 +65,11 @@ describe('ConfigUtils', () => {
       }
     })
 
-    it('loads config with file path set by env variable', () => {
-      process.env.APPLITOOLS_CONFIG_PATH = configPath
+    it('loads arbitrary config with file path set by env variable', () => {
+      process.env.APPLITOOLS_CONFIG_PATH = path.join(configPath, 'bla.config.js')
       try {
         const config = ConfigUtils.getConfig()
-        const expectedConfig = {bla: 'kuku', it: 'works'}
+        const expectedConfig = {bla: 'kuku-eyes', it: 'works-eyes'}
         assert.deepStrictEqual(config, expectedConfig)
       } finally {
         process.env.APPLITOOLS_CONFIG_PATH = ''

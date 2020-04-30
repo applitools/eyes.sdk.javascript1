@@ -5,9 +5,8 @@ const {By} = require('../../index')
 
 shared.examplesFor('TestClassicApi', function(test) {
   it('TestIgnoreCaret', async () => {
-    test.eyes.setIgnoreCaret(true)
-    const input = await test.eyes.getDriver().webDriver.findElement(By.xPath('/html/body/input'))
-    await input.sendKeys('test')
+    test.eyes.setHideCaret(true)
+    await test.browser.$('/html/body/input').setValue('test')
 
     await test.eyes.checkRegionBy(By.xPath('/html/body/input'), 'input')
   })

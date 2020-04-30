@@ -5,7 +5,16 @@ const sanitizeAuthUrl = require('./sanitizeAuthUrl');
 
 function makeFindStyleSheetByUrl({styleSheetCache}) {
   return function findStyleSheetByUrl(url, documents) {
-    const allStylesheets = flat(documents.map(d => Array.from(d.styleSheets)));
+    const allStylesheets = flat(
+      documents.map(d => {
+        try {
+          return Array.from(d.styleSheets);
+        } catch (_e) {
+          // A 'fake' documnetFragment doesn't have styleSheets
+          return [];
+        }
+      }),
+    );
     return (
       styleSheetCache[url] ||
       allStylesheets.find(styleSheet => {

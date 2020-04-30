@@ -88,6 +88,12 @@ class SeleniumCheckSettings extends CheckSettings {
     return this._frameChain
   }
 
+  _getTargetType() {
+    return !this._targetRegion && !this._targetElement && !this._targetSelector
+      ? 'window'
+      : 'region'
+  }
+
   /**
    * @param {number|string|By|WebElement|EyesWebElement} frame - The frame to switch to.
    * @return {this}
@@ -252,29 +258,6 @@ class SeleniumCheckSettings extends CheckSettings {
       super.accessibilityRegion(regionOrContainer, regionType)
     }
     return this
-  }
-
-  /**
-   * @ignore
-   * @return {string}
-   */
-  getSizeMode() {
-    if (!this._targetRegion && !this._targetElement && !this._targetSelector) {
-      if (this.getStitchContent()) {
-        return 'full-page'
-      }
-      return 'viewport'
-    }
-    if (this._targetRegion) {
-      if (this.getStitchContent()) {
-        return 'region'
-      }
-      return 'region'
-    }
-    if (this.getStitchContent()) {
-      return 'selector'
-    }
-    return 'selector'
   }
 
   /**

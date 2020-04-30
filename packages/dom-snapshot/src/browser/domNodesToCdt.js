@@ -158,21 +158,35 @@ function domNodesToCdt(docNode, baseUrl, log = noop) {
       NEED_MAP_INPUT_TYPES.has(elementNode.type) &&
       (elementNode.attributes.value && elementNode.attributes.value.value) !== elementNode.value
     ) {
-      const nodeAttr = node.attributes.find(a => a.name === 'value');
-      if (nodeAttr) {
-        nodeAttr.value = elementNode.value;
-      } else {
-        node.attributes.push({name: 'value', value: elementNode.value});
-      }
+      addOrUpdateAttribute(node.attributes, 'value', elementNode.value);
     }
 
     if (elementNode.tagName === 'OPTION' && elementNode.parentElement.value === elementNode.value) {
-      const nodeAttr = node.attributes.find(a => a.name === 'selected');
-      if (!nodeAttr) {
-        node.attributes.push({name: 'selected', value: ''});
-      }
+      addOrUpdateAttribute(node.attributes, 'selected', '');
     }
+
+    if (elementNode.tagName === 'STYLE' && elementNode.sheet && elementNode.sheet.disabled) {
+      node.attributes.push({name: 'data-applitools-disabled', value: ''});
+    }
+    if (
+      elementNode.tagName === 'LINK' &&
+      elementNode.type === 'text/css' &&
+      elementNode.sheet &&
+      elementNode.sheet.disabled
+    ) {
+      addOrUpdateAttribute(node.attributes, 'disabled', '');
+    }
+
     return node;
+  }
+
+  function addOrUpdateAttribute(attributes, name, value) {
+    const nodeAttr = attributes.find(a => a.name === name);
+    if (nodeAttr) {
+      nodeAttr.value = value;
+    } else {
+      attributes.push({name, value});
+    }
   }
 
   function getScriptNode(elementNode) {

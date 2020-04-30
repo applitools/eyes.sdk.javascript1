@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CHLG</title>
+    <style>
+        .pricingdiv{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+            margin-top: 20px;
+        }
+        .pricingdiv ul.theplan{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            border-top-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            color: white;
+            background: #7c3ac9;
+            position: relative;
+            width: 250px; /* width of each table */
+            margin-right: 10px; /* spacing between tables */
+            margin-bottom: 1em;
+            transition: all .5s;
+        }
+        .pricingdiv ul.theplan:hover{ /* when mouse hover over pricing table */
+            transform: scale(1.05);
+            transition: all .5s;
+            z-index: 100;
+            box-shadow: 0 0 10px gray;
+        }
+        .pricingdiv ul.theplan li{
+            margin: 10px 20px;
+            position: relative;
+        }
+        .pricingdiv ul.theplan li.title{
+            font-size: 150%;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            text-transform: uppercase;
+            border-bottom: 5px solid white;
+        }
+        .pricingdiv ul.theplan:nth-of-type(5n+2){
+            background: #e53499;
+        }   
+        .pricingdiv ul.theplan:nth-of-type(5n+3){
+            background: #2a2cc8;
+        }
+
+        .pricingdiv ul.theplan:nth-of-type(5n+4){
+            background: darkgreen;
+        }
+
+        .pricingdiv ul.theplan:nth-of-type(5n+5){
+            background: darkolivegreen;
+        }
+
+        .pricingdiv ul.theplan:last-of-type{ /* remove right margin in very last table */
+            margin-right: 0;
+        }
+        /*very last LI within each pricing UL */
+        .pricingdiv ul.theplan > li:last-of-type{
+            text-align: center;
+            margin-top: auto; /*align last LI (price botton li) to the very bottom of UL */
+        }  
+        .pricingdiv a.pricebutton{
+            background: white;
+            text-decoration: none;
+            padding: 10px;
+            display: inline-block;
+            margin: 10px auto;
+            border-radius: 5px;
+            color: navy;
+            text-transform: uppercase;
+        }
+        @media only screen and (max-width: 500px) {
+            .pricingdiv ul.theplan{
+                border-radius: 0;
+                width: 100%;
+                margin-right: 0;
+            }
+            .pricingdiv ul.theplan:hover{
+                transform: none;
+                box-shadow: none;
+            }
+            .pricingdiv a.pricebutton{
+                display: block;
+            }
+        }
+        li p {
+            word-break: break-word;
+        }
+        .changelog { 
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 17px;
+            width: 100%;
+        }
+        ul.theplan {
+            overflow: hidden;
+            max-height: 600px;
+        }
+    </style>
+    <script id="info">
+    </script>
+    <script>
+        function buildChangelogs() {
+            const container = document.getElementById('container')
+            for (const info of packagesInfo) {
+                const el = getPackageElement(info)
+                el && container.appendChild(el)
+            }
+
+            // Create UL for a package
+            function getPackageElement({dirName, changes}) {
+                const ul = document.createElement('ul')
+                ul.className = 'theplan'
+                const div = document.createElement('div')
+                div.className = 'changelog'
+                ul.appendChild(div)
+
+                let li = document.createElement('li')
+                li.className = 'title'
+                div.appendChild(li)
+                let b = document.createElement('b')
+                b.textContent = dirName
+                li.appendChild(b)
+
+                for (const {version, entries} of changes) {
+                if (!entries) {
+                    continue
+                }
+                li = document.createElement('li')
+                div.appendChild(li)
+                b = document.createElement('b')
+                b.textContent = `${version} :`
+                entries.forEach(e => {
+                    const p = document.createElement('p')
+                    p.textContent = e
+                    li.appendChild(p)
+                })
+                li.prepend(b)
+                }
+
+                li = document.createElement('li')
+                ul.appendChild(li)
+                const url = `https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/${dirName}/CHANGELOG.md`
+                const a = document.createElement('a')
+                a.href = url
+                a.target = '_blank'
+                a.className = 'pricebutton'
+                li.appendChild(a)
+
+                const span = document.createElement('span')
+                span.className = 'icon-tag'
+                a.appendChild(span)
+                a.textContent = 'ALL'
+                return ul
+            }
+            }
+    </script>
+</head>
+<body onload="buildChangelogs()">
+    <div class="pricingdiv" id="container">
+        <!-- 
+            EXAMPLE
+            <ul class="theplan">
+                <div class="changelog">
+                    <li class="title"><span class="icon-trophy" style="color:yellow"></span> <b>Plan 2</b></li>
+                    <li><b>Warranty:</b> 30 Days Money Back</li>
+                </div>
+                <li><a class="pricebutton" href="http://ergonomictrends.com/best-ergonomic-office-chairs-2017-reviews-buyers-guide/" target="_blank" rel="nofollow">Check Out</a></li>
+            </ul> 
+        -->
+    </div>
+</body>
+</html>

@@ -11,7 +11,7 @@ const {
 } = require('@applitools/eyes-common')
 
 const {NullCutProvider} = require('../cropping/NullCutProvider')
-const {NullRegionPositionCompensation} = require('../positioning/NullRegionPositionCompensation')
+const NullRegionPositionCompensation = require('../positioning/NullRegionPositionCompensation')
 
 const MIN_SCREENSHOT_PART_HEIGHT = 10
 

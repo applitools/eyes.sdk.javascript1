@@ -1,12 +1,5 @@
 'use strict'
-const {
-  Eyes,
-  Target,
-  VisualGridRunner,
-  ConsoleLogHandler,
-  Configuration,
-  DeviceName,
-} = require('../../../index')
+const {Eyes, Target, VisualGridRunner, Configuration, DeviceName} = require('../../../index')
 const {getDriver, getBatch} = require('./util/TestSetup')
 const batch = getBatch()
 
@@ -17,7 +10,6 @@ describe('TestRenderings', async () => {
     webDriver = await getDriver('CHROME')
     runner = new VisualGridRunner(30)
     eyes = new Eyes(runner)
-    eyes.setLogHandler(new ConsoleLogHandler())
     eyes.setBranchName('master')
   })
   afterEach(async () => {

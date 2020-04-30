@@ -1,6 +1,12 @@
 'use strict'
 
-const {GetRegion, Location, Region, CoordinatesType} = require('@applitools/eyes-sdk-core')
+const {
+  GetRegion,
+  Location,
+  Region,
+  CoordinatesType,
+  EyesJsBrowserUtils,
+} = require('@applitools/eyes-sdk-core')
 const {SelectorByElement} = require('./SelectorByElement')
 
 /**
@@ -41,6 +47,11 @@ class IgnoreRegionByElement extends GetRegion {
   async getSelector(eyes) {
     // eslint-disable-line no-unused-vars
     return new SelectorByElement(this._element).getSelector(eyes)
+  }
+
+  async toPersistedRegions(driver) {
+    const xpath = await EyesJsBrowserUtils.getElementXpath(driver, this._element)
+    return [{type: 'xpath', selector: xpath}]
   }
 }
 

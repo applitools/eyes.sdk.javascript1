@@ -17,6 +17,7 @@ http://localhost:7272/test.css
     "color": "rgb(0, 0, 0)",
     "display": "block",
     "font-size": "16px",
+    "font-weight": "400",
     "line-height": "normal",
     "margin": "0px",
     "opacity": "1",
@@ -46,6 +47,7 @@ http://localhost:7272/test.css
         "color": "rgb(0, 0, 0)",
         "display": "block",
         "font-size": "16px",
+        "font-weight": "400",
         "line-height": "normal",
         "margin": "8px",
         "opacity": "1",
@@ -75,6 +77,7 @@ http://localhost:7272/test.css
             "color": "rgb(0, 0, 0)",
             "display": "block",
             "font-size": "16px",
+            "font-weight": "400",
             "line-height": "normal",
             "margin": "0px",
             "opacity": "1",
@@ -103,6 +106,6 @@ http://localhost:7272/test.css
   ],
   "css": "#####http://localhost:7272/test.css#####",
   "images": {},
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scriptVersion": "7.1.4"
 }

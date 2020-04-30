@@ -23,7 +23,7 @@ function makeCoverageTests({
   open,
   scrollDown,
   switchToFrame,
-  getAllTestResults,
+  _getAllTestResults,
   type,
   visit,
 } = {}) {
@@ -31,13 +31,10 @@ function makeCoverageTests({
   const viewportSize = '700x460'
   const throwException = true
 
-  function sleep(timeout) {
-    return new Promise(resolve => setTimeout(resolve, timeout))
-  }
-
   return {
     'Test Abort': () => {
       visit('data:text/html,<p>Test</p>')
+      open({appName: 'Test Abort', viewportSize: '1200x800'})
       checkWindow()
       //sleep(15000)
       abort()
@@ -80,6 +77,13 @@ function makeCoverageTests({
       open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
       checkFrame('[name="frame1"]')
       close(throwException)
+    },
+    TestCheckFrameHideScrollbars_Fluent: async () => {
+      // This test is identical to TestCheckFrame_Fluent, and exists only in order to have a new baseline. Once all SDK's implement this test properly, we can remove it and update the baseline for TestCheckFrame_Fluent
+      await visit(url)
+      await open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
+      await checkFrame('[name="frame1"]')
+      await close(throwException)
     },
     TestCheckFrameFully_Fluent: () => {
       visit(url)

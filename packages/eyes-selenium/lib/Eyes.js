@@ -8,7 +8,6 @@ const {
   Location,
   RectangleSize,
   ArgumentGuard,
-  Configuration,
   EyesBase,
   TestFailedError,
   CorsIframeHandle,
@@ -64,7 +63,7 @@ class Eyes extends EyesBase {
       )
     }
 
-    super(serverUrl, isDisabled, new Configuration())
+    super(serverUrl, isDisabled)
     this._runner = runner
     this._runner.attachEyes(this, this._serverConnector)
 
@@ -143,7 +142,8 @@ class Eyes extends EyesBase {
    * @param {SeleniumCheckSettings} checkSettings - Target instance which describes whether we want a window/region/frame
    * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
-  async check(_name, _checkSettings) {
+  // eslint-disable-next-line no-unused-vars
+  async check(name, checkSettings) {
     throw new TypeError('The method is not implemented!')
   }
 
@@ -152,15 +152,15 @@ class Eyes extends EyesBase {
    *
    * @param {string} [tag] - An optional tag to be associated with the snapshot.
    * @param {number} [matchTimeout] - The amount of time to retry matching (Milliseconds).
-   * @param {boolean} [stitchContent=false] - If {@code true}, stitch the internal content of the window.
+   * @param {boolean} [fully=false] - If {@code true}, stitch the internal content of the window.
    * @return {Promise<MatchResult>} - A promise which is resolved when the validation is finished.
    */
-  async checkWindow(tag, matchTimeout, stitchContent = false) {
+  async checkWindow(tag, matchTimeout, fully = false) {
     return this.check(
       tag,
       Target.window()
         .timeout(matchTimeout)
-        .stitchContent(stitchContent),
+        .fully(fully),
     )
   }
 

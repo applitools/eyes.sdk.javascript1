@@ -44,8 +44,8 @@
   "main": "./index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "eyes.sdk": "5.0.0",
-    "eyes.utils": "4.0.0"
+    "@applitools/eyes-common-legacy": "1.0.1",
+    "@applitools/eyes-sdk-core-legacy": "1.0.0"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",

@@ -2,7 +2,7 @@
 
 const {Region} = require('@applitools/eyes-common')
 
-const {RegionProvider} = require('./RegionProvider')
+const RegionProvider = require('./RegionProvider')
 
 class NullRegionProvider extends RegionProvider {
   constructor() {
@@ -10,4 +10,4 @@ class NullRegionProvider extends RegionProvider {
   }
 }
 
-exports.NullRegionProvider = NullRegionProvider
+module.exports = NullRegionProvider

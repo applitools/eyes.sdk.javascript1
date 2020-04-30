@@ -5,6 +5,10 @@
 			"path": "packages/dom-capture"
 		},
 		{
+			"name": "dom-snapshot",
+			"path": "packages/dom-snapshot"
+		},
+		{
 			"name": "dom-utils",
 			"path": "packages/dom-utils"
 		},

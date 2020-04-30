@@ -3,7 +3,7 @@ const {By} = require('selenium-webdriver')
 const {getDriver, getEyes, batch} = require('./util/TestSetup')
 const {Target, StitchMode} = require('../../../index')
 const appName = 'Eyes Selenium SDK - Fluent API'
-describe(appName, () => {
+describe.skip(appName, () => {
   let webDriver, eyes
 
   const longIframes = [

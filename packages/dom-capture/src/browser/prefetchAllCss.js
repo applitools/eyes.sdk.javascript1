@@ -80,6 +80,9 @@ function makePrefetchAllCss(fetchCss) {
 
       async function fetchAllCssFromIframe(el) {
         fetchAllCssFromElement(el);
+        if (!el.contentDocument) {
+          return;
+        }
         try {
           const baseUrl = isInlineFrame(el) ? el.baseURI : el.contentDocument.location.href;
           doFetchAllCssFromFrame(el.contentDocument, baseUrl, cssMap, promises);

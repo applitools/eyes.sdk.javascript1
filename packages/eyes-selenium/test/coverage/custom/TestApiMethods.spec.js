@@ -5,17 +5,16 @@ const {Target, StitchMode} = require('../../../index')
 const batch = getBatch()
 describe('api methods', () => {
   let webDriver, eyes, runner
+  afterEach(async function() {
+    await webDriver.quit()
+    await eyes.abortIfNotClosed()
+  })
   describe('classic', function() {
     beforeEach(async function() {
       webDriver = await getDriver('CHROME')
       ;({eyes, runner} = await getEyes('classic', StitchMode.CSS))
       eyes.setBatch(batch)
     })
-    afterEach(async function() {
-      await webDriver.quit()
-      await eyes.abortIfNotClosed()
-    })
-
     it('TestCloseAsync', testCloseAsync)
   })
   describe('visualGrid', function() {
@@ -24,11 +23,6 @@ describe('api methods', () => {
       ;({eyes, runner} = await getEyes('VG'))
       eyes.setBatch(batch)
     })
-    afterEach(async function() {
-      await webDriver.quit()
-      await eyes.abortIfNotClosed()
-    })
-
     it('TestCloseAsync', testCloseAsync)
   })
 

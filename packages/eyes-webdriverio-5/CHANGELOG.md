@@ -3,10 +3,20 @@
 ## Unreleased
 
 
+## 5.10.1 - 2020/4/27
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- added emulation devices
+- fix returned value from `close` method ([Trello](https://trello.com/c/m6K2Ftd5/277-wdio5-difficulty-getting-test-results-object))
+- updated to @applitools/dom-utils@4.7.14
+- updated to @applitools/eyes-sdk-core@9.2.1
+- updated to @applitools/visual-grid-client@13.7.2
+
 ## 5.9.23 - 2020/4/1
 
 - removed eyes-common dependency
 - update @applitools/visual-grid-client@13.6.11
+- handle switchToFrame on MS Edge <= 18 ([Trello](https://trello.com/c/SLUduLu8/68-can-take-baseline-screenshot-but-checkpoint-screenshots-not-showing-up.))
 
 ## 5.9.22
 

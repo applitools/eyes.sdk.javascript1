@@ -8,7 +8,6 @@ const {
   TestFailedError,
 } = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
-
 const VERSION = require('../../package.json').version
 
 class EyesWrapper extends EyesBase {
@@ -80,11 +79,11 @@ class EyesWrapper extends EyesBase {
 
   /** @override */
   getBaseAgentId() {
-    return this.agentId || `visual-grid-client/${VERSION}`
+    return this._baseAgentId || `visual-grid-client/${VERSION}`
   }
 
-  setBaseAgentId(agentId) {
-    this.agentId = agentId
+  setBaseAgentId(baseAgentId) {
+    this._baseAgentId = baseAgentId
   }
 
   setAccessibilityValidation(accessibilityLevel) {

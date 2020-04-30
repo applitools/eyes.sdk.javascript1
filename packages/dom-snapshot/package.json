@@ -1,14 +1,14 @@
 {
   "name": "@applitools/dom-snapshot",
-  "version": "3.4.3",
+  "version": "3.5.0",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "test:mocha": "mocha --no-timeouts tests/**/*.test.js",
     "eslint:node": "eslint '**/*.js' --ignore-pattern 'src/browser'",
     "eslint:browser": "eslint -c 'src/browser/.eslintrc.json' 'src/browser/**/*.js'",
-    "eslint": "yarn eslint:node && yarn eslint:browser",
-    "test": "yarn test:mocha && yarn eslint",
+    "lint": "yarn eslint:node && yarn eslint:browser",
+    "test": "yarn test:mocha && yarn lint",
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -c rollup.config.js --watch",
     "surge": "surge tests/fixtures applitools-dom-snapshot.surge.sh",

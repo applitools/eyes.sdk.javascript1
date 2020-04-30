@@ -19,4 +19,4 @@ class RegionProvider {
   }
 }
 
-exports.RegionProvider = RegionProvider
+module.exports = RegionProvider

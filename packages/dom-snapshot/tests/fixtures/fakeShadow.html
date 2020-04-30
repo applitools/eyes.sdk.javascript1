@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="test.css" rel="stylesheet" />
+  <script>
+    function createFakeShadow() {
+      const father = document.getElementById('father')
+      const child = document.getElementById('child')
+      Object.defineProperty(father, 'shadowRoot', {
+        value: child,
+        writable: true
+      });
+    }
+  </script>
+</head>
+<body onload="createFakeShadow()">
+  <div id="father">
+    Father fo fake shadow root
+    <div id="child">Same dom tree child!</div>
+  </div>
+</body>
+</html>

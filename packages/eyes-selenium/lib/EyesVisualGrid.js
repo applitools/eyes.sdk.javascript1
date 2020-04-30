@@ -1,7 +1,6 @@
 'use strict'
 
 const {makeVisualGridClient, takeDomSnapshot} = require('@applitools/visual-grid-client')
-
 const {
   ArgumentGuard,
   TypeUtils,
@@ -10,7 +9,6 @@ const {
   BrowserType,
   CorsIframeHandle,
   CorsIframeHandler,
-  IgnoreRegionByRectangle,
   VisualGridRunner,
 } = require('@applitools/eyes-sdk-core')
 
@@ -133,10 +131,12 @@ class EyesVisualGrid extends Eyes {
         if (this._runner) {
           this._runner._allTestResult.push(...results)
         }
-        if (throwEx && isErrorCaught) {
-          throw TypeUtils.isArray(results) ? results[0] : results
+        if (isErrorCaught) {
+          const error = TypeUtils.isArray(results) ? results[0] : results
+          if (throwEx) throw error
+          else return error.getTestResults()
         }
-        return results
+        return TypeUtils.isArray(results) ? results[0] : results
       })
 
     return this._closePromise
@@ -160,15 +160,6 @@ class EyesVisualGrid extends Eyes {
       checkSettings.withName(name)
     }
 
-    // check if we need a region of screenshot, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
-    let targetSelector = await checkSettings.getTargetProvider()
-    if (targetSelector) {
-      targetSelector = await targetSelector.getSelector(this)
-    }
-
-    // prepare regions, add custom tag if by selector (SHOULD BE BEFORE CAPTURING DOM)
-    const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions())
-
     try {
       this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`)
 
@@ -177,7 +168,7 @@ class EyesVisualGrid extends Eyes {
         browser: this._userAgent.getBrowser(),
       })
 
-      const {cdt, url: pageUrl, resourceContents, resourceUrls, frames} = pageDomResults
+      const {cdt, url, resourceContents, resourceUrls, frames} = pageDomResults
 
       if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
         CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames)
@@ -187,26 +178,26 @@ class EyesVisualGrid extends Eyes {
 
       const source = await this._driver.getCurrentUrl()
 
+      const [config, {region, selector}] = await Promise.all([
+        checkSettings.toCheckWindowConfiguration(this._driver),
+        this._getTargetConfiguration(checkSettings),
+      ])
+      const overrideConfig = {
+        fully: this.getForceFullPageScreenshot() || config.fully,
+        sendDom: this.getSendDom() || config.sendDom,
+        matchLevel: this.getMatchLevel() || config.matchLevel,
+      }
+
       await this._checkWindowCommand({
+        ...config,
+        ...overrideConfig,
+        region,
+        selector,
         resourceUrls,
         resourceContents,
         frames,
-        url: pageUrl,
+        url,
         cdt,
-        tag: checkSettings.getName(),
-        sizeMode:
-          checkSettings.getSizeMode() === 'viewport' && this.getForceFullPageScreenshot()
-            ? 'full-page'
-            : checkSettings.getSizeMode(),
-        selector: targetSelector,
-        region: checkSettings.getTargetRegion(),
-        scriptHooks: checkSettings.getScriptHooks(),
-        ignore: ignoreRegions,
-        floating: checkSettings.getFloatingRegions(),
-        sendDom: checkSettings.getSendDom() ? checkSettings.getSendDom() : this.getSendDom(),
-        matchLevel: checkSettings.getMatchLevel()
-          ? checkSettings.getMatchLevel()
-          : this.getMatchLevel(),
         source,
       })
     } catch (e) {
@@ -214,31 +205,22 @@ class EyesVisualGrid extends Eyes {
     }
   }
 
-  /**
-   * @private
-   * @param {GetRegion[]} regions
-   * @return {{type: string, url: string, value: Buffer}[]}
-   */
-  async _prepareRegions(regions) {
-    if (regions && regions.length > 0) {
-      const newRegions = []
+  async _getTargetConfiguration(checkSettings) {
+    const targetSelector =
+      checkSettings.getTargetProvider() &&
+      checkSettings
+        .getTargetProvider()
+        .toPersistedRegions(this._driver)
+        .then(r => r[0])
+    const targetRegion =
+      checkSettings.getTargetRegion() &&
+      checkSettings
+        .getTargetRegion()
+        .toPersistedRegions(this._driver)
+        .then(r => r[0])
 
-      for (const region of regions) {
-        if (region instanceof IgnoreRegionByRectangle) {
-          const plainRegions = await region.getRegion(this, undefined)
-          plainRegions.forEach(plainRegion => {
-            newRegions.push(plainRegion.toJSON())
-          })
-        } else {
-          const selector = await region.getSelector(this)
-          newRegions.push({selector})
-        }
-      }
-
-      return newRegions
-    }
-
-    return regions
+    const [region, selector] = await Promise.all([targetRegion, targetSelector])
+    return {region, selector}
   }
 }
 

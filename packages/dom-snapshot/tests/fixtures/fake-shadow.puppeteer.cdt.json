@@ -1,0 +1,158 @@
+[
+  {
+    "nodeType": 9,
+    "childNodeIndexes": [
+      1,
+      19
+    ]
+  },
+  {
+    "nodeType": 10,
+    "nodeName": "html"
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n  "
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "LINK",
+    "attributes": [
+      {
+        "name": "href",
+        "value": "test.css"
+      },
+      {
+        "name": "rel",
+        "value": "stylesheet"
+      }
+    ],
+    "childNodeIndexes": []
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n  "
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "SCRIPT",
+    "attributes": [],
+    "childNodeIndexes": []
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n"
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "HEAD",
+    "attributes": [],
+    "childNodeIndexes": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n"
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n  "
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n    Father fo fake shadow root\n    "
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "Same dom tree child!"
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "DIV",
+    "attributes": [
+      {
+        "name": "id",
+        "value": "child"
+      }
+    ],
+    "childNodeIndexes": [
+      11
+    ]
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n  "
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "Same dom tree child!"
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "DIV",
+    "attributes": [
+      {
+        "name": "id",
+        "value": "child"
+      }
+    ],
+    "childNodeIndexes": [
+      14
+    ]
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "DIV",
+    "attributes": [
+      {
+        "name": "id",
+        "value": "father"
+      }
+    ],
+    "childNodeIndexes": [
+      10,
+      12,
+      13
+    ],
+    "shadowRootIndex": 15
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "\n\n"
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "BODY",
+    "attributes": [
+      {
+        "name": "onload",
+        "value": ""
+      }
+    ],
+    "childNodeIndexes": [
+      9,
+      16,
+      17
+    ]
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "HTML",
+    "attributes": [
+      {
+        "name": "lang",
+        "value": "en"
+      }
+    ],
+    "childNodeIndexes": [
+      7,
+      8,
+      18
+    ]
+  }
+]

@@ -9,7 +9,14 @@ describe('Eyes', function() {
   this.timeout(5 * 60 * 1000)
 
   before(function() {
-    driver = new webdriver.Builder().forBrowser('chrome').build()
+    driver = new webdriver.Builder()
+      .withCapabilities({
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ['headless'],
+        },
+      })
+      .build()
 
     eyes = new EyesSDK.Eyes()
     eyes.setApiKey(process.env.APPLITOOLS_API_KEY)

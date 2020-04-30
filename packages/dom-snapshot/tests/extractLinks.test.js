@@ -30,25 +30,30 @@ describe('extractLinks', () => {
   it('works', async () => {
     await page.goto(`http://localhost:7373/links.html`);
     const result = await page.evaluate(extractLinks);
-    expect(result).to.eql([
-      'smurfs.jpg?x=12,y=13',
-      'gargamel.jpg',
-      'smurfs.jpg?x=12,y=13',
-      'gargamel.jpg',
-      'smurfs.jpg?x=12,y=13',
-      'gargamel.jpg',
-      'blob:http://www.google.com/cat.jpg',
-      'http://www.google.com/body.jpg',
-      'http://www.google.com/body.jpg',
-      'http://www.google.com/input-image.jpg',
-      'smurfs.jpg',
-      'smurfs.jpg',
-      'smurfs.jpg',
-      '/path/to/video.mp4',
-      'style.css',
-      'http://bla/style.css',
-      '/path/to/poster.jpg',
-    ]);
+    expect(result.sort()).to.eql(
+      [
+        'smurfs.jpg?x=12,y=13',
+        'gargamel.jpg',
+        'smurfs.jpg?x=12,y=13',
+        'gargamel.jpg',
+        'smurfs.jpg?x=12,y=13',
+        'gargamel.jpg',
+        'blob:http://www.google.com/cat.jpg',
+        'http://www.google.com/body.jpg',
+        'http://www.google.com/body.jpg',
+        'http://www.google.com/input-image.jpg',
+        'smurfs.jpg',
+        'smurfs.jpg',
+        'smurfs.jpg',
+        '/path/to/video.mp4',
+        '/path/to/sound.mp3',
+        'style.css',
+        'http://bla/style.css',
+        '/path/to/poster.jpg',
+        'sourceTag.ogg',
+        'sourceTag.mp3',
+      ].sort(),
+    );
   });
 
   it('works for svg', async () => {

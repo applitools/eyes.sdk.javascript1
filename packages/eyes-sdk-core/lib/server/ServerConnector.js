@@ -8,8 +8,7 @@ const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
 const {RenderingInfo} = require('./RenderingInfo')
 const {RunningSession} = require('./RunningSession')
 const {
-  configAxiosHeaders,
-  configAxiosFromConfiguration,
+  configureAxios,
   delayRequest,
   handleRequestResponse,
   handleRequestError,
@@ -80,7 +79,7 @@ class ServerConnector {
    * @param {Logger} logger
    * @param {Configuration} configuration
    */
-  constructor(logger, configuration) {
+  constructor({logger, configuration, getAgentId}) {
     this._logger = logger
     this._configuration = configuration
 
@@ -103,11 +102,11 @@ class ServerConnector {
     this._axios.interceptors.request.use(async config => {
       const axiosConfig = Object.assign({}, this._axios.defaults, config)
       axiosConfig.requestId = axiosConfig.createRequestId()
-      configAxiosHeaders({axiosConfig})
-      configAxiosFromConfiguration({
+      configureAxios({
         axiosConfig,
         configuration: this._configuration,
         logger: this._logger,
+        agentId: getAgentId(),
       })
 
       this._logger.verbose(
@@ -511,7 +510,7 @@ class ServerConnector {
     const isBatch = Array.isArray(renderRequest)
     const config = {
       name: 'render',
-      widthApiKey: false,
+      withApiKey: false,
       method: 'POST',
       url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/render'),
       headers: {
@@ -554,7 +553,7 @@ class ServerConnector {
 
     const config = {
       name: 'renderCheckResource',
-      widthApiKey: false,
+      withApiKey: false,
       method: 'HEAD',
       url: GeneralUtils.urlConcat(
         this._renderingInfo.getServiceUrl(),

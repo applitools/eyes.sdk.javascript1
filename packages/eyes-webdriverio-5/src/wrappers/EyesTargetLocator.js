@@ -57,6 +57,8 @@ class EyesTargetLocator extends TargetLocator {
       return
     }
 
+    let frameElement
+
     if (TypeUtils.isInteger(arg1)) {
       const frameIndex = arg1
       this._logger.verbose(`EyesTargetLocator.frame(${frameIndex})`)
@@ -66,17 +68,9 @@ class EyesTargetLocator extends TargetLocator {
       if (frameIndex > frames.length) {
         throw new TypeError(`Frame index [${frameIndex}] is invalid!`)
       }
-
       this._logger.verbose('Done! getting the specific frame...')
-      this._logger.verbose('Done! Making preparations...')
-      await this.willSwitchToFrame(frames[frameIndex])
-      this._logger.verbose('Done! Switching to frame...')
-      await this._targetLocator.frame(frameIndex)
-      this._logger.verbose('Done!')
-      return
-    }
-
-    if (TypeUtils.isString(arg1)) {
+      frameElement = frames[frameIndex]
+    } else if (TypeUtils.isString(arg1)) {
       const frameNameOrId = arg1
       this._logger.verbose(`EyesTargetLocator.frame(${frameNameOrId})`)
       // Finding the target element so we can report it.
@@ -92,27 +86,16 @@ class EyesTargetLocator extends TargetLocator {
           throw new TypeError(`No frame with name or id '${frameNameOrId}' exists!`)
         }
       }
-      this._logger.verbose('Done! Making preparations...')
-      await this.willSwitchToFrame(frames[0])
-      this._logger.verbose('Done! Switching to frame...')
-      let frameElement = frames[0]
-      if (frameElement instanceof EyesWebElement) {
-        frameElement = frameElement.getWebElement()
-      }
-      await this._targetLocator.frame(frameElement.element)
-      this._logger.verbose('Done!')
-      return
+      frameElement = frames[0]
+    } else {
+      frameElement = arg1
     }
 
-    let frameElement = arg1
     this._logger.verbose('EyesTargetLocator.frame(element)')
     this._logger.verbose('Making preparations...')
     await this.willSwitchToFrame(frameElement)
     this._logger.verbose('Done! Switching to frame...')
-    if (frameElement instanceof EyesWebElement) {
-      frameElement = frameElement.getWebElement()
-    }
-    await this._targetLocator.frame(frameElement.element)
+    await this._targetLocator.frame(frameElement.jsonElement)
     this._logger.verbose('Done!')
   }
 

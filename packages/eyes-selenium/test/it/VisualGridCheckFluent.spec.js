@@ -106,6 +106,7 @@ describe('Multi version browsers in Visual Grid', () => {
       {width: 640, height: 480, name: BrowserType.CHROME_TWO_VERSIONS_BACK},
       {width: 640, height: 480, name: BrowserType.FIREFOX_TWO_VERSIONS_BACK},
       {width: 640, height: 480, name: BrowserType.SAFARI_TWO_VERSIONS_BACK},
+      {width: 640, height: 480, name: BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK},
     ]
     configuration.addBrowsers.apply(configuration, browsers)
     eyes.setConfiguration(configuration)

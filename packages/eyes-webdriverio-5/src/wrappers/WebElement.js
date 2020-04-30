@@ -4,6 +4,8 @@ const {ArgumentGuard, TypeUtils} = require('@applitools/eyes-sdk-core')
 const command = require('../services/selenium/Command')
 const {By} = require('../By')
 
+const WEB_ELEMENT_IDENTIFIER = 'element-6066-11e4-a52e-4f735466cecf'
+
 /**
  * Wrapper for Webdriverio element
  */
@@ -198,6 +200,10 @@ class WebElement {
    */
   get element() {
     return this._element
+  }
+
+  get jsonElement() {
+    return {[WEB_ELEMENT_IDENTIFIER]: this.elementId}
   }
 
   /**

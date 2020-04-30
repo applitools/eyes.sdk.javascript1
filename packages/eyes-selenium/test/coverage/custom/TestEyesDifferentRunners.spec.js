@@ -12,6 +12,7 @@ const {assertImages, getApiData} = require('./util/ApiAssertions')
 const assert = require('assert')
 const batch = getBatch()
 
+
 describe('TestEyesDifferentRunners', () => {
   let webDriver, eyes
 
@@ -91,7 +92,7 @@ describe('TestEyesDifferentRunners', () => {
           'https://www.target.com/c/blankets-throws/-/N-d6wsb?lnk=ThrowsBlankets%E2%80%9C,tc',
           MatchLevel.Strict,
         ],
-        ['https://youtube.com', MatchLevel.Layout],
+        // ['https://youtube.com', MatchLevel.Layout],
       ]
       cases.forEach(testData => {
         it(testData[0], testCase(...testData))
@@ -108,7 +109,7 @@ describe('TestEyesDifferentRunners', () => {
           'https://www.target.com/c/blankets-throws/-/N-d6wsb?lnk=ThrowsBlankets%E2%80%9C,tc',
           MatchLevel.Strict,
         ],
-        ['https://youtube.com', MatchLevel.Layout],
+        // ['https://youtube.com', MatchLevel.Layout],
       ]
 
       cases.forEach(testData => {

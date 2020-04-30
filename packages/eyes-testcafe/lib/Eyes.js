@@ -8,7 +8,6 @@ const {
   Location,
   RectangleSize,
   ArgumentGuard,
-  Configuration,
   EyesBase,
   TestFailedError,
   CorsIframeHandle,
@@ -64,7 +63,7 @@ class Eyes extends EyesBase {
       )
     }
 
-    super(serverUrl, isDisabled, new Configuration())
+    super(serverUrl, isDisabled)
     this._runner = runner
     this._runner.attachEyes(this, this._serverConnector)
 

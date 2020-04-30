@@ -2,7 +2,7 @@
   'use strict'
 
   var ScaleProvider = require('./ScaleProvider').ScaleProvider,
-    ArgumentGuard = require('eyes.utils').ArgumentGuard
+    ArgumentGuard = require('@applitools/eyes-common-legacy').ArgumentGuard
 
   /**
    * @constructor

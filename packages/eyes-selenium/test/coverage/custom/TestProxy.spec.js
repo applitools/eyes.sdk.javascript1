@@ -1,7 +1,7 @@
 'use strict'
 const childProcess = require('child_process')
 const {getDriver, getEyes, getBatch} = require('./util/TestSetup')
-const {Configuration, ProxySettings, ConsoleLogHandler} = require('../../../index')
+const {Configuration, ProxySettings} = require('../../../index')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
@@ -21,7 +21,6 @@ describe('TestProxy', () => {
   async function checkNetworkPassThroughProxy() {
     let webDriver = await getDriver('CHROME')
     let {eyes} = await getEyes('VG')
-    eyes.setLogHandler(new ConsoleLogHandler(true))
     try {
       let conf = new Configuration()
       conf.setBatch(batch)
@@ -30,8 +29,9 @@ describe('TestProxy', () => {
       conf.setTestName('proxy test')
       eyes.setConfiguration(conf)
 
-      await eyes.open(webDriver)
       await webDriver.get('https://applitools.com/helloworld')
+      await webDriver.sleep(2000)
+      await eyes.open(webDriver)
       await eyes.checkWindow()
       await eyes.close()
       await expect(eyes.close()).to.be.rejectedWith(Error, 'IllegalState: Eyes not open')
@@ -44,7 +44,6 @@ describe('TestProxy', () => {
   async function checkNetworkFailIfNoProxy() {
     let webDriver = await getDriver('CHROME')
     let {eyes} = await getEyes('VG')
-    eyes.setLogHandler(new ConsoleLogHandler(true))
     try {
       let conf = new Configuration()
       conf.setBatch(batch)
