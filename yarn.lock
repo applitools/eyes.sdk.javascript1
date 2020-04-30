@@ -13909,7 +13909,7 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mocha-parallel-tests@^2.1.0, mocha-parallel-tests@^2.2.2:
+mocha-parallel-tests@^2.2.2:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/mocha-parallel-tests/-/mocha-parallel-tests-2.3.0.tgz#92d5cf0a3c9ba71b1a9c08a7b56194c023a58de1"
   integrity sha512-GdU55VkOCXK2aBmjFzBE11RsSolA71WJppucU3BrTbMUpGIWnTidrje5Hvdr+hOolynEiv6fHWyoNT41mq4HkA==
