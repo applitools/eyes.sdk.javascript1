@@ -1,56 +1,100 @@
-const {remote} = require('webdriverio')
-const {By} = require('selenium-webdriver')
-const {
-  Eyes,
-  BatchInfo,
-  RectangleSize,
-  StitchMode,
-  VisualGridRunner,
-  Target,
-  Region,
-} = require('../../index')
-
-const sdkName = 'eyes.webdriverio.javascript5'
-const batch = new BatchInfo(`JS Coverage Tests - ${sdkName}`)
 const supportedTests = require('./supported-tests')
+const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
+const uuidv4 = require('uuid/v4')
+const sdkName = 'eyes.webdriverio.javascript5'
+const branchId = uuidv4()
 
 function initialize() {
-  let eyes
-  let driver
-  let runner
+  const result = makeEmitTracker()
+  result.storeHook('deps', `const {remote} = require('webdriverio')`)
+  result.storeHook(
+    'deps',
+    `const {
+    By,
+    Eyes,
+    BatchInfo,
+    RectangleSize,
+    StitchMode,
+    VisualGridRunner,
+    Target,
+    Region,
+    FileLogHandler,
+  } = require('../../../index')`,
+  )
+  result.storeHook('deps', `const path = require('path')`)
+  result.storeHook('vars', 'let eyes')
+  result.storeHook('vars', 'let driver')
+  result.storeHook('vars', 'let runner')
   let baselineTestName
 
   // TODO: add support --remote runner flag (e.g., options.host) to connect to a remote Selenium Grid
   // Right now, wdio implicitly connects to http://localhost:4444/wd/hub
   async function _setup(options) {
     baselineTestName = options.baselineTestName
-    const browserOptions = {
-      logLevel: 'error',
-      capabilities: {
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          args: ['--headless'],
+    result.storeHook(
+      'beforeEach',
+      `const browserOptions = {
+        logLevel: 'error',
+        capabilities: {
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            args: ['--headless'],
+          },
         },
-      },
+      }`,
+    )
+    result.storeHook('beforeEach', `driver = await remote(browserOptions)`)
+    result.storeHook(
+      'beforeEach',
+      `runner = ${
+        options.executionMode.isVisualGrid ? 'runner = new VisualGridRunner(10)' : undefined
+      }`,
+    )
+    result.storeHook(
+      'beforeEach',
+      `eyes = ${options.executionMode.isVisualGrid ? 'new Eyes(runner)' : 'new Eyes()'}`,
+    )
+    result.storeHook(
+      'beforeEach',
+      `${options.executionMode.isCssStitching ? 'eyes.setStitchMode(StitchMode.CSS)' : undefined}`,
+    )
+    result.storeHook(
+      'beforeEach',
+      `${
+        options.executionMode.isScrollStitching
+          ? 'eyes.setStitchMode(StitchMode.SCROLL)'
+          : undefined
+      }`,
+    )
+    result.storeHook('beforeEach', `eyes.setBranchName('${options.branchName}')`)
+    result.storeHook('beforeEach', `eyes.setBatch('JS Coverage Tests - ${sdkName}', '${branchId}')`)
+    if (!options.executionMode.isVisualGrid) {
+      result.storeHook('beforeEach', `eyes.setHideScrollbars(true)`)
     }
-    driver = await remote(browserOptions)
-    runner = options.executionMode.isVisualGrid ? (runner = new VisualGridRunner(10)) : undefined
-    eyes = options.executionMode.isVisualGrid ? new Eyes(runner) : new Eyes()
-    options.executionMode.isCssStitching ? eyes.setStitchMode(StitchMode.CSS) : undefined
-    options.executionMode.isScrollStitching ? eyes.setStitchMode(StitchMode.SCROLL) : undefined
-    eyes.setBranchName(options.branchName)
-    eyes.setBatch(batch)
+    if (process.env.APPLITOOLS_SHOW_LOGS) {
+      result.storeHook('beforeEach', `const logsFolder = path.resolve(__dirname, 'logs')`)
+      result.storeHook(
+        'beforeEach',
+        `const logHandler = new FileLogHandler(
+        true,
+        path.resolve(logsFolder, '${baselineTestName}.log'),
+        false,
+      )`,
+      )
+      result.storeHook('beforeEach', `logHandler.open()`)
+      result.storeHook('beforeEach', `eyes.setLogHandler(logHandler)`)
+    }
     if (process.env.APPLITOOLS_API_KEY_SDK) {
-      eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)
+      result.storeHook('beforeEach', 'eyes.setApiKey(process.env.APPLITOOLS_API_KEY_SDK)')
     }
   }
 
   async function _cleanup() {
-    await driver.deleteSession()
+    result.storeHook('afterEach', 'await driver.deleteSession()')
   }
 
   async function abort() {
-    await eyes.abortIfNotClosed()
+    result.storeCommand('await eyes.abortIfNotClosed()')
   }
 
   async function checkFrame(
@@ -58,21 +102,33 @@ function initialize() {
     {isClassicApi = false, isFully = false, tag, matchTimeout} = {},
   ) {
     if (isClassicApi) {
-      await eyes.checkFrame(By.css(target), matchTimeout, tag)
+      result.storeCommand(
+        `await eyes.checkFrame(By.css('${target}'), ${matchTimeout}, ${
+          tag ? '"' + tag + '"' : undefined
+        })`,
+      )
     } else {
-      let _checkSettings
+      result.storeCommand(`{`)
+      result.storeCommand(`let _checkSettings`)
       if (Array.isArray(target)) {
         target.forEach((entry, index) => {
           index === 0
-            ? (_checkSettings = Target.frame(By.css(entry)))
-            : _checkSettings.frame(By.css(entry))
+            ? result.storeCommand(`(_checkSettings = Target.frame(By.css('${entry}')))`)
+            : result.storeCommand(`_checkSettings.frame(By.css('${entry}'))`)
         })
       } else {
-        _checkSettings = Target.frame(By.css(target))
+        result.storeCommand(`_checkSettings = Target.frame(By.css('${target}'))`)
       }
-      _checkSettings.fully(isFully)
-      await eyes.check(tag, _checkSettings)
+      result.storeCommand(`_checkSettings.fully(${isFully})`)
+      result.storeCommand(`await eyes.check(${tag ? '"' + tag + '"' : undefined}, _checkSettings)`)
+      result.storeCommand(`}`)
     }
+  }
+
+  function makeRegionLocator(target) {
+    return typeof target === 'string'
+      ? `By.css('${target}')`
+      : `new Region(${JSON.stringify(target)})`
   }
 
   async function checkRegion(
@@ -81,27 +137,37 @@ function initialize() {
   ) {
     if (isClassicApi) {
       inFrame
-        ? await eyes.checkRegionInFrame(By.css(inFrame), By.css(target), matchTimeout, tag, isFully)
-        : await eyes.checkRegion(By.css(target), matchTimeout, tag)
+        ? result.storeCommand(
+            `await eyes.checkRegionInFrame(By.css('${inFrame}'), By.css('${target}'), ${matchTimeout}, ${
+              tag ? '"' + tag + '"' : undefined
+            }, ${isFully})`,
+          )
+        : result.storeCommand(
+            `await eyes.checkRegion(By.css('${target}'), ${matchTimeout}, ${
+              tag ? '"' + tag + '"' : undefined
+            })`,
+          )
     } else {
-      let _checkSettings
-      if (inFrame) _checkSettings = Target.frame(By.css(inFrame))
+      result.storeCommand(`{`)
+      result.storeCommand(`let _checkSettings`)
+      if (inFrame) result.storeCommand(`_checkSettings = Target.frame(By.css('${inFrame}'))`)
       if (Array.isArray(target)) {
         target.forEach((entry, index) => {
-          index === 0 && _checkSettings === undefined
-            ? (_checkSettings = Target.region(_makeRegionLocator(entry)))
-            : _checkSettings.region(_makeRegionLocator(entry))
+          index === 0
+            ? result.storeCommand(`(_checkSettings = Target.region(${makeRegionLocator(entry)}))`)
+            : result.storeCommand(`_checkSettings.region(${makeRegionLocator(entry)})`)
         })
       } else {
-        _checkSettings
-          ? _checkSettings.region(_makeRegionLocator(target))
-          : (_checkSettings = Target.region(_makeRegionLocator(target)))
+        result.storeCommand(`_checkSettings
+          ? _checkSettings.region(${makeRegionLocator(target)})
+          : (_checkSettings = Target.region(${makeRegionLocator(target)}))`)
       }
       if (ignoreRegion) {
-        _checkSettings.ignoreRegions(_makeRegionLocator(ignoreRegion))
+        result.storeCommand(`_checkSettings.ignoreRegions(${makeRegionLocator(ignoreRegion)})`)
       }
-      _checkSettings.fully(isFully)
-      await eyes.check(tag, _checkSettings)
+      result.storeCommand(`_checkSettings.fully(${isFully})`)
+      result.storeCommand(`await eyes.check(${tag ? '"' + tag + '"' : undefined}, _checkSettings)`)
+      result.storeCommand(`}`)
     }
   }
 
@@ -115,68 +181,73 @@ function initialize() {
     matchTimeout,
   } = {}) {
     if (isClassicApi) {
-      await eyes.checkWindow(tag, matchTimeout, isFully)
+      result.storeCommand(
+        `await eyes.checkWindow(${tag ? '"' + tag + '"' : undefined}, ${matchTimeout}, ${isFully})`,
+      )
     } else {
-      let _checkSettings = Target.window()
-        .fully(isFully)
-        .ignoreCaret()
+      result.storeCommand(`{`)
+      result.storeCommand(
+        `let _checkSettings = Target.window()
+        .fully(${isFully})
+        .ignoreCaret()`,
+      )
       if (scrollRootElement) {
-        _checkSettings.scrollRootElement(By.css(scrollRootElement))
+        result.storeCommand(`_checkSettings.scrollRootElement(By.css('${scrollRootElement}'))`)
       }
       if (ignoreRegion) {
-        _checkSettings.ignoreRegions(_makeRegionLocator(ignoreRegion))
+        result.storeCommand(`_checkSettings.ignoreRegions(${makeRegionLocator(ignoreRegion)})`)
       }
       if (floatingRegion) {
+        result.storeCommand(`
         _checkSettings.floatingRegion(
-          _makeRegionLocator(floatingRegion.target),
-          floatingRegion.maxUp,
-          floatingRegion.maxDown,
-          floatingRegion.maxLeft,
-          floatingRegion.maxRight,
-        )
+          ${makeRegionLocator(floatingRegion.target)},
+          ${floatingRegion.maxUp},
+          ${floatingRegion.maxDown},
+          ${floatingRegion.maxLeft},
+          ${floatingRegion.maxRight},
+        )`)
       }
-      await eyes.check(tag, _checkSettings)
+      result.storeCommand(`await eyes.check(undefined, _checkSettings)`)
+      result.storeCommand(`}`)
     }
   }
 
   async function close(options) {
-    await eyes.close(options)
+    result.storeCommand(`await eyes.close(${options})`)
   }
 
   async function getAllTestResults() {
-    const resultsSummary = await runner.getAllTestResults()
-    return resultsSummary.getAllResults()
-  }
-
-  const _makeRegionLocator = target => {
-    if (typeof target === 'string') return By.css(target)
-    else if (typeof target === 'number') return target
-    else return new Region(target)
+    result.storeCommand(`const resultsSummary = await runner.getAllTestResults()`)
+    result.storeCommand(`const allResults = resultsSummary.getAllResults()`)
   }
 
   async function open({appName, viewportSize}) {
-    driver = await eyes.open(driver, appName, baselineTestName, RectangleSize.parse(viewportSize))
+    result.storeCommand(
+      `await eyes.open(driver, '${appName}', '${baselineTestName}', RectangleSize.parse('${viewportSize}'))`,
+    )
   }
 
   async function visit(url) {
-    await driver.url(url)
+    result.storeCommand(`await driver.url('${url}')`)
   }
 
   async function scrollDown(pixels) {
-    await driver.executeScript(`window.scrollBy(0,${pixels})`)
+    result.storeCommand(`await driver.execute('window.scrollBy(0,${pixels})')`)
   }
 
   async function switchToFrame(selector) {
-    await driver.switchToFrame(By.css(selector))
+    result.storeCommand(`await driver.switchToFrame(By.css('${selector}'))`)
   }
 
   async function type(selector, text) {
-    await driver.elementSendKeys(selector, text)
+    result.storeCommand(`await driver.elementSendKeys('${selector}', '${text}')`)
   }
-
   return {
-    _setup,
-    _cleanup,
+    hooks: {
+      beforeEach: _setup,
+      afterEach: _cleanup,
+    },
+    out: result,
     abort,
     visit,
     open,
@@ -195,8 +266,4 @@ module.exports = {
   name: sdkName,
   initialize,
   supportedTests,
-  options: {
-    needsChromeDriver: true,
-    chromeDriverOptions: ['--port=4444', '--url-base=wd/hub', '--silent'],
-  },
 }
