@@ -19,7 +19,7 @@ function initialize() {
     Target,
     Region,
     FileLogHandler,
-  } = require('../../index')`,
+  } = require('../../../index')`,
   )
   result.storeHook('deps', `const path = require('path')`)
   result.storeHook('vars', 'let eyes')
@@ -103,7 +103,11 @@ function initialize() {
     {isClassicApi = false, isFully = false, tag, matchTimeout} = {},
   ) {
     if (isClassicApi) {
-      result.storeCommand(`await eyes.checkFrame(By.css(${target}), ${matchTimeout}, ${tag})`)
+      result.storeCommand(
+        `await eyes.checkFrame(By.css('${target}'), ${matchTimeout}, ${
+          tag ? '"' + tag + '"' : undefined
+        })`,
+      )
     } else {
       result.storeCommand(`{`)
       result.storeCommand(`let _checkSettings`)
@@ -114,7 +118,7 @@ function initialize() {
             : result.storeCommand(`_checkSettings.frame(By.css('${entry}'))`)
         })
       } else {
-        result.storeCommand(`_checkSettings = Target.frame(By.css(${target}))`)
+        result.storeCommand(`_checkSettings = Target.frame(By.css('${target}'))`)
       }
       result.storeCommand(`_checkSettings.fully(${isFully})`)
       result.storeCommand(`await eyes.check(${tag ? '"' + tag + '"' : undefined}, _checkSettings)`)
@@ -135,13 +139,19 @@ function initialize() {
     if (isClassicApi) {
       inFrame
         ? result.storeCommand(
-            `await eyes.checkRegionInFrame(By.css(${inFrame}), By.css(${target}), ${matchTimeout}, ${tag}, ${isFully})`,
+            `await eyes.checkRegionInFrame(By.css('${inFrame}'), By.css('${target}'), ${matchTimeout}, ${
+              tag ? '"' + tag + '"' : undefined
+            }, ${isFully})`,
           )
-        : result.storeCommand(`await eyes.checkRegion(By.css(${target}), ${matchTimeout}, ${tag})`)
+        : result.storeCommand(
+            `await eyes.checkRegion(By.css('${target}'), ${matchTimeout}, ${
+              tag ? '"' + tag + '"' : undefined
+            })`,
+          )
     } else {
       result.storeCommand(`{`)
       result.storeCommand(`let _checkSettings`)
-      if (inFrame) result.storeCommand(`_checkSettings = Target.frame(By.css(${inFrame}))`)
+      if (inFrame) result.storeCommand(`_checkSettings = Target.frame(By.css('${inFrame}'))`)
       if (Array.isArray(target)) {
         target.forEach((entry, index) => {
           index === 0
@@ -214,12 +224,12 @@ function initialize() {
 
   async function open({appName, viewportSize}) {
     result.storeCommand(
-      `await eyes.open(driver, ${appName}, ${baselineTestName}, RectangleSize.parse(${viewportSize}))`,
+      `await eyes.open(driver, '${appName}', '${baselineTestName}', RectangleSize.parse('${viewportSize}'))`,
     )
   }
 
   async function visit(url) {
-    result.storeCommand(`await driver.url(${url})`)
+    result.storeCommand(`await driver.url('${url}')`)
   }
 
   async function scrollDown(pixels) {
@@ -227,11 +237,11 @@ function initialize() {
   }
 
   async function switchToFrame(selector) {
-    result.storeCommand(`await driver.frame(By.css(${selector}))`)
+    result.storeCommand(`await driver.frame(By.css('${selector}'))`)
   }
 
   async function type(selector, text) {
-    result.storeCommand(`await driver.setValue(${selector}, ${text})`)
+    result.storeCommand(`await driver.setValue('${selector}', '${text}')`)
   }
 
   return {
