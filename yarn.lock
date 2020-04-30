@@ -6236,6 +6236,18 @@ chromedriver@^80.0.0, chromedriver@^80.0.1:
     mkdirp "^1.0.4"
     tcp-port-used "^1.0.1"
 
+chromedriver@^81.0.0:
+  version "81.0.0"
+  resolved "https://registry.yarnpkg.com/chromedriver/-/chromedriver-81.0.0.tgz#690ba333aedf2b4c4933b6590c3242d3e5f28f3c"
+  integrity sha512-BA++IQ7O1FzHmNpzMlOfLiSBvPZ946uuhtJjZHEIr/Gb+Ha9jiuGbHiT45l6O3XGbQ8BAwvbmdisjl4rTxro4A==
+  dependencies:
+    "@testim/chrome-version" "^1.0.7"
+    axios "^0.19.2"
+    del "^5.1.0"
+    extract-zip "^2.0.0"
+    mkdirp "^1.0.4"
+    tcp-port-used "^1.0.1"
+
 chromium-pickle-js@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/chromium-pickle-js/-/chromium-pickle-js-0.2.0.tgz#04a106672c18b085ab774d983dfa3ea138f22205"
