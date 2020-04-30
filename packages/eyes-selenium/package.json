@@ -69,7 +69,7 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
     "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "env XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file test/coverage/generic/*.spec.js",
+    "test:coverage": "env XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 test/coverage/generic/*.spec.js",
     "test:coverage:custom": "mocha --no-timeouts \"test/coverage/custom/*.spec.js\"",
     "preversion": "bongo preversion && yarn coverage:prod",
     "version": "bongo version",
