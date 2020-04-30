@@ -11,10 +11,12 @@
     "test:unit": "mocha \"test/unit/**/*.js\"",
     "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "env XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 test/coverage/generic/*.spec.js",
+    "test:coverage": "yarn start-chromedriver && env XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 test/coverage/generic/*.spec.js",
     "preversion": "bongo preversion && yarn coverage:prod",
     "version": "bongo version",
-    "postversion": "bongo postversion"
+    "postversion": "bongo postversion",
+    "start-chromedriver": "chromedriver --port=4444 --url-base=wd/hub --silent &",
+    "stop-chromedriver": "ps ax | grep chromedriver | grep port=4444 | awk '{print $1}' | xargs kill -9"
   },
   "author": "Applitools Team <team@applitools.com> (http://www.applitools.com/)",
   "license": "SEE LICENSE IN LICENSE",
