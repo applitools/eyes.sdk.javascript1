@@ -3,9 +3,9 @@
 const assert = require('assert')
 const chromedriver = require('chromedriver')
 const {remote} = require('webdriverio')
-const {Eyes} = require('../../index')
+const {Eyes} = require('../../../index')
 
-describe('TestCacheActualViewportSize', () => {
+describe('TestTooBigViewportSize', () => {
   let browser, eyes
   before(async () => {
     await chromedriver.start(['--silent'], true)
@@ -36,7 +36,7 @@ describe('TestCacheActualViewportSize', () => {
     chromedriver.stop()
   })
 
-  it('TestCacheActualViewportSize', async function() {
+  it('TestTooBigViewportSize', async function() {
     await eyes.open(browser, this.test.parent.title, this.test.title, {width: 5000, height: 5000})
 
     const actualViewportSize = await eyes.getDriver().getDefaultContentViewportSize()
