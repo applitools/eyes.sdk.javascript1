@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- cache actual viewport size in case of error during setting viewport size
 
 ## 5.10.1 - 2020/4/27
 
