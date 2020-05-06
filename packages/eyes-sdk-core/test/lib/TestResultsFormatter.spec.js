@@ -1,4 +1,4 @@
-const {toXmlOutput} = require('../../lib/TestResultsFormatter')
+const {TestResultsFormatter} = require('../../lib/TestResultsFormatter')
 const {TestResults} = require('../../lib/TestResults')
 const {TestResultsStatus} = require('../../lib/TestResultsStatus')
 const assert = require('assert')
@@ -27,7 +27,9 @@ describe('TestResultsFormatter', () => {
 <testcase name="someName2">
 </testcase>
 </testsuite>`
-      assert.deepStrictEqual(toXmlOutput({testResults, suiteName: 'blah', totalTime: 10}), expected)
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
     })
     it('works with 1 diff', () => {
       const testResults = [
@@ -57,7 +59,9 @@ Difference found. See https://eyes.com/results for details.
 </failure>
 </testcase>
 </testsuite>`
-      assert.deepStrictEqual(toXmlOutput({testResults, suiteName: 'blah', totalTime: 10}), expected)
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
     })
     it('works with multiple diffs', () => {
       const testResults = [
@@ -91,7 +95,9 @@ Difference found. See https://eyes.com/results for details.
 </failure>
 </testcase>
 </testsuite>`
-      assert.deepStrictEqual(toXmlOutput({testResults, suiteName: 'blah', totalTime: 10}), expected)
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
     })
   })
 })
