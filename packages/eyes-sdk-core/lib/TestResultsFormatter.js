@@ -242,4 +242,25 @@ class TestResultsFormatter {
   }
 }
 
+//unresolved
+//passedOrNew
+//errors
+function toXmlOutput({testResults, suiteName, totalTime}) {
+  let output = `<?xml version="1.0" encoding="UTF-8" ?>`
+  if (!testResults.length) return ''
+  output += `\n<testsuite name="${suiteName}" tests="${testResults.length}" time="${totalTime}">`
+  testResults.forEach(result => {
+    output += `\n<testcase name="${result.getName()}">`
+    if (result.getIsDifferent()) {
+      output += `\n<failure>`
+      output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`
+      output += `\n</failure>`
+    }
+    output += `\n</testcase>`
+  })
+  output += `\n</testsuite>`
+  return output
+}
+
 exports.TestResultsFormatter = TestResultsFormatter
+exports.toXmlOutput = toXmlOutput
