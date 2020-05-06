@@ -451,6 +451,8 @@ class TestResults {
     noneMatches,
     url,
     accessibilityStatus,
+    isError,
+    errorMessage,
   } = {}) {
     if (hostDisplaySize && !(hostDisplaySize instanceof RectangleSize)) {
       hostDisplaySize = new RectangleSize(hostDisplaySize)
@@ -508,6 +510,8 @@ class TestResults {
     this._noneMatches = noneMatches
     this._url = url
     this._accessibilityStatus = accessibilityStatus
+    this.isError = isError
+    this.errorMessage = errorMessage
 
     /** @type {ServerConnector} */
     this._serverConnector = undefined
