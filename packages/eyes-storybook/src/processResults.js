@@ -19,10 +19,10 @@ function processResults({results = [], totalTime, concurrency}) {
 
   outputStr += '[EYES: TEST RESULTS]:\n\n';
   if (passedOrNew.length > 0) {
-    outputStr += testResultsOutpot(passedOrNew);
+    outputStr += testResultsOutput(passedOrNew);
   }
   if (unresolved.length > 0) {
-    outputStr += testResultsOutpot(unresolved);
+    outputStr += testResultsOutput(unresolved);
   }
   if (errors.length) {
     const sortedErrors = errors.sort((a, b) => a.title.localeCompare(b.title));
@@ -83,7 +83,7 @@ function processResults({results = [], totalTime, concurrency}) {
   };
 }
 
-function testResultsOutpot(results) {
+function testResultsOutput(results) {
   let outputStr = '';
   const sortedTestResults = results.sort((a, b) => a.getName().localeCompare(b.getName()));
   sortedTestResults.forEach(result => {
