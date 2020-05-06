@@ -100,4 +100,38 @@ Difference found. See https://eyes.com/results for details.
       assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
     })
   })
+  it('works with 1 error', async () => {
+    const testResults = [
+      new TestResults({
+        status: TestResultsStatus.Passed,
+        isDifferent: false,
+        name: 'My Component | Button2',
+        hostApp: 'Chrome',
+        hostDisplaySize: {width: 10, height: 20},
+        appUrls: {batch: 'https://eyes.com/results'},
+      }),
+      new TestResults({
+        name: 'My Component | Button1',
+        isError: true,
+        errorMessage: 'some error messgae !',
+      }),
+    ]
+    const expected = `<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="blah" tests="2" time="10">
+<testcase name="My Component | Button2">
+</testcase>
+<testcase name="My Component | Button1">
+<failure>
+some error messgae !
+</failure>
+</testcase>
+</testsuite>`
+    const formatter = new TestResultsFormatter()
+    testResults.forEach(r => formatter.addTestResults(r))
+    assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+  })
+  it.skip('works with multiple errors', async () => {})
+  it.skip('works with diffs and errors', async () => {})
+  it.skip('works with no diifs and no errors', async () => {})
+  it.skip('works with no diffs no errors and no succeeses', async () => {})
 })

@@ -241,7 +241,6 @@ class TestResultsFormatter {
     return tapString
   }
 
-  //errors
   toXmlOutput({suiteName, totalTime} = {}) {
     let output = `<?xml version="1.0" encoding="UTF-8" ?>`
     const testResults = this._resultsList
@@ -252,6 +251,10 @@ class TestResultsFormatter {
       if (result.getIsDifferent()) {
         output += `\n<failure>`
         output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`
+        output += `\n</failure>`
+      } else if (result.isError) {
+        output += `\n<failure>`
+        output += `\n${result.errorMessage}`
         output += `\n</failure>`
       }
       output += `\n</testcase>`
