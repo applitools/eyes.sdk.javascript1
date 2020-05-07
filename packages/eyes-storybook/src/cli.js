@@ -12,6 +12,7 @@ const defaultConfig = require('./defaultConfig');
 const configDigest = require('./configDigest');
 const {makeTiming} = require('@applitools/monitoring-commons');
 const handleTapFile = require('./handleTapFile');
+const handleXmlFile = require('./handleXmlFile');
 const {presult} = require('@applitools/functional-commons');
 const chalk = require('chalk');
 const {performance, timeItAsync} = makeTiming();
@@ -41,14 +42,18 @@ const {performance, timeItAsync} = makeTiming();
       console.log(chalk.red(err.message));
       process.exit(config.exitcode ? config.exitcode : 0);
     } else {
+      const totalTime = performance['eyesStorybook'];
       const {exitCode, formatter, outputStr} = processResults({
         results,
-        totalTime: performance['eyesStorybook'],
+        totalTime,
         concurrency: config.concurrency,
       });
       console.log(outputStr);
       if (config.tapFilePath) {
         handleTapFile(config.tapFilePath, formatter);
+      }
+      if (config.xmlFilePath) {
+        handleXmlFile(config.xmlFilePath, formatter, {totalTime});
       }
       process.exit(config.exitcode ? exitCode : 0);
     }
