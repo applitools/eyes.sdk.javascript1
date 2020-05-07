@@ -244,7 +244,6 @@ class TestResultsFormatter {
   toXmlOutput({suiteName, totalTime} = {}) {
     let output = `<?xml version="1.0" encoding="UTF-8" ?>`
     const testResults = this._resultsList
-    if (!testResults.length) return ''
     output += `\n<testsuite name="${suiteName}" tests="${testResults.length}" time="${totalTime}">`
     testResults.forEach(result => {
       output += `\n<testcase name="${result.getName()}">`
