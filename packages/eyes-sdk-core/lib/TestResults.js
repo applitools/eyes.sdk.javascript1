@@ -451,8 +451,6 @@ class TestResults {
     noneMatches,
     url,
     accessibilityStatus,
-    isError,
-    errorMessage,
   } = {}) {
     if (hostDisplaySize && !(hostDisplaySize instanceof RectangleSize)) {
       hostDisplaySize = new RectangleSize(hostDisplaySize)
@@ -510,8 +508,6 @@ class TestResults {
     this._noneMatches = noneMatches
     this._url = url
     this._accessibilityStatus = accessibilityStatus
-    this.isError = isError
-    this.errorMessage = errorMessage
 
     /** @type {ServerConnector} */
     this._serverConnector = undefined
@@ -978,5 +974,14 @@ class TestResults {
   }
 }
 
+class TestResultsError extends TestResults {
+  constructor({name, message} = {}) {
+    super({name})
+    this.isError = true
+    this.message = message
+  }
+}
+
 exports.TestResults = TestResults
+exports.TestResultsError = TestResultsError
 exports.TestAccessibilityStatus = TestAccessibilityStatus

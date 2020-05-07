@@ -118,6 +118,7 @@ exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask').MatchSing
 exports.MatchWindowTask = require('./lib/MatchWindowTask').MatchWindowTask
 exports.RenderWindowTask = require('./lib/RenderWindowTask').RenderWindowTask
 exports.TestResults = require('./lib/TestResults').TestResults
+exports.TestResultsError = require('./lib/TestResults').TestResultsError
 exports.TestAccessibilityStatus = require('./lib/TestResults').TestAccessibilityStatus
 exports.AccessibilityStatus = require('./lib/AccessibilityStatus').AccessibilityStatus
 exports.TestResultsFormatter = require('./lib/TestResultsFormatter').TestResultsFormatter

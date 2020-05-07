@@ -2,8 +2,7 @@ const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const processResults = require('../../src/processResults');
 const {TestResultsStatus} = require('@applitools/eyes-sdk-core');
-const {TestResults} = require('@applitools/eyes-sdk-core/lib/TestResults');
-
+const {TestResults} = require('@applitools/eyes-sdk-core/lib/TestResults'); 
 describe('processResults', () => {
   it('works', async () => {
     const results = [
@@ -260,6 +259,6 @@ describe('processResults', () => {
     const storedResults = formatter.getResultsList();
     expect(storedResults.length).to.eql(1);
     expect(storedResults[0].getName()).to.eql('My Component | Button1');
-    expect(storedResults[0].errorMessage).to.eql('some error message');
+    expect(storedResults[0].message).to.eql('some error message');
   });
 });

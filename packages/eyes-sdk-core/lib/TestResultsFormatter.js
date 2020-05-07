@@ -254,7 +254,7 @@ class TestResultsFormatter {
         output += `\n</failure>`
       } else if (result.isError) {
         output += `\n<failure>`
-        output += `\n${result.errorMessage}`
+        output += `\n${result.message}`
         output += `\n</failure>`
       }
       output += `\n</testcase>`

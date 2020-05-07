@@ -1,5 +1,5 @@
 const {TestResultsFormatter} = require('../../lib/TestResultsFormatter')
-const {TestResults} = require('../../lib/TestResults')
+const {TestResults, TestResultsError} = require('../../lib/TestResults')
 const {TestResultsStatus} = require('../../lib/TestResultsStatus')
 const assert = require('assert')
 
@@ -109,10 +109,9 @@ Difference found. See https://eyes.com/results for details.
           hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button1',
-          isError: true,
-          errorMessage: 'some error message',
+          message: 'some error message',
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -139,15 +138,13 @@ some error message
           hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button2',
-          isError: true,
-          errorMessage: 'another error message',
+          message: 'another error message',
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button1',
-          isError: true,
-          errorMessage: 'some error message',
+          message: 'some error message',
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -179,15 +176,13 @@ some error message
           hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button1',
-          isError: true,
-          errorMessage: 'some error message',
+          message: 'some error message',
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button3',
-          isError: true,
-          errorMessage: 'some error message',
+          message: 'some error message',
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -261,10 +256,9 @@ some error message
           appUrls: {batch: 'https://eyes.com/results'},
           duration: 10,
         }),
-        new TestResults({
+        new TestResultsError({
           name: 'My Component | Button1',
-          isError: true,
-          errorMessage: 'some error message',
+          message: 'some error message',
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>

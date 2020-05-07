@@ -1,7 +1,7 @@
 'use strict';
 const flatten = require('lodash.flatten');
 const chalk = require('chalk');
-const {TestResults, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
+const {TestResultsError, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
 const uniq = require('./uniq');
 const concurrencyMsg = require('./concurrencyMsg');
 
@@ -77,10 +77,9 @@ function processResults({results = [], totalTime, concurrency}) {
   unresolved.forEach(formatter.addTestResults.bind(formatter));
   errors.forEach(error => {
     formatter.addTestResults(
-      new TestResults({
+      new TestResultsError({
         name: error.title,
-        isError: true,
-        errorMessage: error.err.message,
+        message: error.err.message,
       }),
     );
   });
