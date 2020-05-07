@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- add ability to render tests results to XUnit XML (per [Trello 261](https://trello.com/c/ozmI1rav))
 
 ## 3.5.3 - 2020/5/4
 
