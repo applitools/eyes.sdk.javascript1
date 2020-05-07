@@ -246,7 +246,8 @@ class TestResultsFormatter {
     const testResults = this._resultsList
     output += `\n<testsuite name="${suiteName}" tests="${testResults.length}" time="${totalTime}">`
     testResults.forEach(result => {
-      output += `\n<testcase name="${result.getName()}">`
+      const duration = result.getDuration()
+      output += `\n<testcase name="${result.getName()}"${duration ? ' time=' + duration : ''}>`
       if (result.getIsDifferent()) {
         output += `\n<failure>`
         output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`

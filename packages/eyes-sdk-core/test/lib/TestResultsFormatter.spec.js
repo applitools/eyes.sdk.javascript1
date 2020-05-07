@@ -241,8 +241,45 @@ some error message
       testResults.forEach(r => formatter.addTestResults(r))
       assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 0}), expected)
     })
+    it('works with no diffs no errors and no succeeses', async () => {
+      const testResults = []
+      const expected = `<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="blah" tests="0" time="0">
+</testsuite>`
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 0}), expected)
+    })
+    it('displays duration if provided', async () => {
+      const testResults = [
+        new TestResults({
+          status: TestResultsStatus.Passed,
+          isDifferent: false,
+          name: 'My Component | Button2',
+          hostApp: 'Chrome',
+          hostDisplaySize: {width: 10, height: 20},
+          appUrls: {batch: 'https://eyes.com/results'},
+          duration: 10,
+        }),
+        new TestResults({
+          name: 'My Component | Button1',
+          isError: true,
+          errorMessage: 'some error message',
+        }),
+      ]
+      const expected = `<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="blah" tests="2" time="20">
+<testcase name="My Component | Button2" time=10>
+</testcase>
+<testcase name="My Component | Button1">
+<failure>
+some error message
+</failure>
+</testcase>
+</testsuite>`
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 20}), expected)
+    })
   })
 })
-
-// TODO:
-// - add time to testcase if there (result.getDuration())
