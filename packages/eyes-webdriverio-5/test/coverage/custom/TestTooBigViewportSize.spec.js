@@ -3,7 +3,7 @@
 const assert = require('assert')
 const chromedriver = require('chromedriver')
 const {remote} = require('webdriverio')
-const {Eyes} = require('../../../index')
+const {Eyes, Target, By} = require('../../../index')
 
 describe('TestTooBigViewportSize', () => {
   let browser, eyes
@@ -42,6 +42,15 @@ describe('TestTooBigViewportSize', () => {
     const actualViewportSize = await eyes.getDriver().getDefaultContentViewportSize()
     const cachedViewportSize = await eyes.getViewportSize()
     assert.deepStrictEqual(cachedViewportSize, actualViewportSize)
+
+    return eyes.close(false)
+  })
+
+  it.only('TestTooBigViewportSize', async function() {
+    await browser.url('https://applitools.github.io/demo/TestPages/FramesTestPage')
+    await eyes.open(browser, this.test.parent.title, this.test.title, {width: 5000, height: 5000})
+
+    await eyes.check('input', Target.region(By.css('input')))
 
     return eyes.close(false)
   })
