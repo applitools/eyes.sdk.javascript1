@@ -381,7 +381,6 @@ class EyesWDIOScreenshot extends EyesScreenshot {
           const result =
             image.getWidth() <= viewportSize.getWidth() &&
             image.getHeight() <= viewportSize.getHeight() + heightCompensation()
-          debugger
           return result
         }
 
