@@ -241,20 +241,27 @@ class TestResultsFormatter {
     return tapString
   }
 
-  toXmlOutput({suiteName, totalTime} = {}) {
+  toXmlOutput({totalTime} = {}) {
+    const suiteName = 'Eyes Test Suite'
     let output = `<?xml version="1.0" encoding="UTF-8" ?>`
     const testResults = this._resultsList
     output += `\n<testsuite name="${suiteName}" tests="${testResults.length}" time="${totalTime}">`
     testResults.forEach(result => {
       const duration = result.getDuration()
-      output += `\n<testcase name="${result.getName()}"${duration ? ' time=' + duration : ''}>`
+      output += `\n<testcase name="${result.getName()}"${
+        duration ? ' time="' + duration + '"' : ''
+      }>`
       if (result.getIsDifferent()) {
         output += `\n<failure>`
         output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`
         output += `\n</failure>`
+      } else if (result.getIsAborted()) {
+        output += `\n<failure>`
+        output += `\nTest aborted.`
+        output += `\n</failure>`
       } else if (result.isError) {
         output += `\n<failure>`
-        output += `\n${result.message}`
+        output += `\n${result.error.message}`
         output += `\n</failure>`
       }
       output += `\n</testcase>`

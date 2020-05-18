@@ -21,7 +21,7 @@ describe('TestResultsFormatter', () => {
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="2" time="10">
+<testsuite name="Eyes Test Suite" tests="2" time="10">
 <testcase name="someName1">
 </testcase>
 <testcase name="someName2">
@@ -29,7 +29,7 @@ describe('TestResultsFormatter', () => {
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with 1 diff', () => {
       const testResults = [
@@ -50,7 +50,7 @@ describe('TestResultsFormatter', () => {
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="2" time="10">
+<testsuite name="Eyes Test Suite" tests="2" time="10">
 <testcase name="My Component | Button2">
 </testcase>
 <testcase name="My Component | Button1">
@@ -61,7 +61,7 @@ Difference found. See https://eyes.com/results for details.
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with multiple diffs', () => {
       const testResults = [
@@ -83,7 +83,7 @@ Difference found. See https://eyes.com/results for details.
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="2" time="10">
+<testsuite name="Eyes Test Suite" tests="2" time="10">
 <testcase name="My Component | Button2">
 <failure>
 Difference found. See https://eyes.com/results for details.
@@ -97,7 +97,7 @@ Difference found. See https://eyes.com/results for details.
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with 1 error', async () => {
       const testResults = [
@@ -111,11 +111,11 @@ Difference found. See https://eyes.com/results for details.
         }),
         new TestResultsError({
           name: 'My Component | Button1',
-          message: 'some error message',
+          error: new Error('some error message'),
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="2" time="10">
+<testsuite name="Eyes Test Suite" tests="2" time="10">
 <testcase name="My Component | Button2">
 </testcase>
 <testcase name="My Component | Button1">
@@ -126,7 +126,7 @@ some error message
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with multiple errors', async () => {
       const testResults = [
@@ -140,15 +140,15 @@ some error message
         }),
         new TestResultsError({
           name: 'My Component | Button2',
-          message: 'another error message',
+          error: new Error('another error message'),
         }),
         new TestResultsError({
           name: 'My Component | Button1',
-          message: 'some error message',
+          error: new Error('some error message'),
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="3" time="10">
+<testsuite name="Eyes Test Suite" tests="3" time="10">
 <testcase name="My Component | Button2">
 </testcase>
 <testcase name="My Component | Button2">
@@ -164,7 +164,7 @@ some error message
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with diffs and errors', async () => {
       const testResults = [
@@ -178,15 +178,15 @@ some error message
         }),
         new TestResultsError({
           name: 'My Component | Button1',
-          message: 'some error message',
+          error: new Error('some error message'),
         }),
         new TestResultsError({
           name: 'My Component | Button3',
-          message: 'some error message',
+          error: new Error('some error message'),
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="3" time="10">
+<testsuite name="Eyes Test Suite" tests="3" time="10">
 <testcase name="My Component | Button2">
 <failure>
 Difference found. See https://eyes.com/results for details.
@@ -205,7 +205,7 @@ some error message
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with no diifs and no errors', async () => {
       const testResults = [
@@ -219,31 +219,31 @@ some error message
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="1" time="10">
+<testsuite name="Eyes Test Suite" tests="1" time="10">
 <testcase name="My Component | Button2">
 </testcase>
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 10}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 10}), expected)
     })
     it('works with no diffs no errors and no succeeses', async () => {
       const testResults = []
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="0" time="0">
+<testsuite name="Eyes Test Suite" tests="0" time="0">
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 0}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 0}), expected)
     })
     it('works with no diffs no errors and no succeeses', async () => {
       const testResults = []
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="0" time="0">
+<testsuite name="Eyes Test Suite" tests="0" time="0">
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 0}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 0}), expected)
     })
     it('displays duration if provided', async () => {
       const testResults = [
@@ -258,12 +258,12 @@ some error message
         }),
         new TestResultsError({
           name: 'My Component | Button1',
-          message: 'some error message',
+          error: new Error('some error message'),
         }),
       ]
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
-<testsuite name="blah" tests="2" time="20">
-<testcase name="My Component | Button2" time=10>
+<testsuite name="Eyes Test Suite" tests="2" time="20">
+<testcase name="My Component | Button2" time="10">
 </testcase>
 <testcase name="My Component | Button1">
 <failure>
@@ -273,7 +273,7 @@ some error message
 </testsuite>`
       const formatter = new TestResultsFormatter()
       testResults.forEach(r => formatter.addTestResults(r))
-      assert.deepStrictEqual(formatter.toXmlOutput({suiteName: 'blah', totalTime: 20}), expected)
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 20}), expected)
     })
   })
 })

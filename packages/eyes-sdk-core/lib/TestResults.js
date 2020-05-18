@@ -975,10 +975,10 @@ class TestResults {
 }
 
 class TestResultsError extends TestResults {
-  constructor({name, message} = {}) {
+  constructor({name, error}) {
     super({name})
     this.isError = true
-    this.message = message
+    this.error = error
   }
 }
 
