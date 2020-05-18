@@ -109,22 +109,6 @@ describe('captureDom for IE', () => {
     }
   });
 
-  it('performs well in IE 11', async () => {
-    const driver = await openPageWith({
-      browserName: 'internet explorer',
-      url: 'https://www.softwareadvice.com/hr/rippling-profile/?automated=true',
-    });
-    try {
-      const start = new Date();
-      await captureDom(driver);
-      const end = new Date();
-      const duration = end - start;
-      expect(duration).to.be.below(90000);
-    } finally {
-      await driver.quit();
-    }
-  });
-
   it('works in IE 10 with poll', async () => {
     const driver = await openPageWith({browserName: 'internet explorer'});
     try {
