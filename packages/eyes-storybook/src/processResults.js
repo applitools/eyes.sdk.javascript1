@@ -79,7 +79,7 @@ function processResults({results = [], totalTime, concurrency}) {
     formatter.addTestResults(
       new TestResultsError({
         name: error.title,
-        message: error.err.message,
+        error: error.err,
       }),
     );
   });

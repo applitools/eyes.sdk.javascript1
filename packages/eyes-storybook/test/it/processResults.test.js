@@ -259,6 +259,6 @@ describe('processResults', () => {
     const storedResults = formatter.getResultsList();
     expect(storedResults.length).to.eql(1);
     expect(storedResults[0].getName()).to.eql('My Component | Button1');
-    expect(storedResults[0].message).to.eql('some error message');
+    expect(storedResults[0].error).to.eql(results[0].resultsOrErr[0]);
   });
 });
