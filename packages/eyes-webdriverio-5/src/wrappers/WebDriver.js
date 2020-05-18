@@ -101,7 +101,7 @@ class WebDriver {
   }
 
   getCapabilities() {
-    return this.remoteWebDriver.getCapabilities()
+    return this.remoteWebDriver.capabilities
   }
 
   /**
