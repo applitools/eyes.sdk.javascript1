@@ -78,6 +78,12 @@ function LegacyAPIDriver(WDIODriver) {
     async takeScreenshot() {
       return this._driver.controller.takeScreenshot()
     }
+    async getCapabilities() {
+      return this._driver.desiredCapabilities
+    }
+    async getCurrentUrl() {
+      return this._driver.getUrl()
+    }
   }
 }
 

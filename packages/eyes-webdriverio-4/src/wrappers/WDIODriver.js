@@ -68,14 +68,6 @@ class WDIODriver extends EyesWrappedDriver {
     this._context.reset()
     return this._driver.url(url)
   }
-
-  async getCapabilities() {
-    return this._driver.desiredCapabilities
-  }
-
-  async getCurrentUrl() {
-    return this._driver.getUrl()
-  }
 }
 
 module.exports = LegacyAPIDriver(WDIODriver)
