@@ -84,6 +84,10 @@ function LegacyAPIDriver(WDIODriver) {
     async getCurrentUrl() {
       return this._driver.getUrl()
     }
+    async getBrowserName() {
+      const capabilities = await this.getCapabilities()
+      return capabilities.browserName
+    }
   }
 }
 

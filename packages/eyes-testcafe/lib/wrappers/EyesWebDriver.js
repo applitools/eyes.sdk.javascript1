@@ -107,6 +107,11 @@ class EyesWebDriver {
     return this._driver.getSession()
   }
 
+  async getBrowserName() {
+    const capabilities = this.getCapabilities()
+    return capabilities.browserName
+  }
+
   /**
    * @inheritDoc
    */
