@@ -26,7 +26,17 @@ function createRenderRequests({
   })
 
   return browsers.map(
-    ({width, height, name, deviceName, screenOrientation, deviceScaleFactor, mobile}) => {
+    ({
+      width,
+      height,
+      name,
+      deviceName,
+      screenOrientation,
+      deviceScaleFactor,
+      mobile,
+      platform,
+      iosDeviceInfo,
+    }) => {
       const emulationInfo = createEmulationInfo({
         deviceName,
         screenOrientation,
@@ -35,6 +45,8 @@ function createRenderRequests({
         width,
         height,
       })
+      const filledBrowserName = iosDeviceInfo && !name ? 'safari' : name
+      const filledPlatform = iosDeviceInfo && !platform ? 'ios' : platform
 
       return new RenderRequest({
         webhook: renderInfo.getResultsUrl(),
@@ -49,12 +61,13 @@ function createRenderRequests({
           selector,
           region,
           emulationInfo,
+          iosDeviceInfo,
         }),
-        platform: 'Linux',
-        browserName: name,
+        browserName: filledBrowserName,
         scriptHooks,
         selectorsToFindRegionsFor,
         sendDom,
+        platform: filledPlatform,
       })
     },
   )

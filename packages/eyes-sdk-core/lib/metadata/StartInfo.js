@@ -14,6 +14,7 @@ class StartInfo {
    * @param {string} appIdOrName
    * @param {boolean} compareWithParentBranch
    * @param {string} scenarioIdOrName
+   * @param {string} displayName
    * @param {BatchInfo|object} batchInfo
    * @param {AppEnvironment|object} environment
    * @param {MatchLevel|string} matchLevel
@@ -29,6 +30,7 @@ class StartInfo {
     appIdOrName,
     compareWithParentBranch,
     scenarioIdOrName,
+    displayName,
     batchInfo,
     environment,
     matchLevel,
@@ -55,6 +57,7 @@ class StartInfo {
     this._appIdOrName = appIdOrName
     this._compareWithParentBranch = compareWithParentBranch
     this._scenarioIdOrName = scenarioIdOrName
+    this._displayName = displayName
     this._batchInfo = batchInfo
     this._environment = environment
     this._matchLevel = matchLevel
@@ -146,6 +149,20 @@ class StartInfo {
    */
   setScenarioIdOrName(value) {
     this._scenarioIdOrName = value
+  }
+
+  /**
+   * @return {string}
+   */
+  getDisplayName() {
+    return this._displayName
+  }
+
+  /**
+   * @param {string} value
+   */
+  setDisplayName(value) {
+    this._displayName = value
   }
 
   /**

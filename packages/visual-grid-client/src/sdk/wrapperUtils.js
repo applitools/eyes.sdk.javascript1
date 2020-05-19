@@ -1,6 +1,7 @@
 'use strict'
 const EyesWrapper = require('./EyesWrapper')
 const {RectangleSize, TypeUtils} = require('@applitools/eyes-sdk-core')
+const getDeviceInfoFromBrowserConfig = require('./getDeviceInfoFromBrowserConfig')
 
 function initWrappers({count, apiKey, logHandler, getBatchInfoWithCache}) {
   return Array.from(
@@ -42,7 +43,7 @@ function configureWrappers({
   envName,
   ignoreCaret,
   matchLevel,
-  accessibilityLevel,
+  accessibilitySettings,
   parentBranch,
   branch,
   proxy,
@@ -60,7 +61,7 @@ function configureWrappers({
     const wrapper = wrappers[i]
     const browser = browsers[i]
 
-    const deviceInfo = browser.deviceName ? `${browser.deviceName} (Chrome emulation)` : 'Desktop'
+    const deviceInfo = getDeviceInfoFromBrowserConfig(browser)
     wrapper.setDeviceInfo(deviceInfo)
 
     validateAndAddProperties(wrapper, properties)
@@ -74,7 +75,7 @@ function configureWrappers({
     ignoreCaret !== undefined && wrapper.setIgnoreCaret(ignoreCaret)
     isDisabled !== undefined && wrapper.setIsDisabled(isDisabled)
     matchLevel !== undefined && wrapper.setMatchLevel(matchLevel)
-    accessibilityLevel !== undefined && wrapper.setAccessibilityValidation(accessibilityLevel)
+    accessibilitySettings !== undefined && wrapper.setAccessibilityValidation(accessibilitySettings)
     useDom !== undefined && wrapper.setUseDom(useDom)
     enablePatterns !== undefined && wrapper.setEnablePatterns(enablePatterns)
     ignoreDisplacements !== undefined && wrapper.setIgnoreDisplacements(ignoreDisplacements)

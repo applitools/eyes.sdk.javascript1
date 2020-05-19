@@ -19,11 +19,17 @@ describe('RenderInfo', () => {
     assert.strictEqual(Object.prototype.hasOwnProperty.call(renderInfo, '_selector'), true)
     assert.strictEqual(Object.prototype.hasOwnProperty.call(renderInfo, '_region'), true)
     assert.strictEqual(Object.prototype.hasOwnProperty.call(renderInfo, '_emulationInfo'), true)
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(renderInfo, '_iosDeviceInfo'), true)
   })
 
   it('constructor with object', () => {
     const regionObj = {left: 3, top: 4, width: 5, height: 6}
     const emulationInfoObj = {deviceName: 'deviceName'}
+    const iosDeviceInfoObj = {
+      name: 'iPhone 11 Pro',
+      screenOrientation: 'landscapeLeft',
+      version: 'latest',
+    }
 
     const renderInfo = new RenderInfo({
       width: 1,
@@ -32,6 +38,7 @@ describe('RenderInfo', () => {
       selector: 'some selector',
       region: regionObj,
       emulationInfo: emulationInfoObj,
+      iosDeviceInfo: iosDeviceInfoObj,
     })
 
     const region = new Region(regionObj)
@@ -43,6 +50,7 @@ describe('RenderInfo', () => {
     assert.strictEqual(renderInfo.getSelector(), 'some selector')
     assert.deepStrictEqual(renderInfo.getRegion(), region)
     assert.deepStrictEqual(renderInfo.getEmulationInfo(), emulationInfo)
+    assert.deepStrictEqual(renderInfo.getIosDeviceInfo(), iosDeviceInfoObj)
   })
 
   it('constructor handles undefined region', () => {
@@ -75,6 +83,11 @@ describe('RenderInfo', () => {
   it('toJSON', () => {
     const regionObj = {left: 3, top: 4, width: 5, height: 6}
     const emulationInfo = {deviceName: 'deviceName', screenOrientation: ScreenOrientation.PORTRAIT}
+    const iosDeviceInfo = {
+      name: 'iPhone 11 Pro',
+      screenOrientation: 'landscapeLeft',
+      version: 'latest',
+    }
     const renderInfoObj = {
       width: 1,
       height: 2,
@@ -82,6 +95,7 @@ describe('RenderInfo', () => {
       selector: 'some selector',
       region: regionObj,
       emulationInfo,
+      iosDeviceInfo,
     }
 
     const renderInfo = new RenderInfo(renderInfoObj)
@@ -95,6 +109,11 @@ describe('RenderInfo', () => {
   it('toString', () => {
     const regionObj = {left: 3, top: 4, width: 5, height: 6}
     const emulationInfo = {deviceName: 'deviceName', screenOrientation: ScreenOrientation.PORTRAIT}
+    const iosDeviceInfo = {
+      name: 'iPhone 11 Pro',
+      screenOrientation: 'landscapeLeft',
+      version: 'latest',
+    }
     const renderInfoObj = {
       width: 1,
       height: 2,
@@ -102,12 +121,13 @@ describe('RenderInfo', () => {
       selector: 'some selector',
       region: regionObj,
       emulationInfo,
+      iosDeviceInfo,
     }
 
     const renderInfo = new RenderInfo(renderInfoObj)
     assert.deepStrictEqual(
       renderInfo.toString(),
-      'RenderInfo { {"width":1,"height":2,"sizeMode":"some size mode","selector":"some selector","region":{"width":5,"height":6,"coordinatesType":"SCREENSHOT_AS_IS","x":3,"y":4},"emulationInfo":{"deviceName":"deviceName","screenOrientation":"portrait"}} }',
+      'RenderInfo { {"width":1,"height":2,"sizeMode":"some size mode","selector":"some selector","region":{"width":5,"height":6,"coordinatesType":"SCREENSHOT_AS_IS","x":3,"y":4},"emulationInfo":{"deviceName":"deviceName","screenOrientation":"portrait"},"iosDeviceInfo":{"name":"iPhone 11 Pro","screenOrientation":"landscapeLeft","version":"latest"}} }',
     )
   })
 })

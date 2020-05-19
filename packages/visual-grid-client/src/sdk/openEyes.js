@@ -34,7 +34,7 @@ function makeOpenEyes({
   ignoreCaret: _ignoreCaret,
   isDisabled: _isDisabled,
   matchLevel: _matchLevel,
-  accessibilityLevel: _accessibilityLevel,
+  accessibilitySettings: _accessibilitySettings,
   useDom: _useDom,
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
@@ -88,7 +88,7 @@ function makeOpenEyes({
     ignoreCaret = _ignoreCaret,
     isDisabled = _isDisabled,
     matchLevel = _matchLevel,
-    accessibilityLevel = _accessibilityLevel,
+    accessibilitySettings = _accessibilitySettings,
     useDom = _useDom,
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
@@ -192,7 +192,7 @@ function makeOpenEyes({
       envName,
       ignoreCaret,
       matchLevel,
-      accessibilityLevel,
+      accessibilitySettings,
       useDom,
       enablePatterns,
       ignoreDisplacements,
@@ -263,7 +263,6 @@ function makeOpenEyes({
       testName,
       openEyesPromises,
       matchLevel,
-      accessibilityLevel,
       fetchHeaders: headers,
       isSingleWindow,
       getUserAgents,
@@ -321,7 +320,12 @@ function makeOpenEyes({
       if (browser.name && !supportedBrowserKeys.includes(browser.name)) {
         return `browser name should be one of the following:${supportedBrowserKeysStr}\nReceived: '${browser.name}'.`
       }
-      if (browser.name && !browser.deviceName && (!browser.height || !browser.width)) {
+      if (
+        browser.name &&
+        !browser.deviceName &&
+        !browser.iosDeviceInfo &&
+        (!browser.height || !browser.width)
+      ) {
         return `browser '${browser.name}' should include 'height' and 'width' parameters.`
       }
       if (isEmulation(browser) && !isSupportsDeviceEmulation(browser.name)) {

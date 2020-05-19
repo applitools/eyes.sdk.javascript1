@@ -141,6 +141,7 @@
     this._exact = exact || null
     this._ignoreCaret = ignoreCaret || true
     this._ignoreDisplacements = false
+    this._accessibilitySettings = null
   }
 
   //noinspection JSUnusedGlobalSymbols
@@ -205,6 +206,20 @@
    */
   ImageMatchSettings.prototype.setIgnoreDisplacements = function(value) {
     this._ignoreDisplacements = value
+  }
+
+  /**
+   * @return {AccessibilitySettings}
+   */
+  ImageMatchSettings.prototype.getAccessibilitySettings = function() {
+    return this._accessibilitySettings
+  }
+
+  /**
+   * @param {AccessibilitySettings} value
+   */
+  ImageMatchSettings.prototype.setAccessibilitySettings = function(value) {
+    this._accessibilitySettings = value
   }
 
   Object.freeze(MatchLevel)

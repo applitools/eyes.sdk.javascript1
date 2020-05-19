@@ -4,6 +4,14 @@
 
 - add ability to render tests results to XUnit XML (per [Trello 261](https://trello.com/c/ozmI1rav))
 
+
+## 3.6.0 - 2020/5/19
+
+- Support for AccessibilityGuidelinesVersion
+- updated to @applitools/dom-snapshot@3.5.2
+- updated to @applitools/eyes-sdk-core@10.2.0
+- updated to @applitools/visual-grid-client@14.1.0
+
 ## 3.5.3 - 2020/5/4
 
 - changed console output to contain story data on errors

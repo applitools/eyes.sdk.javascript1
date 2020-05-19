@@ -117,35 +117,13 @@ describe('RenderRequest', () => {
         renderInfo: 'renderInfoToJSON',
         browser: {
           name: 'browserName',
-          platform: 'platform',
+        },
+        platform: {
+          name: 'platform',
         },
         scriptHooks: 'scriptHooks',
         selectorsToFindRegionsFor: 'selectorsToFindRegionsFor',
         sendDom: 'sendDom',
-      }
-      assert.deepStrictEqual(renderRequest.toJSON(), expected)
-    })
-
-    it("doesn't include platform if there is no browserName", () => {
-      const dom = {
-        getHashAsObject() {
-          return 'dom_hashAsObject'
-        },
-      }
-      const renderRequest = new RenderRequest({
-        webhook: 'webhook',
-        url: 'url',
-        dom,
-        resources: [],
-        renderInfo: null,
-        platform: 'platform',
-      })
-      const expected = {
-        stitchingService: undefined,
-        webhook: 'webhook',
-        url: 'url',
-        dom: 'dom_hashAsObject',
-        resources: {},
       }
       assert.deepStrictEqual(renderRequest.toJSON(), expected)
     })
@@ -195,7 +173,7 @@ describe('RenderRequest', () => {
       })
       assert.strictEqual(
         renderRequest.toString(),
-        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"browser":{"name":"browserName","platform":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom"} }',
+        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom"} }',
       )
     })
   })

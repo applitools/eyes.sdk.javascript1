@@ -3,9 +3,11 @@ const shorthandProperties = new Map([
     'background',
     new Set([
       'background-color',
+      'background-position',
       'background-position-x',
       'background-position-y',
       'background-size',
+      'background-repeat',
       'background-repeat-x',
       'background-repeat-y',
       'background-clip',
@@ -328,6 +330,13 @@ const webkitShorthandProperties = new Map([
   ],
 ]);
 
+const experimentalLonghandProperties = new Map([
+  ['background-position-x', 'background-position'],
+  ['background-position-y', 'background-position'],
+  ['background-repeat-x', 'background-repeat'],
+  ['background-repeat-y', 'background-repeat'],
+]);
+
 mozShorthandProperties.forEach((longhandSet, shorthand) =>
   shorthandProperties.set(shorthand, longhandSet),
 );
@@ -337,9 +346,8 @@ webkitShorthandProperties.forEach((longhandSet, shorthand) =>
 );
 
 const longhandProperties = new Set(
-  Array.from(shorthandProperties.entries()).reduce(
-    (longhandProperties, [shorthand, longhandSet]) =>
-      longhandProperties.concat(Array.from(longhandSet, longhand => [longhand, shorthand])),
+  Array.from(shorthandProperties.values()).reduce(
+    (longhandProperties, longhandSet) => longhandProperties.concat(Array.from(longhandSet)),
     [],
   ),
 );
@@ -367,6 +375,11 @@ function hasShorthandWithin(longhand, shorthands) {
   return shorthands.some(shorthand => isShorthandFor(shorthand, longhand));
 }
 
+function preferredShorthand(longhand) {
+  return experimentalLonghandProperties.get(longhand);
+}
+
 exports.isShorthandFor = isShorthandFor;
 exports.hasShorthand = hasShorthand;
 exports.hasShorthandWithin = hasShorthandWithin;
+exports.preferredShorthand = preferredShorthand;

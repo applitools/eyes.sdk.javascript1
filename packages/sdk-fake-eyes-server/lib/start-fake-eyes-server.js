@@ -24,7 +24,7 @@ function startFakeEyesServer({
 
   const app = express()
   const jsonMiddleware = express.json()
-  const rawMiddleware = express.raw({limit: '100MB'})
+  const rawMiddleware = express.raw({limit: '100MB', type: '*/*'})
 
   app.use((req, _res, next) => {
     if (hangUp) {
@@ -49,35 +49,58 @@ function startFakeEyesServer({
       req.body.map(renderRequest => {
         const renderId = renderRequest.renderId || `r${renderCounter++}`
         renderings[renderId] = renderRequest
+        const screenshotEntry = Object.entries(renderRequest.resources).find(
+          ([_url, {contentType}]) => contentType === 'application/x-applitools-screenshot',
+        )
         return {
           renderId,
           renderStatus: renderRequest.renderId ? 'rendering' : 'need-more-resources',
           needMoreDom: !renderRequest.renderId,
+          needMoreResources:
+            screenshotEntry && !renderRequest.renderId ? [screenshotEntry[0]] : undefined,
         }
       }),
     )
   })
 
   // render status
-  app.post('/render-status', jsonMiddleware, (req, res) => {
+  app.post('/render-status', jsonMiddleware, async (req, res) => {
     res.send(
-      req.body.map(renderId => {
-        const rendering = renderings[renderId]
-        if (rendering) {
-          const regions = rendering.selectorsToFindRegionsFor || []
-          return {
-            status: 'rendered',
-            imageLocation: `imageLoc_${renderId}`,
-            domLocation: `domLoc_${renderId}`,
-            selectorRegions: regions.map(() => ({x: 1, y: 2, width: 3, height: 4})),
+      await Promise.all(
+        req.body.map(async renderId => {
+          const rendering = renderings[renderId]
+          if (rendering) {
+            const regions = rendering.selectorsToFindRegionsFor || []
+            const imageResource = Object.values(rendering.resources).find(
+              ({contentType}) => contentType === 'application/x-applitools-screenshot',
+            )
+            const imageLocation = `${serverUrl}/api/resources/image_${renderId}`
+            const domLocation = `${serverUrl}/api/resources/dom_${renderId}`
+            await fetch(imageLocation, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': imageResource ? 'image/png' : 'text/plain',
+              },
+              body: imageResource ? resources[imageResource.hash] : `image_${renderId}`,
+            })
+            await fetch(domLocation, {method: 'PUT', body: `dom_${renderId}`})
+            return {
+              status: 'rendered',
+              imageLocation,
+              domLocation,
+              userAgent:
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+              selectorRegions: regions.map(() => ({x: 1, y: 2, width: 3, height: 4})),
+            }
           }
-        }
-      }),
+        }),
+      ),
     )
   })
 
   // put resource
-  app.put('/resources/sha256/:hash', rawMiddleware, (_req, res) => {
+  app.put('/resources/sha256/:hash', rawMiddleware, (req, res) => {
+    resources[req.params.hash] = req.body
     res.send({success: true})
   })
 
@@ -335,6 +358,12 @@ function startFakeEyesServer({
       contentMatches: 0, // TODO
       layoutMatches: 0, // TODO
       noneMatches: 0, // TODO
+      accessibilityStatus: runningSession.startInfo.defaultMatchSettings.accessibilitySettings
+        ? {
+            status: 'Passed',
+            ...runningSession.startInfo.defaultMatchSettings.accessibilitySettings,
+          }
+        : undefined, // TODO return only if checkpoints had accessibility regions
     }
   }
 

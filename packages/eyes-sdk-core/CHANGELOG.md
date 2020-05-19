@@ -4,6 +4,29 @@
 
 - add ability to output XUnit XML from the TestResultFormatter (per [Trello 261](https://trello.com/c/ozmI1rav))
 
+## 10.2.0 - 2020/5/19
+
+- add AccessibilityGuidelinesVersion enum
+- remove accessibilityLevel from checkSettings
+- updated to @applitools/eyes-common@3.24.0
+
+   ## 10.1.2 - 2020/5/13
+
+- added retry for requests returning with a status code of 503   
+
+## 10.1.1 - 2020/5/11
+
+- updated to @applitools/eyes-common@3.23.1
+
+## 10.1.0 - 2020/5/11
+
+- add iosDeviceInfo support
+- updated to @applitools/eyes-common@3.23.0
+
+## 10.0.2 - 2020/5/11
+
+- updated to @applitools/eyes-common@3.22.2
+
 ## 10.0.1 - 2020/5/4
 
 - added resource info on putRender Error

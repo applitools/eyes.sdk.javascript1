@@ -119,7 +119,6 @@ exports.MatchWindowTask = require('./lib/MatchWindowTask').MatchWindowTask
 exports.RenderWindowTask = require('./lib/RenderWindowTask').RenderWindowTask
 exports.TestResults = require('./lib/TestResults').TestResults
 exports.TestResultsError = require('./lib/TestResults').TestResultsError
-exports.TestAccessibilityStatus = require('./lib/TestResults').TestAccessibilityStatus
 exports.AccessibilityStatus = require('./lib/AccessibilityStatus').AccessibilityStatus
 exports.TestResultsFormatter = require('./lib/TestResultsFormatter').TestResultsFormatter
 exports.TestResultsStatus = require('./lib/TestResultsStatus').TestResultsStatus
@@ -141,6 +140,7 @@ exports.TestResultsSummary = require('./lib/runner/TestResultsSummary').TestResu
 
 // Classes from eyes-common which may be used as part of public API
 exports.AccessibilityLevel = common.AccessibilityLevel
+exports.AccessibilityGuidelinesVersion = common.AccessibilityGuidelinesVersion
 exports.AccessibilityMatchSettings = common.AccessibilityMatchSettings
 exports.AccessibilityRegionType = common.AccessibilityRegionType
 exports.BatchInfo = common.BatchInfo
@@ -156,6 +156,9 @@ exports.ProxySettings = common.ProxySettings
 exports.ScreenOrientation = common.ScreenOrientation
 exports.SessionType = common.SessionType
 exports.StitchMode = common.StitchMode
+exports.IosVersion = common.IosVersion
+exports.IosScreenOrientation = common.IosScreenOrientation
+exports.IosDeviceName = common.IosDeviceName
 
 exports.DebugScreenshotsProvider = common.DebugScreenshotsProvider
 exports.FileDebugScreenshotsProvider = common.FileDebugScreenshotsProvider

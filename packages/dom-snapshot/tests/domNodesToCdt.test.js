@@ -1207,7 +1207,7 @@ describe('domNodesToCdt', () => {
     expect(cdt).to.deep.equal(expectedCdt);
   });
 
-  it('returns links with having disabled attribute', done => {
+  it('returns links with having disabled attribute', () => {
     const absolutePath = path.join(__dirname, 'fixtures/test.css');
     const docNode = getDocNode(`
       <link id="lnk1" rel="stylesheet" type="text/css" href="file://${absolutePath}">
@@ -1272,13 +1272,19 @@ describe('domNodesToCdt', () => {
       {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [7, 8]},
     ];
 
-    docNode.defaultView.onload = () => {
-      docNode.getElementById('lnk1').sheet.disabled = true;
-      docNode.getElementById('lnk3').removeAttribute('disabled');
-      const {cdt} = domNodesToCdt(docNode);
-      expect(cdt).to.eql(expectedCdt);
-      done();
-    };
+    return new Promise((resolve, reject) => {
+      docNode.defaultView.onload = () => {
+        try {
+          docNode.getElementById('lnk1').sheet.disabled = true;
+          docNode.getElementById('lnk3').removeAttribute('disabled');
+          const {cdt} = domNodesToCdt(docNode);
+          expect(cdt).to.eql(expectedCdt);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      };
+    });
   });
 
   it('returns style tags with a disabled styleSheet', () => {

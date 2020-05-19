@@ -1,6 +1,7 @@
 'use strict';
 
 const csstree = require('css-tree');
+const {preferredShorthand} = require('./styleProperties');
 
 const CSSOM_TYPES = {
   UNKNOWN_RULE: 0,
@@ -72,15 +73,17 @@ function createAstFromCssom(cssomRules) {
     }
 
     if (props.block === 'style') {
-      rule.block = {
-        type: 'Block',
-        children: Array.from(cssomRule.style, property => ({
+      const children = Array.from(cssomRule.style).reduce((children, longhand) => {
+        const property = preferredShorthand(longhand) || longhand;
+        children.set(property, {
           type: 'Declaration',
           important: Boolean(cssomRule.style.getPropertyPriority(property)),
           property,
           value: {type: 'Raw', value: cssomRule.style.getPropertyValue(property)},
-        })),
-      };
+        });
+        return children;
+      }, new Map());
+      rule.block = {type: 'Block', children: Array.from(children.values())};
     } else if (props.block === 'nested') {
       rule.block = {type: 'Block', children: createAstFromCssom(cssomRule.cssRules)};
     } else {

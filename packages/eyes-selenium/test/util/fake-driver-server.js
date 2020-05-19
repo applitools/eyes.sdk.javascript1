@@ -6,9 +6,9 @@ const nock = require('nock')
 function fakeDriverServer({
   sessionId = 'fake session id',
   _capabilities = {},
-  url = 'fake url',
+  url = 'http://fake-driver',
   userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
-  screenshotFileName = 'software_development.png',
+  screenshotFilePath = path.resolve(__dirname, '../fixtures/software_development.png'),
 } = {}) {
   nock('http://localhost:4444')
     .post('/session')
@@ -91,14 +91,14 @@ function fakeDriverServer({
       return `{"separator":"-----","cssStartToken":"#####","cssEndToken":"#####","iframeStartToken":"\\\\"@@@@@","iframeEndToken":"@@@@@\\\\""}\n-----\n-----\n{}`
     } else if (script === 'return navigator.userAgent;') {
       return userAgent
+    } else if (script.indexOf('__processPageAndSerializePoll()') > -1) {
+      return `{"status": "SUCCESS", "value": {"url":"${url}","blobs":[{"url":"http://fake-blob","type":"application/x-applitools-screenshot","value":"${takeScreenshot()}"}],"frames":[]}}`
     }
     return ''
   }
 
   function takeScreenshot() {
-    return fs
-      .readFileSync(path.resolve(__dirname, '../fixtures', screenshotFileName))
-      .toString('base64')
+    return fs.readFileSync(screenshotFilePath).toString('base64')
   }
 }
 

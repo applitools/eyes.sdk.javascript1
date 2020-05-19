@@ -25,3 +25,6 @@ exports.RectangleSize = core.RectangleSize
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityRegionType = core.AccessibilityRegionType
 exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings
+exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
+exports.AccessibilityRegionBySelector = core.AccessibilityRegionBySelector
+exports.AccessibilityRegionByElement = core.AccessibilityRegionByElement

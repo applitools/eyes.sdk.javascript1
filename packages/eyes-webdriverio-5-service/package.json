@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-webdriverio5-service",
-  "version": "1.3.10",
+  "version": "1.4.0",
   "description": "",
   "keywords": [
     "wdio-plugin",
@@ -20,7 +20,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@applitools/eyes-webdriverio": "5.10.1"
+    "@applitools/eyes-webdriverio": "5.11.0"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",
@@ -34,6 +34,7 @@
     "wdio-chromedriver-service": "^5.0.2"
   },
   "scripts": {
+    "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test": "wdio tests/wdio.conf.js",
     "preversion": "bongo preversion",
     "version": "bongo version",

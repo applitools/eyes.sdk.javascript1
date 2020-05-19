@@ -176,8 +176,8 @@ describe('testWindow', () => {
         domUrl: undefined,
         imageLocation: undefined,
         screenshotUrl: '{"isGood":true,"sizeMode":"full-page"}',
-        source: undefined,
         tag: 'good1',
+        url: `${baseUrl}/test.html`,
       },
     ])
   })

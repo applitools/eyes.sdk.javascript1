@@ -3,6 +3,24 @@
 ## Unreleased
 
 
+## 3.24.0 - 2020/5/19
+
+- add AccessibilityGuidelinesVersion enum
+- support AccessibilitySettings with `level` and `guidelinesVersion` in defaultMatchSettings
+- support ability to specify defaultMatchSettings in Configuration c'tor
+
+## 3.23.1 - 2020/5/11
+
+- added Galaxy S10 Plus to device emulation  
+
+## 3.23.0 - 2020/5/11
+
+- add iosDeviceInfo related enums
+
+## 3.22.2 - 2020/5/11
+
+- fix device emulation names  
+
 ## 3.22.1 - 2020/4/26
 
 - fix bug with config: handle configPath (including env var) as full path to config file

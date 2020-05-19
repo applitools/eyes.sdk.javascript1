@@ -24,6 +24,7 @@ function makeRenderStory({config, logger, testWindow, performance, timeItAsync})
       tag,
       properties,
       ignore,
+      accessibilityValidation,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -46,6 +47,10 @@ function makeRenderStory({config, logger, testWindow, performance, timeItAsync})
         ...(properties !== undefined ? properties : config.properties || []),
       ],
       ignoreDisplacements,
+      accessibilitySettings:
+        accessibilityValidation !== undefined
+          ? accessibilityValidation
+          : config.accessibilityValidation,
     };
 
     const checkParams = {

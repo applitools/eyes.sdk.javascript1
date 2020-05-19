@@ -26,10 +26,10 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/dom-utils": "4.7.10",
-    "@applitools/eyes-sdk-core": "9.0.3",
+    "@applitools/dom-utils": "4.7.16",
+    "@applitools/eyes-sdk-core": "10.1.2",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.6.12",
+    "@applitools/visual-grid-client": "14.0.1",
     "rimraf": "^3.0.0"
   },
   "peerDependencies": {

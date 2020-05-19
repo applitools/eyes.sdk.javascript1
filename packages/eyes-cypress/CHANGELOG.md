@@ -3,6 +3,24 @@
 ## Unreleased
 
 
+## 3.11.0 - 2020/5/19
+
+- Support for accessibility validation
+- updated to @applitools/eyes-sdk-core@10.2.0
+- updated to @applitools/visual-grid-client@14.1.0
+
+ ## 3.10.5 - 2020/5/18
+
+- fixed typescript definitions file for eyesCheckWindow string argument and open browser name parameter. 
+- updated to @applitools/eyes-sdk-core@10.1.2
+- updated to @applitools/visual-grid-client@14.0.2
+
+## 3.10.4 - 2020/5/7
+
+- updated to @applitools/dom-snapshot@3.5.2
+- updated to @applitools/eyes-sdk-core@10.0.1
+- updated to @applitools/visual-grid-client@13.7.7
+
  ## 3.10.3 - 2020/4/30
 
 - updated to @applitools/dom-snapshot@3.5.0 

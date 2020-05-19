@@ -5,11 +5,11 @@ const {GeneralUtils} = require('../utils/GeneralUtils')
 const {TypeUtils} = require('../utils/TypeUtils')
 const {MatchLevel} = require('./MatchLevel')
 const {AccessibilityLevel} = require('./AccessibilityLevel')
+const {AccessibilityGuidelinesVersion} = require('./AccessibilityGuidelinesVersion')
 const {ExactMatchSettings} = require('./ExactMatchSettings')
 
 const DEFAULT_VALUES = {
   matchLevel: MatchLevel.Strict,
-  accessibilityLevel: AccessibilityLevel.None,
   ignoreCaret: true,
   useDom: false,
   enablePatterns: false,
@@ -33,7 +33,7 @@ class ImageMatchSettings {
    * @param {Region[]} [content]
    * @param {AccessibilityMatchSettings[]} [accessibility]
    * @param {FloatingMatchSettings[]} [floating]
-   * @param {AccessibilityLevel} [accessibilityLevel]
+   * @param {AccessibilitySettings} [accessibilitySettings]
    */
   constructor(imageMatchSettings) {
     if (arguments.length > 1) {
@@ -41,7 +41,7 @@ class ImageMatchSettings {
     }
 
     if (arguments[0] && arguments[0].constructor.name === 'ImageMatchSettings') {
-      return new ImageMatchSettings(arguments[0].toJSON())
+      return new ImageMatchSettings(arguments[0]._toPlain())
     }
 
     const {
@@ -57,11 +57,10 @@ class ImageMatchSettings {
       content,
       accessibility,
       floating,
-      accessibilityLevel,
+      accessibilitySettings,
     } = imageMatchSettings || {}
 
     ArgumentGuard.isValidEnumValue(matchLevel, MatchLevel, false)
-    ArgumentGuard.isValidEnumValue(accessibilityLevel, AccessibilityLevel, false)
     ArgumentGuard.isBoolean(ignoreCaret, 'ignoreCaret', false)
     ArgumentGuard.isBoolean(useDom, 'useDom', false)
     ArgumentGuard.isBoolean(enablePatterns, 'enablePatterns', false)
@@ -75,10 +74,6 @@ class ImageMatchSettings {
     ArgumentGuard.isValidType(exact, ExactMatchSettings, false)
 
     this._matchLevel = TypeUtils.getOrDefault(matchLevel, DEFAULT_VALUES.matchLevel)
-    this._accessibilityLevel = TypeUtils.getOrDefault(
-      accessibilityLevel,
-      DEFAULT_VALUES.accessibilityLevel,
-    )
     this._ignoreCaret = TypeUtils.getOrDefault(ignoreCaret, DEFAULT_VALUES.ignoreCaret)
     this._useDom = TypeUtils.getOrDefault(useDom, DEFAULT_VALUES.useDom)
     this._enablePatterns = TypeUtils.getOrDefault(enablePatterns, DEFAULT_VALUES.enablePatterns)
@@ -98,6 +93,8 @@ class ImageMatchSettings {
     this._contentRegions = content || []
     /** @type {AccessibilityMatchSettings[]} */
     this._accessibilityMatchSettings = accessibility || []
+    /** @type {AccessibilitySettings} */
+    this.setAccessibilitySettings(accessibilitySettings)
     /** @type {FloatingMatchSettings[]} */
     this._floatingMatchSettings = floating || []
   }
@@ -118,18 +115,22 @@ class ImageMatchSettings {
   }
 
   /**
-   * @return {AccessibilityLevel} - The accessablity level to use.
+   * @return {AccessibilitySettings} - The accessibility settings to use.
    */
-  getAccessibilityValidation() {
-    return this._accessibilityLevel
+  getAccessibilitySettings() {
+    return this._accessibilitySettings
   }
 
   /**
-   * @param {AccessibilityLevel} value - The accessablity level to use.
+   * @param {AccessibilitySettings} value - The accessibility settings to use.
    */
-  setAccessibilityValidation(value) {
-    ArgumentGuard.isValidEnumValue(value, AccessibilityLevel)
-    this._accessibilityLevel = value
+  setAccessibilitySettings(value) {
+    if (value) {
+      ArgumentGuard.hasProperties(value, ['level', 'guidelinesVersion'], 'accessibilitySettings')
+      ArgumentGuard.isValidEnumValue(value.level, AccessibilityLevel)
+      ArgumentGuard.isValidEnumValue(value.guidelinesVersion, AccessibilityGuidelinesVersion)
+    }
+    this._accessibilitySettings = value
   }
 
   /**
@@ -302,6 +303,17 @@ class ImageMatchSettings {
    * @override
    */
   toJSON() {
+    const obj = this._toPlain()
+    if (obj.accessibilitySettings) {
+      obj.accessibilitySettings = {
+        level: obj.accessibilitySettings.level,
+        version: obj.accessibilitySettings.guidelinesVersion,
+      }
+    }
+    return obj
+  }
+
+  _toPlain() {
     return GeneralUtils.toPlain(this, [], {
       ignoreRegions: 'ignore',
       layoutRegions: 'layout',

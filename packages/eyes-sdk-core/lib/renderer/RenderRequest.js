@@ -210,9 +210,11 @@ class RenderRequest {
       object.browser = {
         name: this._browserName,
       }
+    }
 
-      if (this._platform) {
-        object.browser.platform = this._platform
+    if (this._platform) {
+      object.platform = {
+        name: this._platform,
       }
     }
 

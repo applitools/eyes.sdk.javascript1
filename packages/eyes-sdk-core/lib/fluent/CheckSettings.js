@@ -174,25 +174,6 @@ class CheckSettings {
   }
 
   /**
-   * Set the accessibilityLevel level for the screenshot.
-   *
-   * @param {AccessibilityLevel} accessibilityLevel - The accessibilityLevel level to use.
-   * @return {this} - This instance of the settings object.
-   */
-  accessibilityValidation(accessibilityLevel) {
-    this._accessibilityLevel = accessibilityLevel
-    return this
-  }
-
-  /**
-   * @ignore
-   * @return {AccessibilityLevel}
-   */
-  getAccessibilityValidation() {
-    return this._accessibilityLevel
-  }
-
-  /**
    * Defines if to detect and ignore a blinking caret in the screenshot.
    *
    * @param {boolean} [ignoreCaret=true] - Whether or not to detect and ignore a blinking caret in the screenshot.
@@ -349,9 +330,17 @@ class CheckSettings {
     return !this._targetRegion ? 'window' : 'region'
   }
 
+  /**
+   * Adds a region to ignore.
+   *
+   * @override
+   * @param {GetRegion|Region|By|String|EyesWebElement|Object} region The region or region container to ignore when validating the screenshot.
+   * @return {CheckSettings} This instance of the settings object.
+   */
   ignore(region) {
     return this.ignoreRegion(region)
   }
+
   /**
    * Adds a region to ignore.
    *
@@ -374,9 +363,16 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds one or more ignore regions.
+   *
+   * @param {...(GetRegion|Region)} regions - A region to ignore when validating the screenshot.
+   * @return {this} - This instance of the settings object.
+   */
   ignores(...regions) {
     return this.ignoreRegions(...regions)
   }
+
   /**
    * Adds one or more ignore regions.
    *
@@ -388,6 +384,11 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds a layout region.
+   * @param {GetRegion|Region} region - A region to match using the Layout method.
+   * @return {this} - This instance of the settings object.
+   */
   layoutRegion(region) {
     let layoutRegion
     if (region instanceof GetRegion) {
@@ -413,6 +414,11 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds a strict regions.
+   * @param {GetRegion|Region} region - A region to match using the Strict method.
+   * @return {this} - This instance of the settings object.
+   */
   strictRegion(region) {
     let strictRegion
     if (region instanceof GetRegion) {
@@ -438,6 +444,11 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds a content region.
+   * @param {GetRegion|Region} region - A region to match using the Content method.
+   * @return {this} - This instance of the settings object.
+   */
   contentRegion(region) {
     let contentRegion
     if (region instanceof GetRegion) {
@@ -463,6 +474,18 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds a floating region. A floating region is a a region that can be placed within the boundaries of a bigger
+   * region.
+   *
+   * @param {GetFloatingRegion|Region|FloatingMatchSettings} region - The content rectangle or region
+   *   container
+   * @param {number} [maxUpOffset] - How much the content can move up.
+   * @param {number} [maxDownOffset] - How much the content can move down.
+   * @param {number} [maxLeftOffset] - How much the content can move to the left.
+   * @param {number} [maxRightOffset] - How much the content can move to the right.
+   * @return {this} - This instance of the settings object.
+   */
   floating(region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
     return this.floatingRegion(region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset)
   }
@@ -471,7 +494,7 @@ class CheckSettings {
    * Adds a floating region. A floating region is a a region that can be placed within the boundaries of a bigger
    * region.
    *
-   * @param {GetFloatingRegion|Region|FloatingMatchSettings} regionOrContainer - The content rectangle or region
+   * @param {GetFloatingRegion|Region|FloatingMatchSettings} region - The content rectangle or region
    *   container
    * @param {number} [maxUpOffset] - How much the content can move up.
    * @param {number} [maxDownOffset] - How much the content can move down.
@@ -507,12 +530,20 @@ class CheckSettings {
     return this
   }
 
+  /**
+   * Adds one or more floating regions. A floating region is a a region that can be placed within the boundaries of a
+   * bigger region.
+   *
+   * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
+   * @param {...Region} regionsOrContainers - One or more content rectangles or region containers
+   * @return {this} - This instance of the settings object.
+   */
   floatings(maxOffset, ...regions) {
     return this.floatingRegions(maxOffset, ...regions)
   }
 
   /**
-   * Adds a floating region. A floating region is a a region that can be placed within the boundaries of a
+   * Adds one or more floating regions. A floating region is a a region that can be placed within the boundaries of a
    * bigger region.
    *
    * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
@@ -529,9 +560,9 @@ class CheckSettings {
   /**
    * Adds an accessibility region. An accessibility region is a region that has an accessibility type.
    *
-   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings} regionOrContainer - The content rectangle or
+   * @param {GetAccessibilityRegion|Region|AccessibilityMatchSettings} region - The content rectangle or
    *   region container
-   * @param {AccessibilityRegionType} [regionType] - Type of accessibility.
+   * @param {AccessibilityRegionType} regionType - Type of accessibility.
    * @return {this} - This instance of the settings object.
    */
   accessibilityRegion(region, regionType) {
@@ -548,6 +579,10 @@ class CheckSettings {
     this._accessibilityRegions.push(accessibilityRegion)
 
     return this
+  }
+
+  accessibility(region, regionType) {
+    return this.accessibilityRegion(region, regionType)
   }
 
   /**

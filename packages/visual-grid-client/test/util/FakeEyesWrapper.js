@@ -62,7 +62,6 @@ class FakeEyesWrapper extends EventEmitter {
     this.resultsRoute = '/results_url'
     this.stitchingServiceUrl = '/stitching_service'
     this.matchLevel = 'Strict'
-    this.accessibilityLevel = 'None'
     this.closeErr = closeErr
     this.failRender = failRender
     this._serverConnector = {deleteBatchSessions: () => {}}
@@ -87,7 +86,9 @@ class FakeEyesWrapper extends EventEmitter {
     this.selector = renderInfo.getSelector()
     this.region = renderInfo.getRegion()
     this.emulationInfo = renderInfo.getEmulationInfo()
+    this.iosDeviceInfo = renderInfo.getIosDeviceInfo()
     this.selectorsToFindRegionsFor = renderRequests[0].getSelectorsToFindRegionsFor()
+    this.platform = renderRequests[0].getPlatform()
 
     return renderRequests.map(renderRequest => this.getRunningRenderForRequest(renderRequest))
   }
@@ -115,7 +116,9 @@ class FakeEyesWrapper extends EventEmitter {
     const selector = renderInfo.getSelector()
     const region = renderInfo.getRegion()
     const emulationInfo = renderInfo.getEmulationInfo()
+    const iosDeviceInfo = renderInfo.getIosDeviceInfo()
     const selectorsToFindRegionsFor = renderRequest.getSelectorsToFindRegionsFor()
+    const platform = renderRequest.getPlatform()
 
     const isGood = isGoodCdt && isGoodResources
     const renderId = JSON.stringify({
@@ -125,7 +128,9 @@ class FakeEyesWrapper extends EventEmitter {
       selector,
       sizeMode,
       emulationInfo,
+      iosDeviceInfo,
       selectorsToFindRegionsFor,
+      platform,
       salt: salt++,
     })
 
@@ -134,12 +139,21 @@ class FakeEyesWrapper extends EventEmitter {
 
   async getRenderStatus(renderIds) {
     return renderIds.map(renderId => {
-      const {browserName, emulationInfo, selectorsToFindRegionsFor} = JSON.parse(renderId)
+      const {browserName, emulationInfo, iosDeviceInfo, selectorsToFindRegionsFor} = JSON.parse(
+        renderId,
+      )
+      const deviceName =
+        emulationInfo && emulationInfo.deviceName
+          ? emulationInfo.deviceName
+          : iosDeviceInfo
+          ? iosDeviceInfo.name
+          : undefined
+
       return new RenderStatusResults({
         status: RenderStatus.RENDERED,
         imageLocation: renderId,
         userAgent: browserName,
-        deviceSize: emulationInfo && emulationInfo.deviceName && devices[emulationInfo.deviceName],
+        deviceSize: deviceName && devices[deviceName],
         selectorRegions: selectorsToFindRegionsFor
           ? selectorsToFindRegionsFor.map(
               selector => selectorsToLocations[selector.selector || selector],
@@ -191,7 +205,9 @@ class FakeEyesWrapper extends EventEmitter {
       selector,
       region,
       emulationInfo,
+      iosDeviceInfo,
       selectorsToFindRegionsFor,
+      platform,
     } = JSON.parse(screenshotUrl)
 
     let expectedImageLocation = undefined
@@ -207,7 +223,9 @@ class FakeEyesWrapper extends EventEmitter {
       (!this.selector || selector === this.selector) &&
       compare(region, this.region) &&
       compare(emulationInfo, this.emulationInfo) &&
+      compare(iosDeviceInfo, this.iosDeviceInfo) &&
       compare(selectorsToFindRegionsFor, this.selectorsToFindRegionsFor) &&
+      compare(platform, this.platform) &&
       compare(imageLocation, expectedImageLocation)
 
     result.setAsExpected(asExpected)
@@ -216,6 +234,7 @@ class FakeEyesWrapper extends EventEmitter {
     result.__checkSettings = checkSettings
     result.__tag = tag
     result.__browserName = browserName
+    result.__platform = platform
     this.results.push(result)
     return new Promise(res =>
       setTimeout(() => {
@@ -333,11 +352,11 @@ class FakeEyesWrapper extends EventEmitter {
   }
 
   setAccessibilityValidation(value) {
-    this.accessibilityLevel = value
+    this.accessibilitySettings = value
   }
 
   getAccessibilityValidation() {
-    return this.accessibilityLevel
+    return this.accessibilitySettings
   }
 
   setParentBranchName(value) {

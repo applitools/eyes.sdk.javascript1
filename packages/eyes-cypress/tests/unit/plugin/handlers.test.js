@@ -12,7 +12,7 @@ describe('handlers', () => {
 
   const fakeOpenEyes = (args = {}) => ({
     checkWindow: async (args2 = {}) => {
-      return Object.assign(args2, {__test: `checkWindow_${args.__test}`});
+      return Object.assign({__openArgs: args}, args2, {__test: `checkWindow_${args.__test}`});
     },
 
     close: async () => {
@@ -28,7 +28,7 @@ describe('handlers', () => {
   });
 
   async function openAndClose() {
-    await handlers.open();
+    await handlers.open({});
     await handlers.close().catch(x => x);
   }
 
@@ -42,8 +42,11 @@ describe('handlers', () => {
 
   it('handles "open"', async () => {
     handlers.batchStart();
-    const {checkWindow} = await handlers.open({__test: 123});
-    expect((await checkWindow()).__test).to.equal('checkWindow_123');
+    const {checkWindow} = await handlers.open({__test: 123, accessibilityValidation: 'bla'});
+    const checkResult = await checkWindow();
+    expect(checkResult.__test).to.equal('checkWindow_123');
+    expect(checkResult.__openArgs.accessibilityValidation).to.be.undefined;
+    expect(checkResult.__openArgs.accessibilitySettings).to.equal('bla');
   });
 
   it('throws when calling "checkWindow" before "open"', async () => {
@@ -143,9 +146,7 @@ describe('handlers', () => {
     const useDom = 'useDom';
     const enablePatterns = 'enablePatterns';
     const ignoreDisplacements = 'ignoreDisplacements';
-    const referrer = 'referrer';
     const accessibility = 'accessibility';
-    const accessibilityLevel = 'accessibilityLevel';
     const resourceContents = {};
 
     const result = await handlers.checkWindow({
@@ -168,9 +169,7 @@ describe('handlers', () => {
       useDom,
       enablePatterns,
       ignoreDisplacements,
-      referrer,
       accessibility,
-      accessibilityLevel,
     });
 
     expect(result).to.eql({
@@ -196,9 +195,11 @@ describe('handlers', () => {
       enablePatterns,
       ignoreDisplacements,
       frames: [],
-      referrer,
       accessibility,
-      accessibilityLevel,
+      __openArgs: {
+        __test: 123,
+        accessibilitySettings: undefined,
+      },
     });
   });
 
@@ -250,7 +251,10 @@ describe('handlers', () => {
 
     expect(result).to.eql({
       __test: 'checkWindow_123',
-
+      __openArgs: {
+        __test: 123,
+        accessibilitySettings: undefined,
+      },
       resourceContents: {
         id1: {url: 'id1', type: 'type1', value: 'buff1'},
       },
@@ -294,9 +298,7 @@ describe('handlers', () => {
       useDom: undefined,
       enablePatterns: undefined,
       ignoreDisplacements: undefined,
-      referrer: undefined,
       accessibility: undefined,
-      accessibilityLevel: undefined,
     });
   });
 
@@ -477,7 +479,7 @@ describe('handlers', () => {
       }),
     });
     handlers.batchStart();
-    await handlers.open().catch(x => x);
+    await handlers.open({}).catch(x => x);
     const err = await handlers.close().then(
       x => x,
       err => err,

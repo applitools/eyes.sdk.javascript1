@@ -22,7 +22,7 @@ module.exports = {
   ignoreDisplacements: true,
   properties: [{name: 'some prop', value: 'some value'}]
   // notifyOnCompletion: true,
-  // accessibilityLevel: 'AA',
+  // accessibilitySettings: {level: 'AA', version: 'WCAG_2_0'},
   // storybookUrl: 'http://localhost:9001/',
   // concurrency: 100,
   // browser: [{width: 1000, height: 600, name: 'edge'}],

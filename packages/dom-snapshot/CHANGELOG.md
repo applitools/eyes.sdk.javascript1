@@ -4,7 +4,11 @@
 ## Unreleased
 
 
-  ## 3.5.0 - 2020/4/30
+## 3.5.2 - 2020/5/6
+
+- fix bug when experimental longhands extracted from the cssom [Trello](https://trello.com/c/ASx8Bwd8/323-difference-in-gradient) [Trello](https://trello.com/c/wOytxwv4/346-ufg-safari-incorrect-render-repeated-image)
+
+## 3.5.0 - 2020/4/30
 
 - added data-applitools-disabled attribute to scripts and fixed disabled attribute for links  
 

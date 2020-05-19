@@ -1,6 +1,6 @@
 {
   "name": "@applitools/dom-snapshot",
-  "version": "3.5.0",
+  "version": "3.5.2",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {

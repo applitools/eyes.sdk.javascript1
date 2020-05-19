@@ -227,6 +227,18 @@ describe('processInlineCss', () => {
       'body{justify-content:center;align-content:center}',
     );
   });
+
+  it('works for experimental longhands', async () => {
+    await page.goto('http://localhost:7373/cssom/longhand-experimental.html');
+    const styles = await extract(page);
+
+    expect(styles['longhand_experimental'].cssom).to.be.eql(
+      'body { background-position: center bottom -4rem; background-repeat: no-repeat; }',
+    );
+    expect(styles['longhand_experimental'].result).to.be.eql(
+      'body{background-position:center bottom -4rem;background-repeat:no-repeat}',
+    );
+  });
 });
 
 describe('processInlineCss works for large css', () => {

@@ -36,7 +36,7 @@ module.exports = [
   'useDom',
   'enablePatterns',
   'ignoreDisplacements',
-  'accessibilityLevel',
+  'accessibilitySettings',
   'notifyOnCompletion',
   'batchNotify',
   'dontCloseBatches',

@@ -47,6 +47,11 @@ const HTTP_STATUS_CODES = {
   GATEWAY_TIMEOUT: 504,
 }
 
+const AZURE_RETRY_CONFIG = {
+  delayBeforeRetry: 500,
+  retry: 5,
+}
+
 const REQUEST_GUID = GeneralUtils.guid()
 let requestCounter = 0
 function createRequestId() {
@@ -291,7 +296,6 @@ class ServerConnector {
     const url = this._renderingInfo.getResultsUrl().replace('__random__', id)
     const config = {
       name: 'uploadScreenshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: screenshot,
@@ -300,6 +304,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'content-type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)
@@ -701,7 +706,6 @@ class ServerConnector {
 
     const config = {
       name: 'postDomSnapshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: zlib.gzipSync(Buffer.from(domJson)),
@@ -710,6 +714,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'Content-Type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)

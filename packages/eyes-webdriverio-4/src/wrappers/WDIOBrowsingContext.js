@@ -56,6 +56,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async frame(arg) {
+    if (await this._driver.controller.isMobileDevice()) return
     if (!arg) {
       this._logger.verbose('WDIOBrowsingContext.frame(null)')
       return this.frameDefault()
@@ -105,6 +106,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async frameDefault() {
+    if (await this._driver.controller.isMobileDevice()) return
     this._logger.verbose('WDIOBrowsingContext.frameDefault()')
     const result = await this._driver.unwrapped.frame()
     this._logger.verbose('Done! Switching to default content...')
@@ -115,6 +117,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async frameParent(elevation = 1) {
+    if (await this._driver.controller.isMobileDevice()) return
     this._logger.verbose(`WDIOBrowsingContext.frameParent(${elevation})`)
     let result
     while (elevation-- > 0) {
@@ -128,6 +131,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async frames(path) {
+    if (await this._driver.controller.isMobileDevice()) return
     const currentPath = this._frameChain.toArray()
     const requiredPath = Array.from(path || [])
     if (currentPath.length <= 0) return this.framesAppend(requiredPath)
@@ -163,6 +167,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async framesAppend(path) {
+    if (await this._driver.controller.isMobileDevice()) return
     this._logger.verbose('WDIOBrowsingContext.framesAppend(path)')
     for (const frameReference of path) {
       await this.frame(frameReference)
@@ -171,6 +176,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async framesDoScroll(frameChain) {
+    if (await this._driver.controller.isMobileDevice()) return
     this._logger.verbose('WDIOBrowsingContext.framesDoScroll(frameChain)')
     await this.frameDefault()
     for (const frame of frameChain) {
@@ -182,6 +188,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async framesRefresh() {
+    if (await this._driver.controller.isMobileDevice()) return
     let contextInfo = await EyesUtils.getCurrentContextInfo(this._logger, this._driver.executor)
     if (contextInfo.isRoot) {
       this._frameChain.clear()
@@ -218,6 +225,7 @@ class WDIOBrowsingContext extends EyesBrowsingContext {
   }
 
   async framesToAndFro(toPath, operation) {
+    if (await this._driver.controller.isMobileDevice()) return operation()
     const originalFrameChain = this.frameChain
     await this.frames(toPath)
     try {

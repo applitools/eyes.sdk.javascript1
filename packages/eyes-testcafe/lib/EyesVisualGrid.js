@@ -174,7 +174,7 @@ class EyesVisualGrid extends Eyes {
     const ignoreRegions = await this._prepareRegions(checkSettings.getIgnoreRegions())
 
     try {
-      this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`)
+      this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})`)
 
       const pageDomResults = await takeDomSnapshot({
         executeScript: this._driver.executeScript.bind(this._driver),
@@ -195,10 +195,7 @@ class EyesVisualGrid extends Eyes {
         }
       }
 
-      this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
-
-      const source = await this._driver.getCurrentUrl()
-
+      this._logger.verbose(`Dom extracted  (${checkSettings.toString()})`)
       await this._checkWindowCommand({
         resourceUrls,
         resourceContents,
@@ -219,7 +216,6 @@ class EyesVisualGrid extends Eyes {
         matchLevel: checkSettings.getMatchLevel()
           ? checkSettings.getMatchLevel()
           : this.getMatchLevel(),
-        source,
       })
     } catch (e) {
       throw new EyesError(`Failed to extract DOM from the page: ${e.toString()}`)

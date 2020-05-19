@@ -85,6 +85,7 @@ describe.skip(appName, () => {
 })
 
 function scrollTop() {
+  // eslint-disable-next-line no-undef
   document.documentElement.scrollTop = 350
 }
 function makeItRed() {

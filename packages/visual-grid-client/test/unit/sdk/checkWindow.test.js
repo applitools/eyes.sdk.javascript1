@@ -23,13 +23,13 @@ describe('checkWindow', () => {
       openEyesPromises: () => {},
       fetchHeaders,
     })
-    await checkWindow({resourceUrls: [], referrer: 'some referrer'})
+    await checkWindow({resourceUrls: [], url: 'some referrer'})
     expect(fetchHeaders).to.eql({Referer: 'some referrer', ['User-Agent']: 'some agent'})
 
     await checkWindow({resourceUrls: []})
     expect(fetchHeaders).to.eql({Referer: undefined, ['User-Agent']: 'some agent'})
 
-    await checkWindow({resourceUrls: [], referrer: 'some referrer 2'})
+    await checkWindow({resourceUrls: [], url: 'some referrer 2'})
     expect(fetchHeaders).to.eql({Referer: 'some referrer 2', ['User-Agent']: 'some agent'})
   })
 })

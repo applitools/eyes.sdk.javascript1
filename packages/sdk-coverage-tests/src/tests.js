@@ -51,7 +51,7 @@ function makeCoverageTests({
     TestCheckElementFully_Fluent: () => {
       visit(url)
       open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
-      checkRegion('[name="frame1"]', {isFully: true})
+      checkRegion('#overflowing-div-image', {isFully: true})
       close(throwException)
     },
     TestCheckElementWithIgnoreRegionByElementOutsideTheViewport_Fluent: () => {
@@ -72,14 +72,7 @@ function makeCoverageTests({
       checkFrame('[name="frame1"]', {isClassicApi: true})
       close(throwException)
     },
-    TestCheckFrame_Fluent: () => {
-      visit(url)
-      open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
-      checkFrame('[name="frame1"]')
-      close(throwException)
-    },
-    TestCheckFrameHideScrollbars_Fluent: async () => {
-      // This test is identical to TestCheckFrame_Fluent, and exists only in order to have a new baseline. Once all SDK's implement this test properly, we can remove it and update the baseline for TestCheckFrame_Fluent
+    TestCheckFrame_Fluent: async () => {
       await visit(url)
       await open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
       await checkFrame('[name="frame1"]')
@@ -168,7 +161,7 @@ function makeCoverageTests({
     TestCheckRegionByCoordinates_Fluent: () => {
       visit(url)
       open({appName: 'Eyes Selenium SDK - Fluent API', viewportSize})
-      checkRegion({left: 50, top: 50, width: 100, height: 100})
+      checkRegion({left: 50, top: 70, width: 90, height: 110})
       close(throwException)
     },
     TestCheckRegionByCoordinateInFrame_Fluent: () => {

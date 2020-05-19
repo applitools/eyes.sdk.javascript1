@@ -2,6 +2,7 @@
 
 const assert = require('assert')
 
+const {Enum} = require('../../../lib/utils/Enum')
 const {ArgumentGuard} = require('../../../index')
 
 describe('ArgumentGuard', () => {
@@ -63,6 +64,51 @@ describe('ArgumentGuard', () => {
       assert.doesNotThrow(() => {
         ArgumentGuard.isPlainObject(null, 'some-name', false)
       })
+    })
+  })
+
+  describe('isValidEnumValue()', () => {
+    const EnumObj = Enum('TestEnum', {Value1: 'val-1', Value2: 'val-2'})
+    it('works', () => {
+      // null with strict
+      assert.throws(
+        () => {
+          ArgumentGuard.isValidEnumValue(null, EnumObj)
+        },
+        {
+          message: "IllegalType: null is not a valid 'TestEnum' value",
+        },
+      )
+
+      // null without strict
+      assert.doesNotThrow(() => {
+        ArgumentGuard.isValidEnumValue(null, EnumObj, false)
+      })
+
+      // invalid value
+      assert.throws(
+        () => {
+          ArgumentGuard.isValidEnumValue('x', EnumObj)
+        },
+        {
+          message: "IllegalType: x is not a valid 'TestEnum' value",
+        },
+      )
+
+      // valid value
+      assert.doesNotThrow(() => {
+        ArgumentGuard.isValidEnumValue('val-1', EnumObj)
+      })
+
+      // invalid value that is a key in the enum
+      assert.throws(
+        () => {
+          ArgumentGuard.isValidEnumValue('Value1', EnumObj)
+        },
+        {
+          message: "IllegalType: Value1 is not a valid 'TestEnum' value",
+        },
+      )
     })
   })
 })

@@ -94,13 +94,53 @@ describe('ServerConnector', () => {
     assert.strictEqual(result, renderingInfo.getResultsUrl().replace('__random__', id))
   })
 
-  it('postDomSnapshot uploads to resultsUrl webhook', async () => {
+  it('uploadScreenshot uses correct retry configuration', async () => {
     const serverConnector = getServerConnector()
-    const renderingInfo = await serverConnector.renderInfo()
+    let actualConfig
+    serverConnector._axios.defaults.adapter = async config => {
+      if (config.url == 'https://eyesapi.applitools.com/api/sessions/renderinfo') {
+        return {
+          status: 200,
+          config,
+          data: {resultsUrl: ''},
+        }
+      } else {
+        actualConfig = config
+        return {
+          status: 201,
+          config,
+        }
+      }
+    }
+    await serverConnector.renderInfo()
+    await serverConnector.uploadScreenshot('id', {})
+    assert.strictEqual(actualConfig.delayBeforeRetry, 500)
+    assert.strictEqual(actualConfig.retry, 5)
+  })
+
+  it('postDomSnapshot uses correct retry configuration', async () => {
+    const serverConnector = getServerConnector()
+    let actualConfig
+    serverConnector._axios.defaults.adapter = async config => {
+      if (config.url == 'https://eyesapi.applitools.com/api/sessions/renderinfo') {
+        return {
+          status: 200,
+          config,
+          data: {resultsUrl: ''},
+        }
+      } else {
+        actualConfig = config
+        return {
+          status: 201,
+          config,
+        }
+      }
+    }
+    await serverConnector.renderInfo()
     const buffer = Buffer.from('something')
-    const id = GeneralUtils.guid()
-    const result = await serverConnector.postDomSnapshot(id, buffer)
-    assert.strictEqual(result, renderingInfo.getResultsUrl().replace('__random__', id))
+    await serverConnector.postDomSnapshot('id', buffer)
+    assert.strictEqual(actualConfig.delayBeforeRetry, 500)
+    assert.strictEqual(actualConfig.retry, 5)
   })
 
   it('long request waits right amount of time', async () => {

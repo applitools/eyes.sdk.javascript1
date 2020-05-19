@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.10.3",
+  "version": "3.11.0",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -39,10 +39,10 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "3.5.0",
-    "@applitools/eyes-sdk-core": "9.2.1",
+    "@applitools/dom-snapshot": "3.5.2",
+    "@applitools/eyes-sdk-core": "10.2.0",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.7.3",
+    "@applitools/visual-grid-client": "14.1.0",
     "body-parser": "^1.19.0",
     "chalk": "3.0.0",
     "cors": "^2.8.5",
@@ -54,7 +54,7 @@
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.4",
-    "cypress": "^3.8.3",
+    "cypress": "^4.5.0",
     "eslint": "^6.8.0",
     "eslint-plugin-mocha-no-only": "^1.1.0",
     "eslint-plugin-node": "^7.0.1",
@@ -64,6 +64,7 @@
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "node-notifier-cli": "^1.2.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^3.9.2"
   }
 }

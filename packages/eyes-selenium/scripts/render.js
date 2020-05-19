@@ -13,7 +13,6 @@ const {
   EyesSeleniumUtils,
   DeviceName,
   ScreenOrientation,
-  // BatchInfo,
   // FileDebugScreenshotsProvider,
 } = require('../index')
 const path = require('path')
@@ -32,6 +31,15 @@ const args = yargs
     'yarn render http://example.org --ignore-regions "#ignore-this,.dynamic-element" --fully',
     'classic full page screenshot, 2 ignore selectors',
   )
+  .option('api-key', {
+    describe: 'Applitools API key',
+    type: 'string',
+    default: process.env.APPLITOOLS_API_KEY,
+  })
+  .option('target-element', {
+    describe: '',
+    type: 'string',
+  })
   .option('vg', {
     type: 'boolean',
     describe: 'when specified, use visual grid instead of classic runner',
@@ -98,6 +106,10 @@ const args = yargs
     type: 'number',
     default: 0,
   })
+  .options('accessibility-validation', {
+    describe: 'accessibility validation (comma separated, e.g. AA.WCAG_2_0)',
+    type: 'string',
+  })
   .option('server-url', {
     describe: 'server url',
     type: 'string',
@@ -129,7 +141,29 @@ const args = yargs
     describe: 'server for driver.',
     type: 'string',
   })
-
+  .option('tag', {
+    describe: 'tag for checkpoint',
+    type: 'string',
+    default: 'selenium render',
+  })
+  .option('app-name', {
+    describe: 'app name for baseline',
+    type: 'string',
+    default: 'selenium render',
+  })
+  .option('display-name', {
+    describe:
+      "display name for test. This is what shows up in the dashboard as the test name, but doesn't affect the baseline.",
+    type: 'string',
+  })
+  .option('batch-id', {
+    describe: 'batch id',
+    type: 'string',
+  })
+  .option('batch-name', {
+    describe: 'batch name',
+    type: 'string',
+  })
   .help().argv
 
 const [url] = args._
@@ -147,25 +181,27 @@ if (!url) {
       .join('\n  '),
   )
 
+  const isMobileEmulation = args.deviceName && !args.vg
+
   if (args.webdriverProxy) {
     await chromedriver.start(['--whitelisted-ips=127.0.0.1'], true)
   }
 
-  const driver = await buildDriver(args)
+  const driver = await buildDriver({...args, isMobileEmulation})
 
   const runner = args.vg ? new VisualGridRunner() : new ClassicRunner()
   const eyes = new Eyes(runner)
   const configuration = new Configuration({
     stitchMode: args.css ? StitchMode.CSS : StitchMode.SCROLL,
   })
-  if (args.viewportSize) {
+  if (args.viewportSize && !isMobileEmulation) {
     const [width, height] = args.viewportSize.split('x').map(Number)
     configuration.setViewportSize({width, height})
   }
   if (args.browser) {
     configuration.addBrowsers(args.browser)
   }
-  if (args.deviceEmulation) {
+  if (args.deviceName) {
     configuration.addDeviceEmulation(args.deviceName, args.screenOrientation)
   }
   if (args.serverUrl) {
@@ -177,9 +213,22 @@ if (!url) {
   if (args.proxy) {
     configuration.setProxy(args.proxy)
   }
+  if (args.accessibilityValidation) {
+    const [level, version] = args.accessibilityValidation.split(',')
+    configuration.setAccessibilityValidation({level, version})
+  }
   if (args.envName) {
     configuration.setBaselineEnvName(args.envName) // determines the baseline
     configuration.setEnvironmentName(args.envName) // shows up in the Environment column in the dasboard
+  }
+  if (args.displayName) {
+    configuration.setDisplayName(args.displayName)
+  }
+  if (args.batchId || args.batchName) {
+    configuration.setBatch({id: args.batchId, name: args.batchName})
+  }
+  if (args.batchId) {
+    configuration.setDontCloseBatches(true)
   }
   eyes.setConfiguration(configuration)
 
@@ -191,9 +240,16 @@ if (!url) {
   await driver.get(url)
 
   try {
-    await eyes.open(driver, 'selenium render', url)
+    await eyes.open(driver, args.appName, url)
 
-    let target = Target.window()
+    let target
+
+    if (args.targetElement) {
+      target = Target.region(By.css(args.targetElement))
+    } else {
+      target = Target.window()
+    }
+    target = target
       .fully(args.fully)
       .ignoreDisplacements(args.ignoreDisplacements)
       .timeout(args.matchTimeout)
@@ -222,7 +278,7 @@ if (!url) {
       await EyesSeleniumUtils.scrollPage(driver)
     }
 
-    await eyes.check('selenium render', target)
+    await eyes.check(args.tag, target)
     await eyes.close(false)
 
     const testResultsSummary = await runner.getAllTestResults(false)
@@ -243,11 +299,19 @@ if (!url) {
   }
 })()
 
-function buildDriver({headless, webdriverProxy, driverCapabilities, driverServer} = {}) {
+function buildDriver({
+  headless,
+  webdriverProxy,
+  driverCapabilities,
+  driverServer,
+  isMobileEmulation,
+  deviceName,
+} = {}) {
   const capabilities = {
     browserName: 'chrome',
     'goog:chromeOptions': {
       args: headless ? ['--headless'] : [],
+      mobileEmulation: isMobileEmulation ? {deviceName} : undefined,
     },
     username: process.env.SAUCE_USERNAME,
     accesskey: process.env.SAUCE_ACCESS_KEY,

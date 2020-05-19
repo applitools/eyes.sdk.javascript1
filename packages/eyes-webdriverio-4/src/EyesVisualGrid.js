@@ -244,7 +244,7 @@ class EyesVisualGrid extends EyesBase {
       checkSettings.withName(name)
     }
 
-    this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`)
+    this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})`)
 
     const pageDomResults = await takeDomSnapshot({
       executeScript: this._executor.executeScript.bind(this._executor),
@@ -254,10 +254,7 @@ class EyesVisualGrid extends EyesBase {
     if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
       CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames)
     }
-
-    this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
-
-    const source = await this._controller.getSource()
+    this._logger.verbose(`Dom extracted  (${checkSettings.toString()})`)
 
     const [config, {region, selector}] = await Promise.all([
       checkSettings.toCheckWindowConfiguration(this._driver),
@@ -279,7 +276,6 @@ class EyesVisualGrid extends EyesBase {
       frames,
       url,
       cdt,
-      source,
     })
   }
 

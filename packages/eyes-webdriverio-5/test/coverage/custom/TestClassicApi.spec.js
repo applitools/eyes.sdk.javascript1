@@ -18,7 +18,12 @@ describe.skip(appName, () => {
 
     it('TestCheckInnerFrame', async () => {
       eyes.hideScrollbars = false
-      let driver = await eyes.open(browser, appName, 'TestCheckInnerFrame', new RectangleSize(700, 460))
+      let driver = await eyes.open(
+        browser,
+        appName,
+        'TestCheckInnerFrame',
+        new RectangleSize(700, 460),
+      )
       await driver.executeScript(scrollTop)
       await driver.switchTo().defaultContent()
       let element = await driver.findElement(By.name('frame1'))
@@ -41,7 +46,12 @@ describe.skip(appName, () => {
 
     it('TestCheckInnerFrame_SCROLL', async () => {
       eyes.hideScrollbars = false
-      let driver = await eyes.open(browser, appName, 'TestCheckInnerFrame_Scroll', new RectangleSize(700, 460))
+      let driver = await eyes.open(
+        browser,
+        appName,
+        'TestCheckInnerFrame_Scroll',
+        new RectangleSize(700, 460),
+      )
       await driver.executeScript(scrollTop)
       await driver.switchTo().defaultContent()
       let element = await driver.findElement(By.name('frame1'))
@@ -83,6 +93,7 @@ describe.skip(appName, () => {
 })
 
 function scrollTop() {
+  // eslint-disable-next-line
   document.documentElement.scrollTop = 350
 }
 function makeItRed() {

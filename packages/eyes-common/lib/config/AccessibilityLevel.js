@@ -1,5 +1,7 @@
 'use strict'
 
+const {Enum} = require('../utils/Enum')
+
 /**
  * The extent in which to check the image visual accessibility level.
  *
@@ -7,10 +9,6 @@
  * @enum {string}
  */
 const AccessibilityLevel = {
-  /**
-   * No accessibility - default level.
-   */
-  None: 'None',
   /**
    * Low accessibility level.
    */
@@ -21,5 +19,4 @@ const AccessibilityLevel = {
   AAA: 'AAA',
 }
 
-Object.freeze(AccessibilityLevel)
-exports.AccessibilityLevel = AccessibilityLevel
+exports.AccessibilityLevel = Enum('AccessibilityLevel', AccessibilityLevel)

@@ -75,10 +75,7 @@ describe.skip('TestEyesConfiguration', async () => {
       if (data.useVisualGrid) {
         results = results[0]
       }
-      let sessionResults = await getApiData(
-        results.getApiUrls().getSession(),
-        results.getSecretToken(),
-      )
+      let sessionResults = await getApiData(results)
       assert.ok(sessionResults, 'SessionResults')
 
       assert.deepStrictEqual(sessionResults.env.os, 'someHostOS', 'OS')

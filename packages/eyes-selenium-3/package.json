@@ -1,6 +1,6 @@
 {
   "name": "eyes.selenium",
-  "version": "3.8.11",
+  "version": "3.9.0",
   "description": "Applitools Eyes SDK For Selenium JavaScript WebDriver",
   "keywords": [
     "eyes.selenium",
@@ -50,6 +50,7 @@
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",
     "@types/node": "*",
+    "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chromedriver": "^80.0.1",
@@ -62,6 +63,7 @@
     "selenium-webdriver": "< 4.0.0"
   },
   "scripts": {
+    "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "npm run test:selenium",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.js\"",

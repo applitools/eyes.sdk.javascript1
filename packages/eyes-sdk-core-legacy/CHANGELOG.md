@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- support accessibility validation
+
 ## 1.0.0 - 20/4/2020
 
 - new package name: @applitools/eyes-sdk-core-legacy

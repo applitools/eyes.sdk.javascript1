@@ -1,7 +1,6 @@
 'use strict'
 const assert = require('assert')
 const {getDriver} = require('./util/TestSetup')
-const {remote} = require('webdriverio')
 const {Target, Configuration, BatchInfo, Eyes, VisualGridRunner} = require('../../../index')
 const batch = new BatchInfo('WebdriverIO 5 tests')
 describe('TestCounts', () => {

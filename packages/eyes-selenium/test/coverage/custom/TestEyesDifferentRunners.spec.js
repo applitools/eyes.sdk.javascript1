@@ -12,7 +12,6 @@ const {assertImages, getApiData} = require('./util/ApiAssertions')
 const assert = require('assert')
 const batch = getBatch()
 
-
 describe('TestEyesDifferentRunners', () => {
   let webDriver, eyes
 
@@ -178,13 +177,7 @@ async function validateVG(eyes) {
   let container = await eyes.getRunner().getAllTestResults(false)
   let results = container.getAllResults()
   for (let result of results) {
-    let data = await getApiData(
-      result
-        .getTestResults()
-        .getApiUrls()
-        .getSession(),
-      result.getTestResults().getSecretToken(),
-    )
+    let data = await getApiData(result.getTestResults())
     assert.deepStrictEqual(
       data.actualAppOutput.length,
       2,
