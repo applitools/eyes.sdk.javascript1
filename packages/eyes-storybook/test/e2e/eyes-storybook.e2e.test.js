@@ -101,11 +101,11 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
 
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
-      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=100`, {
+      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
         spawnOptions: {stdio: 'pipe'},
       }),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 
@@ -148,7 +148,7 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
         },
       ),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 
