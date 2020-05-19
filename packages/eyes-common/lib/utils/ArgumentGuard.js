@@ -255,11 +255,8 @@ class ArgumentGuard {
    * @param {boolean} [strict=true] - If {@code false} then the value can be null|undefined
    */
   static isValidEnumValue(value, enumObject, strict = true) {
-    if (
-      (strict || TypeUtils.isNotNull(value)) &&
-      !Object.prototype.hasOwnProperty.call(enumObject, value)
-    ) {
-      throw new Error(`IllegalType: ${value} is not member of ${enumObject}`)
+    if ((strict || TypeUtils.isNotNull(value)) && !Object.values(enumObject).includes(value)) {
+      throw new Error(`IllegalType: ${value} is not a valid '${enumObject._name}' value`)
     }
   }
 
@@ -273,7 +270,7 @@ class ArgumentGuard {
   static hasProperties(object, properties, paramName) {
     if (!TypeUtils.has(object, properties)) {
       throw new Error(
-        `IllegalArgument: ${paramName} don't have all required properties '${properties}'`,
+        `IllegalArgument: ${paramName} should have the following properties: '${properties}'`,
       )
     }
   }

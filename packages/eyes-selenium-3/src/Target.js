@@ -9,6 +9,9 @@
    *            maxLeftOffset: number, maxRightOffset: number, maxUpOffset: number, maxDownOffset: number}} FloatingRegion
    * @typedef {{element: webdriver.WebElement|EyesRemoteWebElement|webdriver.By,
    *            maxLeftOffset: number, maxRightOffset: number, maxUpOffset: number, maxDownOffset: number}} FloatingElement
+   * @typedef {{left: number, top: number, width: number, height: number, type: AccessibilityRegionType}} AccessibilityRegion
+   * @typedef {{element: webdriver.WebElement|EyesRemoteWebElement|webdriver.By,
+   *            left: number, top: number, width: number, height: number, type: AccessibilityRegionType}} AccessibilityElement
    */
 
   /**
@@ -26,9 +29,11 @@
     this._ignoreDisplacements = null
     this._ignoreRegions = []
     this._floatingRegions = []
+    this._accessibilityRegions = []
 
     this._ignoreObjects = []
     this._floatingObjects = []
+    this._accessibilityObjects = []
   }
 
   //noinspection JSUnusedGlobalSymbols
@@ -157,6 +162,25 @@
   }
 
   /**
+   * @param {...(AccessibilityRegion|AccessibilityElement)} accessibilityRegion
+   * @return {Target}
+   */
+  Target.prototype.accessibility = function(accessibilityRegion) {
+    for (var i = 0, l = arguments.length; i < l; i++) {
+      if (!arguments[i]) {
+        throw new Error("Accesibility region can't be null or empty.")
+      }
+
+      if (GeometryUtils.isRegion(arguments[i]) && 'regionType' in arguments[i]) {
+        this._accessibilityRegions.push(arguments[i])
+      } else {
+        this._accessibilityObjects.push(arguments[i])
+      }
+    }
+    return this
+  }
+
+  /**
    * @return {Region|webdriver.WebElement|EyesRemoteWebElement|webdriver.By|null}
    */
   Target.prototype.getRegion = function() {
@@ -245,6 +269,20 @@
    */
   Target.prototype.getFloatingRegions = function() {
     return this._floatingRegions
+  }
+
+  /**
+   * @return {AccessibilityRegion[]}
+   */
+  Target.prototype.getAccessibilityRegions = function() {
+    return this._accessibilityRegions
+  }
+
+  /**
+   * @return {AccessibilityElement[]}
+   */
+  Target.prototype.getAccessibilityObjects = function() {
+    return this._accessibilityObjects
   }
 
   /**

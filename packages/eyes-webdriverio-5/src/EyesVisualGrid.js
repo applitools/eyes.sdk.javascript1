@@ -254,9 +254,7 @@ class EyesVisualGrid extends EyesBase {
     if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
       CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames)
     }
-
-    this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
-    const source = await this._driver.getCurrentUrl()
+    this._logger.verbose(`Dom extracted  (${checkSettings.toString()})`)
 
     const [config, {region, selector}] = await Promise.all([
       checkSettings.toCheckWindowConfiguration(this._driver),
@@ -278,7 +276,6 @@ class EyesVisualGrid extends EyesBase {
       frames,
       url,
       cdt,
-      source,
     })
   }
 

@@ -3,7 +3,6 @@ const {expect} = require('chai');
 const processResults = require('../../src/processResults');
 const {TestResultsStatus} = require('@applitools/eyes-sdk-core');
 const {TestResults} = require('@applitools/eyes-sdk-core/lib/TestResults');
-
 describe('processResults', () => {
   it('works', async () => {
     const results = [
@@ -248,5 +247,18 @@ describe('processResults', () => {
     const expectedOutput = '\n[EYES: TEST RESULTS]:\n\nTest is finished but no results returned.\n';
     expect(expectedOutput).to.eql(outputStr);
     expect(exitCode).to.eql(1);
+  });
+  it('passes errors to the formatter correctly', async () => {
+    const results = [
+      {
+        title: 'My Component | Button1',
+        resultsOrErr: [new Error('some error message')],
+      },
+    ];
+    const {formatter} = processResults({results, totalTime: 10000, concurrency: 1});
+    const storedResults = formatter.getResultsList();
+    expect(storedResults.length).to.eql(1);
+    expect(storedResults[0].getName()).to.eql('My Component | Button1');
+    expect(storedResults[0].error).to.eql(results[0].resultsOrErr[0]);
   });
 });

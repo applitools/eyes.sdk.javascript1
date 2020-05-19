@@ -29,7 +29,6 @@ function makeCheckWindow({
   openEyesPromises,
   fetchHeaders,
   matchLevel: _matchLevel,
-  accessibilityLevel: _accessibilityLevel,
   isSingleWindow,
   getUserAgents,
 }) {
@@ -51,15 +50,12 @@ function makeCheckWindow({
     accessibility,
     sendDom = true,
     matchLevel = _matchLevel,
-    accessibilityLevel = _accessibilityLevel,
     layout,
     strict,
     content,
     useDom,
     enablePatterns,
     ignoreDisplacements,
-    source,
-    referrer,
   }) {
     if (target === 'window' && !fully) {
       sizeMode = 'viewport'
@@ -68,7 +64,7 @@ function makeCheckWindow({
     } else if (target === 'region' && region) {
       sizeMode = 'region'
     }
-    fetchHeaders['Referer'] = referrer
+    fetchHeaders['Referer'] = url
 
     const accErr = isInvalidAccessibility(accessibility)
     if (accErr) {
@@ -243,7 +239,6 @@ function makeCheckWindow({
         ignoreDisplacements,
         renderId,
         matchLevel,
-        accessibilityLevel,
       })
 
       logger.verbose(
@@ -265,7 +260,7 @@ function makeCheckWindow({
         domUrl: domLocation,
         checkSettings,
         imageLocation,
-        source,
+        url,
       }
 
       return !isSingleWindow ? wrapper.checkWindow(checkArgs) : wrapper.testWindow(checkArgs)

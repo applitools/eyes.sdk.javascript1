@@ -6,7 +6,7 @@ const {delay: psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('../../src/__process-commons');
 const {version} = require('../../package.json');
 
-describe('eyes-storybook', () => {
+describe.only('eyes-storybook', () => {
   let closeTestServer, showLogsOrig;
   before(async () => {
     closeTestServer = (await testServer({port: 7272})).close;
@@ -46,7 +46,6 @@ describe('eyes-storybook', () => {
         'See details at <some_url>',
       )
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
-    console.log('XXXXXXXXX: normalizedStdout', normalizedStdout);
     expect(normalizedStdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
 
 
@@ -99,13 +98,13 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
 `);
   });
 
-  it('fails with proper message when failing to get stories because of undetermined version', async () => {
+  it.only('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
-      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=100`, {
+      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
         spawnOptions: {stdio: 'pipe'},
       }),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 
@@ -148,7 +147,7 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
         },
       ),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 

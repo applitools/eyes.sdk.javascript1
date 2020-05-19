@@ -1,7 +1,7 @@
 'use strict'
 const {Builder} = require('selenium-webdriver')
 const {Eyes, StitchMode, GeneralUtils} = require('../../../../index')
-const defaultArgs = process.env.HEADLESS === 'true' ? ['headless'] : []
+const defaultArgs = process.env.NO_HEADLESS ? [] : ['headless']
 
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
 const batch = {

@@ -15,6 +15,7 @@ const {GeneralUtils} = require('../utils/GeneralUtils')
 /**
  * @typedef {{width: number, height: number, name: BrowserType}} RenderBrowserInfo
  * @typedef {{deviceName: string, screenOrientation: ScreenOrientation}} DeviceInfo
+ * @typedef {{level: AccessibilityLevel, guidelinesVersion: AccessibilityGuidelinesVersion}} AccessibilitySettings
  */
 
 const MIN_MATCH_TIMEOUT = 500
@@ -123,7 +124,9 @@ class Configuration {
     this._deviceInfo = undefined
 
     /** @type {ImageMatchSettings} */
-    this._defaultMatchSettings = new ImageMatchSettings()
+    this._defaultMatchSettings = new ImageMatchSettings(
+      configuration ? configuration.defaultMatchSettings : undefined,
+    )
 
     // classic (selenium)
     /** @type {boolean} */
@@ -859,20 +862,20 @@ class Configuration {
   }
 
   /**
-   * @return {AccessibilityLevel} - The test-wide accessibility level.
+   * @return {AccessibilitySettings} - The test-wide accessibility settings.
    */
   getAccessibilityValidation() {
-    return this._defaultMatchSettings.getAccessibilityValidation()
+    return this._defaultMatchSettings.getAccessibilitySettings()
   }
 
   /**
-   * The test-wide accessibility level to use when checking application screenshot.
+   * The test-wide accessibility settings to use when checking application screenshot.
    *
-   * @param {AccessibilityLevel} value - The test-wide accessibility level to use when checking application screenshot.
+   * @param {AccessibilitySettings} value - The test-wide accessibility settings to use when checking application screenshot.
    * @return {this}
    */
   setAccessibilityValidation(value) {
-    this._defaultMatchSettings.setAccessibilityValidation(value)
+    this._defaultMatchSettings.setAccessibilitySettings(value)
     return this
   }
 
@@ -1245,6 +1248,7 @@ class Configuration {
       enablePatterns: this.getEnablePatterns(),
       ignoreDisplacements: this.getIgnoreDisplacements(),
       saveDebugData: this.getSaveDebugData(),
+      accessibilitySettings: this.getAccessibilityValidation(),
     }
   }
 

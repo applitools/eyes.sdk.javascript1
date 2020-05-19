@@ -161,7 +161,7 @@ class EyesVisualGrid extends Eyes {
     }
 
     try {
-      this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})   $$$$$$$$$$$$`)
+      this._logger.verbose(`Dom extraction starting   (${checkSettings.toString()})`)
 
       const pageDomResults = await takeDomSnapshot({
         executeScript: this._driver.executeScript.bind(this._driver),
@@ -173,10 +173,7 @@ class EyesVisualGrid extends Eyes {
       if (this.getCorsIframeHandle() === CorsIframeHandle.BLANK) {
         CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames)
       }
-
-      this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
-
-      const source = await this._driver.getCurrentUrl()
+      this._logger.verbose(`Dom extracted  (${checkSettings.toString()})`)
 
       const [config, {region, selector}] = await Promise.all([
         checkSettings.toCheckWindowConfiguration(this._driver),
@@ -198,7 +195,6 @@ class EyesVisualGrid extends Eyes {
         frames,
         url,
         cdt,
-        source,
       })
     } catch (e) {
       throw new EyesError(`Failed to extract DOM from the page: ${e.toString()}`, e)

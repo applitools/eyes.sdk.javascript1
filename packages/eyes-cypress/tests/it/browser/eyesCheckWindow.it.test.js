@@ -19,7 +19,6 @@ describe('eyesCheckWindow', () => {
     const eyesCheckWindow = makeEyesCheckWindow({
       sendRequest,
       processPage,
-      win: {location: {href: 'some ref'}},
     });
 
     const tag = 'some tag';
@@ -53,8 +52,6 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
-        accessibilityLevel: undefined,
-        referrer: 'some ref',
       },
     });
     expect(resourcesPutted).to.eql([
@@ -102,7 +99,6 @@ describe('eyesCheckWindow', () => {
     const eyesCheckWindow = makeEyesCheckWindow({
       sendRequest,
       processPage,
-      win: {location: {href: 'some referrer'}},
     });
 
     const tag = 'some tag';
@@ -122,7 +118,6 @@ describe('eyesCheckWindow', () => {
     const enablePatterns = 'enablePatterns';
     const ignoreDisplacements = 'ignoreDisplacements';
     const accessibility = 'accessibility';
-    const accessibilityLevel = 'accessibilityLevel';
 
     await eyesCheckWindow('bla doc', {
       tag,
@@ -142,7 +137,6 @@ describe('eyesCheckWindow', () => {
       enablePatterns,
       ignoreDisplacements,
       accessibility,
-      accessibilityLevel,
     });
 
     expect(sendRequestInput).to.eql({
@@ -172,9 +166,7 @@ describe('eyesCheckWindow', () => {
         useDom,
         enablePatterns,
         ignoreDisplacements,
-        referrer: 'some referrer',
         accessibility,
-        accessibilityLevel,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -232,7 +224,6 @@ describe('eyesCheckWindow', () => {
     const eyesCheckWindow = makeEyesCheckWindow({
       sendRequest,
       processPage,
-      win: {location: {href: 'some ref'}},
     });
 
     await eyesCheckWindow('bla doc');
@@ -284,8 +275,6 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
-        accessibilityLevel: undefined,
-        referrer: 'some ref',
       },
     });
     expect(resourcesPutted).to.eql([
@@ -339,7 +328,6 @@ describe('eyesCheckWindow', () => {
     const eyesCheckWindow = makeEyesCheckWindow({
       sendRequest,
       processPage,
-      win: {location: {href: 'some ref'}},
     });
 
     await eyesCheckWindow('bla doc');
@@ -368,9 +356,7 @@ describe('eyesCheckWindow', () => {
         useDom: undefined,
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
-        referrer: 'some ref',
         accessibility: undefined,
-        accessibilityLevel: undefined,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -411,7 +397,6 @@ describe('eyesCheckWindow', () => {
     const eyesCheckWindow = makeEyesCheckWindow({
       sendRequest,
       processPage,
-      win: {location: {href: 'some ref'}},
     });
 
     const tag = 'some tag';
@@ -443,8 +428,6 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
-        accessibilityLevel: undefined,
-        referrer: 'some ref',
       },
     });
     expect(resourcesPutted).to.eql([

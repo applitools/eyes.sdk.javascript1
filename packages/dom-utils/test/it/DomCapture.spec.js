@@ -35,7 +35,7 @@ async function captureDom(logger_, driver_, url, testName) {
     if (process.env.APPLITOOLS_UPDATE_FIXTURES) {
       fs.writeFileSync(
         path.resolve(__dirname, '../fixtures', `${testName}.json`),
-        actualDomJsonString,
+        JSON.stringify(JSON.parse(actualDomJsonString), null, 2),
       )
     }
 

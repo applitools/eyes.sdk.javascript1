@@ -3,6 +3,24 @@
 ## Unreleased
 
 
+
+## 14.1.0 - 2020/5/19
+
+- support accessibilitySettings
+- updated to @applitools/eyes-sdk-core@10.2.0
+
+## 14.0.2 - 2020/5/18
+
+- fixed typescript definitions for open browser name parameter.
+
+## 14.0.1 - 2020/5/17
+
+- using "url" instead of "source" ad referer header and eyes test source.
+
+ ## 14.0.0 - 2020/5/17
+
+- BREAKING CHANGE - removed "referer" parameter from checkWindow, now using "source" 
+
 ## 13.8.1 - 2020/5/13
 
 - updated to @applitools/eyes-sdk-core@10.1.2

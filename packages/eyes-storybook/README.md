@@ -2,6 +2,44 @@
 
 Applitools Eyes SDK for [Storybook](http://storybook.js.org).
 
+### Table of contents
+
+- [Installation](#installation)
+  * [Install npm package](#install-npm-package)
+  * [Applitools API key](#applitools-api-key)
+- [Usage](#usage)
+  * [Configuring local storybook server](#configuring-local-storybook-server)
+  * [Standalone server](#standalone-server)
+  * [Command line arguments](#command-line-arguments)
+- [Concurrency](#concurrency)
+- [Advanced configuration](#advanced-configuration)
+  * [Method 1: Environment variables](#method-1--environment-variables)
+  * [Method 2: The `applitools.config.js` file](#method-2--the--applitoolsconfigjs--file)
+- [Configuring the browser](#configuring-the-browser)
+  * [Previous browser versions](#previous-browser-versions)
+  * [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
+  * [Device emulation](#device-emulation)
+- [Per component configuration](#per-component-configuration)
+    + [The following properties are supported:](#the-following-properties-are-supported-)
+  * [`include`](#-include-)
+  * [`variations`](#-variations-)
+  * [`waitBeforeScreenshot`](#-waitbeforescreenshot-)
+  * [`properties`](#-properties-)
+  * [`ignoreRegions`](#-ignoreregions-)
+  * [`floatingRegions`](#-floatingregions-)
+  * [`layoutRegions`](#-layoutregions-)
+  * [`contentRegions`](#-contentregions-)
+  * [`strictRegions`](#-strictregions-)
+  * [`accessibilityRegions`](#-accessibilityregions-)
+  * [`accessibilityValidation`](#-accessibilityvalidation-)
+  * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an--advanced-configuration---advanced-configuration-)
+  * [`runBefore`](#-runbefore-)
+  * [`scriptHooks`](#-scripthooks-)
+    + [beforeCaptureScreenshot](#beforecapturescreenshot)
+- [Running Eyes-Storybook in Docker](#running-eyes-storybook-in-docker)
+- [Dealing with dynamic data](#dealing-with-dynamic-data)
+- [Troubleshooting](#troubleshooting)
+
 ## Installation
 
 ### Install npm package
@@ -38,39 +76,6 @@ If your project is using the default storybook config folder (i.e. `<project_fol
 ```bash
 npx eyes-storybook
 ```
-
-<br/><br/>
-
-### Index
-
-- [Configuring a local storybook server](#Configuring-local-storybook-server)
-- [Standalone server](#Standalone-server)
-- [Command line arguments](#Command-line-arguments)
-- [Concurrency](#Concurrency)
-- [Advanced configuration](#Advanced-configuration)
-- [Concurrency](#Concurrency)
-- [Advanced configuration](#Advanced-configuration)
-  - [Arguments](#Advanced-configuration)
-  - [Examples](#Method-1-Environment-variables)
-    - [Environment variables](#Method-1-Environment-variables)
-    - [The `applitools.config.js` file](#Method-2-The-applitoolsconfigjs-file)
-- [Configuring the browser](#Configuring-the-browser)
-  - [Device emulation](#Device-emulation)
-- [Per component configuration](#Per-component-configuration)
-  - [Global params set as per component params](#The-following-properties-are-supported)
-    - [include](#include)
-    - [variations](#variations)
-    - [waitBeforeScreenshot](#waitBeforeScreenshot)
-  - [Per component params](#ignore)
-    - [ignore](#ignoreRegions)
-    <!-- - [accessibility](#accessibility) -->
-    - [runBefore](#runBefore)
-    - [scriptHooks](#scriptHooks)
-- [Running Eyes-Storybook in Docker](#Running-Eyes-Storybook-in-Docker)
-- [Dealing with dynamic data](#Dealing-with-dynamic-data)
-- [Troubleshooting](#Troubleshooting)
-
-<br/><hr/><br/>
 
 ### Configuring local storybook server
 
@@ -161,6 +166,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `runInDocker`             | false                       | If you are having issues running the SDK in docker, set this flag to `true`. See more info [below](#running-eyes-storybook-in-docker) |
 | `puppeteerOptions`        | undefined                | Options to send to `puppeteer.launch`. This is a low-level configuration and should be used with great care. Example use `{ args: ['--no-sandbox'], headless: false, devtools: true}` |
 | `tapFilePath`             | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the file is created with the name eyes.tap and contains the Eyes test results. |
+| `xmlFilePath`             | undefined                   | Directory path of a results file. If set, then a [XUnit XML](https://google.github.io/rich-test-results/xunitxml) file is created in this directory, the file is created with the name eyes.xml and contains the Eyes test results. |
 | `waitBeforeScreenshot`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeScreenshot.](#waitBeforeScreenshot)<br/>Note that we use Puppeteer's [page.waitFor()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagewaitforselectororfunctionortimeout-options-args), checkout it's API for more details. |
 | `include`                 | true                        | A predicate function specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind``` and ```parameters``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, parameters}) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration - include](#include). |
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component  configuration - variations](#variations).|
@@ -175,8 +181,9 @@ In addition to command-line arguments, it's possible to define the following con
 | `layoutRegions`           | undefined                   | An array of regions to consider as match level **Layout** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - layoutRegions](#layoutRegions)|
 | `strictRegions`           | undefined                   | An array of regions to consider as match level **Strict** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - strictRegions](#strictRegions)|
 | `contentRegions`          | undefined                   | An array of regions to consider as match level **Content** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - contentRegions](#contentRegions)|
+| `accessibilityRegions`    | undefined                   | An array of regions to validate accessibility when comparing the checkpoint screenshot with the baseline screenshot. Validation is according to the configured `accessibilityValidation`. For more information, see [per component  configuration - contentRegions](#contentRegions)|
+| `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`. For more information, see [per component  configuration - accessibilityValidation](#accessibilityValidation)|
 
-<!-- | `accessibilityLevel`      | None                        | The accessibility level to use for the screenshots. Possible values are `None`, `AA` and `AAA`. | -->
 There are 2 ways to specify test configuration:
 
 1) Environment variables
@@ -199,7 +206,6 @@ APPLITOOLS_NOTIFY_ON_COMPLETION
 ...
 // all other configuration variables apply as well..
 ```
-<!-- APPLITOOLS_ACCESSIBILITY_LEVEL -->
 
 ### Method 2: The `applitools.config.js` file
 
@@ -292,7 +298,7 @@ module.exports = {
 
 ## Per component configuration
 
-### _Only supported in Storybook version >= 4_
+**_Only supported in Storybook version >= 4_**
 
 There are two ways to provide configuration for a specific story, or a group of stories.
 
@@ -454,9 +460,7 @@ storiesOf('Components with strict region', module)
   )
 ```
 
-### _The following parameters cannot be set as an [Advanced configuration](#advanced-configuration) :_
-
-<!-- ### `accessibility`
+### `accessibilityRegions`
 
 A single or an array of regions for accessibility checking. For example:
 
@@ -468,7 +472,7 @@ storiesOf('Components with accessibility regions', module)
       <span>I am visually perfect!<span>
       <span className="check-me">this should be tested for accessibility</span>
     {eyes: {
-      accessibility: [
+      accessibilityRegions: [
         {accessibilityType: 'RegularText', selector: '.check-me'},
       ]
     }}
@@ -476,7 +480,33 @@ storiesOf('Components with accessibility regions', module)
 });
 ```
 
-Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`. -->
+Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
+
+### `accessibilityValidation`
+
+The level and guidelines version that should be used when validation accesibility regions. For example:
+
+```js
+storiesOf('Components with accessibility regions', module)
+  .add(
+    'Some story',
+    () => <div>
+      <span>I am visually perfect!<span>
+      <span className="check-me">this should be tested for accessibility</span>
+    {eyes: {
+      accessibilityValidation: {
+        level: 'AA',
+        guidelinesVersion: 'WCAG_2_0'
+      }
+    }}
+  )
+});
+```
+
+Possible values for `level` are: `AA` and `AAA`.
+Possible values for `guidelinesVersion` are: `WCAG_2_0` and `WCAG_2_1`.
+
+### Parameters that cannot be set as an [Advanced configuration](#advanced-configuration)
 
 ### `runBefore`
 

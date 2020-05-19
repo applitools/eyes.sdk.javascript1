@@ -62,7 +62,6 @@ class FakeEyesWrapper extends EventEmitter {
     this.resultsRoute = '/results_url'
     this.stitchingServiceUrl = '/stitching_service'
     this.matchLevel = 'Strict'
-    this.accessibilityLevel = 'None'
     this.closeErr = closeErr
     this.failRender = failRender
     this._serverConnector = {deleteBatchSessions: () => {}}
@@ -353,11 +352,11 @@ class FakeEyesWrapper extends EventEmitter {
   }
 
   setAccessibilityValidation(value) {
-    this.accessibilityLevel = value
+    this.accessibilitySettings = value
   }
 
   getAccessibilityValidation() {
-    return this.accessibilityLevel
+    return this.accessibilitySettings
   }
 
   setParentBranchName(value) {

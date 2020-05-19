@@ -94,7 +94,7 @@ defined in the `browser` property of the configuration.
   * `type`: the content type of the resource.
   * `value`: a `Buffer` of the resource content.
 * `matchLevel`: The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match.
-* `accessibilityLevel`: The accessibility to use for the screenshots. Possible values are 'None', 'AA' and 'AAA'.
+* `accessibilitySettings`: The accessibility to use for the screenshots. Possible values are 'AA' and 'AAA'. // TODO
 * `batchNotify`.
 
 ### close()

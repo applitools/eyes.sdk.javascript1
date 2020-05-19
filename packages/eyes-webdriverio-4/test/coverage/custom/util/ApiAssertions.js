@@ -1,5 +1,6 @@
 'use strict'
-const https = require('https')
+
+const axios = require('axios')
 const {expect} = require('chai')
 
 const RegionType = ['ignore', 'strict', 'content', 'layout', 'floating', 'accessibility']
@@ -11,23 +12,13 @@ async function getTestResults(testSummary) {
   return testResultContainer[0].getTestResults()
 }
 
-async function getApiData(url, token) {
-  return new Promise(function(resolve, reject) {
-    https
-      .get(
-        `${url}?format=json&AccessToken=${token}&apiKey=${process.env.APPLITOOLS_API_KEY}`,
-        res => {
-          let data = ''
-          res.on('data', chunk => (data += chunk))
-          res.on('end', () => {
-            resolve(JSON.parse(data))
-          })
-        },
-      )
-      .on('error', err => {
-        reject(err)
-      })
-  })
+async function getApiData(testResults, apiKey = process.env.APPLITOOLS_API_KEY) {
+  let response = await axios.get(
+    `${testResults
+      .getApiUrls()
+      .getSession()}?format=json&AccessToken=${testResults.getSecretToken()}&apiKey=${apiKey}`,
+  )
+  return response.data
 }
 
 function assertProperties(actual, expected) {
@@ -42,7 +33,7 @@ function assertProperties(actual, expected) {
 
 async function assertImages(testSummary, expected) {
   let results = await getTestResults(testSummary)
-  let data = await getApiData(results.getApiUrls().getSession(), results.getSecretToken())
+  let data = await getApiData(results)
   let appOutput = data.actualAppOutput
   expect(appOutput.length).to.be.eql(expected.length)
   appOutput.forEach((output, index) => {
@@ -52,14 +43,14 @@ async function assertImages(testSummary, expected) {
 
 async function assertImage(testSummary, expected, index = 0) {
   let results = await getTestResults(testSummary)
-  let data = await getApiData(results.getApiUrls().getSession(), results.getSecretToken())
+  let data = await getApiData(results)
   let image = data.actualAppOutput[index].image
   assertProperties(image, expected)
 }
 
 async function assertImageMatchSettings(testSummary, expected, index = 0) {
   let results = await getTestResults(testSummary)
-  let data = await getApiData(results.getApiUrls().getSession(), results.getSecretToken())
+  let data = await getApiData(results)
   let imageMatchSettings = data.actualAppOutput[index].imageMatchSettings // can be reconsidered but in the DotNet suite only first one is used for assertions
   assertProperties(imageMatchSettings, expected)
   assertRegions()
@@ -73,7 +64,7 @@ async function assertImageMatchSettings(testSummary, expected, index = 0) {
 
 async function assertDefaultMatchSettings(testSummary, expected) {
   let results = await getTestResults(testSummary)
-  let data = await getApiData(results.getApiUrls().getSession(), results.getSecretToken())
+  let data = await getApiData(results)
   let defaultMatchSettings = data.startInfo.defaultMatchSettings // can be reconsidered but in the DotNet suite only first one is used for assertions
   assertProperties(defaultMatchSettings, expected)
 }

@@ -24,10 +24,12 @@ const batch = new BatchInfo('WDIO 5 Coverage Tests')
 
 async function getDriver(browser) {
   let capabilities = Browsers[browser]
-  return remote({
+  const driver = remote({
     logLevel: 'silent',
-    capabilities: capabilities,
+    desiredCapabilities: capabilities,
   })
+  await driver.init()
+  return {driver}
 }
 
 function getEyes(runnerType, stitchMode, options) {

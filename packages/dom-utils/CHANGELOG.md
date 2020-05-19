@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 4.7.17 - 2020/5/19
+
+- updated to @applitools/eyes-common@3.24.0
+
 ## 4.7.16 - 2020/5/11
 
 - updated to @applitools/eyes-common@3.22.2

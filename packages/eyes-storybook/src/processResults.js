@@ -1,7 +1,7 @@
 'use strict';
 const flatten = require('lodash.flatten');
 const chalk = require('chalk');
-const {TestResultsFormatter} = require('@applitools/eyes-sdk-core');
+const {TestResultsError, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
 const uniq = require('./uniq');
 const concurrencyMsg = require('./concurrencyMsg');
 
@@ -19,10 +19,10 @@ function processResults({results = [], totalTime, concurrency}) {
 
   outputStr += '[EYES: TEST RESULTS]:\n\n';
   if (passedOrNew.length > 0) {
-    outputStr += testResultsOutpot(passedOrNew);
+    outputStr += testResultsOutput(passedOrNew);
   }
   if (unresolved.length > 0) {
-    outputStr += testResultsOutpot(unresolved);
+    outputStr += testResultsOutput(unresolved);
   }
   if (errors.length) {
     const sortedErrors = errors.sort((a, b) => a.title.localeCompare(b.title));
@@ -75,6 +75,14 @@ function processResults({results = [], totalTime, concurrency}) {
 
   passedOrNew.forEach(formatter.addTestResults.bind(formatter));
   unresolved.forEach(formatter.addTestResults.bind(formatter));
+  errors.forEach(error => {
+    formatter.addTestResults(
+      new TestResultsError({
+        name: error.title,
+        error: error.err,
+      }),
+    );
+  });
   const exitCode = passedOrNew.length && !errors.length && !unresolved.length ? 0 : 1;
   return {
     outputStr,
@@ -83,7 +91,7 @@ function processResults({results = [], totalTime, concurrency}) {
   };
 }
 
-function testResultsOutpot(results) {
+function testResultsOutput(results) {
   let outputStr = '';
   const sortedTestResults = results.sort((a, b) => a.getName().localeCompare(b.getName()));
   sortedTestResults.forEach(result => {

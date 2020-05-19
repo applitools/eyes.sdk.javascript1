@@ -2,12 +2,18 @@
 
 ## Unreleased
 
+
+
+## 5.11.0 - 2020/5/19
+
+- Support accessibility validation
+- removed "source" attribute from VG checkWindow
+- fetching resources with "referer" header.
 - added retry for requests failing with a 503 response status
 - added more devices for device emulation
-- updated to @applitools/dom-utils@4.7.16
-- updated to @applitools/eyes-sdk-core@10.1.2
-- updated to @applitools/visual-grid-client@13.8.1
-
+- updated to @applitools/dom-utils@4.7.17
+- updated to @applitools/eyes-sdk-core@10.2.0
+- updated to @applitools/visual-grid-client@14.1.0
 
 ## 5.10.1 - 2020/4/27
 

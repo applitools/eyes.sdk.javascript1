@@ -12,11 +12,14 @@ exports.WebdriverioCheckSettings = require('./src/fluent/WebdriverioCheckSetting
 exports.EyesWDIOScreenshot = require('./src/capture/EyesWDIOScreenshot')
 exports.EyesWDIOUtils = require('./src/EyesWDIOUtils')
 exports.NetHelper = require('./src/services/NetHelper')
+exports.AccessibilityRegionBySelector = require('./src/fluent/AccessibilityRegionBySelector')
+exports.AccessibilityRegionByElement = require('./src/fluent/AccessibilityRegionByElement')
 
 // eyes-common
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings
 exports.AccessibilityRegionType = core.AccessibilityRegionType
+exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
 exports.BatchInfo = core.BatchInfo
 exports.BrowserType = core.BrowserType
 exports.Configuration = core.Configuration

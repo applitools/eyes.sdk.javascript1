@@ -106,6 +106,10 @@ const args = yargs
     type: 'number',
     default: 0,
   })
+  .options('accessibility-validation', {
+    describe: 'accessibility validation (comma separated, e.g. AA.WCAG_2_0)',
+    type: 'string',
+  })
   .option('server-url', {
     describe: 'server url',
     type: 'string',
@@ -208,6 +212,10 @@ if (!url) {
   }
   if (args.proxy) {
     configuration.setProxy(args.proxy)
+  }
+  if (args.accessibilityValidation) {
+    const [level, version] = args.accessibilityValidation.split(',')
+    configuration.setAccessibilityValidation({level, version})
   }
   if (args.envName) {
     configuration.setBaselineEnvName(args.envName) // determines the baseline

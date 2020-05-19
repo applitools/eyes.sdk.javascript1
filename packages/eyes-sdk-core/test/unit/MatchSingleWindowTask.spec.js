@@ -15,7 +15,7 @@ describe('MatchSingleWindowTask', () => {
     it('should return correct default values', async () => {
       const ms = await task.createImageMatchSettings(checkSettings, null)
       const expectedSerialization =
-        '{"matchLevel":"Strict","accessibilityLevel":"None","ignoreCaret":true,"useDom":true,"enablePatterns":false,' +
+        '{"matchLevel":"Strict","ignoreCaret":true,"useDom":true,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"exact":null,"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
       assert.strictEqual(
         JSON.stringify(ms),

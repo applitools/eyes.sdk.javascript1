@@ -118,7 +118,7 @@ exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask').MatchSing
 exports.MatchWindowTask = require('./lib/MatchWindowTask').MatchWindowTask
 exports.RenderWindowTask = require('./lib/RenderWindowTask').RenderWindowTask
 exports.TestResults = require('./lib/TestResults').TestResults
-exports.TestAccessibilityStatus = require('./lib/TestResults').TestAccessibilityStatus
+exports.TestResultsError = require('./lib/TestResults').TestResultsError
 exports.AccessibilityStatus = require('./lib/AccessibilityStatus').AccessibilityStatus
 exports.TestResultsFormatter = require('./lib/TestResultsFormatter').TestResultsFormatter
 exports.TestResultsStatus = require('./lib/TestResultsStatus').TestResultsStatus
@@ -140,6 +140,7 @@ exports.TestResultsSummary = require('./lib/runner/TestResultsSummary').TestResu
 
 // Classes from eyes-common which may be used as part of public API
 exports.AccessibilityLevel = common.AccessibilityLevel
+exports.AccessibilityGuidelinesVersion = common.AccessibilityGuidelinesVersion
 exports.AccessibilityMatchSettings = common.AccessibilityMatchSettings
 exports.AccessibilityRegionType = common.AccessibilityRegionType
 exports.BatchInfo = common.BatchInfo

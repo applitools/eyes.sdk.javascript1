@@ -94,7 +94,7 @@ describe('handlers', () => {
         errorDigest,
       });
       handlers.batchStart({});
-      await handlers.open();
+      await handlers.open({});
       await handlers.checkWindow({useDom: true, enablePatterns: true, ignoreDisplacements: true});
       expect(_args.useDom).to.be.true;
       expect(_args.enablePatterns).to.be.true;
