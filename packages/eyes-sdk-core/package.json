@@ -33,6 +33,7 @@
   "dependencies": {
     "@applitools/eyes-common": "3.23.1",
     "@applitools/isomorphic-fetch": "3.0.0",
+		"@applitools/bitmap-commons": "1.0.0",
     "axios": "0.19.2",
     "chalk": "3.0.0",
     "es6-promise-pool": "2.5.0",
