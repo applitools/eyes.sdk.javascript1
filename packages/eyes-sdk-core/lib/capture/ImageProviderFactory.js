@@ -5,6 +5,7 @@ const {BrowserNames} = require('@applitools/eyes-common')
 const TakesScreenshotImageProvider = require('./TakesScreenshotImageProvider')
 const FirefoxScreenshotImageProvider = require('./FirefoxScreenshotImageProvider')
 const SafariScreenshotImageProvider = require('./SafariScreenshotImageProvider')
+const EdgeClassicScreenshotImageProvider = require('./EdgeClassicScreenshotImageProvider')
 
 class ImageProviderFactory {
   /**
@@ -27,6 +28,8 @@ class ImageProviderFactory {
         }
       } else if (userAgent.getBrowser() === BrowserNames.Safari) {
         return new SafariScreenshotImageProvider(logger, driver, rotation, eyes, userAgent)
+      } else if (userAgent.getBrowser() === BrowserNames.Edge) {
+        return new EdgeClassicScreenshotImageProvider(logger, driver, rotation)
       }
     }
     return new TakesScreenshotImageProvider(logger, driver, rotation)
