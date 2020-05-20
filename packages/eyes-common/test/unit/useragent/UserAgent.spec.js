@@ -65,7 +65,7 @@ describe('UserAgent', () => {
       assert.strictEqual(userAgent.getBrowserMinorVersion(), '0')
     })
 
-    it('should return Edge as browser, Windows as OS', () => {
+    it('should return Edge as browser, EdgeClassic, Windows as OS', () => {
       const uaString =
         'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10136'
       const userAgent = UserAgent.parseUserAgentString(uaString, true)
@@ -75,6 +75,18 @@ describe('UserAgent', () => {
       assert.strictEqual(userAgent.getBrowser(), BrowserNames.Edge)
       assert.strictEqual(userAgent.getBrowserMajorVersion(), '12')
       assert.strictEqual(userAgent.getBrowserMinorVersion(), '10136')
+    })
+
+    it('should return Chrome as browser, EdgeChromium, Windows as OS', () => {
+      const uaString =
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43'
+      const userAgent = UserAgent.parseUserAgentString(uaString, true)
+      assert.strictEqual(userAgent.getOS(), OSNames.Windows)
+      assert.strictEqual(userAgent.getOSMajorVersion(), '10')
+      assert.strictEqual(userAgent.getOSMinorVersion(), '0')
+      assert.strictEqual(userAgent.getBrowser(), BrowserNames.Chrome)
+      assert.strictEqual(userAgent.getBrowserMajorVersion(), '79')
+      //assert.strictEqual(userAgent.getBrowserMinorVersion(), '0.309.43')
     })
 
     it('should return IE as browser, Windows as OS', () => {
