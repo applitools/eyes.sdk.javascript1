@@ -125,7 +125,6 @@ function makeOpenEyes({
     const supportedBrowsers = getSupportedBrowsers()
     const supportedBrowserKeys = Object.keys(supportedBrowsers)
     const supportedBrowserKeysStr = `\n* ${supportedBrowserKeys
-      .filter(x => x !== BrowserType.EDGE)
       .join('\n* ')}\n`
 
     const browsersArray = Array.isArray(browser) ? browser : [browser]
