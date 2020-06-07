@@ -55,7 +55,7 @@ module.exports = {
     return Array.from(elements)
   },
   async getWindowLocation(driver) {
-    const rect = await getWindowRect(driver)
+    const rect = await driver.getWindowRect()
     return {x: rect.x, y: rect.y}
   },
   async setWindowLocation(driver, location) {
