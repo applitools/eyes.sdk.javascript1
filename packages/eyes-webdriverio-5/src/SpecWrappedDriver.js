@@ -9,6 +9,7 @@ function getWindowRect(driver) {
 }
 
 function setWindowRect(driver, {x, y, width, height} = {}) {
+  debugger
   return driver.hasOwnProperty('setWindowRect')
     ? driver.setWindowRect(x, y, width, height)
     : driver.setWindowSize(width, height)
