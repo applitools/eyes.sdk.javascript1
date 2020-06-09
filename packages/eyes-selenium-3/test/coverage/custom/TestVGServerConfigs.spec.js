@@ -1,5 +1,5 @@
 'use strict'
-const {getDriver, getEyes, batch} = require('./util/TestSetup')
+const {getDriver, getEyes} = require('./util/TestSetup')
 const BrowserType = {},
   AccessibilityLevel = {},
   DeviceName = {},
@@ -11,11 +11,11 @@ const {expect} = require('chai')
 
 describe.skip('TestVGServerConfigs', () => {
   // There is no VG runner in the current SDK
-  let webDriver, eyes, runner
+  let webDriver, eyes
 
   beforeEach(async () => {
     webDriver = await getDriver('CHROME')
-    ;({eyes, runner} = await getEyes('VG'))
+    eyes = await getEyes('VG')
   })
 
   afterEach(async () => {
@@ -23,8 +23,7 @@ describe.skip('TestVGServerConfigs', () => {
   })
 
   it(`TestVGDoubleCloseNoCheck`, async () => {
-    let conf = new Configuration()
-    conf.setBatch(batch)
+    let conf = eyes.getConfiguration()
     conf.setAppName('app')
     conf.setTestName('test')
     eyes.setConfiguration(conf)
@@ -35,8 +34,7 @@ describe.skip('TestVGServerConfigs', () => {
   })
 
   it('TestVGChangeConfigAfterOpen', async () => {
-    let conf = new Configuration()
-    conf.setBatch(batch)
+    let conf = eyes.getConfiguration()
     conf.setAppName('app')
     conf.setTestName('js test')
 

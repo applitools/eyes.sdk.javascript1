@@ -8,11 +8,10 @@
     "packages": [
       "packages/dom-capture",
       "packages/dom-snapshot",
-      "packages/dom-utils",
-      "packages/eyes-common",
       "packages/eyes-images",
       "packages/eyes-sdk-core",
       "packages/eyes-selenium",
+      "packages/eyes-protractor",
       "packages/eyes-testcafe",
       "packages/sdk-fake-eyes-server",
       "packages/sdk-coverage-tests",
@@ -29,12 +28,18 @@
       "packages/eyes-cypress",
       "packages/eyes-storybook",
       "packages/eyes-leanft",
-      "packages/side-eyes"
+      "packages/side-eyes",
+      "packages/sdk-shared"
     ],
     "nohoist": [
       "**/@wdio/*",
       "**/wdio-*",
-      "**/webdriverio"
+      "**/webdriverio",
+      "**/protractor",
+      "**/protractor/**",
+      "**/selenium-webdriver",
+      "**/selenium-webdriver-3",
+      "**/selenium-webdriver-4"
     ]
   },
   "scripts": {

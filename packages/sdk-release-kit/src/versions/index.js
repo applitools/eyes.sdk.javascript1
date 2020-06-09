@@ -68,7 +68,7 @@ function verifyVersions({isFix, pkgPath}) {
         const packageJson = require(packageJsonPath)
         packageJson.dependencies[error.dep] = error.sourceVersion
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
-        const changelogEntry = `- updated to ${error.dep}@${error.sourceVersion}`
+        const changelogEntry = `- updated to ${error.dep}@${error.sourceVersion} (from ${error.depVersion})`
         writeUnreleasedItemToChangelog({targetFolder: pkg.path, entry: changelogEntry})
       }
     } else {

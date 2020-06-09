@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 /**
  * A container for a MatchWindowData along with the screenshot used for creating it. (We specifically avoid inheritance

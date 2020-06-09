@@ -3,6 +3,31 @@
 ## Unreleased
 
 
+## 3.8.0 - 2020/6/9
+
+- updated to @applitools/dom-snapshot@3.5.3 (from 3.5.2)
+- updated to @applitools/eyes-sdk-core@11.0.5 (from 11.0.3)
+- updated to @applitools/visual-grid-client@14.4.4 (from 14.4.2)
+
+## 3.7.1 - 2020/6/3
+
+- fixed 409 conflict error
+- Unified core
+- updated to @applitools/eyes-sdk-core@11.0.3 (from v10.3.1)
+- updated to @applitools/visual-grid-client@14.4.2 (from v14.3.1)
+
+## 3.7.0 - 2020/5/24
+
+- add ability to render tests results to XUnit XML (per [Trello 261](https://trello.com/c/ozmI1rav))
+- updated to @applitools/eyes-sdk-core@10.3.0
+- updated to @applitools/visual-grid-client@14.2.0
+
+## 3.6.0 - 2020/5/19
+
+- Support for AccessibilityGuidelinesVersion
+- updated to @applitools/dom-snapshot@3.5.2
+- updated to @applitools/eyes-sdk-core@10.2.0
+- updated to @applitools/visual-grid-client@14.1.0
 
 ## 3.5.3 - 2020/5/4
 

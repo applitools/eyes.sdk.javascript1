@@ -1,7 +1,7 @@
 'use strict'
-const {Eyes, Target} = require('../../../index')
+const {Target, StitchMode} = require('../../../index')
 const {Builder, By} = require('selenium-webdriver')
-const {sauceUrl, batch} = require('./util/TestSetup')
+const {sauceUrl, getEyes} = require('./util/TestSetup')
 
 describe('TestAppiumNative', () => {
   let driver, eyes
@@ -27,8 +27,7 @@ describe('TestAppiumNative', () => {
       })
       .usingServer(sauceUrl)
       .build()
-    eyes = new Eyes()
-    eyes.setBatch(batch)
+    eyes = getEyes(StitchMode.SCROLL)
     await eyes.open(driver, 'Mobile Native Tests', 'Android Native App 1')
     await eyes.checkWindow('Contact list')
     await eyes.close()
@@ -52,8 +51,7 @@ describe('TestAppiumNative', () => {
       })
       .usingServer(sauceUrl)
       .build()
-    eyes = new Eyes()
-    eyes.setBatch(batch)
+    eyes = getEyes(StitchMode.SCROLL)
     await eyes.open(driver, 'Mobile Native Tests', 'Android Native App 2')
 
     let scrollableElement = await driver.findElement(

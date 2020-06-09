@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 const {RenderingInfo} = require('./RenderingInfo')
 

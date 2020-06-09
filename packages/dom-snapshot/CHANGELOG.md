@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 3.5.3 - 2020/6/4
+
+- fix dist scripts
+
 ## 3.5.2 - 2020/5/6
 
 - fix bug when experimental longhands extracted from the cssom [Trello](https://trello.com/c/ASx8Bwd8/323-difference-in-gradient) [Trello](https://trello.com/c/wOytxwv4/346-ufg-safari-incorrect-render-repeated-image)

@@ -1,24 +1,25 @@
 import { cleanup, render, waitForElement } from '@testing-library/react'
-import {
-  click,
-  findElement,
-  innerHtml,
-  mouseOver,
-  sendKeys,
-} from '../../../../../tests/utils'
+import { click, findElement, innerHtml, mouseOver, sendKeys } from '../../../../../tests/utils'
 import React from 'react'
 import Normal from '../../../containers/Normal'
 import uuidv4 from 'uuid/v4'
 jest.mock('../../../../IO/storage')
 import { waitForCompletion } from '../../../../IO/storage'
+import { updateBrowserNamesForBackwardsCompatibility } from '../../../components/VisualGrid/options'
 
-describe('Visual grid options', () => {
+describe('Visual grid options utils', () => {
+  it('supports browsername backwards compatibility', () => {
+    const browsers = ['Chrome', 'Edge', 'Firefox']
+    expect(updateBrowserNamesForBackwardsCompatibility(browsers)).toEqual(['Chrome', 'Edge Legacy', 'Firefox'])
+  })
+})
+
+describe('Visual grid options UI', () => {
   beforeEach(async () => {
     doRender()
     await waitForElement(() => findElement('#enable-visual-grid'))
     click('#enable-visual-grid')
   })
-
   afterEach(cleanup)
 
   // user flow
@@ -38,17 +39,13 @@ describe('Visual grid options', () => {
   it('browser is populated with a sensible default', () => {
     acceptEula()
     toggleBrowsersGroup()
-    expect(
-      innerHtml('.category.browsers .selected-options .option-text')
-    ).toBeTruthy()
+    expect(innerHtml('.category.browsers .selected-options .option-text')).toBeTruthy()
   })
 
   it('viewport size is populated with a sensible default', () => {
     acceptEula()
     toggleBrowsersGroup()
-    expect(
-      innerHtml('.category.viewports .selected-options .option-text')
-    ).toBeTruthy()
+    expect(innerHtml('.category.viewports .selected-options .option-text')).toBeTruthy()
   })
 
   it('error displayed when browser selected but no viewport size selected', async () => {
@@ -65,9 +62,7 @@ describe('Visual grid options', () => {
     toggleDevicesGroup()
     await toggleSelectedDevice()
     await waitForCompletion()
-    expect(
-      innerHtml('.category.device-orientations .error-message')
-    ).toBeTruthy()
+    expect(innerHtml('.category.device-orientations .error-message')).toBeTruthy()
     expect(innerHtml('.general-error')).toBeFalsy()
   })
 
@@ -103,9 +98,7 @@ describe('Visual grid options', () => {
     expect(innerHtml('.category.browsers .error-message')).toBeFalsy()
     expect(innerHtml('.category.viewports .error-message')).toBeFalsy()
     expect(innerHtml('.category.devices .error-message')).toBeFalsy()
-    expect(
-      innerHtml('.category.device-orientations .error-message')
-    ).toBeFalsy()
+    expect(innerHtml('.category.device-orientations .error-message')).toBeFalsy()
     expect(innerHtml('.general-error')).toBeTruthy()
   })
 
@@ -117,17 +110,11 @@ describe('Visual grid options', () => {
     toggleBrowsersGroup()
     click('.category.browsers .selected-options .close.inner')
     storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedBrowsers.length
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedBrowsers.length).toBeFalsy()
     storage = await toggleSelectedBrowser()
-    expect(
-      storage.projectSettings[projectId].selectedBrowsers.length
-    ).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedBrowsers.length).toBeTruthy()
     storage = await toggleSelectedBrowser()
-    expect(
-      storage.projectSettings[projectId].selectedBrowsers.length
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedBrowsers.length).toBeFalsy()
   })
 
   // viewports
@@ -137,9 +124,7 @@ describe('Visual grid options', () => {
     toggleBrowsersGroup()
     click('.category.viewports .selected-options .close.inner')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.length
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.length).toBeFalsy()
   })
 
   it('select a predefined viewport size', async () => {
@@ -149,11 +134,7 @@ describe('Visual grid options', () => {
     await waitForCompletion()
     const selectedSize = togglePredefinedViewportSize()
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes(
-        selectedSize
-      )
-    ).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.includes(selectedSize)).toBeTruthy()
   })
 
   it('deselect a predefined viewport size', async () => {
@@ -163,9 +144,7 @@ describe('Visual grid options', () => {
     click('.predefined-viewport-sizes input[type=checkbox]:checked')
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.length
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.length).toBeFalsy()
   })
 
   it('create and select a custom viewport', async () => {
@@ -176,14 +155,8 @@ describe('Visual grid options', () => {
     await addCustomViewport(100, 100)
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes(
-        '100x100'
-      )
-    ).toBeTruthy()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.length
-    ).toEqual(1)
+    expect(storage.projectSettings[projectId].selectedViewportSizes.includes('100x100')).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.length).toEqual(1)
   })
 
   it('create and delete a custom viewport', async () => {
@@ -194,11 +167,7 @@ describe('Visual grid options', () => {
     click('.custom-viewport-size .close.inner')
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes(
-        '100x100'
-      )
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.includes('100x100')).toBeFalsy()
   })
 
   it('negative numbers ignored when creating a custom viewport', async () => {
@@ -207,11 +176,7 @@ describe('Visual grid options', () => {
     await addCustomViewport(-100, -100)
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes(
-        '100x100'
-      )
-    ).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.includes('100x100')).toBeTruthy()
   })
 
   it('inputting both width and height for a custom viewport enables it', async () => {
@@ -241,9 +206,7 @@ describe('Visual grid options', () => {
     await addCustomViewport(1, 1)
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes('1x1')
-    ).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedViewportSizes.includes('1x1')).toBeTruthy()
   })
 
   // device orientations
@@ -256,15 +219,11 @@ describe('Visual grid options', () => {
 
     toggleSelectedDeviceOrientation()
     storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedDeviceOrientations.length
-    ).toBeTruthy()
+    expect(storage.projectSettings[projectId].selectedDeviceOrientations.length).toBeTruthy()
 
     toggleSelectedDeviceOrientation()
     storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedDeviceOrientations.length
-    ).toBeFalsy()
+    expect(storage.projectSettings[projectId].selectedDeviceOrientations.length).toBeFalsy()
   })
 })
 
@@ -274,11 +233,7 @@ const projectId = uuidv4()
 
 function doRender() {
   const { container } = render(
-    <Normal
-      enableVisualCheckpoints={true}
-      visualCheckpointsChanged={() => {}}
-      projectId={projectId}
-    />
+    <Normal enableVisualCheckpoints={true} visualCheckpointsChanged={() => {}} projectId={projectId} />
   )
   return container
 }

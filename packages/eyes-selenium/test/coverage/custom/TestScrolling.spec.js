@@ -1,9 +1,8 @@
 'use strict'
-const {sauceUrl, getBatch} = require('./util/TestSetup')
-const {Eyes, EyesWebElement, Target, Region, StitchMode} = require('../../../index')
+const {getEyes} = require('./util/TestSetup')
+const {EyesWebElement, Target, Region, StitchMode} = require('../../../index')
 const {Builder, By} = require('selenium-webdriver')
 const appName = 'TestScrolling'
-const batch = getBatch()
 
 describe.skip(appName, () => {
   describe('ChromeEmulation', () => {
@@ -25,9 +24,7 @@ describe.skip(appName, () => {
         .build()
       try {
         await driver.get('https://applitools.github.io/demo/TestPages/MobileDemo/adaptive.html')
-        eyes = new Eyes()
-        eyes.setBatch(batch)
-        eyes.setParentBranchName('master')
+        eyes = getEyes('classic')
         let eyesDriver = await eyes.open(driver, appName, `TestWebAppScrolling`, {
           width: 360,
           height: 740,
@@ -67,9 +64,7 @@ describe.skip(appName, () => {
         .build()
       try {
         await driver.get('https://applitools.github.io/demo/TestPages/MobileDemo/AccessPayments/')
-        eyes = new Eyes()
-        eyes.setBatch(batch)
-        eyes.setParentBranchName('master')
+        eyes = getEyes('classic')
         await eyes.open(driver, appName, 'TestWebAppScrolling2', {width: 386, height: 512})
         eyes.setStitchMode(StitchMode.CSS)
         await eyes.check('big page on mobile', Target.window().fully())
@@ -96,9 +91,7 @@ describe.skip(appName, () => {
         .build()
       try {
         await driver.get('https://www.applitools.com/customers')
-        eyes = new Eyes()
-        eyes.setBatch(batch)
-        eyes.setParentBranchName('master')
+        eyes = getEyes('classic')
         await eyes.open(driver, appName, 'TestWebAppScrolling3', {width: 386, height: 512})
         await eyes.check(
           'long page on mobile',
@@ -111,79 +104,6 @@ describe.skip(appName, () => {
         await eyes.abortIfNotClosed()
         await driver.quit()
       }
-    })
-  })
-
-  describe.skip('SauceLabs', () => {
-    let eyes, driver
-    const sauceCaps = {
-      browserName: 'Chrome',
-      deviceName: 'Samsung Galaxy S9 WQHD GoogleAPI Emulator',
-      platformName: 'Android',
-      platformVersion: '7.1',
-      deviceOrientation: 'portrait',
-      username: process.env.SAUCE_USERNAME,
-      accessKey: process.env.SAUCE_ACCESS_KEY,
-    }
-
-    beforeEach(async () => {
-      driver = await new Builder()
-        .withCapabilities(sauceCaps)
-        .usingServer(sauceUrl)
-        .build()
-    })
-
-    afterEach(async () => {
-      await eyes.abortIfNotClosed()
-      await driver.quit()
-    })
-    // falls down due to timeout, the page used for testing needs to much screenshots so it takes to much on the sauceLabs
-    it.skip('TestWebAppScrolling', async () => {
-      await driver.get('https://applitools.github.io/demo/TestPages/MobileDemo/adaptive.html')
-      eyes = new Eyes()
-      eyes.setBatch(batch)
-      let eyesDriver = await eyes.open(driver, appName, `TestWebAppScrolling`, {
-        width: 360,
-        height: 740,
-      })
-      let element = await driver.findElement(By.css('.content'))
-      let eyesElement = new EyesWebElement(eyes._logger, eyesDriver, element)
-      let size = await eyesElement.getScrollSize()
-      for (let currentPosition = 0; currentPosition < size.getHeight(); currentPosition += 6000) {
-        let height = Math.min(6000, size.getHeight() - currentPosition)
-        await eyes.check(
-          'TestWebAppScrolling',
-          Target.region(new Region(0, currentPosition, size.getWidth(), height))
-            .fully()
-            .scrollRootElement(element),
-        )
-      }
-      await eyes.close()
-    })
-
-    it('TestWebAppScrolling2', async () => {
-      await driver.get('https://applitools.github.io/demo/TestPages/MobileDemo/AccessPayments/')
-      eyes = new Eyes()
-      eyes.setBatch(batch)
-      await eyes.open(driver, appName, 'TestWebAppScrolling2', {width: 386, height: 512})
-      eyes.setStitchMode(StitchMode.CSS)
-      await eyes.check('big page on mobile', Target.window().fully())
-      await eyes.close()
-    })
-
-    it('TestWebAppScrolling3', async () => {
-      await driver.get('https://www.applitools.com/customers')
-      eyes = new Eyes()
-      eyes.setBatch(batch)
-      eyes.setParentBranchName('master')
-      await eyes.open(driver, appName, 'TestWebAppScrolling3', {width: 386, height: 512})
-      await eyes.check(
-        'long page on mobile',
-        Target.region(By.css('div.page'))
-          .fully(false)
-          .sendDom(false),
-      )
-      await eyes.close()
     })
   })
 })

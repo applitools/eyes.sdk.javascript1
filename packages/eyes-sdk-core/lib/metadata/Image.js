@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, RectangleSize} = require('@applitools/eyes-common')
+const {GeneralUtils, RectangleSize} = require('../..')
 
 class Image {
   /**

@@ -1,14 +1,14 @@
 const {getCaptureDomScript} = require('../');
-const startTestServer = require('../tests/util/testServer');
+const {testServer} = require('@applitools/sdk-shared');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
-const {beautifyOutput} = require('../tests/util/beautifyOutput');
+const {beautifyOutput} = require('../test/util/beautifyOutput');
 
 (async function() {
-  const testServer = await startTestServer({port: 7373});
-  const anotherTestServer1 = await startTestServer({port: 7272});
-  const anotherTestServer2 = await startTestServer({port: 7171});
-  const baseUrl = `http://localhost:${testServer.port}`;
+  const server = await testServer({port: 7373});
+  const anotherTestServer1 = await testServer({port: 7272});
+  const anotherTestServer2 = await testServer({port: 7171});
+  const baseUrl = `http://localhost:${server.port}`;
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   const captureDomScript = `(${await getCaptureDomScript()})()`;
@@ -23,7 +23,7 @@ const {beautifyOutput} = require('../tests/util/beautifyOutput');
   await generateFixture(`${baseUrl}/testWithCrossOriginCss.html`, 'testWithCrossOriginCss');
   await generateFixture(`${baseUrl}/testWithNestedIframe.surge.html`, 'testWithNestedIframe.surge');
 
-  await testServer.close();
+  await server.close();
   await anotherTestServer1.close();
   await anotherTestServer2.close();
   await browser.close();
@@ -31,6 +31,6 @@ const {beautifyOutput} = require('../tests/util/beautifyOutput');
   async function generateFixture(url, name) {
     await page.goto(`${url}`);
     const domStr = beautifyOutput(await page.evaluate(captureDomScript));
-    fs.writeFileSync(`tests/fixtures/${name}.dom.json`, domStr);
+    fs.writeFileSync(`test/fixtures/${name}.dom.json`, domStr);
   }
 })();

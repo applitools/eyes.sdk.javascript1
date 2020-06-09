@@ -1,6 +1,6 @@
 'use strict'
 
-const {Region} = require('@applitools/eyes-common')
+const {Region} = require('../..')
 const RegionPositionCompensation = require('./RegionPositionCompensation')
 
 class FirefoxRegionPositionCompensation extends RegionPositionCompensation {

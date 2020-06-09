@@ -1,6 +1,6 @@
 'use strict'
 
-const {FloatingMatchSettings} = require('@applitools/eyes-common')
+const {FloatingMatchSettings} = require('../..')
 const {GetFloatingRegion} = require('./GetFloatingRegion')
 
 /**

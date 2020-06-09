@@ -22,6 +22,7 @@ function getSupportedBrowsers() {
     [translateBrowserNameVersion('safari-1')]: 'safari-1',
     [translateBrowserNameVersion('safari-2')]: 'safari-2',
     [translateBrowserNameVersion('edgechromium-1')]: 'edgechromium-1',
+    [translateBrowserNameVersion('edgechromium-2')]: 'edgechromium-2',
   }
 
   return supportedBrowsers

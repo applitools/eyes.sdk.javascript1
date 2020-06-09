@@ -20,7 +20,6 @@ function createCheckSettings({
   ignoreDisplacements,
   renderId,
   matchLevel,
-  accessibilityLevel,
 }) {
   const checkSettings = new CheckSettings(0)
   setEachRegion(ignore, checkSettings.ignoreRegions.bind(checkSettings))
@@ -70,9 +69,6 @@ function createCheckSettings({
   }
   if (matchLevel !== undefined) {
     checkSettings.matchLevel(matchLevel)
-  }
-  if (accessibilityLevel !== undefined) {
-    checkSettings.accessibilityValidation(accessibilityLevel)
   }
 
   return checkSettings

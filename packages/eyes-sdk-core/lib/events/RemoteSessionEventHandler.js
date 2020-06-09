@@ -2,7 +2,7 @@
 
 const axios = require('axios')
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 const {SessionEventHandler} = require('./SessionEventHandler')
 

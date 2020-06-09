@@ -8,7 +8,8 @@ describe.skip(appName, async () => {
   let driver, eyes, runner
   beforeEach(async () => {
     driver = await getDriver('CHROME')
-    ;({eyes, runner} = await getEyes('VG'))
+    eyes = await getEyes('VG')
+    runner = eyes.getRunner()
     eyes.setBatch(batch)
   })
 

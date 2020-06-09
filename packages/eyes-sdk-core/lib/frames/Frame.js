@@ -1,13 +1,32 @@
 'use strict'
+const {ArgumentGuard} = require('../utils/ArgumentGuard')
+const {TypeUtils} = require('../utils/TypeUtils')
+const {Location} = require('../geometry/Location')
+const {RectangleSize} = require('../geometry/RectangleSize')
+const EyesUtils = require('../EyesUtils')
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
-const {EyesJsBrowserUtils} = require('../EyesJsBrowserUtils')
-const {EyesWrappedElement} = require('../wrappers/EyesWrappedElement')
 /**
- * @typedef {import('@applitools/eyes-common').Logger} Logger
- * @typedef {import('@applitools/eyes-common').Location} Location
- * @typedef {import('@applitools/eyes-common').RectangleSize} RectangleSize
- * @typedef {import('../wrappers/EyesWrappedElement').EyesWrappedElement} EyesWrappedElement
+ * @typedef {import('../logging/Logger').Logger} Logger
+ * @typedef {import('../geometry/Location').Location} Location
+ * @typedef {import('../geometry/RectangleSize').RectangleSize} RectangleSize
+ * @typedef {import('../wrappers/EyesWrappedElement')} EyesWrappedElement
+ * @typedef {import('../wrappers/EyesWrappedElement').SupportedElement} SupportedElement
+ * @typedef {import('../wrappers/EyesWrappedElement').SupportedSelector} SupportedSelector
+ * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
+ */
+
+/**
+ * Reference to the frame, index of the frame in the current context, name or id of the element,
+ * framework element object, {@link EyesWrappedElement} implementation object
+ * @typedef {number|string|SupportedSelector|SupportedElement|EyesWrappedElement|Frame} FrameReference
+ */
+
+/**
+ * @typedef {Object} SpecsFrame
+ * @property {(selector) => boolean} isSelector - return true if the value is a valid selector, false otherwise
+ * @property {(element) => boolean} isCompatibleElement - return true if the value is an element, false otherwise
+ * @property {(leftElement: SupportedElement|EyesWrappedElement, leftElement: SupportedElement|EyesWrappedElement) => Promise<boolean>} isEqualElements - return true if elements are equal, false otherwise
+ * @property {(logger: Logger, driver: EyesWrappedDriver, element: SupportedElement, selector: SupportedSelector) => EyesWrappedElement} createElement - return wrapped element instance
  */
 
 /**
@@ -17,164 +36,280 @@ const {EyesWrappedElement} = require('../wrappers/EyesWrappedElement')
  */
 class Frame {
   /**
-   * Copy constructor
-   * @param {Logger} logger logger instance.
-   * @param {Frame} frameOrComponents frame to make copy
+   * @param {SpecsFrame} SpecsFrame
+   * @return {Frame} specialized version of this class
    */
+  static specialize(SpecsFrame) {
+    return class extends Frame {
+      /** @override */
+      static get specs() {
+        return SpecsFrame
+      }
+      /** @override */
+      get specs() {
+        return SpecsFrame
+      }
+    }
+  }
+  /** @type {SpecsFrame} */
+  static get specs() {
+    throw new TypeError('Frame is not specialized')
+  }
+  /** @type {SpecsFrame} */
+  get specs() {
+    throw new TypeError('Frame is not specialized')
+  }
   /**
    * Create frame from components
-   * @param {Logger} logger logger instance.
-   * @param {Object} frameOrComponents frame components
-   * @param {EyesWrappedElement} frameOrComponents.element frame element, used as a element to switch into the frame.
-   * @param {Location} frameOrComponents.location location of the frame within the current frame.
-   * @param {RectangleSize} frameOrComponents.size frame element size (i.e., the size of the frame on the screen, not the internal document size).
-   * @param {RectangleSize} frameOrComponents.innerSize The frame element inner size (i.e., the size of the frame actual size, without borders).
-   * @param {Location} frameOrComponents.originalLocation The scroll location of the frame.
-   * @param {string} frameOrComponents.originalOverflow The original overflow value of the frame.
+   * @param {Logger} logger - logger instance
+   * @param {EyesWrappedDriver} driver - wrapped driver
+   * @param {Object} frame - frame components
+   * @param {EyesWrappedElement} frame.element - frame element, used as a element to switch into the frame
+   * @param {Location} frame.location - location of the frame within the current frame
+   * @param {RectangleSize} frame.size - frame element size (i.e., the size of the frame on the screen, not the internal document size)
+   * @param {RectangleSize} frame.innerSize - frame element inner size (i.e., the size of the frame actual size, without borders)
+   * @param {Location} frame.parentScrollLocation - scroll location of the frame
+   * @param {EyesWrappedElement} frame.scrollRootElement - scroll root element
    */
-  constructor(logger, frameOrComponents) {
-    ArgumentGuard.notNull(logger, 'logger')
-    this._logger = logger
-    if (frameOrComponents instanceof Frame) {
-      const frame = frameOrComponents
-      this._logger.verbose(`Frame copy constructor (${frame})`)
-      this._logger = frame._logger
-      this._driver = frame._driver
-      this._element = frame._element
-      this._location = frame._location
-      this._size = frame._size
-      this._innerSize = frame._innerSize
-      this._originalLocation = frame._originalLocation
-      this._originalOverflow = frame._originalOverflow
-      this._scrollRootElement = frame._scrollRootElement
-    } else {
-      const components = frameOrComponents
-      ArgumentGuard.hasProperties(components, [
-        'driver',
+  constructor(logger, driver, frame) {
+    if (frame instanceof Frame) {
+      return frame
+    } else if (this.constructor.isReference(frame)) {
+      this._reference = frame
+    } else if (TypeUtils.isObject(frame)) {
+      ArgumentGuard.hasProperties(frame, [
         'element',
         'location',
         'size',
         'innerSize',
-        'originalLocation',
+        'parentScrollLocation',
       ])
-      this._logger.verbose(`Frame constructor (${components})`)
-      this._driver = components.driver
-      this._element = components.element
-      this._location = components.location
-      this._size = components.size
-      this._innerSize = components.innerSize
-      this._originalLocation = components.originalLocation
-      this._originalOverflow = components.originalOverflow
+      this._element = frame.element
+      this._location = frame.location
+      this._size = frame.size
+      this._innerSize = frame.innerSize
+      this._parentScrollLocation = frame.parentScrollLocation
+      this._scrollRootElement = frame.scrollRootElement
+    }
+    if (driver) {
+      this._driver = driver
+    }
+    if (logger) {
+      this._logger = logger
     }
   }
-
-  static equals(leftFrame, rightFrame) {
-    let leftElement = null
-    if (leftFrame instanceof Frame) leftElement = leftFrame.element
-    else if (leftFrame instanceof EyesWrappedElement) leftElement = leftFrame
-    let rightElement = null
-    if (rightFrame instanceof Frame) rightElement = rightFrame.element
-    else if (rightFrame instanceof EyesWrappedElement) rightElement = rightFrame
-
-    if (!leftElement || !rightElement) return false
-    return leftElement.equals(rightElement)
+  /**
+   * Construct frame reference object which could be later initialized to the full frame object
+   * @param {FrameReference} reference - reference to the frame on its parent context
+   * @param {EyesWrappedElement} scrollRootElement - scroll root element
+   * @return {Frame} frame reference object
+   */
+  static fromReference(reference, scrollRootElement) {
+    const frame = new this(null, null, reference)
+    frame.scrollRootElement = scrollRootElement
+    return frame
   }
-
+  /**
+   * Check value for belonging to the {@link FrameReference} type
+   * @param {*} reference - value to check if is it a reference
+   * @return {boolean} true if value is a valid reference, otherwise false
+   */
+  static isReference(reference) {
+    return (
+      TypeUtils.isInteger(reference) ||
+      TypeUtils.isString(reference) ||
+      this.specs.isSelector(reference) ||
+      this.specs.isCompatibleElement(reference) ||
+      reference instanceof Frame
+    )
+  }
+  /**
+   * Equality check for two frame objects or frame elements
+   * @param {Frame|EyesWrappedDriver} leftFrame - frame object or frame element
+   * @param {Frame|EyesWrappedDriver} rightFrame - frame object or frame element
+   * @return {Promise<boolean>} true if frames are described the same frame element, otherwise false
+   */
+  static async equals(leftFrame, rightFrame) {
+    const leftElement = leftFrame instanceof Frame ? leftFrame.element : leftFrame
+    const rightElement = rightFrame instanceof Frame ? rightFrame.element : rightFrame
+    return this.specs.isEqualElements(leftElement, rightElement)
+  }
   /**
    * @return {EyesWrappedElement}
    */
   get element() {
     return this._element
   }
-
   /**
    * @return {Location}
    */
   get location() {
     return this._location
   }
-
   /**
    * @return {RectangleSize}
    */
   get size() {
     return this._size
   }
-
   /**
    * @return {RectangleSize}
    */
   get innerSize() {
     return this._innerSize
   }
-
   /**
    * @return {Location}
    */
-  get originalLocation() {
-    return this._originalLocation
+  get parentScrollLocation() {
+    return this._parentScrollLocation
   }
-
-  /**
-   * @return {string}
-   */
-  get originalOverflow() {
-    return this._originalOverflow
-  }
-
   /**
    * @return {EyesWrappedElement}
    */
   get scrollRootElement() {
     return this._scrollRootElement
   }
-
   /**
-   * @param {EyesWrappedElement} scrollRootElement
+   * @param {!EyesWrappedElement} scrollRootElement
    */
   set scrollRootElement(scrollRootElement) {
-    this._scrollRootElement = scrollRootElement
+    if (scrollRootElement) {
+      this._scrollRootElement = scrollRootElement
+    }
   }
+  /**
+   * Create reference from current frame object
+   * @return {Frame} frame reference object
+   */
+  toReference() {
+    return this.constructor.fromReference(this._element || this._reference, this._scrollRootElement)
+  }
+  /**
+   * Equality check for two frame objects or frame elements
+   * @param {Frame|EyesWrappedDriver} otherFrame - frame object or frame element
+   * @return {Promise<boolean>} true if frames are described the same frame element, otherwise false
+   */
+  async equals(otherFrame) {
+    return this.constructor.equals(this, otherFrame)
+  }
+  /**
+   * Initialize frame reference by finding frame element and calculate metrics
+   * @param {Logger} logger - logger instance
+   * @param {EyesWrappedDriver} driver - wrapped driver targeted on parent context
+   * @return {this} initialized frame object
+   */
+  async init(logger, driver) {
+    if (this._element) return this
+    this._logger = logger
+    this._driver = driver
+    this._logger.verbose(`Frame initialization from reference - ${this._reference}`)
+    if (TypeUtils.isInteger(this._reference)) {
+      this._logger.verbose('Getting frames list...')
+      const elements = await this._driver.finder.findElements('frame, iframe')
+      if (this._reference > elements.length) {
+        throw new TypeError(`Frame index [${this._reference}] is invalid!`)
+      }
+      this._logger.verbose('Done! getting the specific frame...')
+      this._element = elements[this._reference]
+    } else if (TypeUtils.isString(this._reference) || this.specs.isSelector(this._reference)) {
+      if (TypeUtils.isString(this._reference)) {
+        this._logger.verbose('Getting frames by name or id...')
+        const element = await EyesUtils.getFrameByNameOrId(
+          this._logger,
+          this._driver.executor,
+          this._reference,
+        )
+        if (element) {
+          this._element = this.specs.createElement(this._logger, this._driver, element)
+        }
+      }
+      if (this.specs.isSelector(this._reference)) {
+        const element = await this._driver.finder.findElement(this._reference)
+        if (element) {
+          this._element = element
+        }
+      }
+      if (!this._element) {
+        throw new TypeError(`No frame with selector, name or id '${this._reference}' exists!`)
+      }
+    } else if (this.specs.isCompatibleElement(this._reference)) {
+      this._element = this.specs.createElement(this._logger, this._driver, this._reference)
+    } else {
+      throw new TypeError('Reference type does not supported!')
+    }
+    return this.refresh()
+  }
+  /**
+   * Recalculate frame object metrics. Driver should be targeted on a parent context
+   * @return {this} this frame object
+   */
+  async refresh() {
+    const rect = await this._element.getRect()
+    const [clientWidth, clientHeight] = await this._element.getProperty(
+      'clientWidth',
+      'clientHeight',
+    )
+    const [borderLeftWidth, borderTopWidth] = await this._element.getCssProperty(
+      'border-left-width',
+      'border-top-width',
+    )
+    const parentScrollLocation = await EyesUtils.getScrollLocation(
+      this._logger,
+      this._driver.executor,
+    )
 
+    this._size = new RectangleSize(Math.round(rect.getWidth()), Math.round(rect.getHeight()))
+    this._innerSize = new RectangleSize(Math.round(clientWidth), Math.round(clientHeight))
+    this._location = new Location(
+      Math.round(rect.getLeft() + Number.parseFloat(borderLeftWidth)),
+      Math.round(rect.getTop() + Number.parseFloat(borderTopWidth)),
+    )
+    this._parentScrollLocation = parentScrollLocation
+    return this
+  }
   /**
    * @return {Promise<void>}
    */
   async hideScrollbars() {
-    const scrollRootElement = await this._getForceScrollRootElement()
-    this._logger.verbose('hiding scrollbars of element:', scrollRootElement.unwrapped)
-    this._originalOverflow = await EyesJsBrowserUtils.hideScrollbars(
-      this._driver.executor,
-      200,
-      scrollRootElement,
-    )
+    if (!this._scrollRootElement) {
+      const element = await EyesUtils.getScrollRootElement(this._logger, this._driver.executor)
+      this._scrollRootElement = this.specs.createElement(this._logger, this._driver, element)
+    }
+    this._logger.verbose('hiding scrollbars of element')
+    return this._scrollRootElement.hideScrollbars()
   }
-
   /**
    * @return {Promise<void>}
    */
   async restoreScrollbars() {
-    const scrollRootElement = await this._getForceScrollRootElement()
-    this._logger.verbose(
-      'returning overflow of element to its original value:',
-      scrollRootElement.unwrapped,
-    )
-    await scrollRootElement.setOverflow(this._originalOverflow)
-  }
-
-  /**
-   * @private
-   * @return {Promise<EyesWrappedElement>}
-   */
-  async _getForceScrollRootElement() {
-    if (!this._scrollRootElement) {
-      this._logger.verbose('no scroll root element. selecting default.')
-      this._scrollRootElement = await this._driver.finder.findElement({
-        using: 'css selector',
-        value: 'html',
-      })
+    if (this._scrollRootElement) {
+      this._logger.verbose('returning overflow of element to its original value')
+      await this._scrollRootElement.restoreScrollbars()
     }
-    return this._scrollRootElement
+  }
+  /**
+   * @param {positionProvider} positionProvider
+   * @return {Promise<void>}
+   */
+  async preservePosition(positionProvider) {
+    if (!this._scrollRootElement) {
+      const element = await EyesUtils.getScrollRootElement(this._logger, this._driver.executor)
+      this._scrollRootElement = this.specs.createElement(this._logger, this._driver, element)
+    }
+    this._logger.verbose('saving frame position')
+    return this._scrollRootElement.preservePosition(positionProvider)
+  }
+  /**
+   * @param {positionProvider} positionProvider
+   * @return {Promise<void>}
+   */
+  async restorePosition(positionProvider) {
+    if (this._scrollRootElement) {
+      this._logger.verbose('restoring frame position')
+      await this._scrollRootElement.restorePosition(positionProvider)
+    }
   }
 }
 
-exports.Frame = Frame
+module.exports = Frame

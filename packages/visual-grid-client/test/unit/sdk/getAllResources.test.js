@@ -7,7 +7,7 @@ const makeGetAllResources = require('../../../src/sdk/getAllResources')
 const extractCssResources = require('../../../src/sdk/extractCssResources')
 const makeFetchResource = require('../../../src/sdk/fetchResource')
 const createResourceCache = require('../../../src/sdk/createResourceCache')
-const testServer = require('../../util/testServer')
+const {testServer} = require('@applitools/sdk-shared')
 const testLogger = require('../../util/testLogger')
 const {loadFixtureBuffer} = require('../../util/loadFixture')
 const resourceType = require('../../../src/sdk/resourceType')
@@ -676,5 +676,18 @@ describe('getAllResources', () => {
     } finally {
       await server.close()
     }
+  })
+
+  it('returns resource from cache with content', async () => {
+    const fontResource = {url: 'font.ttf', type: 'font/ttf', value: 'should have this value!'}
+    await getAllResources({
+      resourceUrls: [],
+      preResources: {[fontResource.url]: fontResource},
+    })
+    const resources = await getAllResources({
+      resourceUrls: [fontResource.url],
+      preResources: {},
+    })
+    expect(resources[fontResource.url]).to.eql(toRGridResource(fontResource))
   })
 })

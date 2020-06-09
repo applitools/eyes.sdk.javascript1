@@ -5,7 +5,6 @@ const sdkName = 'eyes-selenium'
 function initialize() {
   const result = makeEmitTracker()
   result.storeHook('deps', `const {Builder, By} = require('selenium-webdriver')`)
-  result.storeHook('deps', `const {Options: ChromeOptions} = require('selenium-webdriver/chrome')`)
   result.storeHook(
     'deps',
     `const {
@@ -28,8 +27,12 @@ function initialize() {
     result.storeHook(
       'beforeEach',
       `driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new ChromeOptions().headless())
+      .withCapabilities({
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ['headless', 'disable-infobars'],
+        },
+      })
       .usingServer(${options.host ? "'" + options.host + "'" : undefined})
       .build()`,
     )
@@ -54,7 +57,6 @@ function initialize() {
 
   function _cleanup() {
     result.storeHook('afterEach', 'await driver.quit()')
-    result.storeHook('afterEach', 'await eyes.abort()')
   }
 
   function abort() {
@@ -137,18 +139,17 @@ function initialize() {
       result.storeCommand(`let _checkSettings`)
       if (inFrame) {
         result.storeCommand(`_checkSettings = Target.frame(By.css('${inFrame}'))`)
+      }
+      if (Array.isArray(target)) {
+        target.forEach((entry, index) => {
+          index === 0
+            ? result.storeCommand(`(_checkSettings = Target.region(${makeRegionLocator(entry)}))`)
+            : result.storeCommand(`_checkSettings.region(${makeRegionLocator(entry)})`)
+        })
       } else {
-        if (Array.isArray(target)) {
-          target.forEach((entry, index) => {
-            index === 0
-              ? result.storeCommand(`(_checkSettings = Target.region(${makeRegionLocator(entry)}))`)
-              : result.storeCommand(`_checkSettings.region(${makeRegionLocator(entry)})`)
-          })
-        } else {
-          result.storeCommand(`_checkSettings
-            ? _checkSettings.region(${makeRegionLocator(target)})
-            : (_checkSettings = Target.region(${makeRegionLocator(target)}))`)
-        }
+        result.storeCommand(`_checkSettings
+          ? _checkSettings.region(${makeRegionLocator(target)})
+          : (_checkSettings = Target.region(${makeRegionLocator(target)}))`)
       }
       if (ignoreRegion) {
         result.storeCommand(`_checkSettings.ignoreRegions(${makeRegionLocator(ignoreRegion)})`)
@@ -227,7 +228,7 @@ function initialize() {
   }
 
   function open(options) {
-    result.storeCommand(`driver = await eyes.open(
+    result.storeCommand(`await eyes.open(
       driver,
       '${options.appName}',
       baselineTestName,

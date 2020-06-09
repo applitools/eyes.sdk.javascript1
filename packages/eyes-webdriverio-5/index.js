@@ -1,26 +1,25 @@
 const core = require('@applitools/eyes-sdk-core')
+const WDIOCheckSettings = require('./src/WDIOCheckSettings')
+const {WDIOEyesClassic, WDIOEyesVisualGrid, WDIOEyesFactory} = require('./src/WDIOSpecializedEyes')
+const LegacySelector = require('./src/LegacySelector')
 
-exports.Eyes = require('./src/Eyes').Eyes
-exports.EyesWDIO = require('./src/EyesWDIO').EyesWDIO
-exports.EyesVisualGrid = require('./src/EyesVisualGrid').EyesVisualGrid
-exports.By = require('./src/By').By
-exports.Target = require('./src/fluent/Target')
-exports.WebDriver = require('./src/wrappers/WebDriver')
-exports.WebElement = require('./src/wrappers/WebElement')
-exports.EyesWebDriver = require('./src/wrappers/EyesWebDriver')
-exports.WebdriverioCheckSettings = require('./src/fluent/WebdriverioCheckSettings')
-exports.EyesWDIOScreenshot = require('./src/capture/EyesWDIOScreenshot')
-exports.EyesWDIOUtils = require('./src/EyesWDIOUtils')
-exports.NetHelper = require('./src/services/NetHelper')
+exports.Eyes = WDIOEyesFactory
+exports.EyesWDIO = WDIOEyesClassic
+exports.EyesVisualGrid = WDIOEyesVisualGrid
+exports.Target = WDIOCheckSettings
+exports.WebdriverioCheckSettings = WDIOCheckSettings
+exports.By = LegacySelector
 
-// eyes-common
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings
 exports.AccessibilityRegionType = core.AccessibilityRegionType
+exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
 exports.BatchInfo = core.BatchInfo
 exports.BrowserType = core.BrowserType
 exports.Configuration = core.Configuration
 exports.DeviceName = core.DeviceName
+exports.IosDeviceName = core.IosDeviceName
+exports.IosScreenOrientation = core.IosScreenOrientation
 exports.ExactMatchSettings = core.ExactMatchSettings
 exports.FloatingMatchSettings = core.FloatingMatchSettings
 exports.ImageMatchSettings = core.ImageMatchSettings
@@ -49,7 +48,6 @@ exports.Logger = core.Logger
 exports.LogHandler = core.LogHandler
 exports.NullLogHandler = core.NullLogHandler
 
-// eyes-sdk-core
 exports.ImageProvider = core.ImageProvider
 exports.FullPageCaptureAlgorithm = core.FullPageCaptureAlgorithm
 exports.EyesSimpleScreenshotFactory = core.EyesSimpleScreenshotFactory

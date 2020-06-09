@@ -21,6 +21,9 @@ describe(appName, () => {
     conf.addBrowser(800, 600, BrowserType.CHROME)
     conf.setBatch(batch)
     eyes.setConfiguration(conf)
+    if (process.env['APPLITOOLS_API_KEY_SDK']) {
+      conf.setApiKey(process.env['APPLITOOLS_API_KEY_SDK'])
+    }
     await eyes.open(webDriver)
     await webDriver.get('https://applitools.github.io/demo/TestPages/SpecialCharacters/index.html')
     await eyes.check('Test Special Characters', Target.window().fully())

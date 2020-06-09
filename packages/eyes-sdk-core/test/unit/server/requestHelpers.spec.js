@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const Axios = require('axios')
-const {ProxySettings, Logger, Configuration} = require('@applitools/eyes-common')
+const {ProxySettings, Logger, Configuration} = require('../../..')
 const {
   configureAxios,
   configAxiosProxy,

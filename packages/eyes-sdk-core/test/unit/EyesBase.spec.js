@@ -1,17 +1,24 @@
 'use strict'
 
 const assert = require('assert')
-
 const {EyesBase, Configuration} = require('../../index')
+const {resetEnvVars} = require('../testUtils')
 
 describe('EyesBase', () => {
   describe('setBatch()', () => {
-    /** @type {EyesBase} */ let eyes
+    let eyes
+    let apiKey
     before(() => {
+      apiKey = process.env.APPLITOOLS_API_KEY
+      resetEnvVars()
       eyes = new EyesBase()
     })
+    after(() => {
+      resetEnvVars()
+      process.env.APPLITOOLS_API_KEY = apiKey
+    })
 
-    it('should create an default batch', () => {
+    it('should create default batch', () => {
       const batch = eyes.getBatch()
       assert.strictEqual(typeof batch.getId(), 'string')
       assert.strictEqual(typeof batch.getName(), 'undefined')
@@ -169,7 +176,7 @@ describe('EyesBase', () => {
       }
     })
 
-    it('thorws when no base agent id was not set', () => {
+    it('throws when no base agent id was not set', () => {
       const eyes = new EyesBase()
       assert.throws(() => {
         eyes.getFullAgentId()

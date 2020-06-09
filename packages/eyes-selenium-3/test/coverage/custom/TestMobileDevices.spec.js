@@ -1,17 +1,7 @@
 'use strict'
-const {Eyes, Target, StitchMode, ConsoleLogHandler} = require('../../../index')
+const {Target, StitchMode} = require('../../../index')
 const {Builder} = require('selenium-webdriver')
-const {sauceUrl, batch} = require('./util/TestSetup')
-const sauceCaps = {
-  browserName: 'safari',
-  platformName: 'iOS',
-  platformVersion: '11.0',
-  deviceName: 'iPad Air 2 Simulator',
-  deviceOrientation: 'portrait',
-  username: process.env.SAUCE_USERNAME,
-  accessKey: process.env.SAUCE_ACCESS_KEY,
-  idleTimeout: 360,
-}
+const {getEyes} = require('./util/TestSetup')
 
 const iPadAgent11 =
   'Mozilla/5.0 (iPad; CPU OS 11_0_1 like Mac OS X) AppleWebKit/604.2.10 (KHTML, like Gecko) Version/11.0 Mobile/15A8401 Safari/604.1'
@@ -150,7 +140,7 @@ describe('TestMobileDevices', () => {
   page.forEach(page => {
     describe(`${page}`, () => {
       before(function() {
-        if (page === 'desktop') this.skip()
+        if (page === 'desktop' || page === 'scrolled_mobile') this.skip()
       })
       data.forEach(device => {
         it(`${device.name}`, async () => {
@@ -159,10 +149,8 @@ describe('TestMobileDevices', () => {
             webDriver = await new Builder()
               .withCapabilities(getDeviceEmulationCaps(device.mobileEmulation))
               .build()
-            eyes = new Eyes()
-            eyes.setBatch(batch)
+            eyes = getEyes(StitchMode.CSS)
             eyes.setSaveNewTests(false)
-            eyes.StitchMode = StitchMode.CSS
             eyes.addProperty('Orientation', device.orientation.toLowerCase())
             eyes.addProperty('Page', page)
             webDriver.get(
@@ -182,35 +170,6 @@ describe('TestMobileDevices', () => {
         })
       })
     })
-  })
-
-  it.skip('testSauce', async () => {
-    let webDriver, eyes
-    try {
-      webDriver = await new Builder()
-        .withCapabilities(sauceCaps)
-        .usingServer(sauceUrl)
-        .build()
-      let page = 'mobile'
-      eyes = new Eyes()
-      eyes.setBatch(batch)
-      eyes.setSaveNewTests(false)
-      eyes.StitchMode = StitchMode.CSS
-      eyes.addProperty('Orientation', 'portrait')
-      eyes.addProperty('Page', page)
-      eyes.setLogHandler(new ConsoleLogHandler(true))
-      webDriver.get(`https://applitools.github.io/demo/TestPages/DynamicResolution/${page}.html`)
-      await eyes.open(
-        webDriver,
-        'Eyes Selenium SDK - iOS Safari Cropping',
-        'iPad Air 2 Simulator 10.3 Portrait mobile fully',
-      )
-      await eyes.check('step 1', Target.window().fully())
-      await eyes.close()
-    } finally {
-      await webDriver.quit()
-      await eyes.abortIfNotClosed()
-    }
   })
 })
 

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+
+## 3.9.1 - 2020/6/9
+
+- updated to @applitools/eyes-sdk-core-legacy@1.0.1 (from 1.0.0)
+
+## 3.9.0 - 2020/5/19
+
+- support accessibility validation
 - added SDK agent id header for eyes server requests
 
 ## 3.8.11 - 2020/3/29

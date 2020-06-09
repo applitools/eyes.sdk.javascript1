@@ -28,8 +28,11 @@ describe('render e2e', () => {
       {width: 640, height: 480, name: 'firefox-1'},
       {width: 640, height: 480, name: 'firefox-2'},
       {width: 640, height: 480, name: 'safari'},
-      // {width: 640, height: 480, name: 'safari-1'}, // waiting for implementation in VG
-      // {width: 640, height: 480, name: 'safari-2'},
+      {width: 640, height: 480, name: 'safari-1'},
+      {width: 640, height: 480, name: 'safari-2'},
+      {width: 640, height: 480, name: 'edgechromium'},
+      {width: 640, height: 480, name: 'edgechromium-1'},
+      {width: 640, height: 480, name: 'edgechromium-2'},
     ]
 
     const {createRGridDOMAndGetResourceMapping, renderBatch, waitForRenderedStatus} = makeRenderer({
@@ -64,11 +67,28 @@ describe('render e2e', () => {
       Number(uaParser(userAgent).browser.major),
     )
 
-    expect(majorVersions[1]).to.equal(majorVersions[0] - 1) // chrome-1
-    expect(majorVersions[2]).to.equal(majorVersions[0] - 2) // chrome-2
-    expect(majorVersions[4]).to.equal(majorVersions[3] - 1) // firefox-1
-    expect(majorVersions[5]).to.equal(majorVersions[3] - 2) // firefox-2
-    // expect(majorVersions[5]).to.equal(majorVersions[3] - 2) // safari-1
-    // expect(majorVersions[5]).to.equal(majorVersions[3] - 2) // safari-2
+    const [
+      chrome,
+      chrome1,
+      chrome2,
+      firefox,
+      firefox1,
+      firefox2,
+      safari,
+      safari1,
+      safari2,
+      edgechromium,
+      edgechromium1,
+      edgechromium2,
+    ] = majorVersions
+
+    expect(chrome1).to.equal(chrome - 2) // temporary, because Chrome skipped version 82
+    expect(chrome2).to.equal(chrome - 3) // temporary, because Chrome skipped version 82
+    expect(firefox1).to.equal(firefox - 1)
+    expect(firefox2).to.equal(firefox - 2)
+    expect(safari1).to.equal(safari - 1)
+    expect(safari2).to.equal(safari - 2)
+    expect(edgechromium1).to.equal(edgechromium - 2) // temporary, because Chrome skipped version 82
+    expect(edgechromium2).to.equal(edgechromium - 3) // temporary, because Chrome skipped version 82
   })
 })

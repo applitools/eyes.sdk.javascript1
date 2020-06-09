@@ -2,8 +2,7 @@
 
 require('chromedriver')
 const assert = require('assert')
-const {Builder, Capabilities} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {
   Eyes,
   ClassicRunner,
@@ -53,10 +52,7 @@ const urlsToTest = [
 ]
 
 async function runTests({initializeEyes, displayName}) {
-  const driver = await new Builder()
-    .withCapabilities(Capabilities.chrome())
-    .setChromeOptions(new ChromeOptions().headless())
-    .build()
+  const driver = await getDriver('CHROME')
   try {
     for (const url of urlsToTest) {
       const testName = urlsToTest.indexOf(url).toString()

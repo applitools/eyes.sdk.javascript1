@@ -86,8 +86,8 @@ class EyesWrapper extends EyesBase {
     this._baseAgentId = baseAgentId
   }
 
-  setAccessibilityValidation(accessibilityLevel) {
-    this._configuration.getDefaultMatchSettings().setAccessibilityValidation(accessibilityLevel)
+  setAccessibilityValidation(value) {
+    this._configuration.getDefaultMatchSettings().setAccessibilitySettings(value)
   }
 
   /**
@@ -126,12 +126,12 @@ class EyesWrapper extends EyesBase {
     return this._serverConnector.getUserAgents()
   }
 
-  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, source}) {
+  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, url}) {
     const regionProvider = new NullRegionProvider()
     this.screenshotUrl = screenshotUrl
     this.domUrl = domUrl
     this.imageLocation = imageLocation
-    return this.checkWindowBase(regionProvider, tag, false, checkSettings, source)
+    return this.checkWindowBase(regionProvider, tag, false, checkSettings, url)
   }
 
   testWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {

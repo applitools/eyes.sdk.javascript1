@@ -13,7 +13,7 @@
     "bongo": "./src/cli/index.js"
   },
   "description": "Release Kit for Applitools SDKs",
-  "author": "David Haeffner <dhaeffner@gmail.com>",
+  "author": "Applitools team <team@applitools.com>",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {

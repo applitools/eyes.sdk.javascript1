@@ -15,17 +15,11 @@ export const CommandIds = {
 const CommandNames = Object.values(CommandIds)
 
 export function isEyesCommand(command, exclusions = []) {
-  return (
-    CommandNames.includes(command.command) &&
-    !exclusions.includes(command.command)
-  )
+  return CommandNames.includes(command.command) && !exclusions.includes(command.command)
 }
 
 export function isCheckCommand(command) {
-  return (
-    command.command === CommandIds.CheckWindow ||
-    command.command === CommandIds.CheckElement
-  )
+  return command.command === CommandIds.CheckWindow || command.command === CommandIds.CheckElement
 }
 
 export function containsEyesCommands(commands, exclusions) {
@@ -55,9 +49,7 @@ export async function elevateSetWindowSizeIfNecessary() {
     uri: '/record/command',
     verb: 'get',
   })
-  const hasSetViewportSize = !!commands.find(
-    cmd => cmd.command === CommandIds.SetViewportSize
-  )
+  const hasSetViewportSize = !!commands.find(cmd => cmd.command === CommandIds.SetViewportSize)
   if (!hasSetViewportSize) {
     const tabId = (
       await sendMessage({

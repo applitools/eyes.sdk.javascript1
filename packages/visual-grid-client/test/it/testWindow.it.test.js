@@ -3,7 +3,7 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('../util/testServer')
+const {testServer} = require('@applitools/sdk-shared')
 const {loadJsonFixture} = require('../util/loadFixture')
 const nock = require('nock')
 const {ptimeoutWithError} = require('@applitools/functional-commons')
@@ -176,8 +176,8 @@ describe('testWindow', () => {
         domUrl: undefined,
         imageLocation: undefined,
         screenshotUrl: '{"isGood":true,"sizeMode":"full-page"}',
-        source: undefined,
         tag: 'good1',
+        url: `${baseUrl}/test.html`,
       },
     ])
   })

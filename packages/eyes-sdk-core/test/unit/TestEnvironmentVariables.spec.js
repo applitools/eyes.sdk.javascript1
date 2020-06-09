@@ -2,32 +2,22 @@
 
 const assert = require('assert')
 const {Configuration, BatchInfo} = require('../../index')
+const {resetEnvVars} = require('../testUtils')
 
 describe('TestEnvironmentVariables', () => {
-  function _setEnvVar(envVarName, envVarValue) {
-    process.env[envVarName] = envVarValue
-    process.env[`bamboo_${envVarName}`] = envVarValue
-  }
-
-  function _resetAllEnvVars() {
-    _setEnvVar('APPLITOOLS_API_KEY', null)
-    _setEnvVar('APPLITOOLS_SERVER_URL', null)
-    _setEnvVar('APPLITOOLS_BATCH_ID', null)
-    _setEnvVar('APPLITOOLS_BATCH_NAME', null)
-    _setEnvVar('APPLITOOLS_BATCH_SEQUENCE', null)
-    _setEnvVar('APPLITOOLS_BATCH_NOTIFY', null)
-    _setEnvVar('APPLITOOLS_BRANCH', null)
-    _setEnvVar('APPLITOOLS_PARENT_BRANCH', null)
-    _setEnvVar('APPLITOOLS_BASELINE_BRANCH', null)
-    _setEnvVar('APPLITOOLS_DONT_CLOSE_BATCHES', null)
-  }
-
+  let apiKey
+  before(() => {
+    apiKey = process.env.APPLITOOLS_API_KEY
+    console.log(apiKey)
+  })
   beforeEach(() => {
-    _resetAllEnvVars()
+    resetEnvVars()
   })
 
   after(() => {
-    _resetAllEnvVars()
+    resetEnvVars()
+    console.log(apiKey)
+    process.env.APPLITOOLS_API_KEY = apiKey
   })
 
   it('TestApiKeyEnvironmentVariables', () => {

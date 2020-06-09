@@ -8,7 +8,7 @@ const {
   RectangleSize,
   Region,
   MutableImage,
-} = require('@applitools/eyes-common')
+} = require('../..')
 
 const {NullCutProvider} = require('../cropping/NullCutProvider')
 const NullRegionPositionCompensation = require('../positioning/NullRegionPositionCompensation')

@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
+const {GeneralUtils, ArgumentGuard} = require('../..')
 
 /**
  * Encapsulates the "Options" section of the MatchExpectedOutput body data.

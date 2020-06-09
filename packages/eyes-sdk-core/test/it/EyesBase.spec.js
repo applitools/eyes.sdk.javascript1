@@ -3,7 +3,7 @@
 const assert = require('assert')
 const {
   GeneralUtils: {sleep},
-} = require('@applitools/eyes-common')
+} = require('../..')
 const {EyesBaseImpl} = require('../testUtils')
 const {EyesBase, Configuration, RunningSession, BatchInfo} = require('../../index')
 

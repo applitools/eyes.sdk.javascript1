@@ -1,8 +1,18 @@
 'use strict'
 
-const {Region, CoordinatesType} = require('@applitools/eyes-common')
+const {Region, CoordinatesType} = require('../..')
 const {GetRegion} = require('./GetRegion')
 const EyesUtils = require('../EyesUtils')
+
+/**
+ * @typedef {import('../wrappers/EyesWrappedElement')} EyesWrappedElement
+ * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
+ * @typedef {import('../EyesClassic')} EyesClassic
+ *
+ * @typedef {Object} PersistedRegions
+ * @property {string} type - selector type (css or xpath)
+ * @property {string} selector - selector itself
+ */
 
 class IgnoreRegionByElement extends GetRegion {
   /**
@@ -12,15 +22,14 @@ class IgnoreRegionByElement extends GetRegion {
     super()
     this._element = element
   }
-
   /**
-   * @override
-   * @param {Eyes} eyes
+   * @param {EyesClassic} eyes
    * @param {EyesScreenshot} screenshot
+   * @return {Promise<Region[]>}
    */
   async getRegion(eyes, screenshot) {
-    this._element.bind(eyes.getDriver())
-
+    // TODO eyes should be replaced with driver once all SDKs will use this implementation
+    await this._element.init(eyes.getDriver())
     const rect = await this._element.getRect()
     const lTag = screenshot.convertLocation(
       rect.getLocation(),
@@ -29,7 +38,10 @@ class IgnoreRegionByElement extends GetRegion {
     )
     return [new Region(lTag.getX(), lTag.getY(), rect.getWidth(), rect.getHeight())]
   }
-
+  /**
+   * @param {EyesWrappedDriver} driver
+   * @return {Promise<PersistedRegions[]>}
+   */
   async toPersistedRegions(driver) {
     const xpath = await EyesUtils.getElementAbsoluteXpath(
       driver._logger,

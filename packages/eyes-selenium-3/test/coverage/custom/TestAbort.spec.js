@@ -1,5 +1,5 @@
 'use strict'
-const {getDriver, getEyes, batch} = require('./util/TestSetup')
+const {getDriver, getEyes} = require('./util/TestSetup')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
@@ -23,7 +23,6 @@ describe(appName, () => {
   describe(`TestAbort`, () => {
     async function beforeEach() {
       eyes = await getEyes(StitchMode.CSS)
-      eyes.setBatch(batch)
       webDriver = await getDriver('CHROME')
     }
 

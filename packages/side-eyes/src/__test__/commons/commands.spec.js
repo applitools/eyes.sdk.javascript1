@@ -23,10 +23,7 @@ describe('Commands', () => {
     it('should determine if a group of commands does not contain a valid eyes command, exclusing set viewport size', () => {
       // set viewport size is ignored
       expect(
-        containsEyesCommands(
-          [{ command: 'open' }, { command: 'eyesSetViewportSize' }],
-          ['eyesSetViewportSize']
-        )
+        containsEyesCommands([{ command: 'open' }, { command: 'eyesSetViewportSize' }], ['eyesSetViewportSize'])
       ).toBeFalsy()
       expect(containsEyesCommands(undefined)).toBeFalsy()
     })

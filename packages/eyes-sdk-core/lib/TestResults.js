@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, RectangleSize, DateTimeUtils} = require('@applitools/eyes-common')
+const {GeneralUtils, RectangleSize, DateTimeUtils} = require('..')
 
 const {TestResultsStatus} = require('./TestResultsStatus')
 
@@ -338,51 +338,13 @@ class StepInfo {
   }
 }
 
-class TestAccessibilityStatus {
-  /**
-   * @param {AccessibilityStatus} status
-   * @param {AccessibilityLevel} level
-   */
-  constructor({status, level} = {}) {
-    this._status = status
-    this._level = level
-  }
-
-  /**
-   * @return {string}
-   */
-  getStatus() {
-    return this._status
-  }
-
-  /**
-   * @param {string} value
-   */
-  setStatus(value) {
-    this._status = value
-  }
-
-  /**
-   * @return {string}
-   */
-  getLevel() {
-    return this._level
-  }
-
-  /**
-   * @param {string} value
-   */
-  setLevel(value) {
-    this._level = value
-  }
-
-  /**
-   * @override
-   */
-  toJSON() {
-    return GeneralUtils.toPlain(this)
-  }
-}
+/**
+ * @typedef SessionAccessibilityStatus
+ * @type {object}
+ * @property {AccessibilityLevel} level - accessibility level.
+ * @property {AccessibilityGuidelinesVersion} version - accessibility guidelines version.
+ * @property {AccessibilityStatus} status - test accessibility status.
+ */
 
 /**
  * Eyes test results.
@@ -400,7 +362,7 @@ class TestResults {
    * @param {string} [hostOS]
    * @param {string} [hostApp]
    * @param {RectangleSize|object} [hostDisplaySize]
-   * @param {TestAccessibilityStatus|object} [accessibilityStatus]
+   * @param {SessionAccessibilityStatus} [accessibilityStatus]
    * @param {Date|string} [startedAt]
    * @param {number} [duration]
    * @param {boolean} [isNew]
@@ -470,10 +432,6 @@ class TestResults {
 
     if (stepsInfo && stepsInfo.length > 0 && !(stepsInfo[0] instanceof StepInfo)) {
       stepsInfo = stepsInfo.map(step => new StepInfo(step))
-    }
-
-    if (accessibilityStatus && !(accessibilityStatus instanceof TestAccessibilityStatus)) {
-      accessibilityStatus = new TestAccessibilityStatus(accessibilityStatus)
     }
 
     this._id = id
@@ -668,14 +626,14 @@ class TestResults {
   }
 
   /**
-   * @return {TestAccessibilityStatus}
+   * @return {SessionAccessibilityStatus}
    */
   getAccessibilityStatus() {
     return this._accessibilityStatus
   }
 
   /**
-   * @param {TestAccessibilityStatus} value
+   * @param {SessionAccessibilityStatus} value
    */
   setAccessibilityStatus(value) {
     this._accessibilityStatus = value
@@ -974,5 +932,13 @@ class TestResults {
   }
 }
 
+class TestResultsError extends TestResults {
+  constructor({name, error}) {
+    super({name})
+    this.isError = true
+    this.error = error
+  }
+}
+
 exports.TestResults = TestResults
-exports.TestAccessibilityStatus = TestAccessibilityStatus
+exports.TestResultsError = TestResultsError

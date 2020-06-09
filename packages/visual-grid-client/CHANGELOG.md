@@ -3,6 +3,67 @@
 ## Unreleased
 
 
+ ## 14.4.4 - 2020/6/9
+
+- added chromeEmulationInfo and TS defs for iosDeviceInfo 
+- updated to @applitools/dom-snapshot@3.5.3 (from 3.5.2)
+- updated to @applitools/eyes-sdk-core@11.0.5 (from 11.0.4)
+
+## 14.4.3 - 2020/6/4
+
+- updated to @applitools/eyes-sdk-core@11.0.4 (from v11.0.3)
+
+## 14.4.2 - 2020/6/3
+
+- fixed 409 (Conflict) errors
+- updated to @applitools/eyes-sdk-core@11.0.3 (from v11.0.2)
+
+## 14.4.1 - 2020/6/2
+
+- updated to @applitools/eyes-sdk-core@11.0.2 (from v11.0.1)
+
+## 14.4.0 - 2020/6/2
+
+- Unified core
+- updated to @applitools/eyes-sdk-core@11.0.1 (from v10.3.1)
+
+## 14.3.1 - 2020/5/27
+
+- added edgechromium-two-versions-back to typescript configurations.
+
+## 14.3.0 - 2020/5/27
+
+- added edgechromium-two-versions-back to supported browsers.
+
+## 14.2.1 - 2020/5/26
+
+- updated to @applitools/eyes-sdk-core@10.3.1 (from v10.3.0)
+
+## 14.2.0 - 2020/5/24
+
+- updated to @applitools/eyes-sdk-core@10.3.0
+
+## 14.1.0 - 2020/5/19
+
+- support accessibilitySettings
+- updated to @applitools/eyes-sdk-core@10.2.0
+
+## 14.0.2 - 2020/5/18
+
+- fixed typescript definitions for open browser name parameter.
+
+## 14.0.1 - 2020/5/17
+
+- using "url" instead of "source" ad referer header and eyes test source.
+
+ ## 14.0.0 - 2020/5/17
+
+- BREAKING CHANGE - removed "referer" parameter from checkWindow, now using "source" 
+
+## 13.8.1 - 2020/5/13
+
+- updated to @applitools/eyes-sdk-core@10.1.2
+
 ## 13.8.0 - 2020/5/11
 
 - updated to @applitools/eyes-sdk-core@10.1.1

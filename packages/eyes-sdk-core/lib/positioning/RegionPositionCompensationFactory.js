@@ -1,6 +1,6 @@
 'use strict'
 
-const {BrowserNames} = require('@applitools/eyes-common')
+const {BrowserNames} = require('../..')
 
 const FirefoxRegionPositionCompensation = require('./FirefoxRegionPositionCompensation')
 const NullRegionPositionCompensation = require('./NullRegionPositionCompensation')
@@ -9,7 +9,7 @@ const SafariRegionPositionCompensation = require('./SafariRegionPositionCompensa
 class RegionPositionCompensationFactory {
   /**
    * @param {UserAgent} userAgent
-   * @param {Eyes|EyesWDIO} eyes
+   * @param {Eyes} eyes
    * @param {Logger} logger
    * @return {RegionPositionCompensation}
    */

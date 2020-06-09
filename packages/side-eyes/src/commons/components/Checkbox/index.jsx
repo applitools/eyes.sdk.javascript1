@@ -31,11 +31,7 @@ export default class Checkbox extends React.Component {
         <label key="label" htmlFor={this.props.id}>
           <span>{checked ? '✓' : ''}</span>
           <div>{this.props.label}</div>
-          {this.props.disclaimer ? (
-            <div className="disclaimer">{this.props.disclaimer}</div>
-          ) : (
-            undefined
-          )}
+          {this.props.disclaimer ? <div className="disclaimer">{this.props.disclaimer}</div> : undefined}
         </label>
       </div>
     )

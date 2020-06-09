@@ -1,61 +1,88 @@
-'use strict'
+const core = require('@applitools/eyes-sdk-core')
 
-const parent = require('@applitools/eyes-selenium')
+const ProtractorCheckSettings = require('./src/ProtractorCheckSettings')
+const {
+  ProtractorEyesClassic,
+  ProtractorEyesVisualGrid,
+  ProtractorEyesFactory,
+} = require('./src/ProtractorSpecializedEyes')
 
-// Overridden & new classes
-exports.Eyes = require('./lib/Eyes').Eyes
-exports.ElementFinderWrapper = require('./lib/ElementFinderWrappers').ElementFinderWrapper
-exports.ElementArrayFinderWrapper = require('./lib/ElementFinderWrappers').ElementArrayFinderWrapper
+exports.Eyes = ProtractorEyesFactory
+exports.EyesProtractor = ProtractorEyesClassic
+exports.EyesVisualGrid = ProtractorEyesVisualGrid
+exports.Target = ProtractorCheckSettings
+exports.ProtractorCheckSettings = ProtractorCheckSettings
 
-// Classes from parent
-exports.EyesWebDriverScreenshot = parent.EyesWebDriverScreenshot
-exports.EyesWebDriverScreenshotFactory = parent.EyesWebDriverScreenshotFactory
-exports.FirefoxScreenshotImageProvider = parent.FirefoxScreenshotImageProvider
-exports.ImageProviderFactory = parent.ImageProviderFactory
-exports.SafariScreenshotImageProvider = parent.SafariScreenshotImageProvider
-exports.TakesScreenshotImageProvider = parent.TakesScreenshotImageProvider
+exports.AccessibilityLevel = core.AccessibilityLevel
+exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
+exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings
+exports.AccessibilityRegionType = core.AccessibilityRegionType
+exports.BatchInfo = core.BatchInfo
+exports.BrowserType = core.BrowserType
+exports.Configuration = core.Configuration
+exports.DeviceName = core.DeviceName
+exports.IosDeviceName = core.IosDeviceName
+exports.IosScreenOrientation = core.IosScreenOrientation
+exports.ExactMatchSettings = core.ExactMatchSettings
+exports.FloatingMatchSettings = core.FloatingMatchSettings
+exports.ImageMatchSettings = core.ImageMatchSettings
+exports.MatchLevel = core.MatchLevel
+exports.PropertyData = core.PropertyData
+exports.ProxySettings = core.ProxySettings
+exports.ScreenOrientation = core.ScreenOrientation
+exports.StitchMode = core.StitchMode
+exports.DebugScreenshotsProvider = core.DebugScreenshotsProvider
+exports.FileDebugScreenshotsProvider = core.FileDebugScreenshotsProvider
+exports.NullDebugScreenshotProvider = core.NullDebugScreenshotProvider
+exports.EyesError = core.EyesError
+exports.CoordinatesType = core.CoordinatesType
+exports.Location = core.Location
+exports.RectangleSize = core.RectangleSize
+exports.Region = core.Region
+exports.PropertyHandler = core.PropertyHandler
+exports.ReadOnlyPropertyHandler = core.ReadOnlyPropertyHandler
+exports.SimplePropertyHandler = core.SimplePropertyHandler
+exports.ImageDeltaCompressor = core.ImageDeltaCompressor
+exports.MutableImage = core.MutableImage
+exports.ConsoleLogHandler = core.ConsoleLogHandler
+exports.DebugLogHandler = core.DebugLogHandler
+exports.FileLogHandler = core.FileLogHandler
+exports.Logger = core.Logger
+exports.LogHandler = core.LogHandler
+exports.NullLogHandler = core.NullLogHandler
 
-exports.EyesDriverOperationError = parent.EyesDriverOperationError
-exports.NoFramesError = parent.NoFramesError
-
-exports.FloatingRegionByElement = parent.FloatingRegionByElement
-exports.FloatingRegionBySelector = parent.FloatingRegionBySelector
-exports.FrameLocator = parent.FrameLocator
-exports.IgnoreRegionByElement = parent.IgnoreRegionByElement
-exports.IgnoreRegionBySelector = parent.IgnoreRegionBySelector
-exports.SeleniumCheckSettings = parent.SeleniumCheckSettings
-exports.Target = parent.Target
-
-exports.Frame = parent.Frame
-exports.FrameChain = parent.FrameChain
-
-exports.CssTranslatePositionMemento = parent.CssTranslatePositionMemento
-exports.CssTranslatePositionProvider = parent.CssTranslatePositionProvider
-exports.ElementPositionMemento = parent.ElementPositionMemento
-exports.ElementPositionProvider = parent.ElementPositionProvider
-exports.FirefoxRegionPositionCompensation = parent.FirefoxRegionPositionCompensation
-exports.ImageRotation = parent.ImageRotation
-exports.OverflowAwareCssTranslatePositionProvider = parent.OverflowAwareCssTranslatePositionProvider
-exports.OverflowAwareScrollPositionProvider = parent.OverflowAwareScrollPositionProvider
-exports.RegionPositionCompensationFactory = parent.RegionPositionCompensationFactory
-exports.SafariRegionPositionCompensation = parent.SafariRegionPositionCompensation
-exports.ScrollPositionMemento = parent.ScrollPositionMemento
-exports.ScrollPositionProvider = parent.ScrollPositionProvider
-exports.StitchMode = parent.StitchMode
-
-exports.MoveToRegionVisibilityStrategy = parent.MoveToRegionVisibilityStrategy
-exports.NopRegionVisibilityStrategy = parent.NopRegionVisibilityStrategy
-exports.RegionVisibilityStrategy = parent.RegionVisibilityStrategy
-
-exports.EyesTargetLocator = parent.EyesTargetLocator
-exports.EyesWebDriver = parent.EyesWebDriver
-exports.EyesWebElement = parent.EyesWebElement
-exports.EyesWebElementPromise = parent.EyesWebElementPromise
-
-exports.BordersAwareElementContentLocationProvider =
-  parent.BordersAwareElementContentLocationProvider
-// exports.Eyes = parent.Eyes;
-exports.EyesSeleniumUtils = parent.EyesSeleniumUtils
-exports.ImageOrientationHandler = parent.ImageOrientationHandler
-exports.JavascriptHandler = parent.JavascriptHandler
-exports.SeleniumJavaScriptExecutor = parent.SeleniumJavaScriptExecutor
+exports.ImageProvider = core.ImageProvider
+exports.FullPageCaptureAlgorithm = core.FullPageCaptureAlgorithm
+exports.EyesSimpleScreenshotFactory = core.EyesSimpleScreenshotFactory
+exports.CorsIframeHandle = core.CorsIframeHandle
+exports.CutProvider = core.CutProvider
+exports.FixedCutProvider = core.FixedCutProvider
+exports.NullCutProvider = core.NullCutProvider
+exports.UnscaledFixedCutProvider = core.UnscaledFixedCutProvider
+exports.ScaleProvider = core.ScaleProvider
+exports.FixedScaleProvider = core.FixedScaleProvider
+exports.FixedScaleProviderFactory = core.FixedScaleProviderFactory
+exports.PositionMemento = core.PositionMemento
+exports.PositionProvider = core.PositionProvider
+exports.RemoteSessionEventHandler = core.RemoteSessionEventHandler
+exports.SessionEventHandler = core.SessionEventHandler
+exports.ValidationInfo = core.ValidationInfo
+exports.ValidationResult = core.ValidationResult
+exports.CoordinatesTypeConversionError = core.CoordinatesTypeConversionError
+exports.DiffsFoundError = core.DiffsFoundError
+exports.NewTestError = core.NewTestError
+exports.OutOfBoundsError = core.OutOfBoundsError
+exports.TestFailedError = core.TestFailedError
+exports.MatchResult = core.MatchResult
+exports.NullRegionProvider = core.NullRegionProvider
+exports.RegionProvider = core.RegionProvider
+exports.RunningSession = core.RunningSession
+exports.SessionType = core.SessionType
+exports.FailureReports = core.FailureReports
+exports.TestResults = core.TestResults
+exports.TestResultsFormatter = core.TestResultsFormatter
+exports.TestResultsStatus = core.TestResultsStatus
+exports.TestResultContainer = core.TestResultContainer
+exports.TestResultsSummary = core.TestResultsSummary
+exports.ClassicRunner = core.ClassicRunner
+exports.VisualGridRunner = core.VisualGridRunner

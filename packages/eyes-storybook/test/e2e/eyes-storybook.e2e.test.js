@@ -1,7 +1,7 @@
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const path = require('path');
-const testServer = require('../util/testServer');
+const {testServer} = require('@applitools/sdk-shared');
 const {delay: psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('../../src/__process-commons');
 const {version} = require('../../package.json');
@@ -45,9 +45,10 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/,
         'See details at <some_url>',
       )
-      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
-    console.log('XXXXXXXXX: normalizedStdout', normalizedStdout);
-    expect(normalizedStdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+      .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1 VER]');
+    expect(normalizedStdout).to.equal(
+      `Using @applitools/eyes-storybook version ${version}.
 
 
 Ignoring parameters for story: "with some emoji Button" since they are not serilizable. Error: "Converting circular structure to JSON
@@ -56,25 +57,25 @@ Ignoring parameters for story: "with some emoji Button" since they are not seril
 
 [EYES: TEST RESULTS]:
 
-Button with-space yes-indeed: a yes-a b [Chrome] [1024x768] - Passed
-Button with-space yes-indeed/nested with-space yes: b yes-a b [Chrome] [1024x768] - Passed
-Button with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome] [1024x768] - Passed
-Button: with some emoji [Chrome] [1024x768] - Passed
-Button: with text [Chrome] [1024x768] - Passed
-Image: image [Chrome] [1024x768] - Passed
-Interaction: Popover [Chrome] [1024x768] - Passed
-Nested: story 1 [Chrome] [1024x768] - Passed
-Nested/Component: story 1.1 [Chrome] [1024x768] - Passed
-Nested/Component: story 1.2 [Chrome] [1024x768] - Passed
-Responsive UI: Red/green [Chrome] [1024x768] - Passed
-RTL: local RTL config [Chrome] [1024x768] - Passed
-RTL: local RTL config [rtl] [Chrome] [1024x768] - Passed
-RTL: should also do RTL [Chrome] [1024x768] - Passed
-RTL: should also do RTL [rtl] [Chrome] [1024x768] - Passed
-SOME section|Nested/Component: story 1.1 [Chrome] [1024x768] - Passed
-SOME section|Nested/Component: story 1.2 [Chrome] [1024x768] - Passed
-Text: appears after a delay [Chrome] [1024x768] - Passed
-Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome] [1024x768] - Passed
+Button with-space yes-indeed: a yes-a b [Chrome VER] [1024x768] - Passed
+Button with-space yes-indeed/nested with-space yes: b yes-a b [Chrome VER] [1024x768] - Passed
+Button with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome VER] [1024x768] - Passed
+Button: with some emoji [Chrome VER] [1024x768] - Passed
+Button: with text [Chrome VER] [1024x768] - Passed
+Image: image [Chrome VER] [1024x768] - Passed
+Interaction: Popover [Chrome VER] [1024x768] - Passed
+Nested: story 1 [Chrome VER] [1024x768] - Passed
+Nested/Component: story 1.1 [Chrome VER] [1024x768] - Passed
+Nested/Component: story 1.2 [Chrome VER] [1024x768] - Passed
+Responsive UI: Red/green [Chrome VER] [1024x768] - Passed
+RTL: local RTL config [Chrome VER] [1024x768] - Passed
+RTL: local RTL config [rtl] [Chrome VER] [1024x768] - Passed
+RTL: should also do RTL [Chrome VER] [1024x768] - Passed
+RTL: should also do RTL [rtl] [Chrome VER] [1024x768] - Passed
+SOME section|Nested/Component: story 1.1 [Chrome VER] [1024x768] - Passed
+SOME section|Nested/Component: story 1.2 [Chrome VER] [1024x768] - Passed
+Text: appears after a delay [Chrome VER] [1024x768] - Passed
+Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome VER] [1024x768] - Passed
 
 
 No differences were found!
@@ -88,7 +89,8 @@ If your Applitools license supports a higher concurrency level, learn how to con
 Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.
 
 
-`);
+`,
+    );
 
     expect(stderr).to.equal(`- Starting storybook server
 ✔ Storybook was started
@@ -101,11 +103,11 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
 
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
-      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=100`, {
+      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
         spawnOptions: {stdio: 'pipe'},
       }),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 
@@ -148,7 +150,7 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
         },
       ),
     );
-    const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
+    const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
 
@@ -183,16 +185,17 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/,
         'See details at <some_url>',
       )
-      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+      .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1 VER]');
 
     expect(normalizedStdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
 
 
 [EYES: TEST RESULTS]:
 
-Single category: Single story [Chrome] [640x480] - Passed
-Single category: Single story [Chrome] [640x480] - Passed
-Single category: Single story [Firefox] [640x480] - Passed
+Single category: Single story [Chrome VER] [640x480] - Passed
+Single category: Single story [Chrome VER] [640x480] - Passed
+Single category: Single story [Firefox VER] [640x480] - Passed
 
 
 No differences were found!

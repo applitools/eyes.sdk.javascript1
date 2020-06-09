@@ -52,10 +52,11 @@ export interface SessionStartInfo {
     ignoreBaseline: boolean,
     environmentName: string,
     environment: AppEnvironment,
-    defaultMatchSettings: {
+    defaultMatchSettings: { // TODO ImageMatchSettings
         matchLevel: MatchSettings.MatchLevel,
         ignoreCaret: boolean,
         ignoreDisplacements: boolean,
+        accessibilitySettings: AccessibilitySettings,
         exact: {
             minDiffIntensity: number,
             minDiffWidth: number,
@@ -70,6 +71,21 @@ export interface SessionStartInfo {
     properties: object
 }
 
+export type AccessibilityLevel = "AA"|"AAA"
+export type AccessibilityGuidelinesVersion = "WCAG_2_0"|"WCAG_2_1"
+export type AccessibilityStatus = "Passed"|"Failed"
+export type AccessibilityRegionType = "IgnoreContrast"|"RegularText"|"LargeText"|"BoldText"|"GraphicalObject"
+
+export interface AccessibilitySettings {
+  level: AccessibilityLevel
+  guidelinesVersion: AccessibilityGuidelinesVersion
+}
+
+export interface SessionAccessibilityStatus {
+  level: AccessibilityLevel,
+  version: AccessibilityGuidelinesVersion,
+  status: AccessibilityStatus
+}
 
 export interface TestResults {
     name: string,
@@ -99,7 +115,8 @@ export interface TestResults {
     contentMatches: number,
     layoutMatches: number,
     noneMatches: number,
-    url: string
+    url: string,
+    accessibilityStatus: SessionAccessibilityStatus
 }
 
 
@@ -628,7 +645,6 @@ export declare namespace MatchSettings {
         getMatchThreshold(): number;
     }
 
-
     /**
      * Encapsulates the match settings for a session.
      */
@@ -657,8 +673,10 @@ export declare namespace MatchSettings {
         getExact(): ImageMatchSettings;
         setIgnoreCaret(ignoreCaret: boolean): void;
         isIgnoreCaret(): boolean;
-        getIgnoreDisplacements(value: boolean): void;
-        setIgnoreDisplacements(): boolean;
+        getIgnoreDisplacements(): boolean;
+        setIgnoreDisplacements(value: boolean): void;
+        getAccessibilitySettings(): AccessibilitySettings;
+        setAccessibilitySettings(value: AccessibilitySettings): void;
     }
 }
 
@@ -1028,6 +1046,15 @@ export declare abstract class EyesBase {
      * @return The test-wide ignoreDisplacements to use in match requests.
      */
     getIgnoreDisplacements(): boolean;
+    /**
+     * The test-wide accesibilityValidation to use.
+     * @param value The test-wide accesibilityValidation to use in open requests.
+     */
+    setAccessibilityValidation(value: AccessibilitySettings): void;
+    /**
+     * @return The test-wide accesibilityValidation to use in open requests.
+     */
+    getAccessibilityValidation(): AccessibilitySettings;
     /**
      * @return The currently compareWithParentBranch value
      */

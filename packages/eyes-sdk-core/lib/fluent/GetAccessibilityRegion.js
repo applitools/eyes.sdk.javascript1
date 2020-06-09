@@ -8,7 +8,7 @@
  */
 class GetAccessibilityRegion {
   /**
-   * @param {EyesBase} eyesBase
+   * @param {EyesWrappedDriver} driver
    * @param {EyesScreenshot} screenshot
    * @return {Promise<AccessibilityMatchSettings[]>}
    */

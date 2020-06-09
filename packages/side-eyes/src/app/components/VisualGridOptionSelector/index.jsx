@@ -31,10 +31,7 @@ export default class VisualGridOptionSelector extends React.Component {
     // in the parent component. Also because when the user closes the window
     // we discard the state, but selections from the parent component need to
     // persist into this window.
-    if (
-      prevProps.selectedOptions !== this.props.selectedOptions ||
-      (!prevProps.modalIsOpen && this.props.modalIsOpen)
-    )
+    if (prevProps.selectedOptions !== this.props.selectedOptions || (!prevProps.modalIsOpen && this.props.modalIsOpen))
       this.setState({ selectedOptions: [...this.props.selectedOptions] })
   }
 
@@ -52,17 +49,13 @@ export default class VisualGridOptionSelector extends React.Component {
       }
     } else {
       this.setState({
-        ['selectedOptions']: this.state.selectedOptions.filter(
-          selectedOption => selectedOption !== option
-        ),
+        ['selectedOptions']: this.state.selectedOptions.filter(selectedOption => selectedOption !== option),
       })
     }
   }
 
   isOptionSelected(option) {
-    return !!this.state.selectedOptions.filter(
-      selectedOption => selectedOption === option
-    )[0]
+    return !!this.state.selectedOptions.filter(selectedOption => selectedOption === option)[0]
   }
 
   onSubmit() {
@@ -95,33 +88,19 @@ export default class VisualGridOptionSelector extends React.Component {
       >
         <div className="selections">
           {this.props.isSearch ? (
-            <Input
-              onChange={this.search.bind(this)}
-              name=""
-              label=""
-              placeholder="Search"
-              autoFocus
-            />
+            <Input onChange={this.search.bind(this)} name="" label="" placeholder="Search" autoFocus />
           ) : (
             undefined
           )}
           <div className="selector">
             <CheckList
-              items={
-                this.state.searchResults
-                  ? this.state.searchResults
-                  : this.props.options
-              }
+              items={this.state.searchResults ? this.state.searchResults : this.props.options}
               optionSelected={this.isOptionSelected.bind(this)}
               handleOptionChange={this.handleOptionChange.bind(this)}
             />
           </div>
         </div>
-        <FlatButton
-          className="confirm"
-          type="submit"
-          onClick={this.onSubmit.bind(this)}
-        >
+        <FlatButton className="confirm" type="submit" onClick={this.onSubmit.bind(this)}>
           Confirm
         </FlatButton>
       </Modal>

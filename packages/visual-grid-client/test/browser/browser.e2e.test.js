@@ -3,7 +3,7 @@
 const {describe, it, before, after} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
-const testServer = require('../util/testServer')
+const {testServer} = require('@applitools/sdk-shared')
 const fs = require('fs')
 const path = require('path')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')

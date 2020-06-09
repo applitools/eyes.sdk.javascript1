@@ -12,7 +12,7 @@ class GetSelector {
   }
 
   /**
-   * @param {Eyes} eyes
+   * @param {EyesWrappedDriver} driver
    * @return {Promise<string>}
    */
   async getSelector(eyes) { // eslint-disable-line

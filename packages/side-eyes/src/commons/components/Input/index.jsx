@@ -20,9 +20,7 @@ export default class Input extends React.Component {
     })
     return (
       <div className="input">
-        {this.props.label && (
-          <label htmlFor={this.props.name}>{this.props.label}</label>
-        )}
+        {this.props.label && <label htmlFor={this.props.name}>{this.props.label}</label>}
         {this.props.children ? this.props.children : <input {...props} />}
       </div>
     )

@@ -2,8 +2,12 @@
 
 ## Unreleased 
 
+- removed "source" attribute from VG checkWindow
 - removed eyes-common dependency
 - fix returned value from `close` method ([Trello](https://trello.com/c/m6K2Ftd5/277-wdio5-difficulty-getting-test-results-object))
+- updated to @applitools/dom-utils@4.7.16
+- updated to @applitools/eyes-sdk-core@10.1.2
+- updated to @applitools/visual-grid-client@14.0.1
 
 ## 2.0.0-beta.21
 

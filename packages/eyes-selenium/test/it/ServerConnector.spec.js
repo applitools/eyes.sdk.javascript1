@@ -1,18 +1,13 @@
 'use strict'
 
 require('chromedriver')
-const {Builder, Capabilities} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {Eyes, Target, RectangleSize} = require('../../index')
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes
 describe('ServerConnector', () => {
   before(async () => {
-    driver = await new Builder()
-      .withCapabilities(Capabilities.chrome())
-      .setChromeOptions(new ChromeOptions().headless().addArguments('disable-infobars'))
-      .build()
-
+    driver = await getDriver('CHROME')
     eyes = new Eyes()
   })
 

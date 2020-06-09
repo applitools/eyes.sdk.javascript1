@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
-const testServer = require('../util/testServer');
+const {testServer} = require('@applitools/sdk-shared');
 const makeGetStoryData = require('../../src/getStoryData');
 const {ptimeoutWithError} = require('@applitools/functional-commons');
 const browserLog = require('../../src/browserLog');

@@ -26,10 +26,9 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/dom-utils": "4.7.10",
-    "@applitools/eyes-sdk-core": "9.0.3",
+    "@applitools/eyes-sdk-core": "10.1.2",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.6.12",
+    "@applitools/visual-grid-client": "14.0.1",
     "rimraf": "^3.0.0"
   },
   "peerDependencies": {
@@ -64,7 +63,7 @@
     "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
     "test:coverage": "env  APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/coverage/generic --concurrency 15 --reporter spec,xunit:coverage-test-report.xml",
-    "preversion": "bongo preversion && coverage:prod",
+    "preversion": "bongo preversion && yarn test && coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion"
   },
@@ -72,6 +71,7 @@
     "@applitools/dom-capture": "^7.1.2",
     "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-shared": "0.1.0",
     "@applitools/sdk-coverage-tests": "1.0.0",
     "@babel/plugin-transform-async-to-generator": "^7.7.4",
     "@babel/plugin-transform-regenerator": "^7.7.5",
@@ -82,7 +82,7 @@
     "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",
     "chai": "^4.2.0",
-    "chromedriver": "^80.0.0",
+    "chromedriver": "^83.0.0",
     "core-js": "^3.6.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

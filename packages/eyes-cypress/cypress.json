@@ -1,9 +1,9 @@
 {
   "defaultCommandTimeout": 60000,
   "fixturesFolder": false,
-  "integrationFolder": "tests/cypress/integration",
-  "supportFile": "tests/cypress/support/index.js",
-  "pluginsFile": "tests/cypress/plugins/index.js",
-  "videosFolder": "tests/cypress/videos",
+  "integrationFolder": "test/cypress/integration",
+  "supportFile": "test/cypress/support/index.js",
+  "pluginsFile": "test/cypress/plugins/index.js",
+  "videosFolder": "test/cypress/videos",
   "video":false
 }

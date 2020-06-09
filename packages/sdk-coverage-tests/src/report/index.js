@@ -14,6 +14,8 @@ function convertSdkNameToReportName(sdkName) {
       return 'js_images'
     case 'eyes-testcafe':
       return 'testcafe'
+    case 'eyes-protractor':
+      return 'js_protractor'
     default:
       throw new Error('Unsupported SDK')
   }
@@ -23,7 +25,7 @@ function createReport({sdkName, xmlResult, browser, group, sandbox} = {}) {
   return {
     sdk: convertSdkNameToReportName(sdkName),
     group: group ? group : 'selenium',
-    sandbox: sandbox ? sandbox : true,
+    sandbox: sandbox !== undefined ? sandbox : true,
     results: convertJunitXmlToResultSchema({xmlResult, browser}),
   }
 }

@@ -15,7 +15,7 @@ describe.skip(appName, () => {
     beforeEach(async () => {
       webDriver = await getDriver('CHROME')
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-      ;({eyes} = await getEyes('classic', StitchMode.CSS))
+      eyes = await getEyes('classic', StitchMode.CSS)
       eyes.setBatch(batch)
     })
 
@@ -38,7 +38,7 @@ describe.skip(appName, () => {
     beforeEach(async () => {
       webDriver = await getDriver('CHROME')
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-      ;({eyes} = await getEyes('classic', StitchMode.SCROLL))
+      eyes = await getEyes('classic', StitchMode.SCROLL)
       eyes.setBatch(batch)
     })
 
@@ -61,7 +61,7 @@ describe.skip(appName, () => {
     beforeEach(async () => {
       webDriver = await getDriver('CHROME')
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-      ;({eyes} = await getEyes('VG'))
+      eyes = await getEyes('VG')
       eyes.setBatch(batch)
     })
 

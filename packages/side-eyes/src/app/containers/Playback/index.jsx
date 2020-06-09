@@ -32,8 +32,8 @@ export default class PlaybackBanner extends React.Component {
             {this.props.branch}
           </FormLabel>
           <FormLabel label="Started at">
-            {`${this.props.startTime.getHours()}:${this.props.startTime.getMinutes()}`}{' '}
-            (<Timer time={this.props.startTime} />)
+            {`${this.props.startTime.getHours()}:${this.props.startTime.getMinutes()}`} (
+            <Timer time={this.props.startTime} />)
           </FormLabel>
         </div>
       </div>

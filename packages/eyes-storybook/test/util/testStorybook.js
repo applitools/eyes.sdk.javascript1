@@ -1,8 +1,10 @@
 const {resolve} = require('path');
 const StorybookConnector = require('../../src/storybookConnector');
 
-async function testStorybook({port}) {
-  const storybookConfigDir = resolve(__dirname, '../fixtures/appWithStorybook');
+async function testStorybook({
+  port,
+  storybookConfigDir = resolve(__dirname, '../fixtures/appWithStorybook'),
+}) {
   const isWindows = process.platform.startsWith('win');
   const storybookPath = resolve(
     __dirname,

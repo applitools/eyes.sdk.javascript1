@@ -22,31 +22,16 @@ export default class CustomViewportSize extends React.Component {
   onWidthChange(value) {
     const isSelected = value.length && this.props.height.length ? true : false
     this.setState({ isSelected })
-    this.props.onViewportChange(
-      this.props.id,
-      value,
-      this.props.height,
-      isSelected
-    )
+    this.props.onViewportChange(this.props.id, value, this.props.height, isSelected)
   }
   onHeightChange(value) {
     const isSelected = this.props.width.length && value.length ? true : false
     this.setState({ isSelected })
-    this.props.onViewportChange(
-      this.props.id,
-      this.props.width,
-      value,
-      isSelected
-    )
+    this.props.onViewportChange(this.props.id, this.props.width, value, isSelected)
   }
   onSelect(e) {
     this.setState({ isSelected: e.target.checked })
-    this.props.onViewportChange(
-      this.props.id,
-      this.props.width,
-      this.props.height,
-      e.target.checked
-    )
+    this.props.onViewportChange(this.props.id, this.props.width, this.props.height, e.target.checked)
   }
   render() {
     return (
@@ -74,9 +59,7 @@ export default class CustomViewportSize extends React.Component {
           value={this.props.height}
           onChange={this.onHeightChange.bind(this)}
         />
-        <DeleteButton
-          onClick={this.props.deleteOption.bind(this, this.props.id)}
-        />
+        <DeleteButton onClick={this.props.deleteOption.bind(this, this.props.id)} />
       </div>
     )
   }

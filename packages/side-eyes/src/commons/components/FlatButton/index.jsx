@@ -8,9 +8,7 @@ export default class FlatButton extends React.Component {
     buttonRef: PropTypes.func,
   }
   render() {
-    const full =
-      this.props.full ||
-      (this.props.hasOwnProperty('full') && this.props.full !== false)
+    const full = this.props.full || (this.props.hasOwnProperty('full') && this.props.full !== false)
     const props = { ...this.props }
     delete props.buttonRef
     delete props.full
@@ -19,11 +17,7 @@ export default class FlatButton extends React.Component {
         type="button"
         ref={this.props.buttonRef}
         {...props}
-        className={classNames(
-          'btn',
-          { 'btn-full': full },
-          this.props.className
-        )}
+        className={classNames('btn', { 'btn-full': full }, this.props.className)}
       />
     )
   }

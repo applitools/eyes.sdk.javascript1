@@ -1,25 +1,25 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.10.4",
+  "version": "3.12.0",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
     "eyes-setup": "./bin/eyes-setup.js"
   },
   "scripts": {
-    "render": "run(){ npx cypress run --config integrationFolder=tests/fixtures/testApp/cypress/render,pluginsFile=tests/fixtures/testApp/cypress/plugins/index-render.js,supportFile=tests/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
-    "test:mocha": "mocha --no-timeouts 'tests/**/*.test.js'",
-    "test:unit": "mocha --no-timeouts 'tests/unit/**/*.test.js'",
-    "test:it": "mocha --no-timeouts 'tests/it/**/*.test.js'",
-    "test:e2e": "mocha --no-timeouts 'tests/e2e/**/*.test.js'",
+    "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
+    "test:mocha": "mocha --no-timeouts 'test/**/*.test.js'",
+    "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
+    "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
+    "test:e2e": "mocha --no-timeouts 'test/e2e/**/*.test.js'",
     "lint": "eslint '**/*.js'",
     "test": "yarn test:mocha && yarn lint && yarn msg:success || yarn msg:failure",
     "msg:success": "notify -t 'Cypress tests Passed !!' -m 'Yaaaaaa !!!'",
     "msg:failure": "notify -t 'Cypress tests Failed !!' -m 'Daaaamm !!!'",
-    "cypress": "cd tests/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js",
-    "cypress:run": "cd tests/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js",
-    "cypress:play": "cd tests/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
-    "preversion": "bongo preversion",
+    "cypress": "cd test/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js",
+    "cypress:run": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js",
+    "cypress:play": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
+    "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
@@ -39,10 +39,10 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "3.5.2",
-    "@applitools/eyes-sdk-core": "10.0.1",
+    "@applitools/dom-snapshot": "3.5.3",
+    "@applitools/eyes-sdk-core": "11.0.5",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "13.7.7",
+    "@applitools/visual-grid-client": "14.4.4",
     "body-parser": "^1.19.0",
     "chalk": "3.0.0",
     "cors": "^2.8.5",
@@ -51,10 +51,11 @@
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-shared": "0.1.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.4",
-    "cypress": "^3.8.3",
+    "cypress": "^4.6.0",
     "eslint": "^6.8.0",
     "eslint-plugin-mocha-no-only": "^1.1.0",
     "eslint-plugin-node": "^7.0.1",
@@ -64,6 +65,7 @@
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "node-notifier-cli": "^1.2.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^3.9.2"
   }
 }

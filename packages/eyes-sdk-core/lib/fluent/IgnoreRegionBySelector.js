@@ -1,25 +1,36 @@
 'use strict'
 
-const {CoordinatesType, Region} = require('@applitools/eyes-common')
+const {CoordinatesType, Region} = require('../..')
 const {GetRegion} = require('./GetRegion')
 const EyesUtils = require('../EyesUtils')
 
+/**
+ * @typedef {import('../wrappers/EyesWrappedElement').SupportedSelector} SupportedSelector
+ * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
+ * @typedef {import('../EyesClassic')} EyesClassic
+ *
+ * @typedef {Object} PersistedRegions
+ * @property {string} type - selector type (css or xpath)
+ * @property {string} selector - selector itself
+ */
+
 class IgnoreRegionBySelector extends GetRegion {
   /**
-   * @param {By} selector
+   * @param {SupportedSelector} selector
    */
   constructor(selector) {
     super()
     this._selector = selector
   }
-
   /**
-   * @override
-   * @param {Eyes} eyes
+   * @param {EyesClassic} eyes
    * @param {EyesScreenshot} screenshot
+   * @return {Promise<Region[]>}
    */
   async getRegion(eyes, screenshot) {
+    // TODO eyes should be replaced with driver once all SDKs will use this implementation
     const elements = await eyes.getDriver().finder.findElements(this._selector)
+
     const regions = []
     for (const element of elements) {
       const rect = await element.getRect()
@@ -32,7 +43,10 @@ class IgnoreRegionBySelector extends GetRegion {
     }
     return regions
   }
-
+  /**
+   * @param {EyesWrappedDriver} driver
+   * @return {Promise<PersistedRegions[]>}
+   */
   async toPersistedRegions(driver) {
     return EyesUtils.locatorToPersistedRegions(driver._logger, driver, this._selector)
   }

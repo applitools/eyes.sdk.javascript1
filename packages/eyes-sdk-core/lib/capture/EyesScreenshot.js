@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 
-const {ArgumentGuard, Region} = require('@applitools/eyes-common')
+const {ArgumentGuard, Region} = require('../..')
 
 /**
  * Base class for handling screenshots.

@@ -1,6 +1,6 @@
 'use strict'
 
-const {EyesError} = require('@applitools/eyes-common')
+const {EyesError} = require('./EyesError')
 
 const {SessionStartInfo} = require('../server/SessionStartInfo')
 

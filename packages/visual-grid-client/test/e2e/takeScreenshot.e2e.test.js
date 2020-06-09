@@ -7,7 +7,7 @@ const takeScreenshot = require('../../src/sdk/takeScreenshot')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const fetch = require('node-fetch')
 const {presult} = require('@applitools/functional-commons')
-const testServer = require('../util/testServer')
+const {testServer} = require('@applitools/sdk-shared')
 
 describe('takeScreenshot e2e', () => {
   let server, browser, page

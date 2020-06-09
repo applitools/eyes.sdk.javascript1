@@ -1,28 +1,17 @@
-/* Type definitions for eyes.selenium 3.6.0 */
+/* Type definitions for eyes.selenium 3.9.0 */
 // Project: https://github.com/applitools/eyes.sdk.javascript
 // Definitions by: Applitools Team <https://applitools.com>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.4
+// TypeScript Version: 3.6 
 
 ///<reference types="node"/>
 
 import { WebDriver, WebElement, By, TargetLocator, WebElementPromise, AlertPromise, promise } from 'selenium-webdriver';
 
-import {PromiseFactory, Location, Region, RectangleSize, UserAgent} from 'eyes.utils';
+import {ArgumentGuard, GeneralUtils, GeometryUtils, ImageDeltaCompressor, ImageUtils, StreamUtils, PropertyHandler, SimplePropertyHandler, ReadOnlyPropertyHandler, Region, RectangleSize, PromiseFactory, Location, UserAgent} from '@applitools/eyes-common-legacy';
 
-import { PositionProvider, RegionProvider, Logger, CutProvider, ScaleProviderFactory, MatchSettings, CoordinatesType,
-    EyesScreenshot, EyesBase, MutableImage, TestResults, ImageProvider } from 'eyes.sdk';
-
-
-export { ArgumentGuard, GeneralUtils, GeometryUtils, ImageDeltaCompressor, ImageUtils, PromiseFactory, StreamUtils,
-    PropertyHandler, SimplePropertyHandler, ReadOnlyPropertyHandler, Location, Region, RectangleSize } from 'eyes.utils';
-
-export { ConsoleLogHandler, ContextBasedScaleProvider, ContextBasedScaleProviderFactory, CoordinatesType, CutProvider,
-    EyesScreenshot, FileLogHandler, FixedCutProvider, FixedScaleProvider, FixedScaleProviderFactory, Logger, LogHandler,
-    MatchSettings, MutableImage, NullCutProvider, NullLogHandler, NullScaleProvider, PositionProvider, RegionProvider,
-    ScaleProvider, ScaleProviderFactory, ScaleProviderIdentityFactory, ServerConnector, TestResultsFormatter, Triggers,
-    Trigger, RunningSession, BatchInfo, AppEnvironment, SessionStartInfo, TestResults} from 'eyes.sdk';
-
+import {EyesBase, ImageProvider, ConsoleLogHandler, ContextBasedScaleProvider, ContextBasedScaleProviderFactory, CoordinatesType, CutProvider, EyesScreenshot, FileLogHandler, FixedCutProvider, FixedScaleProvider, FixedScaleProviderFactory, Logger, LogHandler, MatchSettings, MutableImage, NullCutProvider, NullLogHandler, NullScaleProvider, PositionProvider, RegionProvider, ScaleProvider, ScaleProviderFactory, ScaleProviderIdentityFactory, ServerConnector, TestResultsFormatter, Triggers, Trigger, RunningSession, BatchInfo, AppEnvironment, SessionStartInfo, TestResults
+} from '@applitools/eyes-sdk-core-legacy';
 
 export interface FloatingRegion {
     left: number;

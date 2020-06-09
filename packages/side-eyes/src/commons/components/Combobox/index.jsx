@@ -11,6 +11,8 @@ export default class Combobox extends React.Component {
     items: PropTypes.array.isRequired,
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
+    label: PropTypes.string,
+    className: PropTypes.string,
   }
   constructor(props) {
     super(props)
@@ -34,9 +36,7 @@ export default class Combobox extends React.Component {
     this.setState({ isOpen: false })
   }
   calculateModalPosition() {
-    const rect = this.button
-      ? this.button.getBoundingClientRect()
-      : { top: 0, left: 0 }
+    const rect = this.button ? this.button.getBoundingClientRect() : { top: 0, left: 0 }
     return {
       top: `${rect.top}px`,
       left: `${rect.left}px`,
@@ -46,7 +46,16 @@ export default class Combobox extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+        }}
+        className={this.props.className}
+      >
+        {this.props.label && <div>{this.props.label}</div>}
         <a
           className={classNames('combobox', { disabled: this.props.disabled })}
           ref={button => {
@@ -56,9 +65,7 @@ export default class Combobox extends React.Component {
           onClick={this.openCombobox.bind(this)}
         >
           <React.Fragment>
-            <span style={{ marginRight: '5px' }}>
-              {this.props.items[this.state.selectedIndex]}
-            </span>
+            <span style={{ marginRight: '5px' }}>{this.props.items[this.state.selectedIndex]}</span>
             <ArrowIndicator directionIsUp={this.state.isOpen} />
           </React.Fragment>
         </a>
@@ -71,17 +78,8 @@ export default class Combobox extends React.Component {
         >
           <ul className="combobox-content">
             {this.props.items.map((item, index) => (
-              <li
-                key={item}
-                name={item}
-                label={this.props.label}
-                onClick={this.props.onClick}
-              >
-                <a
-                  className="combobox-item"
-                  href="#"
-                  onClick={() => this.click(item, index)}
-                >
+              <li key={item} name={item} label={this.props.label} onClick={this.props.onClick}>
+                <a className="combobox-item" href="#" onClick={() => this.click(item, index)}>
                   {item}
                 </a>
               </li>

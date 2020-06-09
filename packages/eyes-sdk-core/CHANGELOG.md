@@ -3,6 +3,54 @@
 ## Unreleased
 
 
+## 11.0.5 - 2020/6/9
+
+- addBrowser can now accept browserInfo object as first argument
+- fixed iosDeviceInfo in renderRequest and added JSdoc for iosDeviceInfo
+
+## 11.0.4 - 2020/6/4
+
+- fix marking the scroll root element
+- support correct driver API in DomCapture
+
+## 11.0.3 - 2020/6/3
+
+- added EDGE_CHROMIUM_TWO_VERSIONS_BACK to BrowserType
+- updated to @applitools/dom-capture@7.2.4 (from v7.2.0)
+
+## 11.0.2 - 2020/6/2
+
+- avoid 404 error in internet explorer due to parallel script executions
+
+## 11.0.1 - 2020/6/2
+
+- change document.scrollingElement to document.documentElement as the default scroll root element
+
+## 11.0.0 - 2020/5/31
+
+- Unified core to power all SDK's
+
+## 10.3.1 - 2020/5/26
+
+- fix MatchLevel.Layout value ([Trello 1](https://trello.com/c/IBESoj8Q/371-cypress-unable-to-set-match-level-to-layout), [Trello 2](https://trello.com/c/EQD3JUOf/296-wdio-5-long-image-sometimes-fails-sometimes-succeeds))
+
+## 10.3.0 - 2020/5/24
+
+- add ability to output XUnit XML from the TestResultFormatter (per [Trello 261](https://trello.com/c/ozmI1rav))
+- fix to implicitly use the correct dom-capture script when running on Internet Explorer or Edge Classic (per [Trello 296](https://trello.com/c/EQD3JUOf/296-wdio-5-long-image-sometimes-fails-sometimes-succeeds))
+- merge dom-utils into the core
+- merge eyes-common into the core
+
+## 10.2.0 - 2020/5/19
+
+- add AccessibilityGuidelinesVersion enum
+- remove accessibilityLevel from checkSettings
+- updated to @applitools/eyes-common@3.24.0
+
+   ## 10.1.2 - 2020/5/13
+
+- added retry for requests returning with a status code of 503   
+
 ## 10.1.1 - 2020/5/11
 
 - updated to @applitools/eyes-common@3.23.1

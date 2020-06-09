@@ -169,8 +169,7 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [layout](#layout)
     - [strict](#strict)
     - [content](#content)
-    <!-- - [accessibility](#accessibility)
-    - [accessibilityLevel](#accessibilityLevel) -->
+    - [accessibility](#accessibility)
     - [scriptHooks](#scriptHooks)
     - [sendDom](#sendDom)
   - [Close](#Close)
@@ -343,7 +342,7 @@ cy.eyesCheckWindow({ tag: 'Login screen', target: 'your target' })
     });
     ```
 
-<!-- * ##### `accessibility`
+* ##### `accessibility`
   (optional): A single or an array of regions to perform accessibility checks, For example:
 
     ```js
@@ -357,13 +356,6 @@ cy.eyesCheckWindow({ tag: 'Login screen', target: 'your target' })
     ```
 
     Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
-
-* ##### `accessibilityLevel`
-  (optional): The accessibility level to use for the screenshot. Possible values are `None`, `AA` and `AAA`.
-
-    ```js
-    cy.eyesCheckWindow({accessibilityLevel: 'AA'})
-    ``` -->
 
 * ##### `scriptHooks`
   (optional): A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering.
@@ -435,8 +427,7 @@ The list above is also the order of precedence, which means that if you pass a p
 | `compareWithParentBranch` | false                       |  |
 | `ignoreBaseline`          | false                       |  |
 | `notifyOnCompletion`  | false | If `true` batch completion notifications are sent. |
-
-<!-- | `accessibilityLevel` | None | The accessibility level to use for the screenshots. Possible values are `None`, `AA` and `AAA`. | -->
+| `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`|
 
 ### Global configuration properties:
 
@@ -496,7 +487,6 @@ APPLITOOLS_SERVER_URL
 APPLITOOLS_PROXY
 APPLITOOLS_NOTIFY_ON_COMPLETION
 ```
-<!-- APPLITOOLS_ACCESSIBILITY_LEVEL -->
 
 ### Method 3: The `applitools.config.js` file
 
@@ -532,6 +522,7 @@ Possible values are:
 - `safari-one-version-back`
 - `safari-two-versions-back`
 - `edgechromium-one-version-back`
+- `edgechromium-two-versions-back`
 
 ### Previous browser versions
 

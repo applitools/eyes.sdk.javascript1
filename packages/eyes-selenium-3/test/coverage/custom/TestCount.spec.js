@@ -24,7 +24,7 @@ describe.skip('TestCounts', () => {
   })
 
   it('Test_VGTestsCount_2', async () => {
-    let conf = new Configuration()
+    let conf = eyes.getConfiguration()
     conf.setBatch(batch)
     conf.addBrowser(900, 600)
     conf.addBrowser(1024, 768)
@@ -37,7 +37,7 @@ describe.skip('TestCounts', () => {
   })
 
   it('Test_VGTestsCount_3', async () => {
-    let conf = new Configuration()
+    let conf = eyes.getConfiguration()
     conf.setBatch(batch)
     conf.addBrowser(900, 600)
     conf.addBrowser(1024, 768)
@@ -52,7 +52,7 @@ describe.skip('TestCounts', () => {
   })
 
   it('Test_VGTestsCount_4', async () => {
-    let conf = new Configuration()
+    let conf = eyes.getConfiguration()
     conf.setBatch(batch)
     conf.setAppName('Test Count')
     conf.setTestName('Test_VGTestsCount_4')
@@ -65,7 +65,7 @@ describe.skip('TestCounts', () => {
   })
 
   it('Test_VGTestsCount_5', async () => {
-    let conf = new Configuration()
+    let conf = eyes.getConfiguration()
     conf.setBatch(batch)
     conf.addBrowser(900, 600)
     conf.addBrowser(1024, 768)

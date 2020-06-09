@@ -8,11 +8,11 @@
  */
 class GetFloatingRegion {
   /**
-   * @param {EyesBase} eyesBase
+   * @param {EyesWrappedDriver} driver
    * @param {EyesScreenshot} screenshot
    * @return {Promise<FloatingMatchSettings[]>}
    */
-  async getRegion(eyesBase, screenshot) {
+  async getRegion(driver, screenshot) {
     throw new TypeError('The method is not implemented!')
   }
 }

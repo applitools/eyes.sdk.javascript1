@@ -1,6 +1,6 @@
 const {makeTiming} = require('@applitools/monitoring-commons');
 const {getCaptureDomScript} = require('../');
-const testServer = require('../tests/util/testServer');
+const {testServer} = require('@applitools/sdk-shared');
 const path = require('path');
 const fs = require('fs');
 

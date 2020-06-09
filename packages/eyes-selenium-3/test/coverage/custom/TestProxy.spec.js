@@ -1,6 +1,6 @@
 'use strict'
 const childProcess = require('child_process')
-const {getDriver, getEyes, batch} = require('./util/TestSetup')
+const {getDriver, getEyes} = require('./util/TestSetup')
 const {ConsoleLogHandler} = require('../../../index')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
@@ -22,7 +22,6 @@ describe.skip('TestProxy', () => {
     let eyes = await getEyes('CSS')
     eyes.setLogHandler(new ConsoleLogHandler(true))
     try {
-      eyes.setBatch(batch)
       eyes.setProxy('http://127.0.0.1:8080')
 
       await eyes.open(webDriver, 'Eyes Selenium SDK - Test Proxy', 'proxy test')
@@ -42,7 +41,6 @@ describe.skip('TestProxy', () => {
     let webDriver = await getDriver('CHROME')
     let eyes = await getEyes('CSS')
     try {
-      eyes.setBatch(batch)
       eyes.setProxy('http://127.0.0.1:8080')
       await eyes.open(webDriver, 'Eyes Selenium SDK - Test Proxy', 'proxy test')
     } catch (e) {

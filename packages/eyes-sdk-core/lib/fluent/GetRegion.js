@@ -14,7 +14,7 @@ class GetRegion extends GetSelector {
   }
 
   /**
-   * @param {EyesBase} eyesBase
+   * @param {EyesWrappedDriver} driver
    * @param {EyesScreenshot} screenshot
    * @return {Promise<Region[]>}
    */

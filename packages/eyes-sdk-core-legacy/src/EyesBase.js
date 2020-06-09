@@ -699,6 +699,22 @@
     this._defaultMatchSettings.setIgnoreDisplacements(value)
   }
 
+  /**
+   * @return {AccessibilitySettings} - The test-wide accesibilityValidation to use in open requests.
+   */
+  EyesBase.prototype.getAccessibilityValidation = function() {
+    return this._defaultMatchSettings.getAccessibilitySettings()
+  }
+
+  /**
+   * The test-wide accesibilityValidation to use.
+   *
+   * @param {AccessibilitySettings} value - The test-wide accesibilityValidation to use in open requests.
+   */
+  EyesBase.prototype.setAccessibilityValidation = function(value) {
+    this._defaultMatchSettings.setAccessibilitySettings(value)
+  }
+
   //noinspection JSUnusedGlobalSymbols
   /**
    * @return {boolean}- The currently compareWithParentBranch value
@@ -1519,6 +1535,13 @@
                 matchThreshold: exactObj.getMatchThreshold(),
               }
             }
+            if (this._defaultMatchSettings.getAccessibilitySettings()) {
+              const accessibilitySettings = this._defaultMatchSettings.getAccessibilitySettings()
+              imageMatchSettings.accessibilitySettings = {
+                level: accessibilitySettings.level,
+                version: accessibilitySettings.guidelinesVersion,
+              }
+            }
             return _notifyEvent(
               this._logger,
               this._promiseFactory,
@@ -1809,6 +1832,7 @@
                 matchLevel: this._defaultMatchSettings.getMatchLevel(),
                 ignoreCaret: this._defaultMatchSettings.isIgnoreCaret(),
                 ignoreDisplacements: this._defaultMatchSettings.getIgnoreDisplacements(),
+                accessibilitySettings: this._defaultMatchSettings.getAccessibilitySettings(),
                 exact: exact,
               }
               this._sessionStartInfo = {

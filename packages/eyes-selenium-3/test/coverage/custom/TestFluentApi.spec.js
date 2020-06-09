@@ -1,6 +1,6 @@
 'use strict'
 const {By} = require('selenium-webdriver')
-const {getDriver, getEyes, batch} = require('./util/TestSetup')
+const {getDriver, getEyes} = require('./util/TestSetup')
 const {Target, StitchMode} = require('../../../index')
 const appName = 'Eyes Selenium SDK - Fluent API'
 describe.skip(appName, () => {
@@ -28,7 +28,6 @@ describe.skip(appName, () => {
       webDriver = await getDriver('CHROME')
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       eyes = await getEyes(StitchMode.CSS)
-      eyes.setBatch(batch)
     })
 
     it('TestCheckScrollableModal', async () => {
@@ -66,7 +65,6 @@ describe.skip(appName, () => {
       webDriver = await getDriver('CHROME')
       await webDriver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       eyes = await getEyes(StitchMode.Scroll)
-      eyes.setBatch(batch)
     })
 
     it('TestCheckScrollableModal', async () => {

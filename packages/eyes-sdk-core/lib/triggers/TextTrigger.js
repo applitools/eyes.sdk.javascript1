@@ -1,6 +1,6 @@
 'use strict'
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
+const {ArgumentGuard} = require('../..')
 
 const {Trigger} = require('./Trigger')
 

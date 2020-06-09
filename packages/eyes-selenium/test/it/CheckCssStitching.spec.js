@@ -1,17 +1,13 @@
 'use strict'
 
 require('chromedriver')
-const {Builder} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {Eyes, Target, ConsoleLogHandler, StitchMode} = require('../../index')
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes
 describe('Check CSS Stitching', () => {
   before(async () => {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new ChromeOptions().headless())
-      .build()
+    driver = await getDriver('CHROME')
 
     eyes = new Eyes()
     eyes.setLogHandler(new ConsoleLogHandler(false))

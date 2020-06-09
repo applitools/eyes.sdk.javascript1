@@ -3,7 +3,7 @@
 const Axios = require('axios')
 const zlib = require('zlib')
 
-const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
+const {GeneralUtils, ArgumentGuard} = require('../..')
 
 const {RenderingInfo} = require('./RenderingInfo')
 const {RunningSession} = require('./RunningSession')
@@ -45,6 +45,11 @@ const HTTP_STATUS_CODES = {
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
   GATEWAY_TIMEOUT: 504,
+}
+
+const AZURE_RETRY_CONFIG = {
+  delayBeforeRetry: 500,
+  retry: 5,
 }
 
 const REQUEST_GUID = GeneralUtils.guid()
@@ -109,10 +114,15 @@ class ServerConnector {
         agentId: getAgentId(),
       })
 
+      const dataLength = axiosConfig.data && axiosConfig.data.length
+      const dataLengthStr = dataLength ? ` and body length ${axiosConfig.data.length}` : ''
+
       this._logger.verbose(
         `axios request interceptor - ${axiosConfig.name} [${axiosConfig.requestId}${
           axiosConfig.originalRequestId ? ` retry of ${axiosConfig.originalRequestId}` : ''
-        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(axiosConfig.params)}`,
+        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(
+          axiosConfig.params,
+        )}${dataLengthStr}`,
       )
 
       await delayRequest({axiosConfig, logger})
@@ -291,7 +301,6 @@ class ServerConnector {
     const url = this._renderingInfo.getResultsUrl().replace('__random__', id)
     const config = {
       name: 'uploadScreenshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: screenshot,
@@ -300,6 +309,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'content-type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)
@@ -701,7 +711,6 @@ class ServerConnector {
 
     const config = {
       name: 'postDomSnapshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: zlib.gzipSync(Buffer.from(domJson)),
@@ -710,6 +719,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'Content-Type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)

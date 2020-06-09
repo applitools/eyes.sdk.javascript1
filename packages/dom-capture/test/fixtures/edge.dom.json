@@ -1,0 +1,618 @@
+{"separator":"-----","cssStartToken":"#####","cssEndToken":"#####","iframeStartToken":"\"@@@@@","iframeEndToken":"@@@@@\""}
+http://applitools-dom-capture-origin-2.surgs.sh/test.css
+-----
+HTML[1]/BODY[1]/IFRAME[2]
+-----
+{
+  "tagName": "HTML",
+  "style": {
+    "background-repeat": "repeat",
+    "background-origin": "padding-box",
+    "background-position": "0% 0%",
+    "background-color": "transparent",
+    "background-image": "none",
+    "background-size": "auto",
+    "border-width": "0px 0px 0px 0px",
+    "border-color": "",
+    "border-style": "",
+    "color": "rgb(0, 0, 0)",
+    "display": "block",
+    "font-size": "16px",
+    "font-weight": "400",
+    "line-height": "normal",
+    "margin": "",
+    "opacity": "1",
+    "overflow": "visible",
+    "padding": "",
+    "visibility": "visible"
+  },
+  "rect": {
+    "width": 992,
+    "height": 966.8999633789062,
+    "top": 0,
+    "left": 0
+  },
+  "childNodes": [
+    {
+      "tagName": "#text",
+      "text": "\n  "
+    },
+    {
+      "tagName": "BODY",
+      "style": {
+        "background-repeat": "repeat",
+        "background-origin": "padding-box",
+        "background-position": "0% 0%",
+        "background-color": "transparent",
+        "background-image": "none",
+        "background-size": "auto",
+        "border-width": "0px 0px 0px 0px",
+        "border-color": "",
+        "border-style": "",
+        "color": "rgb(0, 0, 0)",
+        "display": "block",
+        "font-size": "24px",
+        "font-weight": "400",
+        "line-height": "36px",
+        "margin": "",
+        "opacity": "1",
+        "overflow": "visible",
+        "padding": "",
+        "visibility": "visible"
+      },
+      "rect": {
+        "width": 952,
+        "height": 926.8999633789062,
+        "top": 20,
+        "left": 20
+      },
+      "attributes": {
+        "style": "margin:20px;"
+      },
+      "childNodes": [
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "DIV",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px 0px 0px 0px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(255, 0, 0)",
+            "display": "block",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 952,
+            "height": 36,
+            "top": 20,
+            "left": 20
+          },
+          "attributes": {
+            "style": "color:red;"
+          },
+          "childNodes": [
+            {
+              "tagName": "#text",
+              "text": "hi, I'm red"
+            }
+          ]
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "DIV",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px 0px 0px 0px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 255)",
+            "display": "block",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 952,
+            "height": 36,
+            "top": 56,
+            "left": 20
+          },
+          "attributes": {
+            "class": "blue"
+          },
+          "childNodes": [
+            {
+              "tagName": "#text",
+              "text": "We've met already, I'm blue"
+            }
+          ]
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "DIV",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "url(http://applitools-dom-capture-origin-1.surge.sh/smurfs.jpg)",
+            "background-size": "auto",
+            "border-width": "0px 0px 0px 0px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 0)",
+            "display": "block",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 151,
+            "height": 227,
+            "top": 92,
+            "left": 20
+          },
+          "attributes": {
+            "class": "bg-smurfs",
+            "style": "margin-bottom:10px;"
+          },
+          "childNodes": []
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "IMG",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px 0px 0px 0px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 0)",
+            "display": "block",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 151,
+            "height": 227,
+            "top": 329,
+            "left": 20
+          },
+          "attributes": {
+            "src": "smurfs.jpg"
+          },
+          "childNodes": []
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "IMG",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "0px 0px 0px 0px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 0)",
+            "display": "block",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 151,
+            "height": 227,
+            "top": 556,
+            "left": 20
+          },
+          "attributes": {
+            "alt": "",
+            "src": "http://applitools-dom-capture-origin-2.surge.sh/smurfs.jpg"
+          },
+          "childNodes": []
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "IFRAME",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "2px 2px 2px 2px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 0)",
+            "display": "inline",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 304,
+            "height": 154,
+            "top": 783,
+            "left": 20
+          },
+          "attributes": {
+            "src": "test.html"
+          },
+          "childNodes": [
+            {
+              "tagName": "HTML",
+              "style": {
+                "background-repeat": "repeat",
+                "background-origin": "padding-box",
+                "background-position": "0% 0%",
+                "background-color": "transparent",
+                "background-image": "none",
+                "background-size": "auto",
+                "border-width": "0px 0px 0px 0px",
+                "border-color": "",
+                "border-style": "",
+                "color": "rgb(0, 0, 0)",
+                "display": "block",
+                "font-size": "16px",
+                "font-weight": "400",
+                "line-height": "normal",
+                "margin": "",
+                "opacity": "1",
+                "overflow": "visible",
+                "padding": "",
+                "visibility": "visible"
+              },
+              "rect": {
+                "width": 284,
+                "height": 612,
+                "top": 0,
+                "left": 0
+              },
+              "attributes": {
+                "lang": "en"
+              },
+              "childNodes": [
+                {
+                  "tagName": "#text",
+                  "text": "\n"
+                },
+                {
+                  "tagName": "BODY",
+                  "style": {
+                    "background-repeat": "repeat",
+                    "background-origin": "padding-box",
+                    "background-position": "0% 0%",
+                    "background-color": "transparent",
+                    "background-image": "none",
+                    "background-size": "auto",
+                    "border-width": "0px 0px 0px 0px",
+                    "border-color": "",
+                    "border-style": "",
+                    "color": "rgb(0, 0, 0)",
+                    "display": "block",
+                    "font-size": "24px",
+                    "font-weight": "400",
+                    "line-height": "36px",
+                    "margin": "",
+                    "opacity": "1",
+                    "overflow": "visible",
+                    "padding": "",
+                    "visibility": "visible"
+                  },
+                  "rect": {
+                    "width": 244,
+                    "height": 572,
+                    "top": 20,
+                    "left": 20
+                  },
+                  "attributes": {
+                    "style": "margin:20px;"
+                  },
+                  "childNodes": [
+                    {
+                      "tagName": "#text",
+                      "text": "\n  "
+                    },
+                    {
+                      "tagName": "DIV",
+                      "style": {
+                        "background-repeat": "repeat",
+                        "background-origin": "padding-box",
+                        "background-position": "0% 0%",
+                        "background-color": "transparent",
+                        "background-image": "none",
+                        "background-size": "auto",
+                        "border-width": "0px 0px 0px 0px",
+                        "border-color": "",
+                        "border-style": "",
+                        "color": "rgb(255, 0, 0)",
+                        "display": "block",
+                        "font-size": "24px",
+                        "font-weight": "400",
+                        "line-height": "36px",
+                        "margin": "",
+                        "opacity": "1",
+                        "overflow": "visible",
+                        "padding": "",
+                        "visibility": "visible"
+                      },
+                      "rect": {
+                        "width": 244,
+                        "height": 36,
+                        "top": 20,
+                        "left": 20
+                      },
+                      "attributes": {
+                        "style": "color:red;"
+                      },
+                      "childNodes": [
+                        {
+                          "tagName": "#text",
+                          "text": "hi, I'm red"
+                        }
+                      ]
+                    },
+                    {
+                      "tagName": "#text",
+                      "text": "\n  "
+                    },
+                    {
+                      "tagName": "DIV",
+                      "style": {
+                        "background-repeat": "repeat",
+                        "background-origin": "padding-box",
+                        "background-position": "0% 0%",
+                        "background-color": "transparent",
+                        "background-image": "none",
+                        "background-size": "auto",
+                        "border-width": "0px 0px 0px 0px",
+                        "border-color": "",
+                        "border-style": "",
+                        "color": "rgb(0, 0, 255)",
+                        "display": "block",
+                        "font-size": "24px",
+                        "font-weight": "400",
+                        "line-height": "36px",
+                        "margin": "",
+                        "opacity": "1",
+                        "overflow": "visible",
+                        "padding": "",
+                        "visibility": "visible"
+                      },
+                      "rect": {
+                        "width": 244,
+                        "height": 72,
+                        "top": 56,
+                        "left": 20
+                      },
+                      "attributes": {
+                        "class": "blue"
+                      },
+                      "childNodes": [
+                        {
+                          "tagName": "#text",
+                          "text": "We've met already, I'm blue"
+                        }
+                      ]
+                    },
+                    {
+                      "tagName": "#text",
+                      "text": "\n  "
+                    },
+                    {
+                      "tagName": "DIV",
+                      "style": {
+                        "background-repeat": "repeat",
+                        "background-origin": "padding-box",
+                        "background-position": "0% 0%",
+                        "background-color": "transparent",
+                        "background-image": "url(http://applitools-dom-capture-origin-1.surge.sh/smurfs.jpg)",
+                        "background-size": "auto",
+                        "border-width": "0px 0px 0px 0px",
+                        "border-color": "",
+                        "border-style": "",
+                        "color": "rgb(0, 0, 0)",
+                        "display": "block",
+                        "font-size": "24px",
+                        "font-weight": "400",
+                        "line-height": "36px",
+                        "margin": "",
+                        "opacity": "1",
+                        "overflow": "visible",
+                        "padding": "",
+                        "visibility": "visible"
+                      },
+                      "rect": {
+                        "width": 151,
+                        "height": 227,
+                        "top": 128,
+                        "left": 20
+                      },
+                      "attributes": {
+                        "class": "bg-smurfs",
+                        "style": "margin-bottom:10px;"
+                      },
+                      "childNodes": []
+                    },
+                    {
+                      "tagName": "#text",
+                      "text": "\n  "
+                    },
+                    {
+                      "tagName": "IMG",
+                      "style": {
+                        "background-repeat": "repeat",
+                        "background-origin": "padding-box",
+                        "background-position": "0% 0%",
+                        "background-color": "transparent",
+                        "background-image": "none",
+                        "background-size": "auto",
+                        "border-width": "0px 0px 0px 0px",
+                        "border-color": "",
+                        "border-style": "",
+                        "color": "rgb(0, 0, 0)",
+                        "display": "block",
+                        "font-size": "24px",
+                        "font-weight": "400",
+                        "line-height": "36px",
+                        "margin": "",
+                        "opacity": "1",
+                        "overflow": "visible",
+                        "padding": "",
+                        "visibility": "visible"
+                      },
+                      "rect": {
+                        "width": 151,
+                        "height": 227,
+                        "top": 365,
+                        "left": 20
+                      },
+                      "attributes": {
+                        "src": "smurfs.jpg"
+                      },
+                      "childNodes": []
+                    },
+                    {
+                      "tagName": "#text",
+                      "text": "\n\n"
+                    }
+                  ]
+                }
+              ],
+              "css": "\n/** http://applitools-dom-capture-origin-1.surge.sh/test.css **/\n@font-face {\n  font-family: 'Montaga';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Montaga-Regular');\n}\n\nbody {\n  font: 400 24px/1.5 Montaga;\n}\n\n.blue {\n  color: blue;\n}\n\nimg {\n  display: block;\n}\n\n.bg-smurfs {\n  background: url('smurfs.jpg');\n  width: 151px;\n  height: 227px;\n  filter: hue-rotate(60deg);\n}",
+              "images": {
+                "http://applitools-dom-capture-origin-1.surge.sh/smurfs.jpg": {
+                  "width": 151,
+                  "height": 227
+                }
+              }
+            }
+          ]
+        },
+        {
+          "tagName": "#text",
+          "text": "\n    "
+        },
+        {
+          "tagName": "IFRAME",
+          "style": {
+            "background-repeat": "repeat",
+            "background-origin": "padding-box",
+            "background-position": "0% 0%",
+            "background-color": "transparent",
+            "background-image": "none",
+            "background-size": "auto",
+            "border-width": "2px 2px 2px 2px",
+            "border-color": "",
+            "border-style": "",
+            "color": "rgb(0, 0, 0)",
+            "display": "inline",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "margin": "",
+            "opacity": "1",
+            "overflow": "visible",
+            "padding": "",
+            "visibility": "visible"
+          },
+          "rect": {
+            "width": 304,
+            "height": 154,
+            "top": 783,
+            "left": 330
+          },
+          "attributes": {
+            "src": "http://applitools-dom-capture-origin-2.surge.sh/test.html"
+          },
+          "childNodes": [
+            "@@@@@HTML[1]/BODY[1]/IFRAME[2]@@@@@"
+          ]
+        },
+        {
+          "tagName": "#text",
+          "text": "\n  \n"
+        }
+      ]
+    }
+  ],
+  "css": "\n/** http://applitools-dom-capture-origin-1.surge.sh/test.css **/\n@font-face {\n  font-family: 'Montaga';\n  font-style: normal;\n  font-weight: 400;\n  src: local('Montaga-Regular');\n}\n\nbody {\n  font: 400 24px/1.5 Montaga;\n}\n\n.blue {\n  color: blue;\n}\n\nimg {\n  display: block;\n}\n\n.bg-smurfs {\n  background: url('smurfs.jpg');\n  width: 151px;\n  height: 227px;\n  filter: hue-rotate(60deg);\n}#####http://applitools-dom-capture-origin-2.surgs.sh/test.css#####",
+  "images": {
+    "http://applitools-dom-capture-origin-1.surge.sh/smurfs.jpg": {
+      "width": 151,
+      "height": 227
+    }
+  },
+  "version": "1.3.0",
+  "scriptVersion": "DOM_CAPTURE_SCRIPT_VERSION_TO_BE_REPLACED"
+}

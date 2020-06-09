@@ -1,16 +1,30 @@
 'use strict'
 
-const {FloatingMatchSettings, CoordinatesType} = require('@applitools/eyes-common')
+const {FloatingMatchSettings, CoordinatesType} = require('../..')
 const {GetFloatingRegion} = require('./GetFloatingRegion')
 const EyesUtils = require('../EyesUtils')
 
+/**
+ * @typedef {import('../wrappers/EyesWrappedElement').SupportedSelector} SupportedSelector
+ * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
+ * @typedef {import('../EyesClassic')} EyesClassic
+ *
+ * @typedef {Object} FloatingPersistedRegions
+ * @property {string} type - selector type (css or xpath)
+ * @property {string} selector - selector itself
+ * @property {number} maxUpOffset - up offset
+ * @property {number} maxDownOffset - down offset
+ * @property {number} maxLeftOffset - left offset
+ * @property {number} maxRightOffset - right offset
+ */
+
 class FloatingRegionBySelector extends GetFloatingRegion {
   /**
-   * @param {By} regionSelector
-   * @param {int} maxUpOffset
-   * @param {int} maxDownOffset
-   * @param {int} maxLeftOffset
-   * @param {int} maxRightOffset
+   * @param {SupportedSelector} regionSelector
+   * @param {number} maxUpOffset
+   * @param {number} maxDownOffset
+   * @param {number} maxLeftOffset
+   * @param {number} maxRightOffset
    */
   constructor(regionSelector, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
     super()
@@ -20,13 +34,13 @@ class FloatingRegionBySelector extends GetFloatingRegion {
     this._maxLeftOffset = maxLeftOffset
     this._maxRightOffset = maxRightOffset
   }
-
   /**
-   * @override
-   * @param {Eyes} eyes
+   * @param {EyesClassic} eyes
    * @param {EyesScreenshot} screenshot
+   * @return {Promise<FloatingMatchSettings[]>}
    */
   async getRegion(eyes, screenshot) {
+    // TODO eyes should be replaced with driver once all SDKs will use this implementation
     const elements = await eyes.getDriver().finder.findElements(this._selector)
 
     const regions = []
@@ -52,7 +66,10 @@ class FloatingRegionBySelector extends GetFloatingRegion {
 
     return regions
   }
-
+  /**
+   * @param {EyesWrappedDriver} driver
+   * @return {Promise<FloatingPersistedRegions[]>}
+   */
   async toPersistedRegions(driver) {
     const regions = await EyesUtils.locatorToPersistedRegions(
       driver._logger,

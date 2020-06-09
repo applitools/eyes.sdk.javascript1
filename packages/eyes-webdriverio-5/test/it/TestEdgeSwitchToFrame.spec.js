@@ -1,12 +1,13 @@
 'use strict'
 
 const {remote} = require('webdriverio')
-const {EyesWebDriver, WebDriver, Eyes, By, Logger} = require('../../index')
+const {By, Logger} = require('../../index')
+const WDIOWrappedDriver = require('../../src/WDIOWrappedDriver')
 
 describe('TestEdgeSwitchToFrame', () => {
   let browser
-  beforeEach(async () => {
-    const edgeBstack = {
+  before(async () => {
+    browser = await remote({
       capabilities: {
         'bstack:options': {
           os: 'Windows',
@@ -21,16 +22,15 @@ describe('TestEdgeSwitchToFrame', () => {
       logLevel: 'error',
       user: process.env.BROWSERSTACK_USERNAME,
       key: process.env.BROWSERSTACK_ACCESS_KEY,
-    }
-    browser = await remote(edgeBstack)
+    })
   })
 
-  afterEach(async () => {
+  after(async () => {
     await browser.deleteSession()
   })
 
-  it('should not throw an error', async function() {
-    const driver = new EyesWebDriver(new Logger(), new WebDriver(browser), new Eyes())
+  it('should not throw an error', async () => {
+    const driver = new WDIOWrappedDriver(new Logger(false), browser)
     await driver.url('https://applitools.github.io/demo/TestPages/FramesTestPage')
     const frame = await driver.findElement(By.css('[name="frame1"]'))
     await driver.switchTo().frame(frame)

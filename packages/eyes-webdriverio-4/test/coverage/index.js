@@ -141,9 +141,9 @@ function initialize() {
             }, ${isFully})`,
           )
         : result.storeCommand(
-            `await eyes.checkRegion(By.css('${target}'), ${matchTimeout}, ${
+            `await eyes.checkRegionBy(By.css('${target}'), ${
               tag ? '"' + tag + '"' : undefined
-            })`,
+            }, ${matchTimeout}, ${isFully})`,
           )
     } else {
       result.storeCommand(`{`)
@@ -234,7 +234,14 @@ function initialize() {
   }
 
   async function switchToFrame(selector) {
-    result.storeCommand(`await driver.frame(By.css('${selector}'))`)
+    result.storeCommand(`await driver.frame(
+      await driver.element('${selector}').then(result => {
+        if (result.state === 'failure') {
+          throw new Error(result.message)
+        }
+        return result.value
+      })
+    )`)
   }
 
   async function type(selector, text) {

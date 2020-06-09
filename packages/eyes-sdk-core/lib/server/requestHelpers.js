@@ -1,6 +1,6 @@
 const tunnel = require('tunnel')
 
-const {GeneralUtils, DateTimeUtils, TypeUtils} = require('@applitools/eyes-common')
+const {GeneralUtils, DateTimeUtils, TypeUtils} = require('../..')
 
 const HTTP_STATUS_CODES = {
   CREATED: 201,
@@ -10,6 +10,7 @@ const HTTP_STATUS_CODES = {
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
+  SERVICE_UNAVAILABLE: 503,
   GATEWAY_TIMEOUT: 504,
 }
 
@@ -17,6 +18,7 @@ const HTTP_FAILED_CODES = [
   HTTP_STATUS_CODES.NOT_FOUND,
   HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
   HTTP_STATUS_CODES.BAD_GATEWAY,
+  HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
   HTTP_STATUS_CODES.GATEWAY_TIMEOUT,
 ]
 

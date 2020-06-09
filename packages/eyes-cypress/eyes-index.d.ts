@@ -23,7 +23,7 @@ declare namespace Cypress {
        *  selector: '.my-element'
        * });
       */
-      eyesCheckWindow(config?: Eyes.Check.Options): null
+      eyesCheckWindow(config?: Eyes.Check.Options|String): null
 
       /**
        * Close the applitools test and check that all screenshots are valid.

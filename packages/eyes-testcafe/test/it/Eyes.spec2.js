@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const {Eyes, ConsoleLogHandler, Configuration} = require('../../index')
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 
 describe('Eyes', function() {
   let eyesClassic, eyesClassic2, eyesClassic3
@@ -16,7 +16,7 @@ describe('Eyes', function() {
     if (process.env.APPLITOOLS_SHOW_LOGS) {
       eyesClassic.setLogHandler(new ConsoleLogHandler(true))
     }
-    const {port, close} = await fakeEyesServer({logger: eyesClassic._logger})
+    const {port, close} = await startFakeEyesServer({logger: eyesClassic._logger})
     closeServer = close
     const serverUrl = `http://localhost:${port}`
     const configuration = new Configuration()

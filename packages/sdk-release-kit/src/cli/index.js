@@ -32,7 +32,7 @@ const {lint} = require('../lint')
 const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
-const {gitPullWithRebase, gitAddFile, gitPushWithTags} = require('../git')
+const {gitAdd, gitCommit, gitPullWithRebase, gitPushWithTags, isStagedForCommit} = require('../git')
 
 ;(async () => {
   try {
@@ -87,10 +87,19 @@ const {gitPullWithRebase, gitAddFile, gitPushWithTags} = require('../git')
         })
       case 'verify-versions':
       case 'vv':
-        return await verifyVersions({isFix: args.fix, pkgPath: cwd})
+        const isFix = args.fix
+        await verifyVersions({isFix, pkgPath: cwd})
+        if (isFix) {
+          await gitAdd('package.json')
+          await gitAdd('CHANGELOG.md')
+          if (await isStagedForCommit('package.json', 'CHANGELOG.md')) {
+            await gitCommit()
+          }
+        }
+        break
       case 'version':
         writeReleaseEntryToChangelog(cwd)
-        return await gitAddFile('CHANGELOG.md')
+        return await gitAdd('CHANGELOG.md')
       default:
         throw new Error('Invalid option provided')
     }

@@ -4,9 +4,7 @@ export async function getDomCapture(tabId) {
   const enableDomCapture = await isDomCaptureEnabled()
   if (!enableDomCapture) return false
 
-  return parseOutExternalFrames(
-    await runDomScript(tabId, { name: 'domCapture' })
-  )
+  return parseOutExternalFrames(await runDomScript(tabId, { name: 'domCapture' }))
 }
 
 export async function getDomSnapshot(tabId) {
@@ -20,18 +18,13 @@ export async function getDomSnapshot(tabId) {
 }
 
 export async function isDomCaptureEnabled() {
-  const { enableDomCapture } = await browser.storage.local.get([
-    'enableDomCapture',
-  ])
+  const { enableDomCapture } = await browser.storage.local.get(['enableDomCapture'])
 
   return enableDomCapture
 }
 
 export async function isLegacyDomSnapshotEnabled() {
-  const {
-    enableLegacyDomSnapshot,
-    experimentalEnabled,
-  } = await browser.storage.local.get([
+  const { enableLegacyDomSnapshot, experimentalEnabled } = await browser.storage.local.get([
     'enableLegacyDomSnapshot',
     'experimentalEnabled',
   ])
@@ -101,10 +94,7 @@ export function parseOutExternalFrames(input = []) {
     let result = snapshot
 
     frames.forEach(frame => {
-      result = result.replace(
-        `${meta.iframeStartToken}${frame}${meta.iframeEndToken}`,
-        ''
-      )
+      result = result.replace(`${meta.iframeStartToken}${frame}${meta.iframeEndToken}`, '')
     })
 
     return result

@@ -28,11 +28,14 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
+    "@applitools/sdk-shared": "0.1.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chalk": "3.0.0",
     "micromatch": "^4.0.2",
     "node-fetch": "^2.6.0",
-    "yargs": "^15.0.2",
-    "chalk": "3.0.0",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^2.14.0",

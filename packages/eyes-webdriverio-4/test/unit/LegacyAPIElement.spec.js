@@ -1,7 +1,7 @@
 'use strict'
 const assert = require('assert')
-const WDIOElement = require('../../src/wrappers/WDIOElement')
-const WDIODriver = require('../../src/wrappers/WDIODriver')
+const WDIOWrappedElement = require('../../src/WDIOWrappedElement')
+const WDIOWrappedDriver = require('../../src/WDIOWrappedDriver')
 const {Logger} = require('../../index')
 
 describe('LegacyAPIElement', function() {
@@ -16,17 +16,17 @@ describe('LegacyAPIElement', function() {
 
   before(async () => {
     logger = new Logger(false)
-    driver = new WDIODriver(logger, {})
+    driver = new WDIOWrappedDriver(logger, {})
   })
 
   it('get element', async () => {
-    const wrappedElement = new WDIOElement(logger, driver, element)
+    const wrappedElement = new WDIOWrappedElement(logger, driver, element)
     assert.deepStrictEqual(wrappedElement.element, wrappedElement.unwrapped)
     assert.strictEqual(elementId(wrappedElement.element), elementId(element))
   })
 
   it('get locator', async () => {
-    const wrappedElement = new WDIOElement(logger, driver, element, selector)
+    const wrappedElement = new WDIOWrappedElement(logger, driver, element, selector)
     assert.strictEqual(wrappedElement.locator, wrappedElement.selector)
     assert.strictEqual(wrappedElement.locator, selector)
   })

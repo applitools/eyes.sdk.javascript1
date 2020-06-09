@@ -4,6 +4,22 @@
 ## Unreleased
 
 
+## 7.2.4 - 2020/6/3
+
+- fix dist scripts
+
+## 7.2.3 - 2020/6/3
+
+- fix dist scripts
+
+## 7.2.2 - 2020/6/3
+
+- fix dist scripts
+
+## 7.2.1 - 2020/6/3
+
+- fix dist scripts
+
  ## 7.2.0 - 2020/5/3
 
 - added shadow dom support ** Dom Capture version 1.3.0 ** 

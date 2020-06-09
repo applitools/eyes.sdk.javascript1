@@ -1,25 +1,26 @@
 {
   "name": "@applitools/eyes-webdriverio4-service",
-  "version": "1.1.0",
+  "version": "1.4.0",
   "description": "",
   "keywords": [
     "wdio-service"
   ],
   "main": "index.js",
   "scripts": {
+    "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
     "test": "wdio test/wdio.conf.js",
-    "preversion": "bongo preversion",
+    "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@applitools/eyes.webdriverio": "2.14.0"
+    "@applitools/eyes.webdriverio": "2.17.0"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",
-    "chromedriver": "^80.0.0",
+    "chromedriver": "^83.0.0",
     "mocha": "^6.2.2",
     "wdio-chromedriver-service": "^0.1.5",
     "wdio-dot-reporter": "0.0.10",

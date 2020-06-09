@@ -20,7 +20,9 @@ function fromCacheToRGridResource({url, type, hash, content}) {
   resource.setUrl(url)
   resource.setContentType(type)
   resource.setContent(content || '')
-  resource._sha256hash = hash // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
+  // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
+  // after renderBatch we clear the content of the resource, for saving space.
+  resource._sha256hash = hash
   return resource
 }
 
@@ -43,9 +45,10 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
       const resources = {}
       for (const [url, resource] of Object.entries(preResources)) {
-        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(resource)))
-        handledResources.add(url)
+        // "preResources" are not fetched and not in "fetchCache" so cache them to "resourceCache".
         const rGridResource = fromFetchedToRGridResource(resource)
+        resourceCache.setValue(url, toCacheEntry(rGridResource))
+        handledResources.add(url)
         assignContentfulResources(resources, {[url]: rGridResource})
       }
 
@@ -79,18 +82,9 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     async function processResource(resource) {
       let {dependentResources, fetchedResources} = await getDependantResources(resource)
       const rGridResource = fromFetchedToRGridResource(resource)
-      /*
-       * Note: We set the cache with resources only after we don't need their content anymore (to save up space);
-       * We set it in renderBatch() after all PUTs are done.
-       * ( toCacheEntry() removes the content of non css/svg resources )
-       *
-       * getAllresources calls before the render ends don't get the cache (it's ok fetch-wise since fetch is cached)
-       * but it is time consuming to do css/svg processing - and so we set these resources to cache here.
-       *
-       * Consider changing this, maybe setting all resources here (and keeping the cache entery content).
-       */
-      const contentType = rGridResource.getContentType()
-      if (resourceType(contentType)) {
+      // It is time consuming to process css/svg so use "resourceCache".
+      const doesRequireProcessing = !!resourceType(rGridResource.getContentType())
+      if (doesRequireProcessing) {
         resourceCache.setValue(resource.url, toCacheEntry(rGridResource))
       }
       resourceCache.setDependencies(resource.url, dependentResources)

@@ -1,8 +1,7 @@
 'use strict'
 
 require('chromedriver')
-const {Builder} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {
   Eyes,
   VisualGridRunner,
@@ -21,10 +20,7 @@ const showLogs = false
 
 describe('VisualGrid Resources', () => {
   before(async function() {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new ChromeOptions().headless())
-      .build()
+    driver = await getDriver('CHROME')
   })
 
   it('should ignore CORS frames', async () => {
@@ -54,7 +50,7 @@ describe('VisualGrid Resources', () => {
 
     await eyes.check('region', Target.region(new Region(200, 200, 50, 100)))
 
-    await eyes.check('selector', Target.region('#scroll1'))
+    await eyes.check('selector', Target.region({css: '#scroll1'}))
 
     await eyes.close()
   })

@@ -30,8 +30,71 @@ const GET_ELEMENT_ENTIRE_SIZE = `
   ];
 `
 
+const GET_ELEMENT_RECT = `
+  var element = arguments[0];
+  var rect = element.getBoundingClientRect();
+  var computedStyle = window.getComputedStyle(element);
+  var isFixed = isFixedElement(element);
+  return {
+    x: isFixed ? rect.left : rect.left + (window.scrollX || window.pageXOffset),
+    y: isFixed ? rect.top : rect.top + (window.scrollY || window.pageYOffset),
+    width: rect.width,
+    height: rect.height
+  };
+
+  function isFixedElement(element) {
+    var offsetElement = element;
+    while (offsetElement && offsetElement !== document.body && offsetElement !== document.documentElement) {
+      offsetElement = offsetElement.offsetParent;
+    }
+    if (!offsetElement) return true;
+    var position = window.getComputedStyle(offsetElement).getPropertyValue('position');
+    return position === 'fixed';
+  }
+`
+
+const GET_ELEMENT_CLIENT_RECT = `
+  var element = arguments[0];
+  var rect = element.getBoundingClientRect();
+  var computedStyle = window.getComputedStyle(element);
+  var borderLeftWidth = parseInt(computedStyle.getPropertyValue('border-left-width'));
+  var borderTopWidth = parseInt(computedStyle.getPropertyValue('border-top-width'));
+  var isFixed = isFixedElement(element);
+  return {
+    x: (isFixed ? element.offsetLeft : rect.left + (window.scrollX || window.pageXOffset)) + borderLeftWidth,
+    y: (isFixed ? element.offsetTop : rect.top + (window.scrollY || window.pageYOffset)) + borderTopWidth,
+    width: element.clientWidth,
+    height: element.clientHeight
+  };
+
+  function isFixedElement(element) {
+    var offsetElement = element;
+    while (offsetElement && offsetElement !== document.body && offsetElement !== document.documentElement) {
+      offsetElement = offsetElement.offsetParent;
+    }
+    if (!offsetElement) return true;
+    var position = window.getComputedStyle(offsetElement).getPropertyValue('position');
+    return position === 'fixed';
+  }
+`
+
+const GET_ELEMENT_PROPERTIES = `
+  var properties = arguments[0];
+  var element = arguments[1];
+  return properties.map(function(property) { return element[property]; });
+`
+
+const GET_ELEMENT_CSS_PROPERTIES = `
+  var properties = arguments[0];
+  var element = arguments[1];
+  var computedStyle = window.getComputedStyle(element, null);
+  return computedStyle
+    ? properties.map(function(property) { return computedStyle.getPropertyValue(property); })
+    : [];
+`
+
 const GET_SCROLL_POSITION = `
-  var element = arguments[0] || document.scrollingElement;
+  var element = arguments[0];
   if (element) return [element.scrollLeft, element.scrollTop];
   else {
     var doc = document.documentElement;
@@ -42,9 +105,16 @@ const GET_SCROLL_POSITION = `
   }
 `
 
-const SCROLL_TO = (x, y) => `
-  var element = arguments[0] || document.scrollingElement || window;
-  element.scrollTo(${x}, ${y});
+const SCROLL_TO = `
+  var offset = arguments[0];
+  var element = arguments[1] || document.documentElement;
+  if (element.scrollTo) {
+    element.scrollTo(offset.x, offset.y);
+  } else {
+    element.scrollTop = offset.x;
+    element.scrollLeft = offset.y;
+  }
+  return [element.scrollLeft, element.scrollTop];
 `
 
 const TRANSFORM_KEYS = ['transform', '-webkit-transform']
@@ -63,9 +133,21 @@ const SET_TRANSFORMS = transforms => `
 
 const TRANSLATE_TO = (x, y) => `
   var element = arguments[0] || document.documentElement;
-  element.scrollTo(0, 0);
-  ${TRANSFORM_KEYS.map(key => `element.style['${key}'] = 'translate(10px, -${y}px)'`).join(';')}
   ${TRANSFORM_KEYS.map(key => `element.style['${key}'] = 'translate(-${x}px, -${y}px)'`).join(';')}
+`
+
+const IS_SCROLLABLE = `
+  var element = arguments[0] || document.documentElement;
+  return element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight
+`
+
+const GET_SCROLL_ROOT_ELEMENT = `
+  return document.documentElement;
+`
+
+const MARK_SCROLL_ROOT_ELEMENT = `
+  var element =  arguments[0] || document.documentElement;
+  element.setAttribute("data-applitools-scroll", "true");
 `
 
 const GET_OVERFLOW = `
@@ -78,6 +160,17 @@ const SET_OVERFLOW_AND_RETURN_ORIGIN_VALUE = overflow => `
   el.style.overflow = newOverflow;
   if (newOverflow.toUpperCase() === 'HIDDEN' && origOverflow.toUpperCase() !== 'HIDDEN') { el.setAttribute('data-applitools-original-overflow', origOverflow); }
   return origOverflow;
+`
+
+const BLUR_ELEMENT = `
+  var activeElement = arguments[0] || document.activeElement;
+  if (activeElement) activeElement.blur();
+  return activeElement;
+`
+
+const FOCUS_ELEMENT = `
+  var activeElement = arguments[0];
+  if (activeElement) activeElement.focus();
 `
 
 const GET_ELEMENT_XPATH_FUNC = `
@@ -119,7 +212,7 @@ const GET_ELEMENT_XPATH = `
 
 const GET_CURRENT_CONTEXT_INFO = `
   ${GET_ELEMENT_XPATH_FUNC}
-  var isCORS, isRoot, frameSelector;
+  var isCORS, isRoot, selector;
   try {
     isRoot = window.top.document === window.document;
   } catch (err) {
@@ -132,17 +225,22 @@ const GET_CURRENT_CONTEXT_INFO = `
   }
   if (!isCORS) {
     try {
-      frameSelector = getElementXpath(window.frameElement);
+      selector = getElementXpath(window.frameElement);
     } catch (err) {
-      frameSelector = null;
+      selector = null;
     }
   }
   return {
     isRoot: isRoot,
     isCORS: isCORS,
-    document: document,
-    frameSelector: frameSelector,
+    contentDocument: document.querySelector('html'),
+    selector: selector,
   };
+`
+
+const GET_FRAME_BY_NAME_OR_ID = `
+  var nameOrId = arguments[0];
+  return document.querySelector('iframe[name="' + nameOrId + '"],iframe#' + nameOrId)
 `
 
 const GET_FRAMES = `
@@ -156,19 +254,34 @@ const GET_FRAMES = `
   });
 `
 
+const GET_DOCUMENT_ELEMENT = `
+  return document.documentElement
+`
+
 module.exports = {
   GET_VIEWPORT_SIZE,
   GET_CONTENT_ENTIRE_SIZE,
   GET_ELEMENT_ENTIRE_SIZE,
+  GET_ELEMENT_RECT,
+  GET_ELEMENT_CLIENT_RECT,
+  GET_ELEMENT_CSS_PROPERTIES,
+  GET_ELEMENT_PROPERTIES,
   GET_SCROLL_POSITION,
   SCROLL_TO,
   GET_TRANSFORMS,
   SET_TRANSFORMS,
   TRANSLATE_TO,
+  IS_SCROLLABLE,
+  GET_SCROLL_ROOT_ELEMENT,
+  MARK_SCROLL_ROOT_ELEMENT,
   GET_OVERFLOW,
   SET_OVERFLOW_AND_RETURN_ORIGIN_VALUE,
+  BLUR_ELEMENT,
+  FOCUS_ELEMENT,
   GET_ELEMENT_XPATH,
   GET_ELEMENT_ABSOLUTE_XPATH,
   GET_CURRENT_CONTEXT_INFO,
+  GET_FRAME_BY_NAME_OR_ID,
   GET_FRAMES,
+  GET_DOCUMENT_ELEMENT,
 }

@@ -3,17 +3,10 @@ import { makeVisualGridClient } from '@applitools/visual-grid-client'
 import { parseApiServer } from './parsers.js'
 import { browserName } from './userAgent'
 import { getCurrentProject } from './ide-project'
-import {
-  parseBrowsers,
-  parseMatchLevel,
-  maxExperimentalResolution,
-  isExperimentalBrowser,
-} from './parsers'
-import ideLogger from './ide-logger'
+import { parseBrowsers, parseMatchLevel, isExperimentalBrowser } from './parsers'
 import storage from '../../IO/storage'
 import manifest from '../../manifest.json'
 
-export const experimentalBrowserWarningMessage = `IE and Edge are experimental and only support viewports of up to ${maxExperimentalResolution}.`
 const DEFAULT_EYES_API_SERVER = 'https://eyesapi.applitools.com'
 const eyes = {}
 let lastResults = {
@@ -28,14 +21,7 @@ function createDefaultSettings() {
 }
 
 export async function getExtensionSettings() {
-  const {
-    apiKey,
-    eyesServer,
-    projectSettings,
-    eulaSignDate,
-    isFree,
-    experimentalEnabled,
-  } = await storage.get([
+  const { apiKey, eyesServer, projectSettings, eulaSignDate, isFree, experimentalEnabled } = await storage.get([
     'apiKey',
     'eyesServer',
     'projectSettings',
@@ -58,14 +44,7 @@ export async function getExtensionSettings() {
   }
 }
 
-export async function makeEyes(
-  id,
-  batchId,
-  appName,
-  batchName,
-  testName,
-  options = {}
-) {
+export async function makeEyes(id, batchId, appName, batchName, testName, options = {}) {
   if (hasEyes(id)) return eyes[id]
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
@@ -73,26 +52,17 @@ export async function makeEyes(
   }
   const settings = await getExtensionSettings()
   if (!settings.apiKey) {
-    throw new Error(
-      'No API key was provided, please set one in the options page'
-    )
+    throw new Error('No API key was provided, please set one in the options page')
   }
-  const eyesApiServerUrl = settings.eyesServer
-    ? parseApiServer(settings.eyesServer)
-    : undefined
+  const eyesApiServerUrl = settings.eyesServer ? parseApiServer(settings.eyesServer) : undefined
   const branch = (settings ? settings.projectSettings.branch : '') || ''
-  const parentBranch =
-    (settings ? settings.projectSettings.parentBranch : '') || ''
+  const parentBranch = (settings ? settings.projectSettings.parentBranch : '') || ''
   let eye
 
   if (settings.projectSettings.enableVisualGrid && !options.useNativeOverride) {
-    let filteredBrowsers = settings.projectSettings
-      ? settings.projectSettings.selectedBrowsers
-      : undefined
+    let filteredBrowsers = settings.projectSettings ? settings.projectSettings.selectedBrowsers : undefined
     if (!settings.experimentalEnabled) {
-      filteredBrowsers = filteredBrowsers.filter(
-        b => !isExperimentalBrowser(b.toLowerCase())
-      )
+      filteredBrowsers = filteredBrowsers.filter(b => !isExperimentalBrowser(b.toLowerCase()))
     }
 
     eye = await createVisualGridEyes(
@@ -105,15 +75,9 @@ export async function makeEyes(
       branch,
       parentBranch,
       filteredBrowsers,
-      settings.projectSettings
-        ? settings.projectSettings.selectedViewportSizes
-        : undefined,
-      settings.projectSettings
-        ? settings.projectSettings.selectedDevices
-        : undefined,
-      settings.projectSettings
-        ? settings.projectSettings.selectedDeviceOrientations
-        : undefined,
+      settings.projectSettings ? settings.projectSettings.selectedViewportSizes : undefined,
+      settings.projectSettings ? settings.projectSettings.selectedDevices : undefined,
+      settings.projectSettings ? settings.projectSettings.selectedDeviceOrientations : undefined,
       options.baselineEnvName,
       settings.isFree,
       settings.eulaSignDate
@@ -136,9 +100,7 @@ export async function makeEyes(
 }
 
 function makeAgentId(runningLocation) {
-  return `eyes.seleniumide.${browserName.toLowerCase()}.${runningLocation}/${
-    manifest.version
-  } `
+  return `eyes.seleniumide.${browserName.toLowerCase()}.${runningLocation}/${manifest.version} `
 }
 
 async function createImagesEyes(
@@ -168,6 +130,13 @@ async function createImagesEyes(
     eyes.setEnablePatterns(true)
     eyes.setUseDom(true)
     eyes.setSendDom(true)
+  }
+
+  const accessibilitySettings = await getAccessibilitySettings()
+  if (accessibilitySettings) {
+    const config = eyes.getConfiguration()
+    config.setAccessibilityValidation(accessibilitySettings)
+    eyes.setConfiguration(config)
   }
 
   await eyes.open(appName, testName)
@@ -207,17 +176,21 @@ export function hasValidVisualGridSettings(settings) {
 
 export async function isPatternsDomEnabled() {
   const settings = await getExtensionSettings()
-  return !!(
-    settings.projectSettings.enablePatternsDom && settings.experimentalEnabled
-  )
+  return !!(settings.projectSettings.enablePatternsDom && settings.experimentalEnabled)
 }
 
-export async function getAccessibilityLevel() {
+export function makeAccessibilitySettings(settings) {
+  if (settings.projectSettings.enableAccessibilityValidations) {
+    return {
+      level: settings.projectSettings.accessibilityLevel,
+      guidelinesVersion: `WCAG_${settings.projectSettings.accessibilityVersion.replace(/\./, '_')}`,
+    }
+  }
+}
+
+async function getAccessibilitySettings() {
   const settings = await getExtensionSettings()
-  return settings.experimentalEnabled &&
-    settings.projectSettings.enableAccessibilityValidations
-    ? settings.projectSettings.accessibilityLevel || 'AA'
-    : 'None'
+  return makeAccessibilitySettings(settings)
 }
 
 async function createVisualGridEyes(
@@ -247,22 +220,7 @@ async function createVisualGridEyes(
     })
   )
     throw new Error('Incomplete visual grid settings')
-  const { matrix, didRemoveResolution } = parseBrowsers(
-    browsers,
-    viewports,
-    devices,
-    orientations
-  )
-  if (didRemoveResolution) {
-    if (matrix.length) {
-      await ideLogger.warn(experimentalBrowserWarningMessage)
-    } else {
-      throw new Error(
-        `Visual Grid has invalid settings, IE and Edge are experimental and only support viewports of up to ${maxExperimentalResolution}, please make sure there is at least one supported viewport.`
-      )
-    }
-  }
-
+  const { matrix, _didRemoveResolution } = parseBrowsers(browsers, viewports, devices, orientations)
   let useDom
   let enablePatterns
 
@@ -271,6 +229,8 @@ async function createVisualGridEyes(
     enablePatterns = true
   }
 
+  const accessibilitySettings = await getAccessibilitySettings()
+
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
@@ -278,6 +238,7 @@ async function createVisualGridEyes(
     showLogs: true,
     useDom,
     enablePatterns,
+    accessibilitySettings,
   }).openEyes({
     appName,
     batchName,
@@ -289,17 +250,7 @@ async function createVisualGridEyes(
     browser: matrix,
     baselineEnvName,
   })
-  await decorateVisualEyes(
-    eyes,
-    batchId,
-    appName,
-    batchName,
-    testName,
-    serverUrl,
-    apiKey,
-    branchName,
-    parentBranchName
-  )
+  await decorateVisualEyes(eyes, batchId, appName, batchName, testName, serverUrl, apiKey, branchName, parentBranchName)
   window.e = eyes
   return eyes
 }
@@ -346,9 +297,7 @@ export async function closeEyes(id) {
     if (firstFailingResultOrLast._status) {
       // checking the length because we might not necessarily have checkpoints
       lastResults.url =
-        eye.commands.length &&
-        (firstFailingResultOrLast._status !== 'Passed' ||
-          firstFailingResultOrLast._isNew)
+        eye.commands.length && (firstFailingResultOrLast._status !== 'Passed' || firstFailingResultOrLast._isNew)
           ? firstFailingResultOrLast._appUrls._session
           : lastResults.url
     } else {
@@ -415,8 +364,6 @@ async function decorateVisualEyes(
 
 function verifyMatchLevel(level) {
   if (!/^(Layout|Layout2|Content|Strict|Exact)$/i.test(level)) {
-    throw new Error(
-      'Match level must be one of: Exact, Strict, Content or Layout.'
-    )
+    throw new Error('Match level must be one of: Exact, Strict, Content or Layout.')
   }
 }

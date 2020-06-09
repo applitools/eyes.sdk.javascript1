@@ -22,19 +22,14 @@ export default class VisualGridOptionGroup extends React.Component {
   render() {
     return (
       <div className="group">
-        <div
-          className={classNames('group-header', this.props.name.toLowerCase())}
-          onClick={this.onClick.bind(this)}
-        >
+        <div className={classNames('group-header', this.props.name.toLowerCase())} onClick={this.onClick.bind(this)}>
           <div className="title">{this.props.name}</div>
           <div className="selected-count">{this.props.selectedCount}</div>
           <div className="control">
             <ArrowIndicator directionIsUp={this.state.isSelected} />
           </div>
         </div>
-        {this.state.isSelected && (
-          <div className="contents">{this.props.children}</div>
-        )}
+        {this.state.isSelected && <div className="contents">{this.props.children}</div>}
       </div>
     )
   }

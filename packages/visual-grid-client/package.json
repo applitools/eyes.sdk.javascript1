@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "13.8.0",
+  "version": "14.4.4",
   "description": "",
   "keywords": [
     "applitools",
@@ -31,8 +31,8 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/dom-snapshot": "3.5.2",
-    "@applitools/eyes-sdk-core": "10.1.1",
+    "@applitools/dom-snapshot": "3.5.3",
+    "@applitools/eyes-sdk-core": "11.0.5",
     "@applitools/feature-flags": "2.1.1",
     "@applitools/functional-commons": "1.5.4",
     "@applitools/http-commons": "2.3.12",
@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-shared": "0.1.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.4",
@@ -61,6 +62,7 @@
     "nock": "^11.3.5",
     "node-fetch": "^2.6.0",
     "puppeteer": "^1.20.0",
+    "typescript": "^3.9.2",
     "ua-parser-js": "^0.7.20"
   },
   "scripts": {
@@ -74,7 +76,7 @@
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
     "test": "yarn build:browser && yarn test:mocha",
     "render": "node example/render.js",
-    "preversion": "bongo preversion",
+    "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },

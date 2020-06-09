@@ -1,12 +1,6 @@
 'use strict'
 
-const {
-  EyesError,
-  RectangleSize,
-  Location,
-  ArgumentGuard,
-  GeneralUtils,
-} = require('@applitools/eyes-common')
+const {EyesError, RectangleSize, Location, ArgumentGuard, GeneralUtils} = require('..')
 
 const JS_GET_VIEWPORT_SIZE =
   'var height, width; ' +

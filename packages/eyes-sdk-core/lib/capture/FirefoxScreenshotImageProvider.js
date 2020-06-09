@@ -1,6 +1,6 @@
 'use strict'
 
-const {Region} = require('@applitools/eyes-common')
+const {Region} = require('../..')
 const {ImageProvider} = require('./ImageProvider')
 const EyesScreenshot = require('./EyesScreenshotNew')
 
@@ -46,7 +46,7 @@ class FirefoxScreenshotImageProvider extends ImageProvider {
       const screenshotType = await EyesScreenshot.getScreenshotType(image, this._eyes)
       let location = this._frameChain.getCurrentFrameLocationInViewport()
       if (screenshotType === EyesScreenshot.ScreenshotType.ENTIRE_FRAME) {
-        location = location.offsetByLocation(frameChain.getTopFrameScrollLocation())
+        location = location.offsetByLocation(frameChain.first.parentScrollLocation)
       }
       const viewportSize = await this._eyes.getViewportSize()
       const scaleRatio = this._eyes.getDevicePixelRatio()

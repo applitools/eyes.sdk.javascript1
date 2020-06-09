@@ -1,0 +1,25 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-ide-java-code-export</artifactId>
+  <version>1</version>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>3.141.59</version>
+    </dependency>
+    <dependency>
+      <groupId>com.applitools</groupId>
+      <artifactId>eyes-selenium-java3</artifactId>
+      <version>3.164.1</version>
+    </dependency>
+  </dependencies>
+</project>

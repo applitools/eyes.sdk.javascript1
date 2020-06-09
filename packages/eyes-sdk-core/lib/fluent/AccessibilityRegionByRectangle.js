@@ -1,10 +1,6 @@
 'use strict'
 
-const {
-  AccessibilityMatchSettings,
-  AccessibilityRegionType,
-  ArgumentGuard,
-} = require('@applitools/eyes-common')
+const {AccessibilityMatchSettings, AccessibilityRegionType, ArgumentGuard} = require('../..')
 const {GetAccessibilityRegion} = require('./GetAccessibilityRegion')
 
 /**
@@ -36,7 +32,7 @@ class AccessibilityRegionByRectangle extends GetAccessibilityRegion {
     return [accessibilityRegion]
   }
 
-  async toPersistedRegions(_driver) {
+  async toPersistedRegions() {
     return [
       {
         left: this._rect.getLeft(),

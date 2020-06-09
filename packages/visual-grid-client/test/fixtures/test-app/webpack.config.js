@@ -12,5 +12,6 @@ module.exports = {
     fs: 'empty',
     url: true,
     child_process: 'empty',
+    module: 'empty',
   },
 }

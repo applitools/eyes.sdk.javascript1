@@ -12,12 +12,7 @@ export default class ButtonList extends React.Component {
     return (
       <ul className="buttons">
         {this.props.items.map(item => (
-          <ListButton
-            key={item}
-            name={item}
-            label={this.props.label}
-            onClick={this.props.onClick}
-          />
+          <ListButton key={item} name={item} label={this.props.label} onClick={this.props.onClick} />
         ))}
       </ul>
     )
@@ -51,13 +46,7 @@ class ListButton extends React.Component {
       <li tabIndex="0" onClick={this.handleClick}>
         <button tabIndex="-1">{this.props.name}</button>
         {this.state.label && (
-          <a
-            className={
-              this.state.selectedCommand ? 'selected-command' : undefined
-            }
-          >
-            {this.state.label}
-          </a>
+          <a className={this.state.selectedCommand ? 'selected-command' : undefined}>{this.state.label}</a>
         )}
       </li>
     )

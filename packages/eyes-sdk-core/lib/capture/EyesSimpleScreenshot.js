@@ -1,12 +1,6 @@
 'use strict'
 
-const {
-  ArgumentGuard,
-  CoordinatesType,
-  Location,
-  RectangleSize,
-  Region,
-} = require('@applitools/eyes-common')
+const {ArgumentGuard, CoordinatesType, Location, RectangleSize, Region} = require('../..')
 
 const {OutOfBoundsError} = require('../errors/OutOfBoundsError')
 const {CoordinatesTypeConversionError} = require('../errors/CoordinatesTypeConversionError')

@@ -12,7 +12,6 @@ const {
   FloatingMatchSettings,
   metadata,
   RectangleSize,
-  Region,
   TypeUtils,
 } = require('@applitools/eyes-sdk-core')
 const {ActualAppOutput, ImageMatchSettings, SessionResults} = metadata
@@ -236,11 +235,11 @@ class Common {
         deepStrictEqual(this._expectedFloatingsRegions, floating, 'Floating regions lists differ')
       }
 
-      if (this._expectedIgnoreRegions) {
-        const ignoreRegions = new Region(imageMatchSettings.getIgnore())
+      // if (this._expectedIgnoreRegions) {
+      //   const ignoreRegions = new Region(imageMatchSettings.getIgnore())
 
-        deepStrictEqual(this._expectedIgnoreRegions, ignoreRegions, 'Ignore regions lists differ')
-      }
+      //   deepStrictEqual(this._expectedIgnoreRegions, ignoreRegions, 'Ignore regions lists differ')
+      // }
 
       // if (this._expectedAccessibilityRegions) {
       //   const accessibilityRegions = new Region(imageMatchSettings.getAccessibility());

@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "10.1.1",
+  "version": "11.0.5",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -31,19 +31,29 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-common": "3.23.1",
+    "@applitools/dom-capture": "7.2.4",
     "@applitools/isomorphic-fetch": "3.0.0",
     "axios": "0.19.2",
     "chalk": "3.0.0",
-    "es6-promise-pool": "2.5.0",
+    "cosmiconfig": "^6.0.0",
+    "dateformat": "^3.0.3",
+    "debug": "^4.1.1",
+    "deepmerge": "^4.2.2",
+    "png-async": "^0.9.4",
+    "stack-trace": "^0.0.10",
     "tunnel": "0.0.6"
   },
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/visual-grid-client": "14.2.0",
+    "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
-    "mocha": "7.0.1"
+    "chromedriver": "^83.0.0",
+    "jsdoc": "3.6.4",
+    "mocha": "7.0.1",
+    "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "browser": {
     "tunnel": false
@@ -53,7 +63,7 @@
     "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "preversion": "bongo preversion",
+    "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },

@@ -1,6 +1,6 @@
 'use strict'
 
-const testServer = require('./test-server')
+const {testServer} = require('@applitools/sdk-shared')
 
 function startTestServer({before, after, port = 0}) {
   let actualPort, close

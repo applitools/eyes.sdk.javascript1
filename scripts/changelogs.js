@@ -22,7 +22,6 @@ const PACKAGE_DIRS = [
   'dom-snapshot',
   'dom-capture',
   'eyes-sdk-core',
-  'eyes-common',
   'visual-grid-client',
 ]
 

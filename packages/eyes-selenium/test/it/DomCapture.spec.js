@@ -3,8 +3,8 @@
 const {describe, it, before} = require('mocha')
 const {expect} = require('chai')
 const {EyesSelenium, Target, Logger, ConsoleLogHandler} = require('../../')
-const {Builder, By} = require('selenium-webdriver')
-const {Options} = require('selenium-webdriver/chrome')
+const {By} = require('selenium-webdriver')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {startFakeEyesServer, getDom, getSession} = require('@applitools/sdk-fake-eyes-server')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 const path = require('path')
@@ -12,13 +12,10 @@ const fs = require('fs')
 
 describe('DOM Capture', () => {
   let driver, eyes, serverUrl, closeServer
-  const expectedFolder = path.resolve(__dirname, '../fixtures/tmp')
+  const expectedFolder = path.resolve(__dirname, '/tmp')
 
   before(async () => {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new Options().headless())
-      .build()
+    driver = await getDriver('CHROME')
 
     if (!fs.existsSync(expectedFolder)) {
       fs.mkdirSync(expectedFolder)
@@ -164,7 +161,7 @@ describe('DOM Capture', () => {
 
   // TODO this should be a central utility also for production code (well, modified for cross browser compat and optimize to get also dimensions), not only tests!
   async function getEffectiveLocation(el) {
-    const rect = await el.getRect()
+    const rect = await (el.getRect ? el.getRect() : el.getLocation())
     const [borderLeft, borderTop] = await el
       .getDriver()
       .executeScript(

@@ -7,7 +7,7 @@ const {
   Region,
   PerformanceUtils,
   ImageMatchSettings,
-} = require('@applitools/eyes-common')
+} = require('..')
 
 const {MatchWindowData, Options} = require('./match/MatchWindowData')
 
@@ -172,11 +172,6 @@ class MatchWindowTask {
         matchLevel = this._eyes.getDefaultMatchSettings().getMatchLevel()
       }
 
-      let accessibilityLevel = checkSettings.getAccessibilityValidation()
-      if (TypeUtils.isNull(accessibilityLevel)) {
-        accessibilityLevel = this._eyes.getDefaultMatchSettings().getAccessibilityValidation()
-      }
-
       let ignoreCaret = checkSettings.getIgnoreCaret()
       if (TypeUtils.isNull(ignoreCaret)) {
         ignoreCaret = this._eyes.getDefaultMatchSettings().getIgnoreCaret()
@@ -197,14 +192,16 @@ class MatchWindowTask {
         ignoreDisplacements = this._eyes.getDefaultMatchSettings().getIgnoreDisplacements()
       }
 
+      const accessibilitySettings = this._eyes.getDefaultMatchSettings().getAccessibilitySettings()
+
       imageMatchSettings = new ImageMatchSettings({
         matchLevel,
-        accessibilityLevel,
         exact: null,
         ignoreCaret,
         useDom,
         enablePatterns,
         ignoreDisplacements,
+        accessibilitySettings,
       })
 
       await this._collectRegions(checkSettings, imageMatchSettings, screenshot)

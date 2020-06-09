@@ -9,40 +9,12 @@
 			"path": "packages/dom-snapshot"
 		},
 		{
-			"name": "dom-utils",
-			"path": "packages/dom-utils"
-		},
-		{
-			"name": "eyes-appium",
-			"path": "packages/eyes-appium"
-		},
-		{
-			"name": "eyes-common",
-			"path": "packages/eyes-common"
-		},
-		{
-			"name": "eyes-common-legacy",
-			"path": "packages/eyes-common-legacy"
-		},
-		{
 			"name": "eyes-cypress",
 			"path": "packages/eyes-cypress"
 		},
 		{
 			"name": "eyes-images",
 			"path": "packages/eyes-images"
-		},
-		{
-			"name": "eyes-images-browser",
-			"path": "packages/eyes-images-browser"
-		},
-		{
-			"name": "eyes-images-legacy",
-			"path": "packages/eyes-images-legacy"
-		},
-		{
-			"name": "eyes-leanft",
-			"path": "packages/eyes-leanft"
 		},
 		{
 			"name": "eyes-protractor",
@@ -53,24 +25,8 @@
 			"path": "packages/eyes-sdk-core"
 		},
 		{
-			"name": "eyes-sdk-core-browser",
-			"path": "packages/eyes-sdk-core-browser"
-		},
-		{
-			"name": "eyes-sdk-core-legacy",
-			"path": "packages/eyes-sdk-core-legacy"
-		},
-		{
 			"name": "eyes-selenium",
 			"path": "packages/eyes-selenium"
-		},
-		{
-			"name": "eyes-selenium-3",
-			"path": "packages/eyes-selenium-3"
-		},
-		{
-			"name": "eyes-selenium-jest-perf",
-			"path": "packages/eyes-selenium-jest-perf"
 		},
 		{
 			"name": "eyes-storybook",
@@ -109,8 +65,12 @@
 			"path": "packages/sdk-release-kit"
 		},
 		{
-			"name": "sdk-test-kit",
-			"path": "packages/sdk-test-kit"
+			"name": "sdk-shared",
+			"path": "packages/sdk-shared"
+		},
+		{
+			"name": "side-eyes",
+			"path": "packages/side-eyes"
 		},
 		{
 			"name": "visual-grid-client",

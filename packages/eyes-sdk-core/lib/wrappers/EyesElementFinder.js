@@ -1,49 +1,79 @@
 'use strict'
-/* eslint-disable no-unused-vars */
-
 /**
- * @typedef {import('./EyesWrappedElement').EyesWrappedElement} EyesWrappedElement
- * @typedef {import('./EyesWrappedElement').UnwrappedElement} UnwrappedElement
+ * @typedef {import('../logging/Logger').Logger} Logger
+ * @typedef {import('./EyesWrappedDriver')} EyesWrappedDriver
+ * @typedef {import('./EyesWrappedDriver').UnwrappedDriver} UnwrappedDriver
+ * @typedef {import('./EyesWrappedElement')} EyesWrappedElement
+ * @typedef {import('./EyesWrappedElement').SupportedElement} SupportedElement
+ * @typedef {import('./EyesWrappedElement').EyesSelector} EyesSelector
+ * @typedef {import('./EyesWrappedElement').SupportedSelector} SupportedSelector
  */
 
 /**
- * @typedef {Object} UniversalLocator
- * @property {!string} UniversalLocator.using
- * @property {!string} UniversalLocator.value
+ * The object which implements the lowest-level functions to work with element finder
+ * @typedef {Object} SpecsElementFinder
+ * @property {(driver: UnwrappedDriver, selector: SupportedSelector) => EyesWrappedElement} findElement - return found element
+ * @property {(driver: UnwrappedDriver, selector: SupportedSelector) => EyesWrappedElement} findElements - return found elements
+ * @property {(logger: Logger, driver: EyesWrappedDriver, element: SupportedElement, selector: SupportedSelector) => EyesWrappedElement} createElement - return wrapped element instance
+ * @property {(selector: EyesSelector) => SupportedSelector} toSupportedSelector - translate cross SDK selector to SDK specific selector
+ * @property {(selector: SupportedSelector) => EyesSelector} toEyesSelector - translate SDK specific selector to cross SDK selector
  */
 
-/**
- * An interface for element finder
- * @ignore
- * @interface
- */
 class EyesElementFinder {
   /**
-   * Check if passed locator is supported by current implementation
-   * @param {*} locator
-   * @returns {boolean} true if locator is supported and could be passed in the {@link EyesElementFinder.findElement} implementation
+   * @param {SpecsElementFinder} SpecsElementFinder - specifications for the specific framework
+   * @return {EyesElementFinder} specialized version of this class
    */
-  static isLocator(locator) {
-    throw new TypeError('The method is not implemented!')
+  static specialize(SpecsElementFinder) {
+    return class extends EyesElementFinder {
+      /** @override */
+      static get specs() {
+        return SpecsElementFinder
+      }
+      /** @override */
+      get specs() {
+        return SpecsElementFinder
+      }
+    }
+  }
+  /** @type {SpecsElementFinder} */
+  static get specs() {
+    throw new TypeError('The class is not specialized')
+  }
+  /** @type {SpecsElementFinder} */
+  get specs() {
+    throw new TypeError('The class is not specialized')
+  }
+  /**
+   * Construct an element finder instance
+   * @param {Logger} logger - logger instance
+   * @param {EyesWrappedDriver} driver - wrapped driver instance
+   */
+  constructor(logger, driver) {
+    this._logger = logger
+    this._driver = driver
   }
   /**
    * Returns first founded element
-   * @param {UniversalLocator} locator locator supported by current implementation
-   * @param {EyesWrappedElement|UnwrappedElement} parentElement parent element to search only among child elements
+   * @param {SupportedSelector} selector - selector supported by current implementation
    * @return {Promise<EyesWrappedElement>}
    */
-  async findElement(locator, parentElement) {
-    throw new TypeError('The method is not implemented!')
+  async findElement(selector) {
+    selector = this.specs.toSupportedSelector(selector)
+    const element = await this.specs.findElement(this._driver.unwrapped, selector)
+    return element ? this.specs.createElement(this._logger, this._driver, element, selector) : null
   }
   /**
    * Returns all founded element
-   * @param {UniversalLocator} locator locator supported by current SDK
-   * @param {EyesWrappedElement|UnwrappedElement} parentElement parent element to search only among child elements
+   * @param {SupportedSelector} selector - selector supported by current implementation
    * @return {Promise<EyesWrappedElement[]>}
    */
-  async findElements(locator, parentElement) {
-    throw new TypeError('The method is not implemented!')
+  async findElements(selector) {
+    const elements = await this.specs.findElements(this._driver.unwrapped, selector)
+    return elements.map(element =>
+      this.specs.createElement(this._logger, this._driver, element, selector),
+    )
   }
 }
 
-exports.EyesElementFinder = EyesElementFinder
+module.exports = EyesElementFinder

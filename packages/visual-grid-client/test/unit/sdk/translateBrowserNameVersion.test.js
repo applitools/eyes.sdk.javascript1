@@ -21,6 +21,7 @@ describe('translateBrowserNameVersion', () => {
     expect(translateBrowserNameVersion('safari-1')).to.equal('safari-one-version-back')
     expect(translateBrowserNameVersion('safari-2')).to.equal('safari-two-versions-back')
     expect(translateBrowserNameVersion('edgechromium-1')).to.equal('edgechromium-one-version-back')
+    expect(translateBrowserNameVersion('edgechromium-2')).to.equal('edgechromium-two-versions-back')
   })
 
   it("doesn't translate to (1|2)-version(s)-back for unsupported browsers", async () => {
@@ -30,7 +31,6 @@ describe('translateBrowserNameVersion', () => {
     expect(translateBrowserNameVersion('ie11-2')).to.equal('ie11-2')
     expect(translateBrowserNameVersion('ie10-1')).to.equal('ie10-1')
     expect(translateBrowserNameVersion('ie10-2')).to.equal('ie10-2')
-    expect(translateBrowserNameVersion('edgechromium-2')).to.equal('edgechromium-2')
     expect(translateBrowserNameVersion('edgelegacy-1')).to.equal('edgelegacy-1')
     expect(translateBrowserNameVersion('edgelegacy-2')).to.equal('edgelegacy-2')
   })

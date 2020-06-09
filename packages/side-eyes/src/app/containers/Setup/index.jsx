@@ -16,14 +16,12 @@ export default class Setup extends React.Component {
     this.handleApiKeyChange = this.handleApiKeyChange.bind(this)
     this.handleServerUrlChange = this.handleServerUrlChange.bind(this)
     this.submitInfo = this.submitInfo.bind(this)
-    browser.storage.local
-      .get(['apiKey', 'eyesServer'])
-      .then(({ apiKey, eyesServer }) => {
-        this.setState({
-          apiKey: apiKey || this.state.apiKey,
-          eyesServer: eyesServer || this.state.serverUrl,
-        })
+    browser.storage.local.get(['apiKey', 'eyesServer']).then(({ apiKey, eyesServer }) => {
+      this.setState({
+        apiKey: apiKey || this.state.apiKey,
+        eyesServer: eyesServer || this.state.serverUrl,
       })
+    })
   }
   static propTypes = {
     isInvalid: PropTypes.bool,
@@ -60,20 +58,13 @@ export default class Setup extends React.Component {
           }}
         >
           <p>
-            <Link href="https://applitools.com/users/register">
-              Sign up for a free account
-            </Link>{' '}
-            if you don’t already have one, or see{' '}
+            <Link href="https://applitools.com/users/register">Sign up for a free account</Link> if you don’t already
+            have one, or see{' '}
             <Link href="https://applitools.com/docs/topics/overview/obtain-api-key.html">
               How to obtain your API key
             </Link>
           </p>
-          <Input
-            name="apiKey"
-            label="API key"
-            value={this.state.apiKey}
-            onChange={this.handleApiKeyChange}
-          />
+          <Input name="apiKey" label="API key" value={this.state.apiKey} onChange={this.handleApiKeyChange} />
           <Input
             name="serverUrl"
             label="Server URL"

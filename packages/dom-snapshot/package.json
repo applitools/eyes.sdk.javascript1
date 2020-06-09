@@ -1,19 +1,18 @@
 {
   "name": "@applitools/dom-snapshot",
-  "version": "3.5.2",
+  "version": "3.5.3",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
-    "test:mocha": "mocha --no-timeouts tests/**/*.test.js",
+    "test": "mocha --no-timeouts test/**/*.test.js",
     "eslint:node": "eslint '**/*.js' --ignore-pattern 'src/browser'",
     "eslint:browser": "eslint -c 'src/browser/.eslintrc.json' 'src/browser/**/*.js'",
     "lint": "yarn eslint:node && yarn eslint:browser",
-    "test": "yarn test:mocha && yarn lint",
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -c rollup.config.js --watch",
-    "surge": "surge tests/fixtures applitools-dom-snapshot.surge.sh",
-    "preversion": "bongo preversion",
-    "version": "bongo version",
+    "surge": "surge test/fixtures applitools-dom-snapshot.surge.sh",
+    "preversion": "bongo preversion && yarn build && yarn test",
+    "version": "yarn build && git add dist && git commit -m \"[auto] dom-snapshot: dist scripts for v$npm_package_version\" && bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
   "engines": {
@@ -31,7 +30,7 @@
     "@applitools/eslint-plugin-compat": "^0.7.0",
     "@applitools/monitoring-commons": "^1.0.19",
     "@applitools/sdk-release-kit": "0.1.0",
-    "@babel/core": "^7.8.3",
+    "@applitools/sdk-shared": "0.1.0",
     "@babel/preset-env": "^7.8.3",
     "canvas": "^2.6.1",
     "chai": "^4.2.0",
@@ -63,7 +62,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "dependencies": {
-    "@applitools/functional-commons": "^1.5.4",
+    "@applitools/functional-commons": "1.5.4",
     "css-tree": "^1.0.0-alpha.39"
   }
 }

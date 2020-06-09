@@ -5,7 +5,7 @@ const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const FakeEyesWrapper = require('../util/FakeEyesWrapper')
 const FakeRunningRender = require('../util/FakeRunningRender')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('../util/testServer')
+const {testServer} = require('@applitools/sdk-shared')
 const {loadJsonFixture, loadFixtureBuffer} = require('../util/loadFixture')
 const {failMsg} = require('../../src/sdk/waitForRenderedStatus')
 const {promisify: p} = require('util')
@@ -367,6 +367,7 @@ describe('openEyes', () => {
 * safari-one-version-back
 * safari-two-versions-back
 * edgechromium-one-version-back
+* edgechromium-two-versions-back
 
 Received: 'firefox-1'.`,
     )
@@ -1221,7 +1222,7 @@ Received: 'firefox-1'.`,
       ignoreCaret: 'ignoreCaret',
       isDisabled: false,
       matchLevel: 'matchLevel',
-      accessibilityLevel: 'accessibilityLevel',
+      accessibilitySettings: 'accessibilitySettings',
       parentBranch: 'parentBranch',
       branch: 'branch',
       saveFailedTests: 'saveFailedTests',
@@ -1241,7 +1242,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.ignoreCaret).to.equal('ignoreCaret')
       expect(wrapper.isDisabled).to.equal(false)
       expect(wrapper.matchLevel).to.equal('matchLevel')
-      expect(wrapper.accessibilityLevel).to.equal('accessibilityLevel')
+      expect(wrapper.accessibilitySettings).to.equal('accessibilitySettings')
       expect(wrapper.parentBranchName).to.equal('parentBranch')
       expect(wrapper.branchName).to.equal('branch')
       expect(wrapper.proxy).to.equal('proxy')
@@ -1280,7 +1281,7 @@ Received: 'firefox-1'.`,
       ignoreCaret: 'ignoreCaret',
       isDisabled: false,
       matchLevel: 'matchLevel',
-      accessibilityLevel: 'accessibilityLevel',
+      accessibilitySettings: 'accessibilitySettings',
       parentBranch: 'parentBranch',
       branch: 'branch',
       saveFailedTests: 'saveFailedTests',
@@ -1304,7 +1305,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.ignoreCaret).to.equal('ignoreCaret')
       expect(wrapper.isDisabled).to.equal(false)
       expect(wrapper.matchLevel).to.equal('matchLevel')
-      expect(wrapper.accessibilityLevel).to.equal('accessibilityLevel')
+      expect(wrapper.accessibilitySettings).to.equal('accessibilitySettings')
       expect(wrapper.parentBranchName).to.equal('parentBranch')
       expect(wrapper.branchName).to.equal('branch')
       expect(wrapper.proxy).to.equal('proxy')
@@ -1939,7 +1940,7 @@ Received: 'firefox-1'.`,
 
   it('renders iosDeviceInfo', async () => {
     const deviceName = 'iPhone 4'
-    const iosDeviceInfo = {screenOrientation: 'portrait', version: 'latest', name: deviceName}
+    const iosDeviceInfo = {screenOrientation: 'portrait', version: 'latest', deviceName}
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       browser: {
@@ -1953,7 +1954,7 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     expect(wrapper.getDeviceInfo()).to.equal(deviceName)
     expect(wrapper.iosDeviceInfo).to.eql(iosDeviceInfo)
-    expect(wrapper.getViewportSize()).to.eql(FakeEyesWrapper.devices['iPhone 4'])
+    expect(wrapper.getViewportSize()).to.eql(FakeEyesWrapper.devices[deviceName])
     expect(results.getStepsInfo()[0].result.getAsExpected()).to.equal(true)
   })
 
@@ -1962,7 +1963,7 @@ Received: 'firefox-1'.`,
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       browser: {
-        iosDeviceInfo: {screenOrientation: 'portrait', version: 'latest', name: deviceName},
+        iosDeviceInfo: {screenOrientation: 'portrait', version: 'latest', deviceName},
       },
       appName,
     })
@@ -2067,28 +2068,6 @@ Received: 'firefox-1'.`,
     await close()
   })
 
-  it('sets accessibilityLevel in checkWindow', async () => {
-    wrapper.checkWindow = async ({tag, checkSettings}) => {
-      await psetTimeout(20)
-      if (tag === 2) {
-        expect(checkSettings.getAccessibilityValidation()).to.equal('AA')
-      } else {
-        expect(wrapper.getAccessibilityValidation()).to.equal('None')
-      }
-      wrapper.setDummyTestResults()
-    }
-    const {checkWindow, close} = await openEyes({
-      wrappers: [wrapper],
-      appName,
-    })
-    checkWindow({tag: 1, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({accessibilityLevel: 'AA', tag: 2, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({tag: 3, cdt: [], url: ''})
-    await close()
-  })
-
   it('sets matchLevel in checkWindow and override argument to openEyes', async () => {
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20)
@@ -2107,29 +2086,6 @@ Received: 'firefox-1'.`,
     checkWindow({tag: 1, cdt: [], url: ''})
     await psetTimeout(0)
     checkWindow({matchLevel: 'Layout', tag: 2, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({tag: 3, cdt: [], url: ''})
-    await close()
-  })
-
-  it('sets accessibilityLevel in checkWindow and override argument to openEyes', async () => {
-    wrapper.checkWindow = async ({tag, checkSettings}) => {
-      await psetTimeout(20)
-      if (tag === 2) {
-        expect(checkSettings.getAccessibilityValidation()).to.equal('AAA')
-      } else {
-        expect(wrapper.getAccessibilityValidation()).to.equal('AA')
-      }
-      wrapper.setDummyTestResults()
-    }
-    const {checkWindow, close} = await openEyes({
-      wrappers: [wrapper],
-      appName,
-      accessibilityLevel: 'AA',
-    })
-    checkWindow({tag: 1, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({accessibilityLevel: 'AAA', tag: 2, cdt: [], url: ''})
     await psetTimeout(0)
     checkWindow({tag: 3, cdt: [], url: ''})
     await close()
@@ -2160,36 +2116,6 @@ Received: 'firefox-1'.`,
     checkWindow({tag: 1, cdt: [], url: ''})
     await psetTimeout(0)
     checkWindow({matchLevel: 'Layout', tag: 2, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({tag: 3, cdt: [], url: ''})
-    await close()
-  })
-
-  it('sets accessibilityLevel in checkWindow and override argument to makeRenderingGridClient', async () => {
-    openEyes = makeRenderingGridClient({
-      apiKey,
-      showLogs: APPLITOOLS_SHOW_LOGS,
-      renderWrapper: wrapper,
-      accessibilityLevel: 'AA',
-    }).openEyes
-
-    wrapper.checkWindow = async ({tag, checkSettings}) => {
-      await psetTimeout(20)
-      if (tag === 2) {
-        expect(checkSettings.getAccessibilityValidation()).to.equal('AAA')
-      } else {
-        expect(wrapper.getAccessibilityValidation()).to.equal('AA')
-      }
-      wrapper.setDummyTestResults()
-    }
-    const {checkWindow, close} = await openEyes({
-      apiKey,
-      wrappers: [wrapper],
-      appName,
-    })
-    checkWindow({tag: 1, cdt: [], url: ''})
-    await psetTimeout(0)
-    checkWindow({accessibilityLevel: 'AAA', tag: 2, cdt: [], url: ''})
     await psetTimeout(0)
     checkWindow({tag: 3, cdt: [], url: ''})
     await close()

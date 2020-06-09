@@ -1,1 +1,76 @@
-{"agentId":"agent","sessionType":"SEQUENTIAL","appIdOrName":"some app","verId":"1.0","scenarioIdOrName":"some test","displayName":"display name","batchInfo":{"id":"someBatchId","name":"some batch","startedAt":"2017-07-29T09:01:00.000Z","notifyOnCompletion":false},"baselineEnvName":"baseline","environmentName":"some environment","environment":{"os":"windows","hostingApp":"test suite","displaySize":{"width":234,"height":456},"deviceInfo":"Some Mobile Device"},"defaultMatchSettings":{"matchLevel":"Strict","accessibilityLevel":"AA","ignoreCaret":true,"useDom":false,"enablePatterns":false,"ignoreDisplacements":false,"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[{"_rect":{"left":10,"top":20,"width":30,"height":40},"_type":"GraphicalObject"}],"floating":[{"left":22,"top":32,"width":42,"height":52,"maxUpOffset":5,"maxDownOffset":10,"maxLeftOffset":15,"maxRightOffset":20}]},"branchName":"some branch","parentBranchName":"parent branch","baselineBranchName":"baseline branch","compareWithParentBranch":false,"ignoreBaseline":false,"saveDiffs":false,"render":false,"properties":[{"name":"property 1","value":"value 1"}]}
+{
+  "agentId": "agent",
+  "sessionType": "SEQUENTIAL",
+  "appIdOrName": "some app",
+  "verId": "1.0",
+  "scenarioIdOrName": "some test",
+  "displayName": "display name",
+  "batchInfo": {
+    "id": "someBatchId",
+    "name": "some batch",
+    "startedAt": "2017-07-29T09:01:00.000Z",
+    "notifyOnCompletion": false
+  },
+  "baselineEnvName": "baseline",
+  "environmentName": "some environment",
+  "environment": {
+    "os": "windows",
+    "hostingApp": "test suite",
+    "displaySize": {
+      "width": 234,
+      "height": 456
+    },
+    "deviceInfo": "Some Mobile Device"
+  },
+  "defaultMatchSettings": {
+    "matchLevel": "Strict",
+    "ignoreCaret": true,
+    "useDom": false,
+    "enablePatterns": false,
+    "ignoreDisplacements": false,
+    "ignore": [],
+    "layout": [],
+    "strict": [],
+    "content": [],
+    "accessibility": [
+      {
+        "_rect": {
+          "left": 10,
+          "top": 20,
+          "width": 30,
+          "height": 40
+        },
+        "_type": "GraphicalObject"
+      }
+    ],
+    "accessibilitySettings": {
+      "level": "AA",
+      "version": "WCAG_2_0"
+    },
+    "floating": [
+      {
+        "left": 22,
+        "top": 32,
+        "width": 42,
+        "height": 52,
+        "maxUpOffset": 5,
+        "maxDownOffset": 10,
+        "maxLeftOffset": 15,
+        "maxRightOffset": 20
+      }
+    ]
+  },
+  "branchName": "some branch",
+  "parentBranchName": "parent branch",
+  "baselineBranchName": "baseline branch",
+  "compareWithParentBranch": false,
+  "ignoreBaseline": false,
+  "saveDiffs": false,
+  "render": false,
+  "properties": [
+    {
+      "name": "property 1",
+      "value": "value 1"
+    }
+  ]
+}

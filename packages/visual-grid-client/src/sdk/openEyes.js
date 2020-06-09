@@ -9,6 +9,7 @@ const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
 const isEmulation = require('./isEmulation')
+const mapChromeEmulationInfo = require('./mapChromeEmulationInfo')
 const getSupportedBrowsers = require('./supportedBrowsers')
 const chalk = require('chalk')
 
@@ -34,7 +35,7 @@ function makeOpenEyes({
   ignoreCaret: _ignoreCaret,
   isDisabled: _isDisabled,
   matchLevel: _matchLevel,
-  accessibilityLevel: _accessibilityLevel,
+  accessibilitySettings: _accessibilitySettings,
   useDom: _useDom,
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
@@ -88,7 +89,7 @@ function makeOpenEyes({
     ignoreCaret = _ignoreCaret,
     isDisabled = _isDisabled,
     matchLevel = _matchLevel,
-    accessibilityLevel = _accessibilityLevel,
+    accessibilitySettings = _accessibilitySettings,
     useDom = _useDom,
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
@@ -128,7 +129,8 @@ function makeOpenEyes({
       .filter(x => x !== BrowserType.EDGE)
       .join('\n* ')}\n`
 
-    const browsersArray = Array.isArray(browser) ? browser : [browser]
+    let browsersArray = Array.isArray(browser) ? browser : [browser]
+    browsersArray = browsersArray.map(mapChromeEmulationInfo)
     const browserError = browsersArray.length
       ? browsersArray.map(getBrowserError).find(Boolean)
       : getBrowserError()
@@ -192,7 +194,7 @@ function makeOpenEyes({
       envName,
       ignoreCaret,
       matchLevel,
-      accessibilityLevel,
+      accessibilitySettings,
       useDom,
       enablePatterns,
       ignoreDisplacements,
@@ -263,7 +265,6 @@ function makeOpenEyes({
       testName,
       openEyesPromises,
       matchLevel,
-      accessibilityLevel,
       fetchHeaders: headers,
       isSingleWindow,
       getUserAgents,

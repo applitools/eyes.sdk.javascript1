@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('..')
 
 const {MatchWindowTask} = require('./MatchWindowTask')
 const {MatchSingleWindowData, Options} = require('./match/MatchSingleWindowData')

@@ -17,7 +17,7 @@ const {
   SessionType,
   Configuration,
   GeneralUtils,
-} = require('@applitools/eyes-common')
+} = require('..')
 
 const {AppOutputProvider} = require('./capture/AppOutputProvider')
 const {AppOutputWithScreenshot} = require('./capture/AppOutputWithScreenshot')
@@ -46,8 +46,6 @@ const {ValidationResult} = require('./events/ValidationResult')
 const {SessionEventHandlers} = require('./events/SessionEventHandlers')
 
 const {CheckSettings} = require('./fluent/CheckSettings')
-
-const {RenderWindowTask} = require('./RenderWindowTask')
 
 const {SessionStartInfo} = require('./server/SessionStartInfo')
 const {TestResultsStatus} = require('./TestResultsStatus')
@@ -105,10 +103,6 @@ class EyesBase {
     /** @type {SessionEventHandlers} */
     this._sessionEventHandlers = new SessionEventHandlers()
 
-    /** @type {RenderWindowTask} */ this._renderWindowTask = new RenderWindowTask(
-      this._logger,
-      this._serverConnector,
-    )
     /** @type {MatchWindowTask} */ this._matchWindowTask = undefined
     /** @type {RunningSession} */ this._runningSession = undefined
     /** @type {SessionStartInfo} */ this._sessionStartInfo = undefined
@@ -2116,6 +2110,8 @@ class EyesBase {
         isMobileDevice = await this._driver.isMobile()
       } else if (typeof this._driver.isMobile === 'object') {
         isMobileDevice = await this._driver.isMobile
+      } else if (typeof this._driver.controller === 'object') {
+        isMobileDevice = await this._driver.controller.isNative()
       }
 
       if (!isMobileDevice && positionProvider) {

@@ -1,39 +1,27 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
 const {GetSelector} = require('./GetSelector')
 const EyesUtils = require('../EyesUtils')
 
-const EYES_SELECTOR_TAG = 'data-eyes-selector'
-
 /**
- * @ignore
+ * @typedef {import('../wrappers/EyesWrappedElement')} EyesWrappedElement
+ * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
  */
+
 class TargetRegionByElement extends GetSelector {
   /**
-   * @param {WDIOElement|object} element
+   * @param {EyesWrappedElement} element
    */
   constructor(element) {
     super()
     this._element = element
   }
-
   /**
-   * @inheritDoc
-   * @param {Eyes} eyes
-   * @return {Promise<string>}
+   * @param {EyesWrappedDriver} driver
+   * @return {Promise<PersistedRegions[]>}
    */
-  async getSelector(driver) {
-    this._element.bind(driver)
-    const randId = GeneralUtils.randomAlphanumeric()
-    await driver.executor.executeScript(
-      `arguments[0].setAttribute('${EYES_SELECTOR_TAG}', '${randId}');`,
-      this._element,
-    )
-    return `[${EYES_SELECTOR_TAG}="${randId}"]`
-  }
-
   async toPersistedRegions(driver) {
+    await this._element.init(driver)
     const xpath = await EyesUtils.getElementAbsoluteXpath(
       driver._logger,
       driver.executor,

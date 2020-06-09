@@ -1,11 +1,11 @@
 'use strict'
 
-const {GeneralUtils, Region} = require('@applitools/eyes-common')
+const {GeneralUtils, Region} = require('../..')
 
 const {EmulationInfo} = require('./EmulationInfo')
 
 /**
- * @typedef {{name: IosDeviceName, version: IosVersion, screenOrientation: IosScreenOrientation}} IosDeviceInfo
+ * @typedef {{iosDeviceInfo: {deviceName: IosDevieName, screenOrientation: (IosScreenOrientation|undefined)})}} IosDeviceInfo
  */
 
 class RenderInfo {
@@ -14,10 +14,9 @@ class RenderInfo {
    * @param {number} height
    * @param {string} sizeMode
    * @param {string} selector
-   * @param {Region|object} region
-   * @param {EmulationInfo|object} emulationInfo
+   * @param {Region|Object} region
+   * @param {EmulationInfo|Object} emulationInfo
    * @param {IosDeviceInfo} iosDeviceInfo
-   * @param {object} iosDeviceInfo
    */
   constructor({width, height, sizeMode, selector, region, emulationInfo, iosDeviceInfo} = {}) {
     if (region && !(region instanceof Region)) {
@@ -149,7 +148,7 @@ class RenderInfo {
     }
 
     if (this._iosDeviceInfo) {
-      obj.iosDeviceInfo = this._iosDeviceInfo
+      obj.iosDeviceInfo = GeneralUtils.toPlain(this._iosDeviceInfo, undefined, {deviceName: 'name'})
     }
 
     // TODO remove this when rendering-grid changes x/y to left/top
