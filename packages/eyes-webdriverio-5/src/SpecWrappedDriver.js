@@ -4,17 +4,6 @@ const LegacySelector = require('./LegacySelector')
 const {remote} = require('webdriverio')
 const {URL} = require('url')
 
-function getWindowRect(driver) {
-  return driver.hasOwnProperty('getWindowRect') ? driver.getWindowRect() : driver.getWindowSize()
-}
-
-function setWindowRect(driver, {x, y, width, height} = {}) {
-  debugger
-  return driver.hasOwnProperty('setWindowRect')
-    ? driver.setWindowRect(x, y, width, height)
-    : driver.setWindowSize(width, height)
-}
-
 module.exports = {
   isEqualFrames(leftFrame, rightFrame) {
     return WDIOFrame.equals(leftFrame, rightFrame)
@@ -63,11 +52,15 @@ module.exports = {
     return driver.setWindowRect(location.x, location.y, null, null)
   },
   async getWindowSize(driver) {
-    const rect = await getWindowRect(driver)
+    const rect = driver.hasOwnProperty('getWindowRect')
+      ? await driver.getWindowRect()
+      : await driver.getWindowSize()
     return {width: rect.width, height: rect.height}
   },
-  async setWindowSize(driver, size) {
-    return setWindowRect(driver, size)
+  async setWindowSize(driver, {x, y, width, height} = {}) {
+    return driver.hasOwnProperty('setWindowRect')
+      ? driver.setWindowRect(x, y, width, height)
+      : driver.setWindowSize(width, height)
   },
   async getOrientation(driver) {
     const orientation = await driver.getOrientation()
