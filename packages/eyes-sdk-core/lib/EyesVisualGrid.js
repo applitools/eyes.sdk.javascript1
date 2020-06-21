@@ -6,6 +6,7 @@ const {TypeUtils} = require('./utils/TypeUtils')
 const {ArgumentGuard} = require('./utils/ArgumentGuard')
 const {RectangleSize} = require('./geometry/RectangleSize')
 const TestResultsFormatter = require('./TestResultsFormatter')
+const {MatchResult} = require('./match/MatchResult')
 const {CorsIframeHandler, CorsIframeHandle} = require('./capture/CorsIframeHandler')
 const {VisualGridRunner} = require('./runner/VisualGridRunner')
 const EyesUtils = require('./EyesUtils')
@@ -149,14 +150,26 @@ class EyesVisualGrid extends EyesCore {
     return this._driver
   }
   /**
-   * @param {string} name
-   * @param {CheckSettings} checkSettings
+   * @param {string|DriverCheckSettings} [nameOrCheckSettings] - name of the test case
+   * @param {DriverCheckSettings} [checkSettings] - check settings for the described test case
+   * @returns {Promise<MatchResult>}
    */
-  async check(name, checkSettings) {
-    ArgumentGuard.notNull(checkSettings, 'checkSettings')
+  async check(nameOrCheckSettings, checkSettings) {
+    if (this._configuration.getIsDisabled()) {
+      this._logger.log(`check(${nameOrCheckSettings}, ${checkSettings}): Ignored`)
+      return new MatchResult()
+    }
+    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
 
-    if (TypeUtils.isNotNull(name)) {
-      checkSettings.withName(name)
+    if (TypeUtils.isNull(checkSettings) && !TypeUtils.isString(nameOrCheckSettings)) {
+      checkSettings = nameOrCheckSettings
+      nameOrCheckSettings = null
+    }
+
+    checkSettings = new this.constructor.CheckSettings(checkSettings)
+
+    if (TypeUtils.isString(nameOrCheckSettings)) {
+      checkSettings.withName(nameOrCheckSettings)
     }
 
     await this._context.framesRefresh()

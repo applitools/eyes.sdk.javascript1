@@ -7,6 +7,7 @@ const EyesUtils = require('../EyesUtils')
  * @typedef {import('../wrappers/EyesWrappedDriver')} EyesWrappedDriver
  * @typedef {import('../wrappers/EyesWrappedDriver').unwrapped} UnwrappedDriver
  * @typedef {import('../frames/Frame').FrameReference} FrameReference
+ * @typedef {import('../frames/Frame')} Frame
  */
 
 /**
@@ -51,7 +52,15 @@ class EyesBrowsingContext {
   constructor(logger, driver) {
     this._logger = logger
     this._driver = driver
+    this._topContext = this.specs.createFrameReference(null)
     this._frameChain = new FrameChain(this._logger)
+  }
+  /**
+   * Representation of the top-level context
+   * @type {Frame}
+   */
+  get topContext() {
+    return this._topContext
   }
   /**
    * Copy of the current frame chain
@@ -77,7 +86,10 @@ class EyesBrowsingContext {
       this._logger.verbose('EyesBrowsingContext.frame(null)')
       return this.frameDefault()
     }
-    const frame = await this.specs.createFrameReference(reference).init(this._logger, this._driver)
+    const parentFrame = this._frameChain.isEmpty ? this._topContext : this._frameChain.current
+    const frame = await this.specs
+      .createFrameReference(reference)
+      .init(this._logger, this._driver, parentFrame)
     const result = await this.specs.switchToFrame(this._driver.unwrapped, frame.element.unwrapped)
     if (frame.scrollRootElement) {
       await frame.scrollRootElement.init(this._driver)
@@ -190,6 +202,7 @@ class EyesBrowsingContext {
     let contextInfo = await EyesUtils.getCurrentContextInfo(this._logger, this._driver.executor)
     if (contextInfo.isRoot) {
       this._frameChain.clear()
+      await this._topContext.init(this._logger, this._driver)
     } else {
       const framePath = []
       const frameChain = this._frameChain.clone()
@@ -219,6 +232,7 @@ class EyesBrowsingContext {
         contextInfo = await EyesUtils.getCurrentContextInfo(this._logger, this._driver.executor)
       }
       if (contextInfo.isRoot) this._frameChain.clear()
+      await this._topContext.init(this._logger, this._driver)
       await this.framesAppend(framePath)
     }
   }

@@ -30,7 +30,8 @@ module.exports = {
     return (
       selector instanceof By ||
       TypeUtils.has(selector, ['using', 'value']) ||
-      Object.keys(selector).some(key => key in By)
+      Object.keys(selector).some(key => key in By) ||
+      TypeUtils.isString(selector)
     )
   },
   toSupportedSelector(selector) {
@@ -41,7 +42,9 @@ module.exports = {
     return selector
   },
   toEyesSelector(selector) {
-    if (TypeUtils.has(selector, ['using', 'value'])) {
+    if (TypeUtils.isString(selector)) {
+      selector = By.css(selector)
+    } else if (TypeUtils.has(selector, ['using', 'value'])) {
       selector = new By(selector.using, selector.value)
     } else if (TypeUtils.isPlainObject(selector)) {
       const using = Object.keys(selector).find(using => TypeUtils.has(By, using))

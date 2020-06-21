@@ -1,6 +1,5 @@
 const {findDifferencesBetweenCollections} = require('../common-util')
-const {makeCoverageTests} = require('../index')
-const {supportedCommands} = require('../tests')
+const {makeCoverageTests, supportedCommands} = require('../tests')
 const {isMatch} = require('micromatch')
 
 function findUnsupportedTests(sdkImplementation) {

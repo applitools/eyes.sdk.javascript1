@@ -1,7 +1,8 @@
-/* eslint-disable no-undef */
+/* global browser */
 'use strict'
 
 const {Eyes, Target} = require('@applitools/eyes.webdriverio')
+const VERSION = require('../package.json').version
 
 const DEFAULT_VIEWPORT = {
   width: 800,
@@ -13,15 +14,14 @@ class EyesService {
    *
    * @param {Configuration} [config]
    */
-  // eslint-disable-next-line
-  constructor(config) {
+  constructor(_config) {
     this._eyes = new Eyes()
+    this._eyes.getBaseAgentId = () => `eyes.webdriverio-service/${VERSION}`
 
     this._appName = null
   }
 
-  // eslint-disable-next-line
-  beforeSession(config, caps) {
+  beforeSession(config, _caps) {
     const eyesConfig = config.eyes
     if (eyesConfig) {
       this._eyes.setConfiguration(eyesConfig)
@@ -34,8 +34,7 @@ class EyesService {
     this._eyes.setHideScrollbars(true)
   }
 
-  // eslint-disable-next-line
-  before(caps) {
+  before(_caps) {
     browser.addCommand('eyesCheck', (title, checkSettings = Target.window().fully()) => {
       return this._eyes.check(title, checkSettings)
     })
@@ -70,11 +69,10 @@ class EyesService {
     await global.browser.call(() => this._eyes.open(global.browser))
   }
 
-  // eslint-disable-next-line
-  async afterTest(exitCode, config, capabilities) {
+  // -disable-next-line
+  async afterTest(_exitCode, _config, _capabilities) {
     try {
-      // eslint-disable-next-line
-      const result = await browser.call(() => this._eyes.close(false))
+      await browser.call(() => this._eyes.close(false))
     } catch (e) {
       await browser.call(() => this._eyes.abortIfNotClosed())
     }

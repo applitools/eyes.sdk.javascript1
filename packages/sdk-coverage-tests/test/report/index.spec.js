@@ -60,7 +60,7 @@ describe('Report', () => {
   })
   it('should return the report test name', () => {
     assert.deepStrictEqual(convertSdkNameToReportName('eyes-selenium'), 'js_selenium_4')
-    assert.deepStrictEqual(convertSdkNameToReportName('eyes.selenium'), 'js_selenium_3')
+    assert.deepStrictEqual(convertSdkNameToReportName('eyes-selenium-3'), 'js_selenium_3')
     assert.deepStrictEqual(convertSdkNameToReportName('eyes.webdriverio.javascript5'), 'js_wdio_5')
     assert.deepStrictEqual(convertSdkNameToReportName('eyes.webdriverio.javascript4'), 'js_wdio_4')
     assert.deepStrictEqual(convertSdkNameToReportName('eyes-images'), 'js_images')
@@ -73,7 +73,7 @@ describe('Report', () => {
   it('should convert xml report to QA report schema as JSON', () => {
     assert.deepStrictEqual(convertJunitXmlToResultSchema({xmlResult}), [
       {
-        test_name: 'TestCheckWindow_VG',
+        test_name: 'TestCheckWindow',
         parameters: {
           browser: 'chrome',
           mode: 'visualgrid',
@@ -89,7 +89,7 @@ describe('Report', () => {
         passed: true,
       },
       {
-        test_name: 'TestCheckWindow_Scroll',
+        test_name: 'TestCheckWindow',
         parameters: {
           browser: 'chrome',
           mode: 'scroll',
@@ -105,7 +105,7 @@ describe('Report', () => {
       sandbox: true,
       results: [
         {
-          test_name: 'TestCheckWindow_VG',
+          test_name: 'TestCheckWindow',
           parameters: {
             browser: 'chrome',
             mode: 'visualgrid',
@@ -121,7 +121,7 @@ describe('Report', () => {
           passed: true,
         },
         {
-          test_name: 'TestCheckWindow_Scroll',
+          test_name: 'TestCheckWindow',
           parameters: {
             browser: 'chrome',
             mode: 'scroll',

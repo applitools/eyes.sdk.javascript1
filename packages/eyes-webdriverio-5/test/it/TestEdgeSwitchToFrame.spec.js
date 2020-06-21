@@ -12,10 +12,10 @@ describe('TestEdgeSwitchToFrame', () => {
         'bstack:options': {
           os: 'Windows',
           osVersion: '10',
+          resolution: '1920x1080',
           local: 'false',
           seleniumVersion: '3.5.2',
         },
-        resolution: '1920x1080',
         browserName: 'Edge',
         browserVersion: '18.0',
       },

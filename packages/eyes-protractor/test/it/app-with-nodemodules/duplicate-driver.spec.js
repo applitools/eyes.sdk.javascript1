@@ -6,7 +6,7 @@ const {expect} = require('chai')
 const {Target} = require('../../..')
 const {
   TestSetup: {getEyes, Browsers},
-} = require('@applitools/sdk-coverage-tests')
+} = require('@applitools/sdk-coverage-tests/coverage-tests')
 const ncp = require('ncp')
 const {promisify} = require('util')
 const pncp = promisify(ncp)

@@ -142,7 +142,19 @@ class FrameChain {
       })
       return effectiveRect.getSize()
     } else {
-      return RectangleSize.ZERO
+      return RectangleSize.EMPTY
+    }
+  }
+
+  getCurrentFrameEffectiveRect() {
+    if (!this.isEmpty) {
+      const effectiveRect = new Region(this.first.location, this.first.innerSize)
+      this._frames.forEach(frame => {
+        effectiveRect.intersect(new Region(frame.location, frame.innerSize))
+      })
+      return effectiveRect
+    } else {
+      return Region.EMPTY
     }
   }
 

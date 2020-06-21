@@ -42,7 +42,7 @@ describe('EyesBrowsingContext', () => {
         ],
       },
     ])
-    driver = new FakeWrappedDriver(new Logger(false), mock)
+    driver = new FakeWrappedDriver(new Logger(Boolean(process.env.APPLITOOLS_SHOW_LOGS)), mock)
   })
 
   beforeEach(async () => {

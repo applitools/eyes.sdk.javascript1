@@ -3,6 +3,29 @@
 ## Unreleased
 
 
+## 11.0.10 - 2020/6/17
+
+- fix stale scroll root element issue
+
+## 11.0.9 - 2020/6/15
+
+- change default concurrent sessions in visual grid from 3 to 1
+
+## 11.0.8 - 2020/6/14
+
+- raise minimum payload size in requests ([Trello](https://trello.com/c/4JMV3NKN))
+
+## 11.0.7 - 2020/6/12
+
+- improved support of the regions with fixed position ([Trello](https://trello.com/c/9G1aau4d/357-wdio5-unable-to-capture-scrollable-region)
+- support scroll root elements with a position different from (0, 0) ([Trello](https://trello.com/c/04pdU1Up/328-js4-incorrect-stitching-using-targetregion-with-scrollrootelement))
+
+## 11.0.6 - 2020/6/11
+
+- added support of  check settings as a plain object
+- handle bug when Safari 11(!) take a full page screenshot by default ([Trello](https://trello.com/c/A9AUxYlP))
+- fix OOM issue with big images ([Trello](https://trello.com/c/4JMV3NKN))
+
 ## 11.0.5 - 2020/6/9
 
 - addBrowser can now accept browserInfo object as first argument

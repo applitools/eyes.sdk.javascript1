@@ -116,6 +116,7 @@ class Frame {
    */
   static isReference(reference) {
     return (
+      reference === null ||
       TypeUtils.isInteger(reference) ||
       TypeUtils.isString(reference) ||
       this.specs.isSelector(reference) ||
@@ -199,12 +200,14 @@ class Frame {
    * @param {EyesWrappedDriver} driver - wrapped driver targeted on parent context
    * @return {this} initialized frame object
    */
-  async init(logger, driver) {
+  async init(logger, driver, parentFrame) {
     if (this._element) return this
     this._logger = logger
     this._driver = driver
     this._logger.verbose(`Frame initialization from reference - ${this._reference}`)
-    if (TypeUtils.isInteger(this._reference)) {
+    if (this._reference === null) {
+      this._element = this._reference
+    } else if (TypeUtils.isInteger(this._reference)) {
       this._logger.verbose('Getting frames list...')
       const elements = await this._driver.finder.findElements('frame, iframe')
       if (this._reference > elements.length) {
@@ -238,34 +241,36 @@ class Frame {
     } else {
       throw new TypeError('Reference type does not supported!')
     }
-    return this.refresh()
+    return this.refresh(parentFrame)
   }
   /**
    * Recalculate frame object metrics. Driver should be targeted on a parent context
    * @return {this} this frame object
    */
-  async refresh() {
-    const rect = await this._element.getRect()
-    const [clientWidth, clientHeight] = await this._element.getProperty(
-      'clientWidth',
-      'clientHeight',
-    )
-    const [borderLeftWidth, borderTopWidth] = await this._element.getCssProperty(
-      'border-left-width',
-      'border-top-width',
-    )
-    const parentScrollLocation = await EyesUtils.getScrollLocation(
-      this._logger,
-      this._driver.executor,
-    )
+  async refresh(parentFrame) {
+    if (this._element) {
+      const rect = await this._element.getRect()
+      const clientRect = await this._element.getClientRect()
+      const parentScrollLocation = await EyesUtils.getScrollLocation(
+        this._logger,
+        this._driver.executor,
+        parentFrame.scrollRootElement,
+      )
 
-    this._size = new RectangleSize(Math.round(rect.getWidth()), Math.round(rect.getHeight()))
-    this._innerSize = new RectangleSize(Math.round(clientWidth), Math.round(clientHeight))
-    this._location = new Location(
-      Math.round(rect.getLeft() + Number.parseFloat(borderLeftWidth)),
-      Math.round(rect.getTop() + Number.parseFloat(borderTopWidth)),
-    )
-    this._parentScrollLocation = parentScrollLocation
+      this._size = new RectangleSize(Math.round(rect.getWidth()), Math.round(rect.getHeight()))
+      this._innerSize = new RectangleSize(
+        Math.round(clientRect.getWidth()),
+        Math.round(clientRect.getHeight()),
+      )
+      this._location = clientRect.getLocation()
+      this._parentScrollLocation = parentScrollLocation
+    } else {
+      const size = await EyesUtils.getViewportSize(this._logger, this._driver)
+      this._size = size
+      this._innerSize = size
+      this._location = Location.ZERO
+      this._parentScrollLocation = Location.ZERO
+    }
     return this
   }
   /**
@@ -273,7 +278,7 @@ class Frame {
    */
   async hideScrollbars() {
     if (!this._scrollRootElement) {
-      const element = await EyesUtils.getScrollRootElement(this._logger, this._driver.executor)
+      const element = await this._driver.finder.findElement({type: 'css', selector: 'html'})
       this._scrollRootElement = this.specs.createElement(this._logger, this._driver, element)
     }
     this._logger.verbose('hiding scrollbars of element')
@@ -294,7 +299,7 @@ class Frame {
    */
   async preservePosition(positionProvider) {
     if (!this._scrollRootElement) {
-      const element = await EyesUtils.getScrollRootElement(this._logger, this._driver.executor)
+      const element = await this._driver.finder.findElement({type: 'css', selector: 'html'})
       this._scrollRootElement = this.specs.createElement(this._logger, this._driver, element)
     }
     this._logger.verbose('saving frame position')

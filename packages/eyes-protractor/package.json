@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-protractor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Applitools Eyes SDK for Protractor",
   "keywords": [
     "eyes-protractor",
@@ -36,8 +36,8 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "11.0.5",
-    "@applitools/visual-grid-client": "14.4.4"
+    "@applitools/eyes-sdk-core": "11.0.10",
+    "@applitools/visual-grid-client": "14.4.9"
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "1.0.0",
@@ -50,8 +50,7 @@
     "chai-as-promised": "^7.1.1",
     "chromedriver": "^81.0.0",
     "cors": "^2.8.5",
-    "mocha": "^7.2.0",
-    "mocha-parallel-tests": "^2.3.0",
+    "mocha": "^8.0.1",
     "ncp": "^2.0.0",
     "nock": "^12.0.3",
     "node-fetch": "^2.6.0",
@@ -67,10 +66,10 @@
     "render": "node ../sdk-shared/src/render.js",
     "test": "yarn test:it",
     "test:it": "mocha --timeout 120000 \"./test/it/**/*.spec.js\"",
-    "coverage:generate": "coverage-tests create-tests --remote=$CVG_TESTS_REMOTE",
+    "coverage:generate": "coverage-tests create-tests",
     "coverage:sandbox": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "env APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-protractor' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 --grep '^(?!.*(@native))' {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-protractor' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --no-timeouts --reporter spec-xunit-file --parallel --jobs 15 --grep '^(?!.*(@native))' {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion"

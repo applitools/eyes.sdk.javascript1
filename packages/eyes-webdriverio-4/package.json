@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes.webdriverio",
-  "version": "2.17.0",
+  "version": "2.17.1",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "main": "index.js",
   "scripts": {
@@ -11,10 +11,10 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/*.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.js\"",
     "test:unit": "mocha \"test/unit/**/*.js\"",
-    "coverage:generate": "coverage-tests create-tests --remote=http://localhost:4444/wd/hub",
-    "coverage:sandbox": "coverage-tests create-tests --remote=$CVG_TESTS_REMOTE && yarn test:coverage && coverage-tests process-report",
-    "coverage:prod": "coverage-tests create-tests --remote=$CVG_TESTS_REMOTE && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "env APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha-parallel-tests --no-timeouts --reporter spec-xunit-file --max-parallel 15 \"{test/coverage/generic/*.spec.js,../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js}\"",
+    "coverage:generate": "coverage-tests create-tests",
+    "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
+    "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --no-timeouts --reporter spec-xunit-file --parallel --jobs 15 {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion",
@@ -26,13 +26,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": "https://github.com/applitools/eyes.sdk.javascript1",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "11.0.5",
-    "@applitools/visual-grid-client": "14.4.4",
-    "css": "2.2.4",
-    "css-url-parser": "^1.1.3",
-    "is-absolute-url": "^2.1.0",
-    "request-promise-native": "^1.0.7",
-    "webdriverio": "~4.14.4"
+    "@applitools/eyes-sdk-core": "11.0.10",
+    "@applitools/visual-grid-client": "14.4.9"
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "1.0.0",
@@ -44,11 +39,11 @@
     "chromedriver": "^83.0.0",
     "eslint": "^6.8.0",
     "geckodriver": "^1.19.1",
-    "mocha": "7.1.2",
-    "mocha-parallel-tests": "^2.2.2",
+    "mocha": "^8.0.1",
     "node-fetch": "^2.6.0",
     "shared-examples-for": "^0.1.3",
-    "spec-xunit-file": "0.0.1-3"
+    "spec-xunit-file": "0.0.1-3",
+    "webdriverio": "~4.14.4"
   },
   "engines": {
     "node": ">=8.9.0"

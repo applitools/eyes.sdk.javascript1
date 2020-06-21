@@ -105,7 +105,6 @@ exports.ElementNotFoundError = require('./lib/errors/ElementNotFoundError').Elem
 
 exports.CheckSettings = require('./lib/fluent/CheckSettings')
 exports.DriverCheckSettings = require('./lib/fluent/DriverCheckSettings')
-exports.locatorToPersistedRegions = require('./lib/fluent/locatorToPersistedRegions')
 exports.GetRegion = require('./lib/fluent/GetRegion').GetRegion
 exports.GetSelector = require('./lib/fluent/GetSelector').GetSelector
 exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle').IgnoreRegionByRectangle
@@ -179,7 +178,6 @@ exports.EyesBase = require('./lib/EyesBase').EyesBase
 exports.EyesClassic = require('./lib/EyesClassic')
 exports.EyesVisualGrid = require('./lib/EyesVisualGrid')
 exports.EyesFactory = require('./lib/EyesFactory')
-exports.EyesJsBrowserUtils = require('./lib/EyesJsBrowserUtils').EyesJsBrowserUtils
 exports.EyesUtils = require('./lib/EyesUtils')
 exports.FailureReports = require('./lib/FailureReports').FailureReports
 exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask').MatchSingleWindowTask

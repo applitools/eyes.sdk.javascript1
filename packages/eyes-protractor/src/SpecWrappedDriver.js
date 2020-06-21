@@ -159,8 +159,11 @@ module.exports = {
   async cleanup(driver) {
     return driver.quit()
   },
-  async click(_driver, element) {
-    return element.click()
+  async click(driver, el) {
+    if (TypeUtils.isString(el)) {
+      el = await this.findElement(driver, el)
+    }
+    return el.click()
   },
   async type(_driver, element, keys) {
     return element.sendKeys(keys)

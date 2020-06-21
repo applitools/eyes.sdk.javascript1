@@ -1,3 +1,4 @@
+const {TypeUtils} = require('@applitools/eyes-sdk-core')
 const WDIOFrame = require('./WDIOFrame')
 const WDIOWrappedElement = require('./WDIOWrappedElement')
 const {remote} = require('webdriverio')
@@ -128,7 +129,14 @@ module.exports = {
   },
 
   async click(driver, el) {
+    if (TypeUtils.isString(el)) {
+      el = await this.findElement(driver, el)
+    }
     return driver.elementIdClick(el.ELEMENT)
+  },
+
+  async type(driver, element, keys) {
+    return driver.elementIdValue(element.ELEMENT, keys)
   },
 
   async waitUntilDisplayed(driver, selector, timeout) {
@@ -136,6 +144,7 @@ module.exports = {
   },
 
   async getElementRect(driver, el) {
-    return driver.elementIdRect(el.ELEMENT)
+    const resp = await driver.elementIdRect(el.ELEMENT)
+    return resp.value
   },
 }

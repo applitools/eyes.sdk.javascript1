@@ -1,3 +1,41 @@
+const GET_SCROLL_OFFSET_FUNC = `
+  function getScrollOffset(element) {
+    if (element) {
+      return {x: element.scrollLeft, y: element.scrollTop};
+    } else {
+      return {
+        x: window.scrollX || window.pageXOffset,
+        y: window.scrollY || window.pageYOffset,
+      }
+    }
+  }
+`
+
+const TRANSFORM_KEYS = ['transform', '-webkit-transform']
+
+const GET_TRANSLATE_OFFSET_FUNC = `
+  function getTranslateOffset(element = document.documentElement) {
+    var translates = [${TRANSFORM_KEYS.map(key => `element.style['${key}']`).join(',')}]
+      .reduce(function(translates, transform) {
+        if (transform) {
+          var data = transform.match(/^translate\\(\\s*(\\-?[\\d, \\.]+)px,\\s*(\-?[\\d, \\.]+)px\\s*\\)/);
+          if (!data) {
+            throw new Error(\`Can't parse CSS transition: \${transform}!\`);
+          }
+          translates.push({
+            x: Math.round(-parseFloat(data[1])),
+            y: Math.round(-parseFloat(data[2]))
+          });
+        }
+        return translates;
+      }, []);
+    if (translates.some(function(offset) { return translates[0].x !== offset.x || translates[0].y !== offset.y })) {
+      throw new Error('Got different css positions!');
+    }
+    return translates[0] || {x: 0, y: 0};
+  }
+`
+
 const GET_VIEWPORT_SIZE =
   'var height, width; ' +
   'if (window.innerHeight) { height = window.innerHeight; } ' +
@@ -30,52 +68,86 @@ const GET_ELEMENT_ENTIRE_SIZE = `
   ];
 `
 
-const GET_ELEMENT_RECT = `
-  var element = arguments[0];
-  var rect = element.getBoundingClientRect();
-  var computedStyle = window.getComputedStyle(element);
-  var isFixed = isFixedElement(element);
-  return {
-    x: isFixed ? rect.left : rect.left + (window.scrollX || window.pageXOffset),
-    y: isFixed ? rect.top : rect.top + (window.scrollY || window.pageYOffset),
-    width: rect.width,
-    height: rect.height
-  };
-
-  function isFixedElement(element) {
+const GET_FIXED_ANCESTOR_FUNC = `
+  function getFixedAncestor(element) {
     var offsetElement = element;
-    while (offsetElement && offsetElement !== document.body && offsetElement !== document.documentElement) {
+    while (
+      offsetElement.offsetParent &&
+      offsetElement.offsetParent !== document.body &&
+      offsetElement.offsetParent !== document.documentElement
+    ) {
       offsetElement = offsetElement.offsetParent;
     }
-    if (!offsetElement) return true;
     var position = window.getComputedStyle(offsetElement).getPropertyValue('position');
-    return position === 'fixed';
+    return position === 'fixed' ? offsetElement : null
   }
 `
 
+const GET_OFFSET_FROM_ANCESTOR_FUNCT = `
+  ${GET_SCROLL_OFFSET_FUNC}
+  function getOffsetFromAncestor(element, ancestorElement) {
+    const ancestorRect = ancestorElement.getBoundingClientRect();
+    const ancestorScrollOffset = getScrollOffset(ancestorElement);
+    const elementRect = element.getBoundingClientRect();
+    return {
+      x: elementRect.left - ancestorRect.left + ancestorScrollOffset.x,
+      y: elementRect.top - ancestorRect.top + ancestorScrollOffset.y,
+    }
+  }
+`
+
+const IS_SCROLLABLE_ELEMENT_FUNC = `
+  function isScrollableElement(element) {
+    return element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight;
+  }
+`
+
+const GET_ELEMENT_RECT = `
+  ${GET_FIXED_ANCESTOR_FUNC}
+  ${GET_OFFSET_FROM_ANCESTOR_FUNCT}
+  ${IS_SCROLLABLE_ELEMENT_FUNC}
+  var element = arguments[0];
+  var rect = element.getBoundingClientRect();
+  var computedStyle = window.getComputedStyle(element);
+  var fixedElement = getFixedAncestor(element);
+  var fixedElementRect = fixedElement ? fixedElement.getBoundingClientRect() : null
+  var offsetFromFixedElement = fixedElement ? getOffsetFromAncestor(element, fixedElement) : null
+  var isFixedElementScrollable = fixedElement ? isScrollableElement(fixedElement) : null
+  return {
+    x: fixedElement
+      ? (fixedElement !== element && isFixedElementScrollable ? offsetFromFixedElement.x + fixedElementRect.left : rect.left)
+      : rect.left + (window.scrollX || window.pageXOffset),
+    y: fixedElement
+      ? (fixedElement !== element && isFixedElementScrollable ? offsetFromFixedElement.y + fixedElementRect.top : rect.top)
+      : rect.top + (window.scrollY || window.pageYOffset),
+    width: rect.width,
+    height: rect.height
+  };
+`
+
 const GET_ELEMENT_CLIENT_RECT = `
+  ${GET_FIXED_ANCESTOR_FUNC}
+  ${IS_SCROLLABLE_ELEMENT_FUNC}
   var element = arguments[0];
   var rect = element.getBoundingClientRect();
   var computedStyle = window.getComputedStyle(element);
   var borderLeftWidth = parseInt(computedStyle.getPropertyValue('border-left-width'));
   var borderTopWidth = parseInt(computedStyle.getPropertyValue('border-top-width'));
-  var isFixed = isFixedElement(element);
+  var fixedElement = getFixedAncestor(element);
+  var isFixedElementScrollable = fixedElement ? isScrollableElement(fixedElement) : false
+  var fixedElementRect = fixedElement && fixedElement !== element ? fixedElement.getBoundingClientRect() : null
   return {
-    x: (isFixed ? element.offsetLeft : rect.left + (window.scrollX || window.pageXOffset)) + borderLeftWidth,
-    y: (isFixed ? element.offsetTop : rect.top + (window.scrollY || window.pageYOffset)) + borderTopWidth,
+    x: (fixedElement
+      ? (fixedElement !== element && isFixedElementScrollable ? element.offsetLeft + fixedElementRect.left : rect.left)
+      : rect.left + (window.scrollX || window.pageXOffset)
+    ) + borderLeftWidth,
+    y: (fixedElement
+      ? (fixedElement !== element && isFixedElementScrollable ? element.offsetTop + fixedElementRect.top : rect.top)
+      : rect.top + (window.scrollY || window.pageYOffset)
+    ) + borderTopWidth,
     width: element.clientWidth,
     height: element.clientHeight
   };
-
-  function isFixedElement(element) {
-    var offsetElement = element;
-    while (offsetElement && offsetElement !== document.body && offsetElement !== document.documentElement) {
-      offsetElement = offsetElement.offsetParent;
-    }
-    if (!offsetElement) return true;
-    var position = window.getComputedStyle(offsetElement).getPropertyValue('position');
-    return position === 'fixed';
-  }
 `
 
 const GET_ELEMENT_PROPERTIES = `
@@ -91,6 +163,15 @@ const GET_ELEMENT_CSS_PROPERTIES = `
   return computedStyle
     ? properties.map(function(property) { return computedStyle.getPropertyValue(property); })
     : [];
+`
+
+const GET_INNER_OFFSETS = `
+  ${GET_SCROLL_OFFSET_FUNC}
+  ${GET_TRANSLATE_OFFSET_FUNC}
+  return {
+    scroll: getScrollOffset(arguments[0]),
+    translate: getTranslateOffset(arguments[0])
+  }
 `
 
 const GET_SCROLL_POSITION = `
@@ -117,8 +198,6 @@ const SCROLL_TO = `
   return [element.scrollLeft, element.scrollTop];
 `
 
-const TRANSFORM_KEYS = ['transform', '-webkit-transform']
-
 const GET_TRANSFORMS = `
   var element = arguments[0] || document.documentElement;
   return {${TRANSFORM_KEYS.map(key => `['${key}']: element.style['${key}']`).join(',')}};
@@ -133,16 +212,12 @@ const SET_TRANSFORMS = transforms => `
 
 const TRANSLATE_TO = (x, y) => `
   var element = arguments[0] || document.documentElement;
-  ${TRANSFORM_KEYS.map(key => `element.style['${key}'] = 'translate(-${x}px, -${y}px)'`).join(';')}
+  ${TRANSFORM_KEYS.map(key => `element.style['${key}'] = 'translate(${-x}px, ${-y}px)'`).join(';')}
 `
 
 const IS_SCROLLABLE = `
   var element = arguments[0] || document.documentElement;
   return element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight
-`
-
-const GET_SCROLL_ROOT_ELEMENT = `
-  return document.documentElement;
 `
 
 const MARK_SCROLL_ROOT_ELEMENT = `
@@ -240,7 +315,11 @@ const GET_CURRENT_CONTEXT_INFO = `
 
 const GET_FRAME_BY_NAME_OR_ID = `
   var nameOrId = arguments[0];
-  return document.querySelector('iframe[name="' + nameOrId + '"],iframe#' + nameOrId)
+  try {
+    return document.querySelector('iframe[name="' + nameOrId + '"],iframe#' + nameOrId);
+  } catch (err) {
+    return null;
+  }
 `
 
 const GET_FRAMES = `
@@ -266,13 +345,13 @@ module.exports = {
   GET_ELEMENT_CLIENT_RECT,
   GET_ELEMENT_CSS_PROPERTIES,
   GET_ELEMENT_PROPERTIES,
+  GET_INNER_OFFSETS,
   GET_SCROLL_POSITION,
   SCROLL_TO,
   GET_TRANSFORMS,
   SET_TRANSFORMS,
   TRANSLATE_TO,
   IS_SCROLLABLE,
-  GET_SCROLL_ROOT_ELEMENT,
   MARK_SCROLL_ROOT_ELEMENT,
   GET_OVERFLOW,
   SET_OVERFLOW_AND_RETURN_ORIGIN_VALUE,

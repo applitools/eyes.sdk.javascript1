@@ -52,7 +52,7 @@ const DEFAULT_VALUES = {
   stitchOverlap: 50, // px
 
   // visual-grid
-  concurrentSessions: 3,
+  concurrentSessions: 1,
   isThrowExceptionOn: false,
 }
 

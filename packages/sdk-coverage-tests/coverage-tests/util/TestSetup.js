@@ -1,12 +1,12 @@
 'use strict'
 const cwd = process.cwd()
 const {
-  Eyes,
-  VisualGridRunner,
   StitchMode,
   BatchInfo,
-  ConsoleLogHandler,
   Configuration,
+  Eyes,
+  VisualGridRunner,
+  ConsoleLogHandler,
 } = require(cwd)
 
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
@@ -38,21 +38,19 @@ const batch = new BatchInfo(process.env.APPLITOOLS_BATCH_NAME || 'JS Coverage Te
 
 function getEyes({isVisualGrid, isCssStitching, configuration, branchName = 'master'} = {}) {
   const eyes = new Eyes(isVisualGrid ? new VisualGridRunner(10) : undefined)
-  const conf = new Configuration(
-    Object.assign({}, configuration, {
+  const conf = Object.assign(
+    {
+      apiKey: process.env.APPLITOOLS_API_KEY_SDK,
       batch,
       branchName,
       parentBranchName: 'master',
       dontCloseBatches: true,
-    }),
+      matchTimeout: 0,
+      stitchMode: isCssStitching ? StitchMode.CSS : StitchMode.SCROLL,
+    },
+    configuration,
   )
-  if (isCssStitching) {
-    conf.setStitchMode(StitchMode.CSS)
-  }
-  if (process.env['APPLITOOLS_API_KEY_SDK']) {
-    conf.setApiKey(process.env['APPLITOOLS_API_KEY_SDK'])
-  }
-  eyes.setConfiguration(conf)
+  eyes.setConfiguration(new Configuration(conf))
 
   if (process.env.APPLITOOLS_SHOW_LOGS) {
     eyes.setLogHandler(new ConsoleLogHandler(true))

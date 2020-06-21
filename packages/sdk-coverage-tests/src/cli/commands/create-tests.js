@@ -13,10 +13,10 @@ async function createTests(args) {
   })
   await createTestFiles(emittedTests, sdkImplementation.testFrameworkTemplate)
   console.log(
-    `\nCreated ${numberOfTestVariations({
+    `\nCreated ${supportedTests.length} (${numberOfTestVariations({
       tests: supportedTests,
       args,
-    })} test files for ${numberOfUniqueTests({
+    })} enabled) test files for ${numberOfUniqueTests({
       tests: supportedTests,
       args,
     })} unique tests.`,

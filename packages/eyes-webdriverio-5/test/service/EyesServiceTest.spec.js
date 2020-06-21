@@ -2,7 +2,7 @@
 'use strict'
 
 const assert = require('assert')
-const {By, Target} = require('@applitools/eyes-webdriverio')
+const {By, Target} = require('../..')
 
 describe('EyesServiceTest', () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 'use strict'
 
-const {By, Target} = require('@applitools/eyes-webdriverio')
+const {By, Target} = require('../..')
 
 describe('EyesServiceTest', () => {
   beforeEach(() => {

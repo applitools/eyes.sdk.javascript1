@@ -101,7 +101,7 @@ class ServerConnector {
       headers: DEFAULT_HEADERS,
       timeout: DEFAULT_TIMEOUT_MS,
       responseType: 'json',
-      maxContentLength: 20 * 1024 * 1024, // 20 MB
+      maxContentLength: 200 * 1024 * 1024, // 200 MB
     })
 
     this._axios.interceptors.request.use(async config => {

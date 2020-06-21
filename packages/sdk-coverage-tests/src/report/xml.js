@@ -7,8 +7,9 @@ function convertJunitXmlToResultSchema({xmlResult, browser}) {
   logDebug(tests)
   tests.forEach(test => {
     const testName = parseBareTestName(test._attributes.name)
+    const testNameWithoutSuffix = removeSuffix(testName)
     result.push({
-      test_name: testName,
+      test_name: testNameWithoutSuffix,
       parameters: {
         browser: browser ? browser : 'chrome',
         mode: parseExecutionMode(testName),
@@ -17,6 +18,10 @@ function convertJunitXmlToResultSchema({xmlResult, browser}) {
     })
   })
   return result
+}
+
+function removeSuffix(testName) {
+  return testName.replace(/_(VG|Scroll)$/, '')
 }
 
 function convertSuffixToExecutionMode(suffix) {

@@ -17,36 +17,31 @@ function makeEmitTests(initializeSdkImplementation, makeCoverageTests = doMakeCo
   let output = []
   function emitTests(supportedTests, {host, all = false} = {}) {
     supportedTests.forEach(supportedTest => {
-      if (!all && supportedTest.disabled) return
-      const sdkImplementation = initializeSdkImplementation()
       const baselineTestName = `${supportedTest.name}${convertExecutionModeToSuffix(
         supportedTest.executionMode,
       )}`
       const branchName = supportedTest.baselineVersion
         ? `v${supportedTest.baselineVersion}`
         : 'master'
-      // hooks
-      for (const hook in sdkImplementation.hooks) {
-        if (hook === 'beforeEach') {
-          sdkImplementation.hooks[hook]({
-            baselineTestName,
-            branchName,
-            host,
-            ...supportedTest,
-          })
-        } else {
-          sdkImplementation.hooks[hook]()
-        }
-      }
+      const sdkImplementation = initializeSdkImplementation({
+        baselineTestName,
+        branchName,
+        host,
+        ...supportedTest,
+      })
       // test
-      try {
-        const coverageTests = makeCoverageTests(sdkImplementation)
-        coverageTests[supportedTest.name]()
-      } catch (error) {
-        debugger
+      const coverageTests = makeCoverageTests(sdkImplementation)
+      const coverageTestFunc = coverageTests[supportedTest.name]
+      if (!coverageTestFunc) {
+        throw new Error('missing implementation for test ' + supportedTest.name)
       }
+      coverageTests[supportedTest.name]()
       // store
-      output.push({name: baselineTestName, ...sdkImplementation.out})
+      output.push({
+        name: baselineTestName,
+        disabled: !all && supportedTest.disabled,
+        ...sdkImplementation.tracker,
+      })
     })
     return output
   }
@@ -64,8 +59,16 @@ class EmitTracker {
     this.commands = []
   }
 
-  storeCommand(value) {
-    this.commands.push(value)
+  storeCommand(command) {
+    const id = this.commands.push(command)
+    return {
+      isRef: true,
+      resolve: () => {
+        const name = `var_${id}`
+        this.commands[id - 1] = `const ${name} = ${command}`
+        return name
+      },
+    }
   }
 
   storeHook(name, value) {

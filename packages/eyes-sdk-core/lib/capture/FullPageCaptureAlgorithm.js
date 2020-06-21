@@ -94,11 +94,11 @@ class FullPageCaptureAlgorithm {
 
     // Saving the original position (in case we were already in the outermost frame).
     const originalPosition = await this._originProvider.getState()
-    await this._originProvider.setPosition(Location.ZERO) // first scroll to 0,0 so CSS stitching works.
-    await positionProvider.setPosition(Location.ZERO) // set initial 0,0 position with specified method
-
     // Saving the original position (in case we were already in the outermost frame).
     const originalStitchedState = await positionProvider.getState()
+    await this._originProvider.setPosition(Location.ZERO) // first scroll to 0,0 so CSS stitching works.
+
+    await positionProvider.setPosition(fullArea ? fullArea.getLocation() : Location.ZERO) // set initial 0,0 position with specified method
 
     this._logger.verbose('Getting top/left image...')
     let image = await this._imageProvider.getImage()
@@ -191,6 +191,7 @@ class FullPageCaptureAlgorithm {
     for (const partRegion of imageParts) {
       // Skipping screenshot, already taken
       if (partRegion.getLeft() === initialX && partRegion.getTop() === initialY) {
+        lastSuccessfulLocation = partRegion.getLocation()
         continue
       }
 
@@ -201,7 +202,7 @@ class FullPageCaptureAlgorithm {
       await GeneralUtils.sleep(this._waitBeforeScreenshots)
       // Screen size may cause the scroll to only reach part of the way.
       const originPosition = await positionProvider.getCurrentPosition()
-      const targetPosition = originPosition.offset(-fullArea.getLeft(), -fullArea.getTop())
+      const targetPosition = originPosition.offsetNegative(fullArea.getLocation())
       this._logger.verbose(`Origin Position is set to ${originPosition}`)
       this._logger.verbose(`Target Position is ${targetPosition}`)
 
@@ -288,7 +289,7 @@ class FullPageCaptureAlgorithm {
       }
 
       if (!this._isDoubleOverlap) {
-        lastSuccessfulLocation = originPosition
+        lastSuccessfulLocation = targetPosition
       }
 
       // TODO - targetPosition.getY() option can be removed after testing.
@@ -371,7 +372,7 @@ class FullPageCaptureAlgorithm {
 
     // Handling a specific case where the region is actually larger than the screenshot (e.g., when body width/height
     // are set to 100%, and an internal div is set to value which is larger than the viewport).
-    regionInScreenshot.intersect(new Region(0, 0, image.getWidth(), image.getHeight()))
+    // regionInScreenshot.intersect(new Region(0, 0, image.getWidth(), image.getHeight()))
     this._logger.verbose(`Region after intersect: ${regionInScreenshot}`)
     return regionInScreenshot
   }

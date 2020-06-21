@@ -33,10 +33,6 @@
 			"path": "packages/eyes-storybook"
 		},
 		{
-			"name": "eyes-testcafe",
-			"path": "packages/eyes-testcafe"
-		},
-		{
 			"name": "eyes-webdriverio-4",
 			"path": "packages/eyes-webdriverio-4"
 		},

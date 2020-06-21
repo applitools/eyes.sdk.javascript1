@@ -7,13 +7,13 @@ const CheckSettings = require('./SeleniumCheckSettings')
 const {version} = require('../package.json')
 
 const SeleniumEyesClassic = EyesClassic.specialize({
-  agentId: `eyes.selenium.javascript/${version}`,
+  agentId: `eyes.selenium.javascript/${version}--${process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION}`,
   WrappedDriver,
   WrappedElement,
   CheckSettings,
 })
 const SeleniumEyesVisualGrid = EyesVisualGrid.specialize({
-  agentId: `eyes.selenium.visualgrid.javascript/${version}`,
+  agentId: `eyes.selenium.visualgrid.javascript/${version}--${process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION}`,
   WrappedDriver,
   WrappedElement,
   CheckSettings,

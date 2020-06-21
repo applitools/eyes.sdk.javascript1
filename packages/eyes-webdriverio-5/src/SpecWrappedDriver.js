@@ -52,11 +52,15 @@ module.exports = {
     return driver.setWindowRect(location.x, location.y, null, null)
   },
   async getWindowSize(driver) {
-    const rect = await driver.getWindowRect()
+    const rect = driver.hasOwnProperty('getWindowRect')
+      ? await driver.getWindowRect()
+      : await driver.getWindowSize()
     return {width: rect.width, height: rect.height}
   },
-  async setWindowSize(driver, size) {
-    return driver.setWindowRect(null, null, size.width, size.height)
+  async setWindowSize(driver, {x = null, y = null, width, height} = {}) {
+    return driver.hasOwnProperty('setWindowRect')
+      ? driver.setWindowRect(x, y, width, height)
+      : driver.setWindowSize(width, height)
   },
   async getOrientation(driver) {
     const orientation = await driver.getOrientation()
@@ -116,7 +120,7 @@ module.exports = {
       path: pathname,
       port: fixedPort ? Number(fixedPort) : undefined,
       hostname,
-      protocol: protocol.replace(/:$/, ''),
+      protocol: protocol ? protocol.replace(/:$/, '') : undefined,
     }
     return remote(options)
   },
@@ -125,8 +129,14 @@ module.exports = {
     return driver.deleteSession()
   },
 
-  async click(_driver, el) {
-    return el.click()
+  async click(driver, element) {
+    const extended = await driver.$(element)
+    return extended.click()
+  },
+
+  async type(driver, element, keys) {
+    const extended = await driver.$(element)
+    return extended.setValue(keys)
   },
 
   async waitUntilDisplayed(driver, selector, timeout) {

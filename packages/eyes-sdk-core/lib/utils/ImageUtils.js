@@ -317,23 +317,27 @@ class ImageUtils {
       }
 
       // process the pixels - crop
-      const croppedArray = []
       const yStart = region.getTop()
       const yEnd = Math.min(region.getTop() + region.getHeight(), image.height)
       const xStart = region.getLeft()
       const xEnd = Math.min(region.getLeft() + region.getWidth(), image.width)
+      const buff = Buffer.alloc((yEnd - yStart) * (xEnd - xStart) * 4)
 
-      let y, x, idx, i
+      let y,
+        x,
+        idx,
+        i,
+        count = 0
       for (y = yStart; y < yEnd; y += 1) {
         for (x = xStart; x < xEnd; x += 1) {
           idx = (image.width * y + x) * 4
           for (i = 0; i < 4; i += 1) {
-            croppedArray.push(image.data[idx + i])
+            buff[count++] = image.data[idx + i]
           }
         }
       }
 
-      image.data = Buffer.from(croppedArray)
+      image.data = buff
       image.width = xEnd - xStart
       image.height = yEnd - yStart
 

@@ -19,8 +19,33 @@ const AccessibilityRegionByElement = require('./AccessibilityRegionByElement')
  */
 
 /**
+ * @typedef ExtendedFrameReference
+ * @prop {ElementReference} [scrollRootElement]
+ * @prop {FrameReference} frame
+ */
+
+/**
  * Reference to the region
  * @typedef {Region|SupportedSelector|SupportedElement|EyesWrappedElement} RegionReference
+ */
+
+/**
+ * @typedef {SupportedSelector|SupportedElement|EyesWrappedElement} ElementReference
+ */
+
+/**
+ * @typedef FloatingRegionReference
+ * @prop {RegionReference} region
+ * @prop {number} [maxUpOffset] - how much the content can move up
+ * @prop {number} [maxDownOffset] - how much the content can move down
+ * @prop {number} [maxLeftOffset] - how much the content can move to the left
+ * @prop {number} [maxRightOffset] - how much the content can move to the right
+ */
+
+/**
+ * @typedef AccessibilityRegionReference
+ * @prop {RegionReference} region
+ * @prop {AccessibilityRegionType} [type]
  */
 
 /**
@@ -31,6 +56,30 @@ const AccessibilityRegionByElement = require('./AccessibilityRegionByElement')
  * @property {(element: SupportedElement) => EyesWrappedElement} createElementFromElement - return partially created element
  * @property {(reference) => boolean} isFrameReference - return true if the value is a frame reference, false otherwise
  * @property {(reference: FrameReference) => Frame} createFrameReference - return frame reference
+ */
+
+/**
+ * @typedef PlainCheckSettings
+ * @prop {string} [name]
+ * @prop {MatchLevel} [matchLevel]
+ * @prop {number} [timeout=-1]
+ * @prop {boolean} [sendDom=true]
+ * @prop {boolean} [useDom=true]
+ * @prop {boolean} [enablePatterns=true]
+ * @prop {boolean} [ignoreDisplacements=true]
+ * @prop {boolean} [ignoreCaret=true]
+ * @prop {boolean} [isFully=false]
+ * @prop {string} [renderId]
+ * @prop {{[key: string]: string}} [hooks]
+ * @prop {RegionReference} [region]
+ * @prop {(FrameReference|ExtendedFrameReference)[]} [frames]
+ * @prop {ElementReference} [scrollRootElement]
+ * @prop {RegionReference[]} [ignoreRegions]
+ * @prop {RegionReference[]} [layoutRegion]
+ * @prop {RegionReference[]} [strictRegions]
+ * @prop {RegionReference[]} [contentRegions]
+ * @prop {(FloatingRegionReference|RegionReference)[]} [floatingRegions]
+ * @prop {(AccessibilityRegionReference|RegionReference)[]} [accessibilityRegions]
  */
 
 const BEFORE_CAPTURE_SCREENSHOT = 'beforeCaptureScreenshot'
@@ -66,21 +115,117 @@ class DriverCheckSettings extends CheckSettings {
    * @param {RegionReference} [region]
    * @param {FrameReference} [frame]
    */
-  constructor(region, frame) {
+  constructor(checkSettings) {
     super()
+    if (checkSettings instanceof DriverCheckSettings) {
+      return checkSettings
+    } else if (checkSettings) {
+      return this.constructor.from(checkSettings)
+    }
     /** @type {EyesWrappedElement} */
     this._targetElement = null
     /** @type {Frame[]} */
     this._frameChain = []
     /** @type {Object<string, string>} */
     this._scriptHooks = {}
+  }
 
-    if (region) {
-      this.region(region)
+  /**
+   * Create check settings from an object
+   * @param {PlainCheckSettings} object
+   * @return {DriverCheckSettings} check settings instance
+   */
+  static from(object) {
+    const settings = new this()
+    if (object.name) {
+      settings.withName(object.name)
     }
-    if (frame) {
-      this.frame(frame)
+    if (object.scrollRootElement) {
+      settings.scrollRootElement(object.scrollRootElement)
     }
+    if (object.hooks) {
+      Object.values(object.hooks).forEach(([name, script]) => {
+        settings.hook(name, script)
+      })
+    }
+    if (object.region) {
+      settings.region(object.region)
+    }
+    if (object.frames) {
+      object.frames.forEach(reference => {
+        if (reference.frame) {
+          settings.frame(reference.frame)
+          if (reference.scrollRootElement) {
+            settings.scrollRootElement(reference.scrollRootElement)
+          }
+        } else {
+          settings.frame(reference)
+        }
+      })
+    }
+    if (object.ignoreRegions) {
+      object.ignoreRegions.forEach(ignoreRegion => settings.ignoreRegion(ignoreRegion))
+    }
+    if (object.layoutRegions) {
+      object.layoutRegions.forEach(layoutRegion => settings.layoutRegion(layoutRegion))
+    }
+    if (object.strictRegions) {
+      object.strictRegions.forEach(strictRegion => settings.strictRegion(strictRegion))
+    }
+    if (object.contentRegions) {
+      object.contentRegions.forEach(contentRegion => settings.contentRegion(contentRegion))
+    }
+    if (object.floatingRegions) {
+      object.floatingRegions.forEach(floatingRegion =>
+        floatingRegion.region
+          ? settings.floatingRegion(
+              floatingRegion.region,
+              floatingRegion.maxUpOffset,
+              floatingRegion.maxDownOffset,
+              floatingRegion.maxLeftOffset,
+              floatingRegion.maxRightOffset,
+            )
+          : settings.floatingRegion(floatingRegion),
+      )
+    }
+    if (object.accessibilityRegions) {
+      object.accessibilityRegions.forEach(accessibilityRegion =>
+        accessibilityRegion.region
+          ? settings.accessibilityRegion(accessibilityRegion.region, accessibilityRegion.type)
+          : settings.accessibilityRegion(accessibilityRegion),
+      )
+    }
+    if (object.matchLevel) {
+      settings.matchLevel(object.matchLevel)
+    }
+    if (object.matchLevel) {
+      settings.matchLevel(object.matchLevel)
+    }
+    if (object.timeout) {
+      settings.timeout(object.timeout)
+    }
+    if (object.sendDom) {
+      settings.sendDom(object.sendDom)
+    }
+    if (object.useDom) {
+      settings.useDom(object.useDom)
+    }
+    if (object.enablePatterns) {
+      settings.enablePatterns(object.enablePatterns)
+    }
+    if (object.ignoreDisplacements) {
+      settings.ignoreDisplacements(object.ignoreDisplacements)
+    }
+    if (object.ignoreCaret) {
+      settings.ignoreCaret(object.ignoreCaret)
+    }
+    if (object.renderId) {
+      settings.renderId(object.renderId)
+    }
+    if (object.isFully) {
+      settings.fully(object.isFully)
+    }
+    return settings
   }
 
   /**
@@ -98,7 +243,7 @@ class DriverCheckSettings extends CheckSettings {
    * @return {DriverCheckSettings} check settings object
    */
   static region(region, frame) {
-    return new this(region, frame)
+    return frame ? new this().frame(frame).region(region) : new this().region(region)
   }
 
   /**
@@ -107,7 +252,7 @@ class DriverCheckSettings extends CheckSettings {
    * @return {DriverCheckSettings} check settings object
    */
   static frame(frame) {
-    return new this(null, frame)
+    return new this().frame(frame)
   }
 
   /**
@@ -345,6 +490,16 @@ class DriverCheckSettings extends CheckSettings {
   }
 
   /**
+   * @param {string} name
+   * @param {string} script
+   * @return {this}
+   */
+  hook(name, script) {
+    this._scriptHooks[name] = script
+    return this
+  }
+
+  /**
    * @deprecated
    * @param {String} hook
    * @return {this}
@@ -358,8 +513,7 @@ class DriverCheckSettings extends CheckSettings {
    * @return {this}
    */
   beforeRenderScreenshotHook(hook) {
-    this._scriptHooks[BEFORE_CAPTURE_SCREENSHOT] = hook
-    return this
+    return this.hook(BEFORE_CAPTURE_SCREENSHOT, hook)
   }
 
   /**

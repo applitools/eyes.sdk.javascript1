@@ -179,6 +179,41 @@ describe('SpecWrappedDriver', async () => {
     })
   })
 
+  describe('browser with unimplemented methods', async () => {
+    let driver
+
+    before(async () => {
+      driver = await remote({
+        protocol: 'https',
+        hostname: 'ondemand.saucelabs.com',
+        port: 443,
+        path: '/wd/hub',
+        logLevel: 'error',
+        capabilities: {
+          browserName: 'internet explorer',
+          browserVersion: '11.285',
+          platformName: 'Windows 10',
+          username: process.env.SAUCE_USERNAME,
+          accesskey: process.env.SAUCE_ACCESS_KEY,
+        },
+      })
+    })
+
+    after(async () => {
+      await driver.deleteSession()
+    })
+
+    it('windowSize', async function() {
+      let size = await specs.getWindowSize(driver)
+      assert.strictEqual(size.width, 1040)
+      assert.strictEqual(size.height, 784)
+      await specs.setWindowSize(driver, {width: 800, height: 600})
+      size = await specs.getWindowSize(driver)
+      assert.strictEqual(size.width, 800)
+      assert.strictEqual(size.height, 600)
+    })
+  })
+
   describe('mobile browser', async () => {
     let driver
 

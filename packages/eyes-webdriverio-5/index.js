@@ -9,6 +9,7 @@ exports.EyesVisualGrid = WDIOEyesVisualGrid
 exports.Target = WDIOCheckSettings
 exports.WebdriverioCheckSettings = WDIOCheckSettings
 exports.By = LegacySelector
+exports.EyesService = require('./src/EyesService')
 
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings

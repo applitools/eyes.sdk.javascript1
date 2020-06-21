@@ -16,11 +16,18 @@ describe('TestCounts', () => {
     await eyes.setSendDom(false)
   })
 
+  it('Test_VGTestsCount_1', async () => {
+    await eyes.open(driver, 'Test Count', 'Test_VGTestsCount_1')
+    await eyes.check('Test', Target.window())
+    await eyes.close()
+    let results = await runner.getAllTestResults()
+    assert.deepStrictEqual(1, results.getAllResults().length)
+  })
+
   it('Test_VGTestsCount_2', async () => {
     let conf = eyes.getConfiguration()
     conf.addBrowser(900, 600)
     conf.addBrowser(1024, 768)
-    conf.setBranchName('master')
     eyes.setConfiguration(conf)
     await eyes.open(driver, 'Test Count', 'Test_VGTestsCount_2')
     await eyes.check('Test', Target.window())
@@ -35,7 +42,6 @@ describe('TestCounts', () => {
     conf.addBrowser(1024, 768)
     conf.setAppName('Test Count')
     conf.setTestName('Test_VGTestsCount_3')
-    conf.setBranchName('master')
     eyes.setConfiguration(conf)
     await eyes.open(driver)
     await eyes.check('Test', Target.window())
@@ -48,7 +54,6 @@ describe('TestCounts', () => {
     let conf = eyes.getConfiguration()
     conf.setAppName('Test Count')
     conf.setTestName('Test_VGTestsCount_4')
-    conf.setBranchName('master')
     eyes.setConfiguration(conf)
     await eyes.open(driver)
     await eyes.check('Test', Target.window())
@@ -61,7 +66,6 @@ describe('TestCounts', () => {
     let conf = eyes.getConfiguration()
     conf.addBrowser(900, 600)
     conf.addBrowser(1024, 768)
-    conf.setBranchName('master')
     eyes.setConfiguration(conf)
     await eyes.open(driver, 'Test Count', 'Test_VGTestsCount_5', {width: 640, height: 480})
     await eyes.check('Test', Target.window())

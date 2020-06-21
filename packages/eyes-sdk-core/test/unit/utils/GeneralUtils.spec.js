@@ -287,7 +287,7 @@ describe('GeneralUtils', () => {
       assert.strictEqual(newParam2, 'using old')
       assert.strictEqual(
         log[0],
-        'warning - "oldParam2" is deprectated and will be removed, please use "newParam2" instead.',
+        'warning - "oldParam2" is deprecated and will be removed, please use "newParam2" instead.',
       )
     })
   })

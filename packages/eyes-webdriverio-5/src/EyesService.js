@@ -1,6 +1,9 @@
 'use strict'
 
-const {ConsoleLogHandler, Eyes, Target} = require('@applitools/eyes-webdriverio')
+const {ConsoleLogHandler, VisualGridRunner} = require('@applitools/eyes-sdk-core')
+const {WDIOEyesFactory: Eyes} = require('../src/WDIOSpecializedEyes')
+const Target = require('../src/WDIOCheckSettings')
+const VERSION = require('../package.json').version
 
 const DEFAULT_VIEWPORT = {
   width: 800,
@@ -8,11 +11,21 @@ const DEFAULT_VIEWPORT = {
 }
 
 class EyesService {
-  constructor() {
-    this._eyes = new Eyes()
+  constructor(config) {
+    this._eyesConfig = getServiceConfig(config) || {}
+    const runner = this._eyesConfig.useVisualGrid
+      ? new VisualGridRunner(this._eyesConfig.concurrency)
+      : undefined
+    this._eyes = new Eyes(runner)
+    this._eyes.getBaseAgentId = () =>
+      runner
+        ? `eyes-webdriverio-service-visualgrid/${VERSION}`
+        : `eyes-webdriverio-service/${VERSION}`
     this._scrollRootElement = undefined
 
-    this._eyes.setHideScrollbars(true)
+    if (!runner) {
+      this._eyes.setHideScrollbars(true)
+    }
     this._appName = null
   }
 
@@ -24,13 +37,9 @@ class EyesService {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  // eslint-disable-next-line
-  beforeSession(config, capabilities, specs) {
-    this._eyesConfig = config.eyes
-    if (this._eyesConfig) {
-      this._eyes.setConfiguration(this._eyesConfig)
-      this._appName = this._eyes.getConfiguration().getAppName()
-    }
+  beforeSession(config, _capabilities, _specs) {
+    this._eyes.setConfiguration(this._eyesConfig)
+    this._appName = this._eyes.getConfiguration().getAppName()
     if (config.enableEyesLogs) {
       this._eyes.setLogHandler(new ConsoleLogHandler(true))
     }
@@ -43,18 +52,12 @@ class EyesService {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  // eslint-disable-next-line
-  before(capabilities, specs) {
+  before(_capabilities, _specs) {
     global.browser.addCommand(
       'eyesCheck',
       async (title, checkSettings = Target.window().fully()) => {
         await this._eyesOpen()
-
-        const matchResult = await this._eyes.check(title, checkSettings)
-        if (this._eyesConfig.throwErrorIfNotAsExpected && !matchResult.getAsExpected()) {
-          throw new Error('Eyes detected visual mismatch!')
-        }
-        return matchResult
+        return this._eyes.check(title, checkSettings)
       },
     )
 
@@ -123,8 +126,7 @@ class EyesService {
    *
    * @param {Object} test test details
    */
-  // eslint-disable-next-line
-  afterTest(test) {
+  afterTest(_test) {
     // the next line is required because if we set an element in one test, then the following test
     // will say that the element is not attached to the page (because different browsers are used)
     this._eyes._scrollRootElement = undefined
@@ -138,8 +140,8 @@ class EyesService {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  // eslint-disable-next-line
-  after(result, capabilities, specs) {
+  after(_result, _capabilities, _specs) {
+    global.browser.call(() => this._eyes.getRunner().getAllTestResults(false))
     global.browser.call(() => this._eyes.abort())
   }
 
@@ -162,4 +164,17 @@ class EyesService {
   }
 }
 
-exports.EyesService = EyesService
+function getServiceConfig(config) {
+  let wdioVersion = 6
+  try {
+    const wdioPkgJson = require('webdriverio/package.json') // eslint-disable-line node/no-extraneous-require
+    wdioVersion = Number(wdioPkgJson.version.split('.', 1)[0])
+    if (isNaN(wdioVersion)) {
+      wdioVersion = 6
+    }
+  } catch (ex) {}
+
+  return wdioVersion >= 6 ? config : config.eyes
+}
+
+module.exports = EyesService

@@ -347,10 +347,13 @@ class EyesCore extends EyesBase {
     }
   }
   /**
-   * @return {Promise<EyesWrappedElement>}
+   * @return {Promise<(EyesWrappedElement|SupportedElement|SupportedSelector)?>}
    */
   async getScrollRootElement() {
-    return this._scrollRootElement ? this._scrollRootElement.init(this._driver) : null
+    if (this._scrollRootElement) {
+      return this._driver ? this._scrollRootElement.init(this._driver) : this._scrollRootElement
+    }
+    return null
   }
 
   /**

@@ -357,7 +357,7 @@ const {VisualGridRunner} = require('@applitools/eyes-protractor')
 const runner = new VisualGridRunner(concurrentSessions)
 ```
 
-- `concurrentSessions` - (Number) the number of visual tests that are allowed to run at the same time. Default: `Infinity`.
+- `concurrentSessions` - (Number) the number of visual tests that are allowed to run at the same time. Default: `1`.
 
 ### Purpose of runners
 
@@ -699,7 +699,7 @@ _For the full list of methods, visit our documentation page: https://applitools.
 To enable logging to the console, use the `ConsoleLogHandler` class:
 
 ```js
-import {Eyes, ConsoleLogHandler} from '@applitools/eyes-testcafe'
+const {Eyes, ConsoleLogHandler} = require('@applitools/eyes-protractor')
 
 const eyes = new Eyes()
 eyes.setLogHandler(new ConsoleLogHandler())

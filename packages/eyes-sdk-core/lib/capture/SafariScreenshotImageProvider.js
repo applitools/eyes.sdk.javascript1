@@ -74,7 +74,10 @@ class SafariScreenshotImageProvider extends ImageProvider {
           this._logger.verbose('no crop needed. must be using chrome emulator.')
         }
       }
-    } else if (!this._eyes.getForceFullPageScreenshot()) {
+    } else if (
+      this._userAgent.getBrowserMajorVersion() === '11' &&
+      !this._eyes.getForceFullPageScreenshot()
+    ) {
       const frameChain = this._driver.context.frameChain
       let loc =
         frameChain.size > 0

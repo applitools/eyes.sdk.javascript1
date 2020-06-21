@@ -351,7 +351,7 @@ class GeneralUtils {
         results[newParamName] = newParam[newParamName]
       } else {
         logger.log(
-          `warning - "${oldParamName}" is deprectated and will be removed, please use "${newParamName}" instead.`,
+          `warning - "${oldParamName}" is deprecated and will be removed, please use "${newParamName}" instead.`,
         )
         results[newParamName] = oldParam[oldParamName]
       }

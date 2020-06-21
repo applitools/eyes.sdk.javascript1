@@ -46,7 +46,7 @@ module.exports = {
     if (!TypeUtils.has(selector, ['using', 'value'])) {
       const by = new ProtractorBy()
       if (TypeUtils.isString(selector)) {
-        selector = by.css(selector[using])
+        selector = by.css(selector)
       } else if (TypeUtils.isPlainObject(selector)) {
         const using = Object.keys(selector).find(using => TypeUtils.has(by, using))
         if (using) selector = by[using](selector[using])

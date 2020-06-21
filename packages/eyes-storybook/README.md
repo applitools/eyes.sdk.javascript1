@@ -54,7 +54,7 @@ npm install --save-dev @applitools/eyes-storybook
 
 In order to authenticate via the Applitools server, you need to supply the Eyes-Storybook SDK with the API key you got from Applitools. Read more about how to obtain the API key [here](https://applitools.com/docs/topics/overview/obtain-api-key.html).
 
-To to this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
+To do this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
 For example, on Linux/Mac:
 
 ```bash
@@ -132,7 +132,7 @@ If you are interested in speeding up your visual tests, contact sdr@applitools.c
 
 ## Advanced configuration
 
-In addition to command-line arguments, it's possible to define the following configuration for tests:
+In addition to command-line arguments, it's possible to define the following configuration parameteres for tests by using environment variables or the applitools.config.js file:
 
 | Property name             | Default value               | Description   |
 | -------------             |:-------------               |:-----------   |
@@ -383,7 +383,12 @@ storiesOf('Components with ignored region', module)
         <span>I am visually perfect!</span>
         <span className="ignore-this">this should be ignored</span>
       </div>,
-    {eyes: { ignoreRegions: [{selector: '.ignore-this'}] }}
+    {eyes: {
+      ignoreRegions: [
+        {selector: '.ignore-this'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
   )
 ```
 
@@ -400,13 +405,27 @@ storiesOf('Components with floating region', module)
         <span>I am visually perfect!</span>
         <span className="floating-region">this should be floating</span>
       </div>,
-    {eyes: { floatingRegions: [{
-      selector: '.floating-region',
-      maxUpOffset: 10,
-      maxDownOffset: 20,
-      maxLeftOffset: 30,
-      maxRightOffset: 40,
-    }] }}
+    {eyes: {
+      floatingRegions: [
+        { // by selector
+          selector: '.floating-region',
+          maxUpOffset: 10,
+          maxDownOffset: 20,
+          maxLeftOffset: 30,
+          maxRightOffset: 40,
+        },
+        { // by absolute coordinates
+          left: 10,
+          top: 20,
+          width: 200,
+          height: 80,
+          maxUpOffset: 10,
+          maxDownOffset: 20,
+          maxLeftOffset: 30,
+          maxRightOffset: 40,
+        }
+      ]}
+    }
   )
 ```
 
@@ -423,7 +442,12 @@ storiesOf('Components with layout region', module)
         <span>I am visually perfect!</span>
         <span className="layout-region">this should be compared with layout match level</span>
       </div>,
-    {eyes: { layoutRegions: [{selector: '.layout-region'}] }}
+    {eyes: {
+      layoutRegions: [
+        {selector: '.layout-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
   )
 ```
 
@@ -440,7 +464,12 @@ storiesOf('Components with content region', module)
         <span>I am visually perfect!</span>
         <span className="content-region">this should be compared with content match level</span>
       </div>,
-    {eyes: { contentRegions: [{selector: '.content-region'}] }}
+    {eyes: {
+      contentRegions: [
+        {selector: '.content-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
   )
 ```
 
@@ -457,7 +486,12 @@ storiesOf('Components with strict region', module)
         <span>I am visually perfect!</span>
         <span className="strict-region">this should be compared with strict match level</span>
       </div>,
-    {eyes: { strictRegions: [{selector: '.strict-region'}] }}
+    {eyes: {
+      strictRegions: [
+        {selector: '.strict-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
   )
 ```
 
@@ -469,12 +503,15 @@ A single or an array of regions for accessibility checking. For example:
 storiesOf('Components with accessibility regions', module)
   .add(
     'Some story',
-    () => <div>
-      <span>I am visually perfect!<span>
-      <span className="check-me">this should be tested for accessibility</span>
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="check-me">this should be tested for accessibility</span>
+      </div>,
     {eyes: {
       accessibilityRegions: [
-        {accessibilityType: 'RegularText', selector: '.check-me'},
+        {accessibilityType: 'RegularText', selector: '.check-me'}, // by css selector
+        {accessibilityType: 'RegularText', left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
       ]
     }}
   )

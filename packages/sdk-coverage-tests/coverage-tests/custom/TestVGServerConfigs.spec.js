@@ -45,7 +45,8 @@ describe('TestVGServerConfigs', () => {
     await expect(eyes.close()).to.be.rejectedWith(Error, 'IllegalState: Eyes not open')
   })
 
-  it(`TestMobileWeb_VG`, async () => {
+  // TODO unskip when VG ios stabilizes (https://trello.com/c/5hGd01CW/552-ios-malformed-screenshot)
+  it.skip(`TestMobileWeb_VG`, async () => {
     const conf = eyes.getConfiguration()
     conf.addBrowser({
       iosDeviceInfo: {
@@ -213,6 +214,7 @@ describe('Miscellaneous VG tests', () => {
       expect(logOutput).to.eql([edgeWarning])
     } finally {
       console.log = origConsoleLog
+      console.log(logOutput)
     }
   })
 })

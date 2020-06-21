@@ -6,7 +6,7 @@ const spec = require(path.resolve(cwd, 'src/SpecWrappedDriver'))
 const {Target} = require(cwd)
 const {assertImage} = require('../util/ApiAssertions')
 
-describe('JS Coverage Tests - Selenium 4', async () => {
+describe('Coverage Tests', async () => {
   describe('edge', () => {
     let eyes
     let driver

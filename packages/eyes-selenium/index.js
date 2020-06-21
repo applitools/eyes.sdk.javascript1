@@ -1,9 +1,9 @@
 const core = require('@applitools/eyes-sdk-core')
 
-if (!process.env.SELENIUM_MAJOR_VERSION) {
+if (!process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION) {
   const {version} = require('selenium-webdriver/package.json')
   const [major] = version.split('.', 1)
-  process.env.SELENIUM_MAJOR_VERSION = major
+  process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION = major
 }
 
 const SeleniumCheckSettings = require('./src/SeleniumCheckSettings')

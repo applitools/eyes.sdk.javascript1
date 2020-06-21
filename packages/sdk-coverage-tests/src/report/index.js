@@ -4,7 +4,7 @@ function convertSdkNameToReportName(sdkName) {
   switch (sdkName) {
     case 'eyes-selenium':
       return 'js_selenium_4'
-    case 'eyes.selenium':
+    case 'eyes-selenium-3':
       return 'js_selenium_3'
     case 'eyes.webdriverio.javascript5':
       return 'js_wdio_5'
