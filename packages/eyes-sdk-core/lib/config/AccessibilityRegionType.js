@@ -1,6 +1,7 @@
 const Enum = require('../utils/Enum')
 
 /**
+ * @enum
  * @typedef {'IgnoreContrast'|'RegularText'|'LargeText'|'BoldText'|'GraphicalObject'} AccessibilityRegionType
  */
 

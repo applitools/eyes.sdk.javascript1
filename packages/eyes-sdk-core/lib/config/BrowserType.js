@@ -1,6 +1,7 @@
 const Enum = require('../utils/Enum')
 
 /**
+ * @enum
  * @typedef {string} BrowserType
  */
 

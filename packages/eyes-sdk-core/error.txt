@@ -1,0 +1,9 @@
+yarn run v1.22.4
+$ node ./scripts/build-typings
+Cannot find global value 'Promise'.
+C:/Users/yonatanlehman/node_modules/cosmiconfig/dist/types.d.ts (12,29): Cannot find name 'Map'. Do you need to change your target library? Try changing the `lib` compiler option to es2015 or later.
+C:/Users/yonatanlehman/node_modules/png-async/lib/index.d.ts (1,23): Cannot find type definition file for 'node'.
+C:/Users/yonatanlehman/node_modules/png-async/lib/index.d.ts (2,25): Cannot find module 'stream' or its corresponding type declarations.
+C:/Users/yonatanlehman/node_modules/png-async/lib/index.d.ts (33,11): Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i @types/node`.
+C:/Users/yonatanlehman/node_modules/png-async/lib/index.d.ts (38,17): Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i @types/node`.
+Done in 9.20s.

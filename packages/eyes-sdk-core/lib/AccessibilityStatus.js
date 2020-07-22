@@ -2,6 +2,7 @@
 const Enum = require('./utils/Enum')
 
 /**
+ * @enum
  * @typedef {'Passed'|'Failed'} AccessibilityStatus
  */
 

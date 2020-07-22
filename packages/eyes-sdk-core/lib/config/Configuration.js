@@ -1207,6 +1207,12 @@ class Configuration {
   }
 
   /**
+   * @signature addBrowser(renderBrowserInfo)
+   * @sigparam {RenderBrowserInfo} renderBrowserInfo
+   * @signature addBrowser(desktopBrowserInfo) 
+   * @sigparam {DesktopBrowserInfo} renderBrowserInfo
+   * @signature addBrowser(chromeEmulationInfo)   
+   * @sigparam {ChromeEmulationInfo} chromeEmulationInfo 
    * @return {RenderInfo[]|undefined}
    */
   getBrowsersInfo() {
@@ -1245,7 +1251,19 @@ class Configuration {
     return this
   }
 
+
   /**
+   * @signature `addBrowser(renderBrowserInfo)`
+   * @sigparam {RenderBrowserInfo} renderBrowserInfo
+   * @signature `addBrowser(desktopBrowserInfo)` 
+   * @sigparam {DesktopBrowserInfo} renderBrowserInfo
+   * @signature `addBrowser(chromeEmulationInfo)`   
+   * @sigparam {ChromeEmulationInfo} chromeEmulationInfo 
+   * @signature `addBrowser(width, height, browserType)`   
+   * @sigparam {number} browserType
+   * @sigparam {number} height
+   * @sigparam {BrowserType} [browserType]
+   *
    * @param {number|RenderInfo} widthOrBrowserInfo
    * @param {number} [height]
    * @param {BrowserType} [browserType]

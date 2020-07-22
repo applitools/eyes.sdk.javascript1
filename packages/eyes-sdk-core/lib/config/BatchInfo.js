@@ -8,7 +8,7 @@ const DateTimeUtils = require('../utils/DateTimeUtils')
  * @typedef BatchInfoObject
  * @prop {string} [id]
  * @prop {string} [name]
- * @prop {Data|string} [startedAt]
+ * @prop {Date|string} [startedAt]
  * @prop {string} [sequenceName]
  * @prop {boolean} [notifyOnCompletion]
  */

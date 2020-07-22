@@ -1,0 +1,76 @@
+WOrking backwards
+
+==index.js==
+
+[16] exports.Eyes = SeleniumEyesFactory
+[10] const {
+  SeleniumEyesClassic,
+  SeleniumEyesVisualGrid,
+  SeleniumEyesFactory,
+} = require('./src/SeleniumSpecializedEyes')
+
+=./src/SeleniumSpecializedEyes=
+[24] const SeleniumEyesFactory = EyesFactory.specialize({
+  EyesClassic: SeleniumEyesClassic,
+  EyesVisualGrid: SeleniumEyesVisualGrid,
+})
+
+[1] const {EyesFactory, EyesClassic, EyesVisualGrid} = require('@applitools/eyes-sdk-core')
+
+=@applitools/eyes-sdk-core/index.js=
+[212]exports.EyesFactory = require('./lib/EyesFactory')
+[210] exports.EyesClassic = require('./lib/EyesClassic')
+[21]] exports.EyesVisualGrid = require('./lib/EyesVisualGrid')
+
+
+= ./lib/EyesFactory= 
+
+[8]
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {import('./EyesClassic')<TDriver, TElement, TSelector>} EyesClassic
+ */
+
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {import('./EyesVisualGrid')<TDriver, TElement, TSelector>} EyesVisualGrid
+ */
+
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {new <TRunner>(serverUrl?: string|boolean|TRunner, isDisabled?: boolean, runner?: TRunner) => TRunner extends VisualGridRunner ? EyesVisualGrid<TDriver, TElement, TSelector> : EyesClassic<TDriver, TElement, TSelector>} EyesFactoryCtor
+ */
+
+/**
+ * This class represents an abstraction for construction of {@link EyesClassic} and {@link EyesVisualGrid}
+ *
+ * @template TDriver
+ * @template TElement
+ * @template TSelector
+ */
+class EyesFactory {
+  /**
+   * Return a specialized
+   * @template TDriver, TElement, TSelector
+   * @param {Object} implementations - implementations of related classes
+   * @param {new (...args: any[]) => EyesClassic<TDriver, TElement, TSelector>} implementations.EyesClassic - specialized implementation of {@link EyesClassic} class
+   * @param {new (...args: any[]) => EyesVisualGrid<TDriver, TElement, TSelector>} implementations.EyesVisualGrid - specialized implementation of {@link EyesVisualGrid} class
+   * @return {EyesFactoryCtor<TDriver, TElement, TSelector>} specialized version of {@link EyesFactory}
+   */
+  static specialize({EyesClassic, EyesVisualGrid}) {
+  ======================================================
+  index.js
+  exports.SeleniumCheckSettings = SeleniumCheckSettings
+  const SeleniumCheckSettings = require('./src/SeleniumCheckSettings')
+  == './src/SeleniumCheckSettings'==
+  module.exports = CheckSettings
+  const CheckSettings = DriverCheckSettings.specialize(SpecCheckSettings)
+  const {DriverCheckSettings} = require('@applitools/eyes-sdk-core')
+  == DriverCheckSettings==
+  exports.DriverCheckSettings = require('./lib/fluent/DriverCheckSettings')
+  == ./lib/fluent/DriverCheckSettings ==
+  /**
+ * @template TElement - TElement provided by wrapped framework
+ * @template TSelector - TSelector supported by framework
+ */
+class CheckSettings {

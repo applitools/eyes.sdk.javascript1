@@ -10,7 +10,7 @@ const TestResultsStatuses = require('./TestResultsStatus')
 
 class SessionUrls {
   /**
-   * @param data
+   * @param { Object } data
    * @param {string} data.batch
    * @param {string} data.session
    */
@@ -57,7 +57,7 @@ class SessionUrls {
 
 class ApiUrls {
   /**
-   * @param data
+   * @param { Object } data
    * @param {string} data.baselineImage
    * @param {string} data.currentImage
    * @param {string} data.checkpointImage
@@ -158,7 +158,7 @@ class ApiUrls {
 
 class AppUrls {
   /**
-   * @param data
+   * @param { Object } data
    * @param {string} data.step
    * @param {string} data.stepEditor
    */
@@ -205,7 +205,7 @@ class AppUrls {
 
 class StepInfo {
   /**
-   * @param info
+   * @param { Object }info
    * @param {string} info.name
    * @param {boolean} info.isDifferent
    * @param {boolean} info.hasBaselineImage
@@ -358,7 +358,7 @@ class StepInfo {
  */
 class TestResults {
   /**
-   * @param results
+   * @param {Object } results
    * @param {string} [results.id]
    * @param {string} [results.name]
    * @param {string} [results.secretToken]

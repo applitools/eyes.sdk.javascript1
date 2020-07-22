@@ -27,10 +27,14 @@ const SpecCheckSettings = {
     return SeleniumFrame.isReference(reference)
   },
   createFrameReference(reference) {
-    return SeleniumFrame.fromReference(reference)
+    return SeleniumFrame.fromReference(reference) 
   },
 }
-
+/**
+    @class SeleniumCheckSettings
+    @instantiate SeleniumCheckSettings from DriverCheckSettings
+    
+*/
 const CheckSettings = DriverCheckSettings.specialize(SpecCheckSettings)
 
 module.exports = CheckSettings
