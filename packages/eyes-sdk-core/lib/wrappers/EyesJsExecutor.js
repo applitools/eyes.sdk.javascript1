@@ -1,5 +1,6 @@
 'use strict'
 const EyesWrappedElement = require('./EyesWrappedElement')
+const TypeUtils = require('../utils/TypeUtils')
 
 /**
  * @typedef {import('../logging/Logger')} Logger
@@ -79,7 +80,7 @@ class EyesJsExecutor {
       const result = await this.spec.executeScript(
         this._driver.unwrapped,
         script,
-        ...args.map(arg => (arg instanceof EyesWrappedElement ? arg.unwrapped : arg)),
+        ...args.map(arg => (TypeUtils.instanceOf(arg, EyesWrappedElement) ? arg.unwrapped : arg)),
       )
       this._logger.verbose('Done!')
       return result

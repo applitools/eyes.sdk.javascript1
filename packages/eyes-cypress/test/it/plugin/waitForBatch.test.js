@@ -2,7 +2,7 @@
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const makeWaitForBatch = require('../../../src/plugin/waitForBatch');
-const {TestResults} = require('@applitools/eyes-sdk-core/lib/TestResults');
+const {TestResults} = require('@applitools/eyes-sdk-core');
 const makeHandleBatchResultsFile = require('../../../src/plugin/makeHandleBatchResultsFile');
 const baseDir = require('../../util/baseDir');
 const fs = require('fs');

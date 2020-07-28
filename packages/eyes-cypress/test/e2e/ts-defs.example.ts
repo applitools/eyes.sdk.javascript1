@@ -1,4 +1,4 @@
-/// <reference path="../fixtures/testApp/node_modules/@applitools/eyes-cypress/eyes-index.d.ts" />
+/// <reference path="../fixtures/testAppCopies/testApp-pack-install/node_modules/@applitools/eyes-cypress/eyes-index.d.ts" />
 
 // no options
 cy.eyesOpen();

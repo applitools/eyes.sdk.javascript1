@@ -7,7 +7,7 @@ function extractLinks(doc = document) {
   ).reduce((acc, urls) => acc.concat(urls), []);
 
   const srcUrls = Array.from(
-    doc.querySelectorAll('img[src],source[src],input[type="image"][src],audio[src]'),
+    doc.querySelectorAll('img[src],source[src],input[type="image"][src],audio[src],video[src]'),
   ).map(srcEl => srcEl.getAttribute('src'));
 
   const imageUrls = Array.from(doc.querySelectorAll('image,use'))

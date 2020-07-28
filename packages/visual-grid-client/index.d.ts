@@ -19,7 +19,7 @@ declare namespace Eyes {
        * This doesn't need to be the same as the browser that driver is running.
        * It could be a different size and also a different browser.
        * Default value: { width: 800, height: 600, name: 'chrome' }
-       */ 
+       */
       browser?:ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo|
               (ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo)[]
 
@@ -162,6 +162,12 @@ declare namespace Eyes {
        * Default value: false
        */
       isDisabled?:boolean
+
+      /**
+       * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
+       * Default value: false
+       */
+      ignoreDisplacements?:boolean
     }
 
     interface DesktopBrowserInfo {
@@ -302,6 +308,12 @@ declare namespace Eyes {
        * and not for normal production use.
        */
       sendDom?:boolean
+
+      /**
+       * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
+       * Default value: false
+       */
+      ignoreDisplacements?:boolean
     }
 
     interface Selector {

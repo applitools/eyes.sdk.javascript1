@@ -38,6 +38,16 @@ describe('EyesClassic', () => {
     })
   })
 
+  describe('#close()', () => {
+    it('should throw if an internal exception happened during close(false)', async () => {
+      eyes._serverConnector.stopSession = () => Promise.reject('some error')
+      eyes.setMatchTimeout(0)
+      await eyes.open(driver, 'FakeApp', 'FakeTest')
+      await eyes.check(FakeCheckSettings.window())
+      await assertRejects(eyes.close(false), /^some error$/)
+    })
+  })
+
   describe('should work wait before viewport screenshot after setWaitBeforeScreenshots', () => {
     let checkTimestamp, networkTimestamp, duration, eyes
 

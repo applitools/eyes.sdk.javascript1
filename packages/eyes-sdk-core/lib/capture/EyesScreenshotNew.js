@@ -149,6 +149,8 @@ class EyesScreenshot {
     const scrollRootElement = !this._frameChain.isEmpty
       ? this._frameChain.current.scrollRootElement
       : positionProvider.scrollRootElement
+
+    // TODO this throws exception on mobile native apps
     this._currentFrameScrollPosition = await EyesUtils.getInnerOffsets(
       this._logger,
       this._eyes._executor,

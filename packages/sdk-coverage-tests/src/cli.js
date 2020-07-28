@@ -49,6 +49,13 @@ yargs
     describe: 'number of parallel executions to run at once',
     default: 15,
   })
+  .option('reportId', {
+    alias: 'id',
+    describe: 'Id of the report which will be displayed at the dashboard',
+  })
+  .option('coverage-tests-local-path', {
+    describe: 'path in file system of tests.js file, instead of fetching it remotely',
+  })
   .demandCommand(1, 'You need to specify a command before moving on')
 ;(async () => {
   try {

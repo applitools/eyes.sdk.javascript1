@@ -1,8 +1,8 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const processResults = require('../../src/processResults');
-const {TestResultsStatus} = require('@applitools/eyes-sdk-core');
-const {TestResults} = require('@applitools/eyes-sdk-core/lib/TestResults');
+const {TestResultsStatus, TestResults} = require('@applitools/eyes-sdk-core');
+
 describe('processResults', () => {
   it('works', async () => {
     const results = [

@@ -24,6 +24,21 @@ describe('deserializeDomSnapshotResult', () => {
     })
   })
 
+  it('converts empty strings in "blobs" property to buffers in "resourceContents"', () => {
+    const domSnapshotResult = {
+      blobs: [{url: 'u1', type: 't1', value: ''}],
+      frames: [],
+    }
+
+    const deserializedResult = deserializeDomSnapshotResult(domSnapshotResult)
+    expect(deserializedResult).to.eql({
+      frames: [],
+      resourceContents: {
+        u1: {url: 'u1', type: 't1', value: Buffer.from('')},
+      },
+    })
+  })
+
   it('handles frames', () => {
     const domSnapshotResult = {
       blobs: [],

@@ -1,4 +1,5 @@
 const ArgumentGuard = require('../utils/ArgumentGuard')
+const TypeUtils = require('../utils/TypeUtils')
 
 /**
  * @typedef {{x: number, y: number}} LocationObject
@@ -18,7 +19,7 @@ class Location {
       return new Location({x: varArg1, y: varArg2})
     }
 
-    if (varArg1 instanceof Location) {
+    if (TypeUtils.instanceOf(varArg1, Location)) {
       return new Location({x: varArg1.getX(), y: varArg1.getY()})
     }
 
@@ -29,6 +30,10 @@ class Location {
     // TODO: remove call to Math.ceil
     this._x = Math.ceil(x)
     this._y = Math.ceil(y)
+  }
+
+  static get __Location() {
+    return true
   }
 
   /**

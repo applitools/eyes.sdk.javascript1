@@ -13,7 +13,7 @@ describe('takeScreenshot e2e', () => {
   let server, browser, page
 
   before(async () => {
-    server = await testServer({port: 3456})
+    server = await testServer({port: 3459})
     browser = await puppeteer.launch()
     page = await browser.newPage()
   })
@@ -34,7 +34,7 @@ describe('takeScreenshot e2e', () => {
     const processPageAndSerialize = `(${await getProcessPageAndSerialize()})()`
     await page.goto(website)
     const {cdt, url, resourceUrls, blobs, frames} = await page.evaluate(processPageAndSerialize)
-    const [err, [{imageLocation, renderId}]] = await presult(
+    const [err, result] = await presult(
       takeScreenshot({
         apiKey,
         showLogs: process.env.APPLITOOLS_SHOW_LOGS,
@@ -50,6 +50,8 @@ describe('takeScreenshot e2e', () => {
 
     err && console.log(err)
     expect(err).to.be.undefined
+
+    const [{imageLocation, renderId}] = result
     expect(renderId).to.not.be.undefined
 
     console.log(imageLocation)

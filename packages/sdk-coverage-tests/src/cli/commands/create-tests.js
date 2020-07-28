@@ -1,25 +1,27 @@
 const path = require('path')
-const {filterTests, numberOfTestVariations, numberOfUniqueTests} = require('../cli-util')
-const {makeEmitTests, createTestFiles} = require('../../code-export')
-
-const defaultSdkImplementation = {
-  out: './test/coverage/generic',
-  ext: '.spec.js',
-}
+const {
+  filterTests,
+  numberOfTestVariations,
+  numberOfUniqueTests,
+  fetchCoverageTests,
+} = require('../cli-util')
+const {makeEmitTests, createTestFiles, createTestMetaData} = require('../../code-export')
 
 async function createTests(args) {
-  const sdkImplementation = Object.assign(
-    defaultSdkImplementation,
-    require(path.join(path.resolve('.'), args.path)),
-  )
+  const sdkImplementation = require(path.join(path.resolve('.'), args.path))
   console.log(`Creating coverage tests for ${sdkImplementation.name}...`)
 
+  const coverageTests = await fetchCoverageTests(args.coverageTestsLocalPath)
   const supportedTests = filterTests({tests: sdkImplementation.supportedTests, args})
-  const emittedTests = makeEmitTests(sdkImplementation.initialize).emitTests(supportedTests, {
-    host: args.remote,
-    all: args.all,
-  })
+  const emittedTests = makeEmitTests(sdkImplementation.initialize, coverageTests).emitTests(
+    supportedTests,
+    {
+      host: args.remote,
+      all: args.all,
+    },
+  )
   await createTestFiles(emittedTests, sdkImplementation)
+  await createTestMetaData(emittedTests, sdkImplementation)
   console.log(
     `\nCreated ${supportedTests.length} (${numberOfTestVariations({
       tests: supportedTests,

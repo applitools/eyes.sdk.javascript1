@@ -70,9 +70,9 @@ describe('fetchResource', () => {
     expect(called).to.equal(4)
   })
 
-  it('stops retry and fails when getting bad status', async () => {
+  it('stops retry and returns errosStatusCode when getting bad status', async () => {
     let called = 0
-    const response = {ok: false, status: '404'}
+    const response = {ok: false, status: 404}
     const dontFetch = () => ((called += 1), Promise.resolve(response))
     const fetchResourceWithRetry = makeFetchResource({
       logger: testLogger,
@@ -80,9 +80,7 @@ describe('fetchResource', () => {
       fetch: dontFetch,
     })
     const url = 'http://something'
-    expect((await presult(fetchResourceWithRetry(url)))[0].message).to.equal(
-      'failed to fetch http://something status 404',
-    )
+    expect(await fetchResourceWithRetry(url)).to.eql({url, errorStatusCode: 404})
     expect(called).to.equal(1)
   })
 })

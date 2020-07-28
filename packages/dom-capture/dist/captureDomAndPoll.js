@@ -1,4 +1,4 @@
-/* @applitools/dom-capture@7.2.4 */
+/* @applitools/dom-capture@7.2.6 */
 
 function __captureDomAndPoll() {
   var captureDomAndPoll = (function () {
@@ -445,7 +445,7 @@ function __captureDomAndPoll() {
 
     // Note: Change the API_VERSION when changing json structure.
     capturedFrame.version = API_VERSION;
-    capturedFrame.scriptVersion = '7.2.4';
+    capturedFrame.scriptVersion = '7.2.6';
 
     const iframePrefix = iframeCors.length ? `${iframeCors.join('\n')}\n` : '';
     const unfetchedPrefix = unfetchedResources.size

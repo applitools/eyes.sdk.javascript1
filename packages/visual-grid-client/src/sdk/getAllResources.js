@@ -6,7 +6,11 @@ const absolutizeUrl = require('./absolutizeUrl')
 const resourceType = require('./resourceType')
 const toCacheEntry = require('./toCacheEntry')
 const extractSvgResources = require('./extractSvgResources')
+const getFetchOptions = require('./getFetchOptions')
 
+// NOTE regarding support for errorStatusCode:
+// why is this function still valid? because it is meant to add resources to the return value of getAllResources, if and only if it's not already there OR it is there but there is no content (for some reason I don't remember).
+// when handling errorStatusCode resources, they are added if they are not already there, and if they are there, they will never have content so it's fine.
 function assignContentfulResources(obj1, obj2) {
   for (const p in obj2) {
     if (!obj1[p] || !obj1[p].getContent()) {
@@ -15,30 +19,36 @@ function assignContentfulResources(obj1, obj2) {
   }
 }
 
-function fromCacheToRGridResource({url, type, hash, content}) {
-  const resource = new RGridResource()
-  resource.setUrl(url)
-  resource.setContentType(type)
-  resource.setContent(content || '')
-  // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
-  // after renderBatch we clear the content of the resource, for saving space.
-  resource._sha256hash = hash
+function fromCacheToRGridResource({url, type, hash, content, errorStatusCode}) {
+  const resource = new RGridResource({url})
+  if (errorStatusCode) {
+    resource.setErrorStatusCode(errorStatusCode)
+  } else {
+    resource.setContentType(type)
+    resource.setContent(content || '')
+    // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
+    // after renderBatch we clear the content of the resource, for saving space.
+    resource._sha256hash = hash
+  }
   return resource
 }
 
 function makeGetAllResources({resourceCache, fetchResource, extractCssResources, logger}) {
-  function fromFetchedToRGridResource({url, type, value}) {
-    const rGridResource = new RGridResource()
-    rGridResource.setUrl(url)
-    rGridResource.setContentType(type || 'application/x-applitools-unknown') // TODO test this
-    rGridResource.setContent(value || '')
-    if (!value) {
-      logger.log(`warning! the resource ${url} ${type} has no content.`)
+  function fromFetchedToRGridResource({url, type, value, errorStatusCode}) {
+    const rGridResource = new RGridResource({url})
+    if (errorStatusCode) {
+      rGridResource.setErrorStatusCode(errorStatusCode)
+    } else {
+      rGridResource.setContentType(type || 'application/x-applitools-unknown') // TODO test this
+      rGridResource.setContent(value || '')
+      if (!value) {
+        logger.log(`warning! the resource ${url} ${type} has no content.`)
+      }
     }
     return rGridResource
   }
 
-  return function getAllResources({resourceUrls, preResources, userAgent, referer}) {
+  return function getAllResources({resourceUrls, preResources, userAgent, referer, proxySettings}) {
     const handledResources = new Set()
     return getOrFetchResources(resourceUrls, preResources)
 
@@ -66,17 +76,16 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
 
       await Promise.all(
         missingResourceUrls.map(url => {
-          const fetchOptions = {headers: {Referer: referer}}
-          if (!/https:\/\/fonts.googleapis.com/.test(url)) {
-            fetchOptions.headers['User-Agent'] = userAgent
-          }
-
+          const fetchOptions = getFetchOptions({url, referer, userAgent, proxySettings})
           return fetchResource(url, fetchOptions)
             .then(async resource =>
               assignContentfulResources(resources, await processResource(resource)),
             )
             .catch(ex => {
-              logger.log(`error fetching resource at ${url}: ${ex}`)
+              logger.log(
+                `error fetching resource at ${url}, setting errorStatusCode to 504. err=${ex}`,
+              )
+              resources[url] = new RGridResource({url, errorStatusCode: 504})
             })
         }),
       )

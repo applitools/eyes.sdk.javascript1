@@ -1,14 +1,23 @@
 const Enum = require('../utils/Enum')
 
 /**
- * @typedef {'BLANK'|'KEEP'|'SNAPSHOT'} CorsIframeHandle
+ * @typedef {import('../utils/Enum').EnumValues<typeof CorsIframeHandles>} CorsIframeHandle
  */
 
 const CorsIframeHandles = Enum('CorsIframeHandle', {
-  /** We should REMOVE the SRC attribute of the iframe */
+  /**
+   * We should REMOVE the SRC attribute of the iframe
+   * @type {'BLANK'}
+   */
   BLANK: 'BLANK',
-  /** Not to do anything */
+  /**
+   * Not to do anything
+   * @type {'KEEP'}
+   */
   KEEP: 'KEEP',
+  /**
+   * @type {'SNAPSHOT'}
+   */
   SNAPSHOT: 'SNAPSHOT',
 })
 

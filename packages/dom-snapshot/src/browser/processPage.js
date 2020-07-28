@@ -26,11 +26,12 @@ const makeSessionCache = require('./sessionCache');
 
 function processPage(
   doc = document,
-  {showLogs, useSessionCache, dontFetchResources, fetchTimeout} = {},
+  {showLogs, useSessionCache, dontFetchResources, fetchTimeout, skipResources} = {},
 ) {
   /* MARKER FOR TEST - DO NOT DELETE */
   const log = showLogs ? makeLog(Date.now()) : noop;
   log('processPage start');
+  log(`skipResources length: ${skipResources && skipResources.length}`);
   const sessionCache = useSessionCache && makeSessionCache({log});
   const styleSheetCache = {};
   const extractResourcesFromStyleSheet = makeExtractResourcesFromStyleSheet({styleSheetCache});
@@ -82,16 +83,14 @@ function processPage(
 
     const resourceUrlsAndBlobsPromise = dontFetchResources
       ? Promise.resolve({resourceUrls: urls, blobsObj: {}})
-      : getResourceUrlsAndBlobs({documents: docRoots, urls}).then(result => {
+      : getResourceUrlsAndBlobs({documents: docRoots, urls, skipResources}).then(result => {
           sessionCache && sessionCache.persist();
           return result;
         });
     const canvasBlobs = buildCanvasBlobs(canvasElements);
     const frameDocs = extractFrames(docRoots);
 
-    const processFramesPromise = frameDocs.map(f =>
-      doProcessPage(f, f.defaultView.frameElement.src),
-    );
+    const processFramesPromise = frameDocs.map(f => doProcessPage(f));
     const processInlineFramesPromise = inlineFrames.map(({element, url}) =>
       doProcessPage(element.contentDocument, url),
     );

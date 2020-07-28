@@ -40,7 +40,11 @@ const args = yargs
     default: process.env.APPLITOOLS_API_KEY,
   })
   .option('target-element', {
-    describe: '',
+    describe: 'translates to Target.region(...)',
+    type: 'string',
+  })
+  .option('target-frame', {
+    describe: 'translates to Target.frame(...)',
     type: 'string',
   })
   .option('vg', {
@@ -186,6 +190,10 @@ const args = yargs
     describe: 'selector to scroll root element',
     type: 'string',
   })
+  .option('stitch-overlap', {
+    describe: 'stitch overlap',
+    type: 'number',
+  })
   .help().argv
 
 let [url] = args._
@@ -270,6 +278,10 @@ if (!url && !args.attach) {
   if (args.batchId) {
     configuration.setDontCloseBatches(true)
   }
+  if (args.stitchOverlap) {
+    configuration.setStitchOverlap(args.stitchOverlap)
+  }
+
   eyes.setConfiguration(configuration)
 
   const {logger, logFilePath} = initLog(eyes, new URL(url).hostname.replace(/\./g, '-'))
@@ -292,6 +304,8 @@ if (!url && !args.attach) {
 
     if (args.targetElement) {
       target = Target.region(args.targetElement)
+    } else if (args.targetFrame) {
+      target = Target.frame(args.targetFrame)
     } else {
       target = Target.window()
     }
@@ -381,6 +395,14 @@ function buildDriver({
     }
   }
 
+  console.log(
+    'Running with capabilities:\n',
+    Object.entries(capabilities)
+      .map(argToString)
+      .join('\n '),
+    '\n',
+  )
+
   return spec.build({capabilities, serverUrl: driverServer, webdriverProxy})
 }
 
@@ -453,7 +475,7 @@ function parseCompoundParameter(str) {
 
   return str
     .split(',')
-    .map(keyValue => keyValue.split(':'))
+    .map(keyValue => keyValue.split('=>'))
     .reduce((acc, [key, value]) => {
       acc[key] = value // not casting to Number or Boolean since I didn't need it
       return acc

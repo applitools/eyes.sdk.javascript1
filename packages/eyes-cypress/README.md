@@ -424,6 +424,7 @@ The list above is also the order of precedence, which means that if you pass a p
 | `saveFailedTests`         | false                       | Set whether or not failed tests are saved by default. |
 | `saveNewTests`            | false                       | Set whether or not new tests are saved by default. |
 | `properties`              | undefined                   | Custom properties for the eyes test. The format is an array of objects with name/value properties. For example: `[{name: 'My prop', value:'My value'}]`. |
+| `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
 | `compareWithParentBranch` | false                       |  |
 | `ignoreBaseline`          | false                       |  |
 | `notifyOnCompletion`  | false | If `true` batch completion notifications are sent. |
@@ -562,11 +563,7 @@ cy.eyesOpen({
 
 Possible values for screen orientation are `landscape` and `portrait`, and if no value is specified, the default is `portrait`.
 
-The list of device names is taken from [chrome devtools predefined devices](https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json), and can be obtained by running the following command in a unix-based shell (installing [`jq`](https://stedolan.github.io/jq/) might be needed):
-
-```sh
-curl -s https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json | jq '.extensions[].device.title'
-```
+The list of device names is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/DeviceName.js
 
 In addition, it's possible to use chrome's device emulation with custom viewport sizes, pixel density and mobile mode, by passing `deviceScaleFactor` and `mobile` in addition to `width` and `height`. For example:
 
@@ -582,6 +579,22 @@ cy.eyesOpen({
   }
 }
 ```
+
+### iOS device
+
+```js
+cy.eyesOpen({
+  // ...
+  browser: {
+    iosDeviceInfo: {
+      deviceName: 'iPhone XR',
+      screenOrientation: 'landscape',
+    },
+  }
+})
+```
+
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
 
 ## Setting a timeout
 

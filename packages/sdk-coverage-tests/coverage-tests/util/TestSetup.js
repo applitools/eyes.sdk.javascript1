@@ -47,6 +47,7 @@ function getEyes({isVisualGrid, isCssStitching, configuration, branchName = 'mas
       dontCloseBatches: true,
       matchTimeout: 0,
       stitchMode: isCssStitching ? StitchMode.CSS : StitchMode.SCROLL,
+      saveNewTests: false,
     },
     configuration,
   )

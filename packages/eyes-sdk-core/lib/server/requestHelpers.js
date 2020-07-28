@@ -1,4 +1,4 @@
-const tunnel = require('tunnel')
+const getTunnelAgentFromProxy = require('./getTunnelAgentFromProxy')
 
 const {GeneralUtils, DateTimeUtils, TypeUtils} = require('../..')
 
@@ -32,32 +32,15 @@ const CUSTOM_HEADER_NAMES = {
 }
 
 function configAxiosProxy({axiosConfig, proxy, logger}) {
-  if (!proxy.getIsHttpOnly()) {
-    axiosConfig.proxy = proxy.toProxyObject()
-    logger.log('using proxy', axiosConfig.proxy.host, axiosConfig.proxy.port)
-    return axiosConfig
-  }
-
-  if (tunnel.httpsOverHttp === undefined) {
-    throw new Error('http only proxy is not supported in the browser')
-  }
-
   const proxyObject = proxy.toProxyObject()
-  const proxyAuth =
-    proxyObject.auth && proxyObject.auth.username
-      ? `${proxyObject.auth.username}:${proxyObject.auth.password}`
-      : undefined
-  const agent = tunnel.httpsOverHttp({
-    proxy: {
-      host: proxyObject.host,
-      port: proxyObject.port || 8080,
-      proxyAuth,
-    },
-  })
-  axiosConfig.httpsAgent = agent
-  axiosConfig.proxy = false // don't use the proxy, we use tunnel.
-
-  logger.log('proxy is set as http only, using tunnel', proxyObject.host, proxyObject.port)
+  if (proxy.getIsHttpOnly()) {
+    axiosConfig.httpsAgent = getTunnelAgentFromProxy(proxyObject)
+    axiosConfig.proxy = false // don't use the proxy, we use tunnel.
+    logger.log('proxy is set as http only, using tunnel', proxyObject.host, proxyObject.port)
+  } else {
+    axiosConfig.proxy = proxyObject
+    logger.log('using proxy', axiosConfig.proxy.host, axiosConfig.proxy.port)
+  }
 }
 
 function configureAxios({axiosConfig, configuration, agentId, logger}) {
@@ -169,6 +152,9 @@ async function startPollingRequest({url, config, axios}) {
   }
 }
 async function handleRequestError({err, axios, logger}) {
+  if (!err.config) {
+    throw err
+  }
   const {response, config} = err
   const reason = `${err.message}${response ? `(${response.statusText})` : ''}`
 

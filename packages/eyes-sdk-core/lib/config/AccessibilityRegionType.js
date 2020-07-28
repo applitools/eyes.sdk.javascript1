@@ -1,18 +1,22 @@
 const Enum = require('../utils/Enum')
 
 /**
- * @enum
- * @typedef {'IgnoreContrast'|'RegularText'|'LargeText'|'BoldText'|'GraphicalObject'} AccessibilityRegionType
+ * @typedef {import('../utils/Enum').EnumValues<typeof AccessibilityRegionTypes>} AccessibilityRegionType
  */
 
 /**
  * The type of accessibility for a region.
  */
 const AccessibilityRegionTypes = Enum('AccessibilityRegionType', {
+  /** @type {'IgnoreContrast'} */
   IgnoreContrast: 'IgnoreContrast',
+  /** @type {'RegularText'} */
   RegularText: 'RegularText',
+  /** @type {'LargeText'} */
   LargeText: 'LargeText',
+  /** @type {'BoldText'} */
   BoldText: 'BoldText',
+  /** @type {'GraphicalObject'} */
   GraphicalObject: 'GraphicalObject',
 })
 

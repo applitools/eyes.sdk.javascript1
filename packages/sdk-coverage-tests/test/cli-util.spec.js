@@ -1,7 +1,6 @@
 const assert = require('assert')
 const {
   findUnsupportedTests,
-  findUnimplementedCommands,
   filterTestsByName,
   filterTestsByMode,
   filterTestsByIndexes,
@@ -9,8 +8,6 @@ const {
   sortErrorsByType,
   getPassedTestIndexes,
 } = require('../src/cli/cli-util')
-const {makeCoverageTests} = require('../src/index')
-const {supportedCommands} = require('../src/tests')
 
 describe('cli-util', () => {
   describe('doRunTests', () => {
@@ -59,19 +56,8 @@ describe('cli-util', () => {
       const sdkImplementation = {
         supportedTests: [],
       }
-      const totalNumberOfTests = Object.keys(makeCoverageTests()).length
-      assert.deepStrictEqual(findUnsupportedTests(sdkImplementation).length, totalNumberOfTests)
-    })
-    // TODO
-    it.skip('finds unimplemented commands', () => {
-      const sdkImplementation = {
-        initialize: () => {},
-      }
-      const totalNumberOfCommands = supportedCommands.length
-      assert.deepStrictEqual(
-        findUnimplementedCommands(sdkImplementation).length,
-        totalNumberOfCommands,
-      )
+      const totalNumberOfTests = Object.keys([]).length
+      assert.deepStrictEqual(findUnsupportedTests(sdkImplementation, []).length, totalNumberOfTests)
     })
   })
   describe('doDisplayResults', () => {

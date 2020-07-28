@@ -24,25 +24,28 @@ class CorsIframeHandler {
   }
 
   /**
-   * @param {object[]} cdt
-   * @param {object[]} frames
+   * @param page
+   * @param {string} page.url
+   * @param {object[]} page.cdt
+   * @param {object[]} page.frames
    * @return {object[]}
    */
-  static blankCorsIframeSrcOfCdt(cdt, frames) {
-    const frameUrls = new Set(frames.map(frame => frame.srcAttr))
+  static blankCorsIframeSrcOfCdt({url, cdt, frames}) {
+    const frameUrls = new Set(frames.map(frame => frame.url))
     cdt.map(node => {
       if (node.nodeName === 'IFRAME') {
         const srcAttr = node.attributes.find(attr => attr.name === 'src')
-        if (srcAttr && !frameUrls.has(srcAttr.value)) {
+        const absoluteSrcAttr = srcAttr && new URL(srcAttr.value, url).href
+        if (absoluteSrcAttr && !frameUrls.has(absoluteSrcAttr)) {
           srcAttr.value = ''
         }
       }
       return node
     })
 
-    frames.forEach(frame => {
-      CorsIframeHandler.blankCorsIframeSrcOfCdt(frame.cdt, frame.frames)
-    })
+    for (const frame of frames) {
+      CorsIframeHandler.blankCorsIframeSrcOfCdt(frame)
+    }
 
     return cdt
   }

@@ -89,7 +89,7 @@ const {gitAdd, gitCommit, gitPullWithRebase, gitPushWithTags, isStagedForCommit}
       case 'vv':
         const isFix = args.fix
         await verifyVersions({isFix, pkgPath: cwd})
-        if (isFix) {
+        if (isFix && !args.skipCommit) {
           await gitAdd('package.json')
           await gitAdd('CHANGELOG.md')
           if (await isStagedForCommit('package.json', 'CHANGELOG.md')) {

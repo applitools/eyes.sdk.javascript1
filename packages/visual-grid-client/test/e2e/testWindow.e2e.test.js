@@ -29,7 +29,7 @@ describe('testWindow', () => {
     if (!apiKey) {
       throw new Error('APPLITOOLS_API_KEY env variable is not defined')
     }
-    const server = await testServer({port: 3456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServer({port: 3455}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 

@@ -4,6 +4,34 @@
 ## Unreleased
 
 
+## 4.0.0 - 2020/7/26
+
+- support non-200 resources ([Trello](https://trello.com/c/J5lBWutP))
+
+## 3.7.3 - 2020/7/23
+
+- support src attribute in video tags
+
+## 3.7.2 - 2020/7/22
+
+- avoid removing single `?` from query param in resource urls (mainly to address `?#iefix`, see https://github.com/applitools/mono/issues/79)
+
+## 3.7.1 - 2020/7/16
+
+- fix selected options in select element ([Trello](https://trello.com/c/PftuuFqx))
+
+## 3.7.0 - 2020/7/9
+
+- support resource skip list ([Trello](https://trello.com/c/dz46CZM5/399-dom-snapshot-should-accept-a-skip-list-for-fetched-resources))
+
+## 3.6.2 - 2020/7/7
+
+- fix redirected frames
+
+## 3.6.1 - 2020/7/5
+
+- fix frames that were redirected with JavaScript ([Trello](https://trello.com/c/egprwtNp))
+
 ## 3.6.0 - 2020/6/29
 
 - don't fetch google fonts

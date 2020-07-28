@@ -15,7 +15,8 @@ function makeFetchResource({logger, retries = 5, fetchCache = createResourceCach
 
         const resp = await fetch(url, opts)
         if (!resp.ok) {
-          return {error: `failed to fetch ${url} status ${resp.status}`}
+          logger.verbose(`failed to fetch ${url} status ${resp.status}, returning errorStatusCode`)
+          return {url, errorStatusCode: resp.status}
         }
 
         logger.verbose(`fetched ${url}`)
@@ -27,12 +28,7 @@ function makeFetchResource({logger, retries = 5, fetchCache = createResourceCach
         }
       },
       {retries},
-    ).then(result => {
-      if (result.error) {
-        throw new Error(result.error)
-      }
-      return result
-    })
+    )
   }
 }
 

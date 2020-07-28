@@ -310,4 +310,12 @@ module.exports = [
   {name: 'TestScrollableContentInModal_Fully', executionMode: {isScrollStitching: true}},
   {name: 'TestWindowWithModal_Fully', executionMode: {isScrollStitching: true}},
   {name: 'TestTooBigViewportSize', executionMode: {isCssStitching: true}},
+  {name: 'TestSetViewportSize', executionMode: {isCssStitching: true}},
+  {name: 'TestSetViewportSizeEdge', executionMode: {isCssStitching: true}},
+  {name: 'TestVisualLocators', executionMode: {isCssStitching: true}},
+  {name: 'TestVisualLocators', executionMode: {isVisualGrid: true}},
+  {name: 'AppiumAndroidCheckRegion', executionMode: {isCssStitching: true}},
+  {name: 'TestHorizonalScroll', executionMode: {isCssStitching: true}},
+  {name: 'TestHorizonalScroll', executionMode: {isScrollStitching: true}},
+  {name: 'TestHorizonalScroll', executionMode: {isVisualGrid: true}},
 ]

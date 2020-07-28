@@ -9,19 +9,13 @@ describe('TestEdgeSwitchToFrame', () => {
   before(async () => {
     browser = await remote({
       capabilities: {
-        'bstack:options': {
-          os: 'Windows',
-          osVersion: '10',
-          resolution: '1920x1080',
-          local: 'false',
-          seleniumVersion: '3.5.2',
-        },
-        browserName: 'Edge',
-        browserVersion: '18.0',
+        browserName: 'MicrosoftEdge',
+        browserVersion: '18.17763',
+        platformName: 'Windows 10',
       },
+      user: process.env.SAUCE_USERNAME,
+      key: process.env.SAUCE_ACCESS_KEY,
       logLevel: 'error',
-      user: process.env.BROWSERSTACK_USERNAME,
-      key: process.env.BROWSERSTACK_ACCESS_KEY,
     })
   })
 

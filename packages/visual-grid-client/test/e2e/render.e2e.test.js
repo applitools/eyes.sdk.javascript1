@@ -82,7 +82,7 @@ describe('render e2e', () => {
       edgechromium2,
     ] = majorVersions
 
-    expect(chrome1).to.equal(chrome - 2) // temporary, because Chrome skipped version 82
+    expect(chrome1).to.equal(chrome - 1) // temporary, because Chrome skipped version 82
     expect(chrome2).to.equal(chrome - 3) // temporary, because Chrome skipped version 82
     expect(firefox1).to.equal(firefox - 1)
     expect(firefox2).to.equal(firefox - 2)

@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.12.1",
+  "version": "3.12.5",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
-    "test:mocha": "mocha --no-timeouts 'test/**/*.test.js'",
+    "test:mocha": "mocha --no-timeouts --parallel --jobs 15 'test/**/*.test.js'",
     "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
     "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
     "test:e2e": "mocha --no-timeouts 'test/e2e/**/*.test.js'",
@@ -37,10 +37,10 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "3.5.4",
-    "@applitools/eyes-sdk-core": "11.1.0",
+    "@applitools/dom-snapshot": "4.0.0",
+    "@applitools/eyes-sdk-core": "11.5.0",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "14.4.10",
+    "@applitools/visual-grid-client": "14.6.0",
     "body-parser": "^1.19.0",
     "chalk": "3.0.0",
     "cors": "^2.8.5",
@@ -59,8 +59,9 @@
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-prettier": "^2.7.0",
     "lodash.omit": "^4.5.0",
-    "mocha": "^5.2.0",
+    "mocha": "^8.0.1",
     "morgan": "^1.9.1",
+    "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "typescript": "^3.9.2"

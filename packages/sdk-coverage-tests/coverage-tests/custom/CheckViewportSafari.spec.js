@@ -16,18 +16,14 @@ describe('CheckViewportSafari', () => {
 
   it('Safari11', async () => {
     driver = await spec.build({
-      serverUrl: 'https://hub-cloud.browserstack.com/wd/hub',
+      serverUrl: 'https://ondemand.saucelabs.com:443/wd/hub',
       capabilities: {
-        'bstack:options': {
-          os: 'OS X',
-          osVersion: 'High Sierra',
-          local: 'false',
-          seleniumVersion: '3.5.2',
-          userName: process.env.BROWSERSTACK_USERNAME,
-          accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-        },
-        browserName: 'Safari',
-        browserVersion: '11.0',
+        username: process.env.SAUCE_USERNAME,
+        accessKey: process.env.SAUCE_ACCESS_KEY,
+        seleniumVersion: '3.4.0',
+        browserName: 'safari',
+        version: '11.0',
+        platform: 'macOS 10.12',
       },
     })
     eyes = new getEyes()
@@ -40,18 +36,14 @@ describe('CheckViewportSafari', () => {
 
   it('Safari12', async () => {
     driver = await spec.build({
-      serverUrl: 'https://hub-cloud.browserstack.com/wd/hub',
+      serverUrl: 'https://ondemand.saucelabs.com:443/wd/hub',
       capabilities: {
-        'bstack:options': {
-          os: 'OS X',
-          osVersion: 'Mojave',
-          local: 'false',
-          seleniumVersion: '3.13.0',
-          userName: process.env.BROWSERSTACK_USERNAME,
-          accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-        },
-        browserName: 'Safari',
-        browserVersion: '12.1',
+        username: process.env.SAUCE_USERNAME,
+        accessKey: process.env.SAUCE_ACCESS_KEY,
+        seleniumVersion: '3.4.0',
+        browserName: 'safari',
+        version: '12.1',
+        platform: 'macOS 10.13',
       },
     })
     eyes = new getEyes()

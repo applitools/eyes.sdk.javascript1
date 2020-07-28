@@ -1,11 +1,60 @@
 const WDIOFrame = require('./WDIOFrame')
 const WDIOWrappedElement = require('./WDIOWrappedElement')
 const LegacySelector = require('./LegacySelector')
-const {remote} = require('webdriverio')
 const {URL} = require('url')
 
 /**
- * @typedef {import('webdriverio').Browser} Driver
+ * @typedef {Object} WDIOSyncDriver
+ * @prop {boolean} isMobile
+ * @prop {boolean} isAndroid
+ * @prop {boolean} isIOS
+ * @prop {string} sessionId
+ * @prop {{platformName?: string, platformVersion?: string|number, browserName?: string}} capabilities
+ * @prop {(script: string|((...args: any[]) => any), ...args: any[]) => any} execute
+ * @prop {(ms: number) => void} pause
+ * @prop {(reference: number|object|null) => void} switchToFrame
+ * @prop {() => void} switchToParentFrame
+ * @prop {(selector: string|object|Function) => Element} $
+ * @prop {(selector: string|object|Function) => Element[]} $$
+ * @prop {(url: string) => void} url
+ * @prop {() => string} takeScreenshot
+ * @prop {() => string} getOrientation
+ * @prop {() => string} getTitle
+ * @prop {() => {x: number, y: number, width: number, height: number}} [getWindowRect]
+ * @prop {(x: number, y: number, width: number, height: number) => any} [setWindowRect]
+ * @prop {() => {x: number, y: number}} [getWindowLocation]
+ * @prop {(x: number, y: number) => any} [setWindowLocation]
+ * @prop {() => {width: number, height: number}} [getWindowSize]
+ * @prop {(width: number, height: number) => any} [setWindowSize]
+ */
+
+/**
+ * @typedef {Object} WDIOAsyncDriver
+ * @prop {boolean} isMobile
+ * @prop {boolean} isAndroid
+ * @prop {boolean} isIOS
+ * @prop {string} sessionId
+ * @prop {{platformName?: string, platformVersion?: string|number, browserName?: string}} capabilities
+ * @prop {(script: string|((...args: any[]) => any), ...args: any[]) => Promise<any>} execute
+ * @prop {(ms: number) => Promise<void>} pause
+ * @prop {(reference: number|object|null) => Promise<void>} switchToFrame
+ * @prop {() => Promise<void>} switchToParentFrame
+ * @prop {(selector: string|object|Function) => Promise<Element>} $
+ * @prop {(selector: string|object|Function) => Promise<Element[]>} $$
+ * @prop {(url: string) => Promise<void>} url
+ * @prop {() => Promise<string>} takeScreenshot
+ * @prop {() => Promise<string>} getOrientation
+ * @prop {() => Promise<string>} getTitle
+ * @prop {() => Promise<{x: number, y: number, width: number, height: number}>} [getWindowRect]
+ * @prop {(x: number, y: number, width: number, height: number) => Promise<any>} [setWindowRect]
+ * @prop {() => Promise<{x: number, y: number}>} [getWindowLocation]
+ * @prop {(x: number, y: number) => Promise<any>} [setWindowLocation]
+ * @prop {() => Promise<{width: number, height: number}>} [getWindowSize]
+ * @prop {(width: number, height: number) => Promise<any>} [setWindowSize]
+ */
+
+/**
+ * @typedef {WDIOSyncDriver|WDIOAsyncDriver} Driver
  * @typedef {import('./SpecWrappedElement').Element} Element
  * @typedef {import('./SpecWrappedElement').Selector} Selector
  *
@@ -110,13 +159,25 @@ async function visit(driver, url) {
   return driver.url(url)
 }
 
+async function getNativeElementLocation(driver, element) {
+  const extended = await driver.$(element)
+  return extended.getLocation()
+}
+
+async function getNativeElementSize(driver, element) {
+  const extended = await driver.$(element)
+  return extended.getSize()
+}
+
 /* -------- FOR TESTING PURPOSES -------- */
 
+/** @return {WDIOAsyncDriver} */
 async function build({
   capabilities,
   serverUrl = process.env.CVG_TESTS_REMOTE,
   logLevel = 'silent',
 }) {
+  const {remote} = require('webdriverio')
   const {hostname, port, pathname, protocol} = serverUrl ? new URL(serverUrl) : {}
   let fixedPort = port
   if (protocol === 'http:' && !port) {
@@ -154,40 +215,39 @@ async function getElementRect(driver, el) {
   return driver.getElementRect(el.elementId)
 }
 
-/** @type {WDIOSpecDriver} */
-module.exports = {
-  isEqualFrames,
-  createElement,
-  createFrameReference,
-  toSupportedSelector,
-  toEyesSelector,
-  executeScript,
-  sleep,
-  switchToFrame,
-  switchToParentFrame,
-  findElement,
-  findElements,
-  getWindowLocation,
-  setWindowLocation,
-  getWindowSize,
-  setWindowSize,
-  getOrientation,
-  isMobile,
-  isAndroid,
-  isIOS,
-  isNative,
-  getPlatformVersion,
-  getBrowserName,
-  getBrowserVersion,
-  getSessionId,
-  takeScreenshot,
-  getTitle,
-  getUrl,
-  visit,
-  build,
-  cleanup,
-  click,
-  type,
-  waitUntilDisplayed,
-  getElementRect,
-}
+exports.isEqualFrames = isEqualFrames
+exports.createElement = createElement
+exports.createFrameReference = createFrameReference
+exports.toSupportedSelector = toSupportedSelector
+exports.toEyesSelector = toEyesSelector
+exports.executeScript = executeScript
+exports.sleep = sleep
+exports.switchToFrame = switchToFrame
+exports.switchToParentFrame = switchToParentFrame
+exports.findElement = findElement
+exports.findElements = findElements
+exports.getWindowLocation = getWindowLocation
+exports.setWindowLocation = setWindowLocation
+exports.getWindowSize = getWindowSize
+exports.setWindowSize = setWindowSize
+exports.getOrientation = getOrientation
+exports.isMobile = isMobile
+exports.isAndroid = isAndroid
+exports.isIOS = isIOS
+exports.isNative = isNative
+exports.getPlatformVersion = getPlatformVersion
+exports.getBrowserName = getBrowserName
+exports.getBrowserVersion = getBrowserVersion
+exports.getSessionId = getSessionId
+exports.takeScreenshot = takeScreenshot
+exports.getTitle = getTitle
+exports.getUrl = getUrl
+exports.visit = visit
+exports.build = build
+exports.cleanup = cleanup
+exports.click = click
+exports.type = type
+exports.waitUntilDisplayed = waitUntilDisplayed
+exports.getElementRect = getElementRect
+exports.getNativeElementLocation = getNativeElementLocation
+exports.getNativeElementSize = getNativeElementSize

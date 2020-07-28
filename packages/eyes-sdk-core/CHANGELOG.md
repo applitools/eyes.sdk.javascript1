@@ -2,8 +2,72 @@
 
 ## Unreleased
 
+
+## 11.5.0 - 2020/7/26
+
+- support non-200 resources ([Trello](https://trello.com/c/J5lBWutP))
+
+## 11.4.1 - 2020/7/24
+
+- fix issue with duplicate copies of the SDK ([Trello](https://trello.com/c/4Gd7uWtS))
+
+## 11.4.0 - 2020/7/24
+
+- updated enum types to be more explicit about values
+- remove type definitions
+- support Appium mobile selectors
+- updated to @applitools/dom-capture@7.2.6 (from 7.2.4)
+
+## 11.3.9 - 2020/7/22
+
+- avoid `error.getTestResults is not a function` error ([Trello 1](https://trello.com/c/XAmA255U) [Trello 2](https://trello.com/c/1Bl2EaDE))
+
+## 11.3.8 - 2020/7/19
+
+- fix `Date` typo in BatchInfo JSDoc
+- support duplicate copies of the SDK in CheckSettings constructor ([Trello](https://trello.com/c/4Gd7uWtS))
+
+## 11.3.7 - 2020/7/15
+
+- use EyesClassic type as a return type for EyesFactoryCtor
+
+## 11.3.6 - 2020/7/14
+
+- return extended driver from EyesVisualGrid#open
+
+## 11.3.5 - 2020/7/13
+
+- improve typings
+
+## 11.3.4 - 2020/7/7
+
+- REVERT: avoid creating a test if no check command was called ([Trello](https://trello.com/c/ZhKO8sqA/404-wdiojs-sdkempty-test-results-with-new-eyes-core))
+
+## 11.3.3 - 2020/7/7
+
+- fix types
+
+## 11.3.2 - 2020/7/7
+
+- [REVERTED] avoid creating a test if no check command was called ([Trello](https://trello.com/c/ZhKO8sqA/404-wdiojs-sdkempty-test-results-with-new-eyes-core))
+- fix setting blank src on same-origin iframes in visual grid
+
+## 11.3.1 - 2020/7/7
+
+- fix issue with redirected frames in dom-snapshot ([Trello](https://trello.com/c/egprwtNp))
+
+## 11.3.0 - 2020/7/7
+
+- support visual locators
+
+## 11.2.2 - 2020/7/5
+
 - cache correct viewport size value after fail set viewport size
 - improve for element client rect js snippet
+- fix js snippet to be compatible with IE ([Trello](https://trello.com/c/Y0Q6QAHK/406-wdio5-error-executing-javascript-fully-fullpagescreenshot))
+- replace concurrent requests to the browser with sequential requests ([Trello](https://trello.com/c/Idx6gS3e/419-gartner-ie-errors))
+- prevent call unnecessary methods in native context ([Trello](https://trello.com/c/SSWShJPg/345-wdio-5-sdk-support-for-wdio6))
+- static Eyes.setViewportSize method ([Trello](https://trello.com/c/1KTjqPjI))
 
 ## 11.2.1 - 2020/6/30
 

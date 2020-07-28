@@ -565,9 +565,12 @@ describe('getAllResources', () => {
         },
       },
     })
-    const resources = await getAllResources({resourceUrls: ['http://localhost:1234/err/bla.css']})
-    expect(resources).to.eql({})
-    expect(output).to.contain('error fetching resource at http://localhost:1234/err/bla.css')
+    const url = 'http://localhost:1234/err/bla.css'
+    const resources = await getAllResources({resourceUrls: [url]})
+    expect(resources).to.eql({[url]: toRGridResource({url, errorStatusCode: 504})})
+    expect(output).to.contain(
+      'error fetching resource at http://localhost:1234/err/bla.css, setting errorStatusCode to 504',
+    )
   })
 
   it('handles the case when the same resource appears both in resourceUrls and preResources', async () => {
@@ -734,6 +737,48 @@ describe('getAllResources', () => {
         type: 'text/plain',
         value: JSON.stringify({headers: {}}),
       }),
+    })
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from preResources', async () => {
+    const resources = await getAllResources({
+      resourceUrls: [],
+      preResources: {'http://resource-1': {url: 'http://resource-1', errorStatusCode: 500}},
+    })
+    expect(resources).to.eql({
+      'http://resource-1': toRGridResource({url: 'http://resource-1', errorStatusCode: 500}),
+    })
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from resourceUrls', async () => {
+    const server = await testServer()
+    const baseUrl = `http://localhost:${server.port}`
+    closeServer = server.close
+
+    try {
+      const url = `${baseUrl}/predefined-status/401`
+      const resources = await getAllResources({
+        resourceUrls: [url],
+        preResources: {},
+      })
+      expect(resources).to.eql({
+        [url]: toRGridResource({url, errorStatusCode: 401}),
+      })
+    } finally {
+      await closeServer()
+    }
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from cache', async () => {
+    const url = 'http://resource-1'
+    await getAllResources({
+      resourceUrls: [],
+      preResources: {[url]: {url, errorStatusCode: 500}},
+    })
+
+    const resources = await getAllResources({resourceUrls: [url], preResources: {}})
+    expect(resources).to.eql({
+      [url]: toRGridResource({url, errorStatusCode: 500}),
     })
   })
 })

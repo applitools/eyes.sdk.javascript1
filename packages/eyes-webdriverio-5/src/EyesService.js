@@ -108,10 +108,10 @@ class EyesService {
    */
   beforeTest(test) {
     const configuration = this._eyes.getConfiguration()
-    configuration.setTestName(test.title)
+    configuration.setTestName(test.title || test.description) // test.title is for mocha, and test.description is for jasmine
 
     if (!this._appName) {
-      configuration.setAppName(test.parent)
+      configuration.setAppName(test.parent || test.id) // test.parent is for mocha, and test.id is for jasmine
     }
 
     if (!configuration.getViewportSize()) {

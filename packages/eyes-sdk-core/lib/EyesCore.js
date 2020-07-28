@@ -8,6 +8,24 @@ const ReadOnlyPropertyHandler = require('./handler/ReadOnlyPropertyHandler')
 const TestFailedError = require('./errors/TestFailedError')
 const EyesUtils = require('./EyesUtils')
 const EyesBase = require('./EyesBase')
+const Logger = require('./logging/Logger')
+const NullCutProvider = require('./cropping/NullCutProvider')
+const EyesScreenshot = require('./capture/EyesScreenshotNew')
+const GeneralUtils = require('./utils/GeneralUtils')
+const SimplePropertyHandler = require('./handler/SimplePropertyHandler')
+const NullScaleProvider = require('./scaling/NullScaleProvider')
+const ScaleProviderIdentityFactory = require('./scaling/ScaleProviderIdentityFactory')
+const FixedScaleProviderFactory = require('./scaling/FixedScaleProviderFactory')
+const ContextBasedScaleProviderFactory = require('./scaling/ContextBasedScaleProviderFactory')
+const UserAgent = require('./useragent/UserAgent')
+const ImageProviderFactory = require('./capture/ImageProviderFactory')
+
+const UNKNOWN_DEVICE_PIXEL_RATIO = 0
+const DEFAULT_DEVICE_PIXEL_RATIO = 1
+
+/**
+ * @typedef {import('./geometry/Region').RegionObject} RegionObject
+ */
 
 /**
  * @template TDriver, TElement, TSelector
@@ -30,6 +48,45 @@ const EyesBase = require('./EyesBase')
  * @template TSelector
  */
 class EyesCore extends EyesBase {
+  constructor(serverUrl, isDisabled) {
+    super(serverUrl, isDisabled)
+
+    /** @type {EyesWrappedDriver<TDriver, TElement, TSelector>} */
+    this._driver = undefined
+    /** @private @type {EyesJsExecutor<TDriver, TElement, TSelector>} */
+    this._executor = undefined
+    /** @private @type {EyesElementFinder<TDriver, TElement, TSelector>} */
+    this._finder = undefined
+    /** @private @type {EyesBrowsingContext<TDriver, TElement, TSelector>} */
+    this._context = undefined
+    /** @private @type {EyesDriverController<TDriver, TElement, TSelector>} */
+    this._controller = undefined
+    /** @private @type {boolean} */
+    this._dontGetTitle = false
+
+    /** @private @type {number} */
+    this._devicePixelRatio = UNKNOWN_DEVICE_PIXEL_RATIO
+    /** @private */
+    this._rotation = undefined
+  }
+
+  async _initCommon() {
+    this._devicePixelRatio = UNKNOWN_DEVICE_PIXEL_RATIO
+
+    const userAgentString = await this._controller.getUserAgent()
+    if (userAgentString) {
+      this._userAgent = UserAgent.parseUserAgentString(userAgentString, true)
+    }
+
+    this._imageProvider = ImageProviderFactory.getImageProvider(
+      this._logger,
+      this._driver,
+      this._rotation,
+      this,
+      this._userAgent,
+    )
+  }
+
   /* ------------ Classic API ------------ */
   /**
    * Takes a snapshot of the application under test and matches it with the expected output.
@@ -296,6 +353,21 @@ class EyesCore extends EyesBase {
       ? viewportSize
       : EyesUtils.getTopContextViewportSize(this._logger, this._driver)
   }
+
+  /**
+   * Sets the browser's viewport size
+   * @param {TDriver} driver - driver object for the specific framework
+   * @param {RectangleSize|{width: number, height: number}} viewportSize - viewport size
+   */
+  static async setViewportSize(driver, viewportSize) {
+    const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
+    const wrappedDriver = new this.WrappedDriver(logger, driver)
+    if (!(await wrappedDriver.controller.isMobile())) {
+      ArgumentGuard.notNull(viewportSize, 'viewportSize')
+      await EyesUtils.setViewportSize(logger, wrappedDriver, new RectangleSize(viewportSize))
+    }
+  }
+
   /**
    * Use this method only if you made a previous call to {@link #open(WebDriver, String, String)} or one of its variants.
    * @protected
@@ -322,6 +394,151 @@ class EyesCore extends EyesBase {
 
     this._viewportSizeHandler.set(new RectangleSize(viewportSize))
   }
+
+  /**
+   * Run visual locators
+   * @template {string} TLocatorName
+   * @param {Object} visualLocatorSettings
+   * @param {Readonly<TLocatorName[]>} visualLocatorSettings.locatorNames
+   * @param {boolean} visualLocatorSettings.firstOnly
+   * @return {Promise<{[TKey in TLocatorName]: RegionObject[]}>}
+   */
+  async locate(visualLocatorSettings) {
+    ArgumentGuard.notNull(visualLocatorSettings, 'visualLocatorSettings')
+    this._logger.verbose('Get locators with given names: ', visualLocatorSettings.locatorNames)
+    const screenshot = await this._getViewportScreenshot()
+    const screenshotBuffer = await screenshot.getImage().getImageBuffer()
+    const id = GeneralUtils.guid()
+    await this.getAndSaveRenderingInfo()
+    const imageUrl = await this._serverConnector.uploadScreenshot(id, screenshotBuffer)
+    const appName = this._configuration.getAppName()
+    return this._serverConnector.postLocators({
+      appName,
+      imageUrl,
+      locatorNames: visualLocatorSettings.locatorNames,
+      firstOnly: visualLocatorSettings.firstOnly,
+    })
+  }
+
+  /**
+   * Create a viewport page screenshot
+   * @return {Promise<EyesScreenshot>}
+   */
+  async _getViewportScreenshot() {
+    this._logger.verbose('Screenshot requested...')
+    const scaleProviderFactory = await this._updateScalingParams()
+
+    let screenshotImage = await this._imageProvider.getImage()
+    await this._debugScreenshotsProvider.save(screenshotImage, 'original')
+
+    const scaleProvider = scaleProviderFactory.getScaleProvider(screenshotImage.getWidth())
+    if (scaleProvider.getScaleRatio() !== 1) {
+      this._logger.verbose('scaling...')
+      screenshotImage = await screenshotImage.scale(scaleProvider.getScaleRatio())
+      await this._debugScreenshotsProvider.save(screenshotImage, 'scaled')
+    }
+
+    const cutProvider = this._cutProviderHandler.get()
+    if (!(cutProvider instanceof NullCutProvider)) {
+      this._logger.verbose('cutting...')
+      screenshotImage = await cutProvider.cut(screenshotImage)
+      await this._debugScreenshotsProvider.save(screenshotImage, 'cut')
+    }
+
+    this._logger.verbose('Building screenshot object...')
+    return EyesScreenshot.fromScreenshotType(this._logger, this, screenshotImage)
+  }
+
+  /**
+   * @private
+   * @return {Promise<ScaleProviderFactory>}
+   */
+  async _updateScalingParams() {
+    // Update the scaling params only if we haven't done so yet, and the user hasn't set anything else manually.
+    if (
+      this._devicePixelRatio !== UNKNOWN_DEVICE_PIXEL_RATIO &&
+      !(this._scaleProviderHandler.get() instanceof NullScaleProvider)
+    ) {
+      // If we already have a scale provider set, we'll just use it, and pass a mock as provider handler.
+      const nullProvider = new SimplePropertyHandler()
+      return new ScaleProviderIdentityFactory(this._scaleProviderHandler.get(), nullProvider)
+    }
+
+    this._devicePixelRatio = await this._getDevicePixelRatio()
+
+    this._logger.verbose('Setting scale provider...')
+    return this._getScaleProviderFactory()
+  }
+
+  async _getDevicePixelRatio() {
+    this._logger.verbose('Trying to extract device pixel ratio...')
+    let devicePixelRatio
+    try {
+      if (await this._controller.isNative()) {
+        const viewportSize = await this.getViewportSize()
+        devicePixelRatio = EyesUtils.getMobilePixelRatio(this._logger, this._driver, viewportSize)
+      } else {
+        devicePixelRatio = EyesUtils.getDevicePixelRatio(this._logger, this._driver)
+      }
+    } catch (err) {
+      this._logger.verbose('Failed to extract device pixel ratio! Using default.', err)
+      devicePixelRatio = DEFAULT_DEVICE_PIXEL_RATIO
+    }
+
+    this._logger.verbose(`Device pixel ratio: ${devicePixelRatio}`)
+    return devicePixelRatio
+  }
+
+  /**
+   * @private
+   * @return {Promise<ScaleProviderFactory>}
+   */
+  async _getScaleProviderFactory() {
+    const defaultScaleProviderFactory = new FixedScaleProviderFactory(
+      1 / this._devicePixelRatio,
+      this._scaleProviderHandler,
+    )
+
+    if (await this._controller.isNative()) {
+      return defaultScaleProviderFactory
+    } else {
+      try {
+        const entireSize = await EyesUtils.getCurrentFrameContentEntireSize(
+          this._logger,
+          this._executor,
+        )
+        return new ContextBasedScaleProviderFactory(
+          this._logger,
+          entireSize,
+          this._viewportSizeHandler.get(),
+          this._devicePixelRatio,
+          false,
+          this._scaleProviderHandler,
+        )
+      } catch (err) {
+        this._logger.verbose('Failed to set ContextBasedScaleProvider.', err)
+        this._logger.verbose('Using FixedScaleProvider instead...')
+        return defaultScaleProviderFactory
+      }
+    }
+  }
+
+  /**
+   * @private
+   */
+  async _getAndSaveBatchInfoFromServer(batchId) {
+    ArgumentGuard.notNullOrEmpty(batchId, 'batchId')
+    return this._runner.getBatchInfoWithCache(batchId)
+  }
+
+  /**
+   * @private
+   */
+  async getAndSaveRenderingInfo() {
+    const renderingInfo = await this._runner.getRenderingInfoWithCache()
+    this._serverConnector.setRenderingInfo(renderingInfo)
+  }
+
   async getAUTSessionId() {
     if (!this._driver) {
       return undefined

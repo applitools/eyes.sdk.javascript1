@@ -37,11 +37,11 @@ module.exports = EyesWrappedDriver.specialize(
     takeScreenshot(driver) {
       return driver.takeScreenshot()
     },
-    isNative(_driver) {
-      return false
+    isNative(driver) {
+      return driver._isNative
     },
-    isMobile(_driver) {
-      return false
+    isMobile(driver) {
+      return driver._isMobile
     },
     getSessionId() {
       return 'session-id'
@@ -62,6 +62,9 @@ module.exports = EyesWrappedDriver.specialize(
     },
     async getUrl(driver) {
       return driver.getUrl()
+    },
+    async getTitle(driver) {
+      return driver.getTitle()
     },
     async visit(driver, url) {
       await driver.visit(url)

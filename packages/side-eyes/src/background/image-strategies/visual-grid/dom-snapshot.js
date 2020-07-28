@@ -2,7 +2,7 @@ import { getDomSnapshot } from '../../dom-capture'
 
 export async function getSnapshot(tabId) {
   const snapshot = await getDomSnapshot(tabId)
-  removeCrossOriginIframes(snapshot.cdt, snapshot.frames)
+  removeCrossOriginIframes(snapshot)
   snapshot.resourceContents = mapResourceContents(snapshot)
   mapFrameResourceContents(snapshot.frames)
 
@@ -23,21 +23,20 @@ function mapResourceContents(snapshot) {
   }))
 }
 
-function removeCrossOriginIframes(cdt, frames) {
-  const frameUrls = new Set(frames.map(frame => frame.srcAttr))
+function removeCrossOriginIframes({ url, cdt, frames }) {
+  const frameUrls = new Set(frames.map(frame => frame.url))
   cdt.map(node => {
     if (node.nodeName === 'IFRAME') {
       const srcAttr = node.attributes.find(attr => attr.name === 'src')
-      if (srcAttr && !frameUrls.has(srcAttr.value)) {
+      const absoluteSrcAttr = srcAttr && new URL(srcAttr.value, url).href
+      if (absoluteSrcAttr && !frameUrls.has(absoluteSrcAttr)) {
         srcAttr.value = ''
       }
     }
     return node
   })
 
-  frames.forEach(frame => {
-    removeCrossOriginIframes(frame.cdt, frame.frames)
-  })
+  frames.forEach(removeCrossOriginIframes)
 
   return cdt
 }

@@ -227,6 +227,20 @@ describe('handlers', () => {
     expect(result.resourceContents).to.eql(resourceContents);
   });
 
+  it('handles "checkWindow" with errorStatusCode resources', async () => {
+    handlers.batchStart();
+    await handlers.open({__test: 123});
+
+    const blobData = [{url: 'id1', errorStatusCode: 500}];
+
+    const resourceContents = {
+      id1: {url: 'id1', errorStatusCode: 500},
+    };
+
+    const result = await handlers.checkWindow({blobData});
+    expect(result.resourceContents).to.eql(resourceContents);
+  });
+
   it('handles "checkWindow" with nested frames', async () => {
     handlers.batchStart();
     await handlers.open({__test: 123});
@@ -236,7 +250,14 @@ describe('handlers', () => {
     const frames = [
       {
         blobData: [{url: 'id2', type: 'type2'}],
-        frames: [{blobData: [{url: 'id3', type: 'type3'}]}],
+        frames: [
+          {
+            blobData: [
+              {url: 'id3', type: 'type3'},
+              {url: 'id4', errorStatusCode: 500},
+            ],
+          },
+        ],
       },
     ];
 
@@ -267,6 +288,7 @@ describe('handlers', () => {
             {
               resourceContents: {
                 id3: {url: 'id3', type: 'type3', value: 'buff3'},
+                id4: {url: 'id4', errorStatusCode: 500},
               },
               resourceUrls: undefined,
               cdt: undefined,

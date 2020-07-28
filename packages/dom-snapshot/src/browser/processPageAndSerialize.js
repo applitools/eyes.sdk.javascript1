@@ -8,11 +8,9 @@ function processPageAndSerialize() {
 }
 
 function serializeFrame(frame) {
-  frame.blobs = frame.blobs.map(({url, type, value}) => ({
-    url,
-    type,
-    value: arrayBufferToBase64(value),
-  }));
+  frame.blobs = frame.blobs.map(blob =>
+    blob.value ? Object.assign(blob, {value: arrayBufferToBase64(blob.value)}) : blob,
+  );
   frame.frames.forEach(serializeFrame);
   return frame;
 }

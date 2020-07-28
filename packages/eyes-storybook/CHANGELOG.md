@@ -3,6 +3,25 @@
 ## Unreleased
 
 
+## 3.8.5 - 2020/7/26
+
+- updated to @applitools/dom-snapshot@4.0.0 (from 3.7.2)
+- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.3.9)
+- updated to @applitools/visual-grid-client@14.6.0 (from 14.5.13)
+
+## 3.8.4 - 2020/7/22
+
+- updated to @applitools/dom-snapshot@3.7.2 (from 3.7.1)
+- updated to @applitools/eyes-sdk-core@11.3.9 (from 11.3.7)
+- updated to @applitools/visual-grid-client@14.5.13 (from 14.5.11)
+
+## 3.8.3 - 2020/7/17
+
+- add ios device info to readme
+- updated to @applitools/dom-snapshot@3.7.1 (from 3.6.0)
+- updated to @applitools/eyes-sdk-core@11.3.7 (from 11.1.0)
+- updated to @applitools/visual-grid-client@14.5.11 (from 14.5.0)
+
 ## 3.8.2 - 2020/6/29
 
 - updated to @applitools/dom-snapshot@3.6.0 (from 3.5.3)

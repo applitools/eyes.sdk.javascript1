@@ -1,4 +1,4 @@
-/* @applitools/dom-capture@7.2.4 */
+/* @applitools/dom-capture@7.2.6 */
 
 function __captureDomAndPollForIE() {
   var captureDomAndPollForIE = (function () {
@@ -12399,7 +12399,7 @@ function __captureDomAndPollForIE() {
                         endTime(performance.waitForImages); // Note: Change the API_VERSION when changing json structure.
 
                         capturedFrame.version = API_VERSION;
-                        capturedFrame.scriptVersion = '7.2.4';
+                        capturedFrame.scriptVersion = '7.2.6';
                         iframePrefix = iframeCors.length ? "".concat(iframeCors.join('\n'), "\n") : '';
                         unfetchedPrefix = unfetchedResources.size ? "".concat(Array.from(unfetchedResources).join('\n'), "\n") : '';
                         metaPrefix = JSON.stringify({

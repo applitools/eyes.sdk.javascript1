@@ -198,8 +198,9 @@ function makeHandlers({
   }
 
   function blobDataToResourceContents(blobData) {
-    return blobData.reduce((acc, {url, type}) => {
-      acc[url] = {url, type, value: resources[url]};
+    return blobData.reduce((acc, {url, type, errorStatusCode}) => {
+      const data = errorStatusCode ? {url, errorStatusCode} : {url, type, value: resources[url]};
+      acc[url] = data;
       return acc;
     }, {});
   }

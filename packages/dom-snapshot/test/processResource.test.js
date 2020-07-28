@@ -95,6 +95,9 @@ describe('processResource', () => {
         type: 'image/jpeg',
         value: bufferToArrayBuffer(loadFixtureBuffer('smurfs.jpg')),
       },
+      'http://localhost:7373/blabla': {
+        errorStatusCode: 404,
+      },
     });
   });
 
@@ -207,12 +210,11 @@ describe('processResource', () => {
   });
 
   it('handles fetch timeout', async () => {
-    const fetchThatHangs = async url => {
+    const fetchThatHangs = async () => {
       await new Promise(r => setTimeout(r, 1000));
-      return url;
     };
     processResource = makeProcessResource({
-      fetchUrl: makeFetchUrl({fetch: fetchThatHangs, AbortController}),
+      fetchUrl: makeFetchUrl({fetch: fetchThatHangs, AbortController, timeout: 100}),
       findStyleSheetByUrl,
       getCorsFreeStyleSheet,
       extractResourcesFromStyleSheet,
@@ -222,13 +224,18 @@ describe('processResource', () => {
 
     const doc = createDoc('test.css');
 
+    const url = 'http://localhost:7373/test.css';
     const result = await processResource({
-      url: 'http://localhost:7373/test.css',
+      url,
       documents: [doc],
       getResourceUrlsAndBlobs,
     });
 
-    expect(result).to.eql({});
+    expect(result).to.eql({
+      blobsObj: {
+        [url]: {errorStatusCode: 504},
+      },
+    });
   });
 
   it("doesn't fetch google fonts", async () => {
@@ -238,6 +245,22 @@ describe('processResource', () => {
 
     expect(resourceUrls).to.eql(['https://fonts.googleapis.com/some-font']);
     expect(blobsObj).to.eql(undefined);
+  });
+
+  it('handles non-200 urls', async () => {
+    const doc = createDoc();
+
+    const {blobsObj} = await processResource({
+      url: 'http://localhost:7373/predefined-status/404',
+      documents: [doc],
+      getResourceUrlsAndBlobs,
+    });
+
+    expect(blobsObj).to.eql({
+      'http://localhost:7373/predefined-status/404': {
+        errorStatusCode: 404,
+      },
+    });
   });
 });
 

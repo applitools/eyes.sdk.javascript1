@@ -10,6 +10,17 @@ const LegacySelector = require('./src/LegacySelector')
  * @typedef {import('@applitools/eyes-sdk-core').EyesWrappedElement<Driver, Element, Selector>} WrappedElement
  * @typedef {import('@applitools/eyes-sdk-core').EyesWrappedDriver<Driver, Element, Selector>} WrappedDriver
  * @typedef {import('@applitools/eyes-sdk-core').DriverCheckSettings<Element, Selector>} CheckSettings
+ * @typedef {InstanceType<typeof WDIOEyesVisualGrid>} EyesVisualGrid
+ * @typedef {InstanceType<typeof WDIOEyesClassic>} EyesClassic
+ */
+
+/**
+ * @typedef {EyesClassic} Eyes
+ */
+
+/**
+ * @typedef {typeof core.VisualGridRunner} VisualGridRunner
+ * @typedef {typeof core.ClassicRunner} ClassicRunner
  */
 
 exports.Eyes = WDIOEyesFactory

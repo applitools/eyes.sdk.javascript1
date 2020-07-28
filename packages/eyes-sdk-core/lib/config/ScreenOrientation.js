@@ -1,15 +1,16 @@
 const Enum = require('../utils/Enum')
 
 /**
- * @enum 
- * @typedef {string} ScreenOrientation
+ * @typedef {import('../utils/Enum').EnumValues<typeof ScreenOrientations>} ScreenOrientation
  */
 
 /**
  * Represents the types of available stitch modes.
  */
 const ScreenOrientations = Enum('ScreenOrientation', {
+  /** @type {'portrait'} */
   PORTRAIT: 'portrait',
+  /** @type {'landscape'} */
   LANDSCAPE: 'landscape',
 })
 

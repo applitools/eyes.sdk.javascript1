@@ -455,4 +455,63 @@ describe('eyesCheckWindow', () => {
       return {resourceUrls, blobs, frames, url, cdt};
     }
   });
+
+  it('handles non-200 resources (blobs with errorStatusCode)', async () => {
+    let sendRequestInput;
+    const resourcesPutted = [];
+
+    const blob = {url: 'blobUrl1', errorStatusCode: 500};
+    const blobs = [blob];
+    const resourceUrls = 'resourceUrls';
+    const url = 'url';
+    const cdt = 'cdt';
+    const frames = [];
+    const eyesCheckWindow = makeEyesCheckWindow({
+      sendRequest,
+      processPage,
+    });
+
+    const tag = 'some tag';
+
+    await eyesCheckWindow('bla doc', tag);
+    expect(sendRequestInput).to.eql({
+      command: 'checkWindow',
+      data: {
+        url,
+        cdt,
+        resourceUrls,
+        blobData: [{url: 'blobUrl1', errorStatusCode: 500}],
+        frames,
+        tag,
+        ignore: undefined,
+        floating: undefined,
+        layout: undefined,
+        content: undefined,
+        strict: undefined,
+        region: undefined,
+        scriptHooks: undefined,
+        selector: undefined,
+        sendDom: undefined,
+        sizeMode: undefined,
+        target: undefined,
+        fully: undefined,
+        useDom: undefined,
+        enablePatterns: undefined,
+        ignoreDisplacements: undefined,
+        accessibility: undefined,
+      },
+    });
+    expect(resourcesPutted).to.eql([]);
+
+    async function sendRequest(arg) {
+      if (arg.command === 'checkWindow') sendRequestInput = arg;
+      else {
+        resourcesPutted.push(arg);
+      }
+    }
+
+    async function processPage() {
+      return {resourceUrls, blobs, frames, url, cdt};
+    }
+  });
 });

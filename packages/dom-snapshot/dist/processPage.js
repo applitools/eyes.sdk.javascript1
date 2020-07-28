@@ -1,4 +1,4 @@
-/* @applitools/dom-snapshot@3.6.0 */
+/* @applitools/dom-snapshot@4.0.0 */
 
 function __processPage() {
   var processPage = (function () {
@@ -11,7 +11,7 @@ function __processPage() {
     ).reduce((acc, urls) => acc.concat(urls), []);
 
     const srcUrls = Array.from(
-      doc.querySelectorAll('img[src],source[src],input[type="image"][src],audio[src]'),
+      doc.querySelectorAll('img[src],source[src],input[type="image"][src],audio[src],video[src]'),
     ).map(srcEl => srcEl.getAttribute('src'));
 
     const imageUrls = Array.from(doc.querySelectorAll('image,use'))
@@ -13181,6 +13181,15 @@ function __processPage() {
             value = value.replace(/^blob:/, '');
           } else if (ON_EVENT_REGEX.test(name)) {
             value = '';
+          } else if (
+            elementNode.nodeName === 'IFRAME' &&
+            isAccessibleFrame_1(elementNode) &&
+            name === 'src' &&
+            elementNode.contentDocument.location.href !== 'about:blank' &&
+            elementNode.contentDocument.location.href !==
+              absolutizeUrl_1(value, elementNode.ownerDocument.location.href)
+          ) {
+            value = elementNode.contentDocument.location.href;
           }
           return {
             name,
@@ -13207,7 +13216,11 @@ function __processPage() {
         addOrUpdateAttribute(node.attributes, 'value', elementNode.value);
       }
 
-      if (elementNode.tagName === 'OPTION' && elementNode.parentElement.value === elementNode.value) {
+      if (
+        elementNode.tagName === 'OPTION' &&
+        elementNode.parentElement.selectedOptions &&
+        Array.from(elementNode.parentElement.selectedOptions).indexOf(elementNode) > -1
+      ) {
         addOrUpdateAttribute(node.attributes, 'selected', '');
       }
 
@@ -13291,9 +13304,16 @@ function __processPage() {
   var aggregateResourceUrlsAndBlobs_1 = aggregateResourceUrlsAndBlobs;
 
   function makeGetResourceUrlsAndBlobs({processResource, aggregateResourceUrlsAndBlobs}) {
-    return function getResourceUrlsAndBlobs({documents, urls, forceCreateStyle = false}) {
+    return function getResourceUrlsAndBlobs({
+      documents,
+      urls,
+      forceCreateStyle = false,
+      skipResources,
+    }) {
       return Promise.all(
-        urls.map(url => processResource({url, documents, getResourceUrlsAndBlobs, forceCreateStyle})),
+        urls.map(url =>
+          processResource({url, documents, getResourceUrlsAndBlobs, forceCreateStyle, skipResources}),
+        ),
       ).then(resourceUrlsAndBlobsArr => aggregateResourceUrlsAndBlobs(resourceUrlsAndBlobsArr));
     };
   }
@@ -13309,7 +13329,7 @@ function __processPage() {
   function toUnAnchoredUri(url) {
     const m = url && url.match(/(^[^#]*)/);
     const res = (m && m[1]) || url;
-    return (res && res.replace(/\?\s*$/, '')) || url;
+    return (res && res.replace(/\?\s*$/, '?')) || url;
   }
 
   var toUnAnchoredUri_1 = toUnAnchoredUri;
@@ -13335,14 +13355,18 @@ function __processPage() {
       documents,
       getResourceUrlsAndBlobs,
       forceCreateStyle = false,
+      skipResources,
     }) {
       if (!cache[url]) {
         if (sessionCache && sessionCache.getItem(url)) {
           const resourceUrls = getDependencies(url);
           log('doProcessResource from sessionStorage', url, 'deps:', resourceUrls.slice(1));
           cache[url] = Promise.resolve({resourceUrls});
-        } else if (/https:\/\/fonts.googleapis.com/.test(url)) {
-          log('not processing google font:', url);
+        } else if (
+          (skipResources && skipResources.indexOf(url) > -1) ||
+          /https:\/\/fonts.googleapis.com/.test(url)
+        ) {
+          log('not processing resource from skip list (or google font):', url);
           cache[url] = Promise.resolve({resourceUrls: [url]});
         } else {
           const now = Date.now();
@@ -13367,19 +13391,24 @@ function __processPage() {
               throw e;
             }
           })
-          .then(({url, type, value, probablyCORS, isTimeout}) => {
+          .then(({url, type, value, probablyCORS, errorStatusCode, isTimeout}) => {
             if (probablyCORS) {
               log('not fetched due to CORS', `[${Date.now() - now}ms]`, url);
               sessionCache && sessionCache.setItem(url, []);
               return {resourceUrls: [url]};
             }
 
+            if (errorStatusCode) {
+              const blobsObj = {[url]: {errorStatusCode}};
+              sessionCache && sessionCache.setItem(url, []);
+              return {blobsObj};
+            }
+
             if (isTimeout) {
-              // TODO return errorStatusCode once VG supports it (https://trello.com/c/J5lBWutP/92-when-capturing-dom-add-non-200-urls-to-resource-map)
-              log('not fetched due to timeout, returning empty resource');
+              log('not fetched due to timeout, returning error status code 504 (Gateway timeout)');
               sessionCache && sessionCache.setItem(url, []);
               return {
-                blobsObj: {[url]: {type: 'application/x-applitools-empty', value: new ArrayBuffer()}},
+                blobsObj: {[url]: {errorStatusCode: 504}},
               };
             }
 
@@ -13418,6 +13447,7 @@ function __processPage() {
                 documents,
                 urls: absoluteDependentUrls,
                 forceCreateStyle,
+                skipResources,
               }).then(({resourceUrls, blobsObj}) => ({
                 resourceUrls,
                 blobsObj: Object.assign(blobsObj, thisBlob),
@@ -13563,7 +13593,7 @@ function __processPage() {
                 value: buff,
               }));
             } else {
-              return Promise.reject(new Error(`bad status code ${resp.status}`));
+              return {url, errorStatusCode: resp.status};
             }
           })
           .then(resolve)
@@ -13844,11 +13874,12 @@ function __processPage() {
 
   function processPage(
     doc = document,
-    {showLogs, useSessionCache, dontFetchResources, fetchTimeout} = {},
+    {showLogs, useSessionCache, dontFetchResources, fetchTimeout, skipResources} = {},
   ) {
     /* MARKER FOR TEST - DO NOT DELETE */
     const log$$1 = showLogs ? log(Date.now()) : noop$4;
     log$$1('processPage start');
+    log$$1(`skipResources length: ${skipResources && skipResources.length}`);
     const sessionCache$$1 = useSessionCache && sessionCache({log: log$$1});
     const styleSheetCache = {};
     const extractResourcesFromStyleSheet$$1 = extractResourcesFromStyleSheet({styleSheetCache});
@@ -13877,7 +13908,7 @@ function __processPage() {
 
     return doProcessPage(doc).then(result => {
       log$$1('processPage end');
-      result.scriptVersion = '3.6.0';
+      result.scriptVersion = '4.0.0';
       return result;
     });
 
@@ -13900,16 +13931,14 @@ function __processPage() {
 
       const resourceUrlsAndBlobsPromise = dontFetchResources
         ? Promise.resolve({resourceUrls: urls, blobsObj: {}})
-        : getResourceUrlsAndBlobs$$1({documents: docRoots, urls}).then(result => {
+        : getResourceUrlsAndBlobs$$1({documents: docRoots, urls, skipResources}).then(result => {
             sessionCache$$1 && sessionCache$$1.persist();
             return result;
           });
       const canvasBlobs = buildCanvasBlobs_1(canvasElements);
       const frameDocs = extractFrames_1(docRoots);
 
-      const processFramesPromise = frameDocs.map(f =>
-        doProcessPage(f, f.defaultView.frameElement.src),
-      );
+      const processFramesPromise = frameDocs.map(f => doProcessPage(f));
       const processInlineFramesPromise = inlineFrames.map(({element, url}) =>
         doProcessPage(element.contentDocument, url),
       );

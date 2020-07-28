@@ -213,6 +213,17 @@ function isIterator(value) {
   return Boolean(value) && isFunction(value.next)
 }
 
+/**
+ * Checks if `obj` is an instance of `constructor`
+ *
+ * @param {*} obj
+ * @param {Function} constructor
+ * @return {boolean}
+ */
+function instanceOf(obj, constructor) {
+  return obj && obj.constructor[`__${constructor.name}`]
+}
+
 module.exports = {
   isNull,
   isNotNull,
@@ -231,4 +242,5 @@ module.exports = {
   getOrDefault,
   isFunction,
   isIterator,
+  instanceOf,
 }

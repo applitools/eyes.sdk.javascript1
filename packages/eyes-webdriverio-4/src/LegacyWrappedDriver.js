@@ -7,11 +7,14 @@ const LegacySelector = require('./LegacySelector')
  */
 function LegacyAPIDriver(EyesWrappedDriver) {
   return class EyesWebDriver extends EyesWrappedDriver {
+    async click(selector) {
+      return this._driver.click(selector instanceof LegacySelector ? selector.toString() : selector)
+    }
     async executeScript(script, ...varArgs) {
       return this._executor.executeScript(script, ...varArgs)
     }
     async executeAsyncScript(script, ...varArgs) {
-      return this._executor.executeAsyncScript(script, ...varArgs)
+      return this._driver.executeAsync(script, ...varArgs)
     }
     async findElement(locator) {
       return this._finder.findElement(locator)

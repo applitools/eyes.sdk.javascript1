@@ -1,7 +1,10 @@
-const {makeSpecEmitter, supportedTests} = require('@applitools/sdk-coverage-tests')
+const {makeEmitter, makeTemplate, supportedTests} = require('@applitools/sdk-coverage-tests/js')
 
 module.exports = {
   name: 'eyes-protractor',
-  initialize: makeSpecEmitter,
+  out: './test/coverage/generic',
+  ext: '.spec.js',
+  initialize: makeEmitter,
+  testFrameworkTemplate: makeTemplate,
   supportedTests,
 }

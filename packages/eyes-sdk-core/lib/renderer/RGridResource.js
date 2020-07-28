@@ -13,13 +13,16 @@ class RGridResource {
    * @param {string} [data.contentType]
    * @param {Buffer} [data.content]
    */
-  constructor({url, contentType, content} = {}) {
+  constructor({url, contentType, content, errorStatusCode} = {}) {
     this._url = url
     this._contentType = contentType
     this._content = content
+    this._errorStatusCode = errorStatusCode
 
     /** @type {string} */
     this._sha256hash = undefined
+
+    this._trimContent()
   }
 
   /**
@@ -67,9 +70,21 @@ class RGridResource {
     this._content = value
     this._sha256hash = undefined
 
-    if (value.length > VISUAL_GRID_MAX_BUFFER_SIZE) {
-      this._content = value.slice(0, VISUAL_GRID_MAX_BUFFER_SIZE - 100000)
+    this._trimContent()
+  }
+
+  _trimContent() {
+    if (this._content && this._content.length > VISUAL_GRID_MAX_BUFFER_SIZE) {
+      this._content = this._content.slice(0, VISUAL_GRID_MAX_BUFFER_SIZE - 100000)
     }
+  }
+
+  getErrorStatusCode() {
+    return this._errorStatusCode
+  }
+
+  setErrorStatusCode(errorStatusCode) {
+    this._errorStatusCode = errorStatusCode
   }
 
   getSha256Hash() {
@@ -83,11 +98,16 @@ class RGridResource {
     return this._sha256hash
   }
 
+  // TODO: now that there's errorStatusCode, this function should be renamed to toPlainObject or prepareToSerialize or something
   getHashAsObject() {
-    return {
-      hashFormat: 'sha256',
-      hash: this.getSha256Hash(),
-      contentType: this.getContentType(),
+    if (this._errorStatusCode) {
+      return {errorStatusCode: this._errorStatusCode}
+    } else {
+      return {
+        hashFormat: 'sha256',
+        hash: this.getSha256Hash(),
+        contentType: this.getContentType(),
+      }
     }
   }
 

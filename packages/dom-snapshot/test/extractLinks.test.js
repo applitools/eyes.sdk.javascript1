@@ -46,6 +46,7 @@ describe('extractLinks', () => {
         'smurfs.jpg',
         'smurfs.jpg',
         '/path/to/video.mp4',
+        '/path/to/src/attr/video.mp4',
         '/path/to/sound.mp3',
         'style.css',
         'http://bla/style.css',

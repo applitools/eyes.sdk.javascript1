@@ -3,6 +3,55 @@
 ## Unreleased
 
 
+## 5.19.2 - 2020/7/26
+
+- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.4.1)
+- updated to @applitools/visual-grid-client@14.6.0 (from 14.5.15)
+
+## 5.19.1 - 2020/7/24
+
+- updated to @applitools/eyes-sdk-core@11.4.1 (from 11.4.0)
+- updated to @applitools/visual-grid-client@14.5.15 (from 14.5.14)
+
+## 5.19.0 - 2020/7/24
+
+- remove type definitions
+- updated to @applitools/eyes-sdk-core@11.4.0 (from 11.3.8)
+- updated to @applitools/visual-grid-client@14.5.14 (from 14.5.12)
+
+## 5.18.4 - 2020/7/18
+
+- prevented from using wdio external types during types generation
+- updated to @applitools/visual-grid-client@14.5.11 (from 14.5.10)
+
+## 5.18.3 - 2020/7/16
+
+- add sync and async interfaces of wdio driver
+- add verification step after types generation
+- updated to @applitools/eyes-sdk-core@11.3.7 (from 11.3.6)
+- updated to @applitools/visual-grid-client@14.5.10 (from 14.5.9)
+
+## 5.18.2 - 2020/7/14
+
+- add default generic type to Eyes
+- updated to @applitools/eyes-sdk-core@11.3.6 (from 11.3.5)
+- updated to @applitools/visual-grid-client@14.5.9 (from 14.5.8)
+
+## 5.18.1 - 2020/7/14
+
+- use own types to describe wdio api instead of importing wdio types
+- updated to @applitools/eyes-sdk-core@11.3.5 (from 11.3.4)
+
+## 5.18.0 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.4 (from 11.2.2)
+- updated to @applitools/visual-grid-client@14.5.7 (from 14.5.2)
+
+## 5.17.0 - 2020/7/5
+
+- updated to @applitools/eyes-sdk-core@11.2.2 (from 11.2.1)
+- updated to @applitools/visual-grid-client@14.5.2 (from 14.5.1)
+
 ## 5.16.0 - 2020/6/30
 
 - updated to @applitools/eyes-sdk-core@11.2.0 (from 11.1.0)

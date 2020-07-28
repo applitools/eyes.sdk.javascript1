@@ -26,6 +26,7 @@ typings
 # sdk-coverage-tests
 **/test/coverage/generic/
 coverage-test-report.xml
+coverage-tests-metadata.json
 
 # yarn
 .yarn

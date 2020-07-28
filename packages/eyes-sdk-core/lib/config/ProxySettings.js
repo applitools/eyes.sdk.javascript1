@@ -10,6 +10,15 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
  */
 
 /**
+ * @typedef ProxyObject
+ * @param {string} protocol
+ * @param {string} host
+ * @param {number} port
+ * @param {{username: string, password: string}} auth
+ * @param {boolean} isHttpOnly
+ */
+
+/**
  * Encapsulates settings for sending Eyes communication via proxy.
  */
 class ProxySettings {

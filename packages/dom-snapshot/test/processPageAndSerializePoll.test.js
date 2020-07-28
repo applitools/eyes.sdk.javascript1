@@ -6,17 +6,7 @@ const {getProcessPageAndSerializePoll} = require('../index');
 const {testServer} = require('@applitools/sdk-shared');
 const {ptimeoutWithError, delay} = require('@applitools/functional-commons');
 const {version} = require('../package.json');
-
-function decodeFrame(frame) {
-  return Object.assign(frame, {
-    blobs: frame.blobs.map(({url, type, value}) => ({
-      url,
-      type,
-      value: Buffer.from(value, 'base64'),
-    })),
-    frames: frame.frames.map(decodeFrame),
-  });
-}
+const decodeFrame = require('./util/decodeFrame');
 
 describe('processPageAndSerialzePoll', () => {
   let server;

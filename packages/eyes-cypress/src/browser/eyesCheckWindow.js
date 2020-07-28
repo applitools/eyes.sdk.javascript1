@@ -43,7 +43,9 @@ function makeEyesCheckWindow({sendRequest, processPage}) {
     }
 
     return processPage(doc).then(mainFrame => {
-      const allBlobs = getAllBlobs(mainFrame).map(mapBlob);
+      const allBlobs = getAllBlobs(mainFrame)
+        .filter(blob => !blob.errorStatusCode)
+        .map(mapBlob);
       const {resourceUrls, blobData, frames, url, cdt} = replaceBlobsWithBlobDataInFrame(mainFrame);
       return Promise.all(allBlobs.map(putResource)).then(() =>
         sendRequest({
@@ -102,8 +104,12 @@ function makeEyesCheckWindow({sendRequest, processPage}) {
     };
   }
 
-  function mapBlobData({url, type}) {
-    return {url, type: type || 'application/x-applitools-unknown'};
+  function mapBlobData(blob) {
+    if (blob.errorStatusCode) {
+      return {url: blob.url, errorStatusCode: blob.errorStatusCode};
+    } else {
+      return {url: blob.url, type: blob.type || 'application/x-applitools-unknown'};
+    }
   }
 
   function mapBlob({url, type, value}) {

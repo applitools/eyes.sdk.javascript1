@@ -4,7 +4,6 @@ const BrowserType = require('./config/BrowserType')
 const Configuration = require('./config/Configuration')
 const TypeUtils = require('./utils/TypeUtils')
 const ArgumentGuard = require('./utils/ArgumentGuard')
-const RectangleSize = require('./geometry/RectangleSize')
 const TestResultsFormatter = require('./TestResultsFormatter')
 const MatchResult = require('./match/MatchResult')
 const CorsIframeHandler = require('./capture/CorsIframeHandler')
@@ -141,13 +140,14 @@ class EyesVisualGrid extends EyesCore {
     this._closePromise = Promise.resolve()
   }
   /**
-   * @param {TDriver} driver The web driver that controls the browser hosting the application under test.
+   * @template {TDriver} CDriver
+   * @param {CDriver} driver The web driver that controls the browser hosting the application under test.
    * @param {Configuration|string} optArg1 The Configuration for the test or the name of the application under the test.
    * @param {string} [optArg2] The test name.
    * @param {RectangleSize|object} [optArg3] The required browser's viewport size
    *   (i.e., the visible part of the document's body) or to use the current window's viewport.
    * @param {Configuration} [optArg4] The Configuration for the test
-   * @return {Promise<TDriver & EyesWrappedDriver<TDriver, TElement, TSelector>>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
+   * @return {Promise<CDriver & EyesWrappedDriver<TDriver, TElement, TSelector>>} A wrapped WebDriver which enables Eyes trigger recording and frame handling.
    */
   async open(driver, optArg1, optArg2, optArg3, optArg4) {
     ArgumentGuard.notNull(driver, 'driver')
@@ -224,6 +224,8 @@ class EyesVisualGrid extends EyesCore {
     this._closeCommand = close
     this._abortCommand = abort
 
+    await this._initCommon()
+
     return this._driver
   }
   /**
@@ -257,7 +259,7 @@ class EyesVisualGrid extends EyesCore {
       })
       const {cdt, url, resourceContents, resourceUrls, frames} = pageDomResults
       if (this.getCorsIframeHandle() === CorsIframeHandles.BLANK) {
-        CorsIframeHandler.blankCorsIframeSrcOfCdt(cdt, frames)
+        CorsIframeHandler.blankCorsIframeSrcOfCdt({url, cdt, frames})
       }
       // this._logger.verbose(`Dom extracted  (${checkSettings.toString()})   $$$$$$$$$$$$`)
 
@@ -343,7 +345,7 @@ class EyesVisualGrid extends EyesCore {
         }
         if (isErrorCaught) {
           const error = TypeUtils.isArray(results) ? results[0] : results
-          if (throwEx) throw error
+          if (throwEx || !error.getTestResults) throw error
           else return error.getTestResults()
         }
         return TypeUtils.isArray(results) ? results[0] : results
@@ -374,13 +376,6 @@ class EyesVisualGrid extends EyesCore {
    */
   async getInferredEnvironment() {
     return undefined
-  }
-  /**
-   * @private
-   */
-  async _getAndSaveBatchInfoFromServer(batchId) {
-    ArgumentGuard.notNullOrEmpty(batchId, 'batchId')
-    return this._runner.getBatchInfoWithCache(batchId)
   }
 }
 module.exports = EyesVisualGrid

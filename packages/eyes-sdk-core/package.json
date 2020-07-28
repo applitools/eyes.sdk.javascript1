@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "11.2.1",
+  "version": "11.5.0",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -32,7 +32,7 @@
   "main": "./index.js",
   "typings": "./typings/index.d.ts",
   "dependencies": {
-    "@applitools/dom-capture": "7.2.4",
+    "@applitools/dom-capture": "7.2.6",
     "@applitools/isomorphic-fetch": "3.0.0",
     "axios": "0.19.2",
     "chalk": "3.0.0",
@@ -53,7 +53,8 @@
     "chai-uuid": "1.0.6",
     "chromedriver": "^83.0.0",
     "jsdoc": "3.6.4",
-    "mocha": "7.0.1",
+    "mocha": "^8.0.1",
+    "ncp": "^2.0.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "typescript": "^3.9.5"
   },
@@ -62,11 +63,11 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
-    "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
+    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
     "types:generate": "node ./scripts/build-typings",
-    "preversion": "bongo preversion && yarn types:generate && yarn test",
+    "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },

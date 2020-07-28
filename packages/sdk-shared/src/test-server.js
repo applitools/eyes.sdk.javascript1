@@ -40,6 +40,12 @@ function startTestServer({
   app.use('/auth', express.static(staticPath))
   app.use('/', express.static(staticPath))
   app.get('/err*', (_req, res) => res.sendStatus(500))
+  app.get('/predefined-status/hangup', req => {
+    req.socket.destroy()
+  })
+  app.get('/predefined-status/:status', (req, res) => {
+    res.status(req.params.status).send('http status route')
+  })
 
   const log = args => showLogs && console.log(args)
 

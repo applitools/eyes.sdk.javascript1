@@ -21,14 +21,18 @@ function makeProcessResource({
     documents,
     getResourceUrlsAndBlobs,
     forceCreateStyle = false,
+    skipResources,
   }) {
     if (!cache[url]) {
       if (sessionCache && sessionCache.getItem(url)) {
         const resourceUrls = getDependencies(url);
         log('doProcessResource from sessionStorage', url, 'deps:', resourceUrls.slice(1));
         cache[url] = Promise.resolve({resourceUrls});
-      } else if (/https:\/\/fonts.googleapis.com/.test(url)) {
-        log('not processing google font:', url);
+      } else if (
+        (skipResources && skipResources.indexOf(url) > -1) ||
+        /https:\/\/fonts.googleapis.com/.test(url)
+      ) {
+        log('not processing resource from skip list (or google font):', url);
         cache[url] = Promise.resolve({resourceUrls: [url]});
       } else {
         const now = Date.now();
@@ -53,19 +57,24 @@ function makeProcessResource({
             throw e;
           }
         })
-        .then(({url, type, value, probablyCORS, isTimeout}) => {
+        .then(({url, type, value, probablyCORS, errorStatusCode, isTimeout}) => {
           if (probablyCORS) {
             log('not fetched due to CORS', `[${Date.now() - now}ms]`, url);
             sessionCache && sessionCache.setItem(url, []);
             return {resourceUrls: [url]};
           }
 
+          if (errorStatusCode) {
+            const blobsObj = {[url]: {errorStatusCode}};
+            sessionCache && sessionCache.setItem(url, []);
+            return {blobsObj};
+          }
+
           if (isTimeout) {
-            // TODO return errorStatusCode once VG supports it (https://trello.com/c/J5lBWutP/92-when-capturing-dom-add-non-200-urls-to-resource-map)
-            log('not fetched due to timeout, returning empty resource');
+            log('not fetched due to timeout, returning error status code 504 (Gateway timeout)');
             sessionCache && sessionCache.setItem(url, []);
             return {
-              blobsObj: {[url]: {type: 'application/x-applitools-empty', value: new ArrayBuffer()}},
+              blobsObj: {[url]: {errorStatusCode: 504}},
             };
           }
 
@@ -104,6 +113,7 @@ function makeProcessResource({
               documents,
               urls: absoluteDependentUrls,
               forceCreateStyle,
+              skipResources,
             }).then(({resourceUrls, blobsObj}) => ({
               resourceUrls,
               blobsObj: Object.assign(blobsObj, thisBlob),

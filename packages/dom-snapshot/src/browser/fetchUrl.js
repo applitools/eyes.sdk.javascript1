@@ -33,7 +33,7 @@ function makeFetchUrl({
               value: buff,
             }));
           } else {
-            return Promise.reject(new Error(`bad status code ${resp.status}`));
+            return {url, errorStatusCode: resp.status};
           }
         })
         .then(resolve)

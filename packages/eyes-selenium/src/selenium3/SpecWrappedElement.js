@@ -1,5 +1,5 @@
 const {TypeUtils} = require('@applitools/eyes-sdk-core')
-const {WebElement, By} = require('selenium-webdriver')
+const {By} = require('selenium-webdriver')
 
 /**
  * @typedef {import('./SpecWrappedDriver').Driver} Driver
@@ -10,7 +10,8 @@ const {WebElement, By} = require('selenium-webdriver')
  */
 
 function isCompatible(element) {
-  return element instanceof WebElement
+  const ctorName = element && element.constructor && element.constructor.name
+  return ctorName === 'WebElement'
 }
 function isSelector(selector) {
   if (!selector) return false

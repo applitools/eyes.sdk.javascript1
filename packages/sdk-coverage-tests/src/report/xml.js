@@ -1,23 +1,23 @@
 const convert = require('xml-js')
 const {logDebug} = require('../log')
 
-function convertJunitXmlToResultSchema({xmlResult, browser}) {
-  let result = []
-  const tests = parseJunitXmlForTests(xmlResult)
+function convertJunitXmlToResultSchema({xmlResult, browser, metaData}) {
+  const tests = parseJunitXmlForTests(xmlResult).filter(test => !test.skipped && !test.ignored)
   logDebug(tests)
-  tests.forEach(test => {
+  return tests.map(test => {
     const testName = parseBareTestName(test._attributes.name)
     const testNameWithoutSuffix = removeSuffix(testName)
-    result.push({
+    return {
       test_name: testNameWithoutSuffix,
       parameters: {
         browser: browser ? browser : 'chrome',
+
         mode: parseExecutionMode(testName),
       },
       passed: !test.failure,
-    })
+      ...metaData[testName],
+    }
   })
-  return result
 }
 
 function removeSuffix(testName) {

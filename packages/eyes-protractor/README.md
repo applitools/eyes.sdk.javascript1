@@ -736,3 +736,89 @@ eyes.setLogHandler(new FileLogHandler(false, path.resolve('logs', 'eyes.log')))
 // write verbose logs to a new file at logs/eyes-{timestamp}.log (relative to current working directory)
 eyes.setLogHandler(new FileLogHandler(true, path.resolve('logs', `eyes-${Date.now()}.log`), false))
 ```
+
+### Configuring browsers for the Ultra fast grid
+
+When it comes to multiple browsers and mobile devices, the Ultra fast grid shines.
+It's now possible to run one functional test, and in the background have multiple screenshots rendered for different browsers, viewport sizes, and mobile devices.
+
+The API methods are:
+
+- `configuration.addBrowser(browser)` for adding a single browser configuration.
+- `configuration.addBrowsers(browser1, browser2, ...)` for adding single or multiple browser configurations.
+
+Here are examples for how to execute visual tests on different browsers and platforms:
+
+#### Desktop browsers
+
+```js
+const {BrowserType} = require('@applitools/eyes-protractor')
+// ...
+const configuration = eyes.getConfiguration()
+configuration.addBrowsers(
+  {name: BrowserType.EDGE_CHROMIUM, width: 768, height: 1024},
+  {name: BrowserType.EDGE_LEGACY, width: 768, height: 1024},
+  {name: BrowserType.FIREFOX, width: 768, height: 1024},
+  {name: BrowserType.CHROME, width: 768, height: 1024},
+  {name: BrowserType.IE_11, width: 768, height: 1024},
+  {name: BrowserType.IE_10, width: 768, height: 1024},
+  {name: BrowserType.SAFARI, width: 768, height: 1024},
+  {name: BrowserType.CHROME_ONE_VERSION_BACK, width: 768, height: 1024},
+  {name: BrowserType.CHROME_TWO_VERSIONS_BACK, width: 768, height: 1024},
+  // ...
+)
+eyes.setConfiguration(configuration)
+```
+
+#### Chrome device emulation
+
+Predefined device:
+
+```js
+const {ScreenOrientation, DeviceName} = require('@applitools/eyes-protractor')
+// ...
+const configuration = eyes.getConfiguration()
+configuration.addBrowsers(
+  {
+    chromeEmulationInfo: {
+      deviceName: DeviceName.iPhone_6_7_8,
+    },
+  },
+  {
+    chromeEmulationInfo: {
+      deviceName: DeviceName.Galaxy_S9_Plus,
+      screenOrientation: ScreenOrientation.LANDSCAPE,
+    },
+  },
+)
+eyes.setConfiguration(configuration)
+```
+
+Custom device:
+
+```js
+const configuration = eyes.getConfiguration()
+configuration.addBrowser({
+  chromeEmulationInfo: {
+    width: 800,
+    height: 600,
+    deviceScaleFactor: 3,
+  },
+})
+eyes.setConfiguration(configuration)
+```
+
+#### iOS device
+
+```js
+const {IosDeviceName, ScreenOrientation} = require('@applitools/eyes-protractor')
+// ...
+const configuration = eyes.getConfiguration()
+configuration.addBrowser({
+  iosDeviceInfo: {
+    deviceName: IosDeviceName.iPhone_11,
+    screenOrientation: ScreenOrientation.LANDSCAPE,
+  },
+})
+eyes.setConfiguration(configuration)
+```

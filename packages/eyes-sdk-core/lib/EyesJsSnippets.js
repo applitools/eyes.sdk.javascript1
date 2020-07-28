@@ -202,7 +202,7 @@ const SCROLL_TO = `
 
 const GET_TRANSFORMS = `
   var element = arguments[0] || document.documentElement;
-  return {${TRANSFORM_KEYS.map(key => `['${key}']: element.style['${key}']`).join(',')}};
+  return {${TRANSFORM_KEYS.map(key => `'${key}': element.style['${key}']`).join(',')}};
 `
 
 const SET_TRANSFORMS = transforms => `

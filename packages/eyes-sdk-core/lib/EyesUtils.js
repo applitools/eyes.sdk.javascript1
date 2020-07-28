@@ -4,7 +4,6 @@ const CoordinatesTypes = require('./geometry/CoordinatesType')
 const Location = require('./geometry/Location')
 const RectangleSize = require('./geometry/RectangleSize')
 const Region = require('./geometry/Region')
-const MutableImage = require('./images/MutableImage')
 const EyesError = require('./errors/EyesError')
 const EyesDriverOperationError = require('./errors/EyesDriverOperationError')
 const EyesJsSnippets = require('./EyesJsSnippets')
@@ -54,166 +53,80 @@ async function setViewportSize(logger, {controller, executor, context}, required
 
     // We move the window to (0,0) to have the best chance to be able to
     // set the viewport size as requested.
-    await controller.setWindowLocation({x: 0, y: 0}).catch(() => {
-      logger.verbose('Warning: Failed to move the browser window to (0,0)')
+    await controller.setWindowLocation({x: 0, y: 0}).catch(err => {
+      logger.verbose('Warning: Failed to move the browser window to (0,0)', err)
     })
 
-    await _setWindowSizeByViewportSize(
-      logger,
-      {controller},
+    // window size is changed after setting window location
+    actualViewportSize = await getViewportSize(logger, {executor})
+
+    const requiredWindowSize = await _getRequiredWindowSize({
+      controller,
       actualViewportSize,
       requiredViewportSize,
-    )
+    })
+    await _setWindowSize({logger, controller, requiredWindowSize})
     actualViewportSize = await getViewportSize(logger, {executor})
     if (actualViewportSize.equals(requiredViewportSize)) return true
 
-    // Additional attempt. This Solves the "maximized browser" bug
-    // (border size for maximized browser sometimes different than non-maximized, so the original browser size calculation is wrong).
     logger.verbose(
-      `Failed attempt to set viewport size. actualViewportSize=${actualViewportSize}, requiredViewportSize=${requiredViewportSize}. Trying workaround for maximization...`,
+      `Failed attempt to set viewport size. actualViewportSize=${actualViewportSize}, requiredViewportSize=${requiredViewportSize}. Trying again...`,
     )
-    await _setWindowSizeByViewportSize(
-      logger,
-      {controller},
-      actualViewportSize,
-      requiredViewportSize,
-    )
-    actualViewportSize = await getViewportSize(logger, {executor})
-    if (actualViewportSize.equals(requiredViewportSize)) return true
 
-    const MAX_DIFF = 3
-    const widthDiff = Math.abs(actualViewportSize.getWidth() - requiredViewportSize.getWidth())
-    const heightDiff = Math.abs(actualViewportSize.getHeight() - requiredViewportSize.getHeight())
+    // // Additional attempt. This Solves the "maximized browser" bug
+    // // (border size for maximized browser sometimes different than non-maximized, so the original browser size calculation is wrong).
+    // logger.verbose(
+    //   `Failed attempt to set viewport size. actualViewportSize=${actualViewportSize}, requiredViewportSize=${requiredViewportSize}`,
+    // )
 
-    // We try the zoom workaround only if size difference is reasonable.
-    if (widthDiff <= MAX_DIFF && heightDiff <= MAX_DIFF) {
-      logger.verbose('Trying workaround for zoom...')
-
-      return _adjustWindowSizeByViewportSize(
-        logger,
-        {controller, executor},
-        actualViewportSize,
-        requiredViewportSize,
-      )
-    } else {
-      throw new Error('Failed to set viewport size!')
-    }
+    throw new Error('Failed to set viewport size!')
   })
 }
 /**
  * Set window size by the actual size of the top-level context viewport
- * @param {Logger} logger - logger instance
- * @param {Object} driver
- * @param {EyesDriverController} driver.controller - driver controller
- * @param {RectangleSize} actualViewportSize - actual viewport size
- * @param {RectangleSize} requiredViewportSize - required size to set
+ * @param {Object} obj
+ * @param {EyesDriverController} obj.controller - driver controller
+ * @param {RectangleSize} obj.actualViewportSize - actual viewport size
+ * @param {RectangleSize} obj.requiredViewportSize - required size to set
  */
-async function _setWindowSizeByViewportSize(
-  logger,
-  {controller},
-  actualViewportSize,
-  requiredViewportSize,
-) {
+async function _getRequiredWindowSize({controller, actualViewportSize, requiredViewportSize}) {
   const actualWindowSize = await controller.getWindowSize()
-  const requiredWindowSize = new RectangleSize(
+  return new RectangleSize(
     actualWindowSize.getWidth() + (requiredViewportSize.getWidth() - actualViewportSize.getWidth()),
     actualWindowSize.getHeight() +
       (requiredViewportSize.getHeight() - actualViewportSize.getHeight()),
   )
-  return _setWindowSize(logger, {controller}, requiredWindowSize)
 }
-/**
- * Adjust the size of the preview window so that the size of the top-level context window matches the required value
- * @param {Logger} logger - logger instance
- * @param {Object} driver
- * @param {EyesDriverController} driver.controller - driver controller
- * @param {EyesJsExecutor} driver.executor - js executor
- * @param {RectangleSize} actualViewportSize - actual viewport size
- * @param {RectangleSize} requiredViewportSize - required viewport size to set
- */
-async function _adjustWindowSizeByViewportSize(
-  logger,
-  {controller, executor},
-  actualViewportSize,
-  requiredViewportSize,
-) {
-  const widthDiff = actualViewportSize.getWidth() - requiredViewportSize.getWidth()
-  const widthStep = widthDiff > 0 ? -1 : 1 // -1 for smaller size, 1 for larger
-  const heightDiff = actualViewportSize.getHeight() - requiredViewportSize.getHeight()
-  const heightStep = heightDiff > 0 ? -1 : 1
 
-  const actualWindowSize = await controller.getWindowSize()
-  let lastRequiredBrowserSize = null
-  let retries = Math.abs((widthDiff || 1) * (heightDiff || 1)) * 2
-  let widthChange = 0
-  let heightChange = 0
-  while (
-    --retries > 0 &&
-    (Math.abs(widthChange) <= Math.abs(widthDiff) || Math.abs(heightChange) <= Math.abs(heightDiff))
-  ) {
-    logger.verbose(`Retries left: ${retries}`)
-    // We specifically use "<=" (and not "<"), so to give an extra resize attempt
-    // in addition to reaching the diff, due to floating point issues.
-    if (
-      Math.abs(widthChange) <= Math.abs(widthDiff) &&
-      actualViewportSize.getWidth() !== requiredViewportSize.getWidth()
-    ) {
-      widthChange += widthStep
-    }
-
-    if (
-      Math.abs(heightChange) <= Math.abs(heightDiff) &&
-      actualViewportSize.getHeight() !== requiredViewportSize.getHeight()
-    ) {
-      heightChange += heightStep
-    }
-
-    const requiredWindowSize = new RectangleSize(
-      actualWindowSize.getWidth() + widthChange,
-      actualWindowSize.getHeight() + heightChange,
-    )
-
-    if (requiredWindowSize.equals(lastRequiredBrowserSize)) {
-      logger.verbose('Browser size is as required but viewport size does not match!')
-      logger.verbose(`Browser size: ${requiredWindowSize}, Viewport size: ${actualViewportSize}`)
-      logger.verbose('Stopping viewport size attempts.')
-      return true
-    }
-
-    await _setWindowSize(logger, {controller}, requiredWindowSize)
-    lastRequiredBrowserSize = requiredWindowSize
-    actualViewportSize = getViewportSize(logger, {executor})
-
-    logger.verbose('Current viewport size:', actualViewportSize)
-    if (actualViewportSize.equals(requiredViewportSize)) {
-      return true
-    }
-  }
-  throw new Error('EyesError: failed to set window size! Zoom workaround failed.')
-}
 /**
  * Set window size with retries
- * @param {Logger} logger - logger instance
- * @param {Object} driver
- * @param {EyesDriverController} driver.controller - driver controller
- * @param {RectangleSize} requiredViewportSize - required viewport size to set
- * @param {number} [sleep=3000] - delay between retries
- * @param {number} [retries=3] - number of retries
+ * @param {Object} obj
+ * @param {Logger} obj.logger - logger instance
+ * @param {EyesDriverController} obj.controller - driver controller
+ * @param {RectangleSize} obj.requiredViewportSize - required viewport size to set
  * @return {boolean} true if operation finished successfully, false otherwise
  */
-async function _setWindowSize(logger, {controller}, requiredWindowSize, sleep = 3000, retries = 3) {
+async function _setWindowSize({logger, controller, requiredWindowSize}) {
+  const sleep = 3000
+  let retries = 3
+  let windowSizeToSend = requiredWindowSize
   try {
     while (retries >= 0) {
-      logger.verbose(
-        `Attempt to set window size to ${requiredWindowSize}. Retries left: ${retries}`,
-      )
-      await controller.setWindowSize(requiredWindowSize)
+      logger.verbose(`Attempt to set window size to ${windowSizeToSend}. Retries left: ${retries}`)
+      await controller.setWindowSize(windowSizeToSend)
       await GeneralUtils.sleep(sleep)
       const actualWindowSize = await controller.getWindowSize()
       if (actualWindowSize.equals(requiredWindowSize)) return true
       logger.verbose(
         `Attempt to set window size to ${requiredWindowSize} failed. actualWindowSize=${actualWindowSize}`,
       )
+      windowSizeToSend = new RectangleSize({
+        width:
+          windowSizeToSend.getWidth() - (actualWindowSize.getWidth() - windowSizeToSend.getWidth()),
+        height:
+          windowSizeToSend.getHeight() -
+          (actualWindowSize.getHeight() - windowSizeToSend.getHeight()),
+      })
       retries -= 1
     }
     logger.verbose('Failed to set browser size: no more retries.')
@@ -253,29 +166,37 @@ async function getTopContextViewportSize(logger, {controller, context, executor}
   return context.framesSwitchAndReturn(null, async () => {
     logger.verbose('Extracting viewport size...')
     let viewportSize
-    try {
-      viewportSize = await getViewportSize(logger, {executor})
-    } catch (err) {
-      logger.verbose('Failed to extract viewport size using Javascript:', err)
-      // If we failed to extract the viewport size using JS, will use the window size instead.
-      logger.verbose('Using window size as viewport size.')
-
-      const windowSize = await controller.getWindowSize()
-      let width = windowSize.getWidth()
-      let height = windowSize.getHeight()
-      const isLandscapeOrientation = await controller.isLandscapeOrientation().catch(() => {
-        // Not every IWebDriver supports querying for orientation.
-      })
-      if (isLandscapeOrientation && height > width) {
-        const temp = width
-        width = height
-        height = temp
+    if (await controller.isNative()) {
+      viewportSize = await _getPortraitWindowSize(logger, controller)
+    } else {
+      try {
+        viewportSize = await getViewportSize(logger, {executor})
+      } catch (err) {
+        logger.verbose('Failed to extract viewport size using Javascript:', err)
+        // If we failed to extract the viewport size using JS, will use the window size instead.
+        viewportSize = await _getPortraitWindowSize(logger, controller)
       }
-      viewportSize = new RectangleSize(width, height)
     }
-    logger.verbose('Done! Viewport size: ', viewportSize)
+    logger.verbose('Done extracting viewport size! Viewport size: ', viewportSize)
     return viewportSize
   })
+}
+
+async function _getPortraitWindowSize(logger, controller) {
+  logger.verbose('Using window size as viewport size.')
+
+  const windowSize = await controller.getWindowSize()
+  let width = windowSize.getWidth()
+  let height = windowSize.getHeight()
+  const isLandscapeOrientation = await controller.isLandscapeOrientation().catch(() => {
+    // Not every IWebDriver supports querying for orientation.
+  })
+  if (isLandscapeOrientation && height > width) {
+    const temp = width
+    width = height
+    height = temp
+  }
+  return new RectangleSize(width, height)
 }
 /**
  * Get current context content size
@@ -326,14 +247,15 @@ async function getElementClientRect(_logger, executor, element) {
     coordinatesType: CoordinatesTypes.CONTEXT_RELATIVE,
   })
 }
+
 /**
  * Get element rect relative to the current context
- * @param {Logger} _logger - logger instance
- * @param {EyesJsExecutor} executor - js executor
- * @param {EyesWrappedElement} element - element to get rect
+ * @param obj
+ * @param {EyesJsExecutor} obj.executor - js executor
+ * @param {EyesWrappedElement} obj.element - element to get rect
  * @return {Promise<Region>} element rect
  */
-async function getElementRect(_logger, executor, element) {
+async function getElementRect({executor, element}) {
   const rect = await executor.executeScript(EyesJsSnippets.GET_ELEMENT_RECT, element)
   return new Region({
     left: Math.ceil(rect.x),
@@ -343,6 +265,56 @@ async function getElementRect(_logger, executor, element) {
     coordinatesType: CoordinatesTypes.CONTEXT_RELATIVE,
   })
 }
+
+/**
+ * Get native mobile element rect relative to the current context
+ * @param obj
+ * @param {EyesWrappedDriver} obj.driver - driver
+ * @param {EyesWrappedElement} obj.element - element to get rect
+ * @return {Promise<Region>} element rect
+ */
+async function getNativeElementRect({driver, element}) {
+  const {x, y} = await driver.specs.getNativeElementLocation(driver, element.unwrapped)
+  const {width, height} = await driver.specs.getNativeElementSize(driver, element.unwrapped)
+  return new Region({
+    left: Math.ceil(x),
+    top: Math.ceil(y),
+    width: Math.ceil(width),
+    height: Math.ceil(height),
+    coordinatesType: CoordinatesTypes.CONTEXT_RELATIVE,
+  })
+}
+
+/**
+ * Get native mobile element size
+ * @param obj
+ * @param {EyesWrappedDriver} obj.driver - driver
+ * @param {EyesWrappedElement} obj.element - element to get rect
+ * @return {Promise<RectangleSize>} element size
+ */
+async function getNativeElementSize({driver, element}) {
+  const {width, height} = await driver.specs.getNativeElementSize(driver, element.unwrapped)
+  return new RectangleSize({
+    width: Math.ceil(width),
+    height: Math.ceil(height),
+  })
+}
+
+/**
+ * Get native mobile element location
+ * @param obj
+ * @param {EyesWrappedDriver} obj.driver - driver
+ * @param {EyesWrappedElement} obj.element - element to get rect
+ * @return {Promise<Location>} element location
+ */
+async function getNativeElementLocation({driver, element}) {
+  const {x, y} = await driver.specs.getNativeElementLocation(driver, element.unwrapped)
+  return new Location({
+    left: Math.ceil(x),
+    top: Math.ceil(y),
+  })
+}
+
 /**
  * Extract values of specified properties for specified element
  * @param {Logger} _logger - logger instance
@@ -384,8 +356,7 @@ async function getDevicePixelRatio(_logger, {executor}) {
  * @return {Promise<number>} mobile device pixel ratio
  */
 async function getMobilePixelRatio(_logger, {controller}, viewportSize) {
-  const screenshot64 = await controller.takeScreenshot()
-  const screenshot = new MutableImage(screenshot64)
+  const screenshot = await controller.takeScreenshot()
   return screenshot.getWidth() / viewportSize.getWidth()
 }
 
@@ -761,6 +732,9 @@ module.exports = {
   getElementEntireSize,
   getElementClientRect,
   getElementRect,
+  getNativeElementRect,
+  getNativeElementSize,
+  getNativeElementLocation,
   getElementProperties,
   getElementCssProperties,
   getDevicePixelRatio,

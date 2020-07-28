@@ -1,11 +1,18 @@
 'use strict'
 
 function toCacheEntry(rGridResource, isContentNeeded = true) {
-  return {
-    url: rGridResource.getUrl(),
-    type: rGridResource.getContentType(),
-    hash: rGridResource.getSha256Hash(),
-    content: isContentNeeded ? rGridResource.getContent() : undefined,
+  if (rGridResource.getErrorStatusCode()) {
+    return {
+      url: rGridResource.getUrl(),
+      errorStatusCode: rGridResource.getErrorStatusCode(),
+    }
+  } else {
+    return {
+      url: rGridResource.getUrl(),
+      type: rGridResource.getContentType(),
+      hash: rGridResource.getSha256Hash(),
+      content: isContentNeeded ? rGridResource.getContent() : undefined,
+    }
   }
 }
 

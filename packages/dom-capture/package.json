@@ -1,10 +1,10 @@
 {
   "name": "@applitools/dom-capture",
-  "version": "7.2.4",
+  "version": "7.2.6",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
-    "test": "mocha --no-timeouts test/**/*.test.js",
+    "test": "mocha --no-timeouts --parallel test/**/*.test.js",
     "lint:node": "eslint '**/*.js' --ignore-pattern 'src/browser'",
     "lint:browser": "eslint -c 'src/browser/.eslintrc.json' 'src/browser/**/*.js'",
     "lint": "yarn lint:node && yarn lint:browser",
@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "3.0.0",
     "express": "^4.17.1",
     "jsdom": "^13.2.0",
-    "mocha": "5.2.0",
+    "mocha": "^8.0.1",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "puppeteer": "^1.20.0",

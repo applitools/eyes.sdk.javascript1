@@ -2,12 +2,13 @@
 const Enum = require('./utils/Enum')
 
 /**
- * @enum
- * @typedef {'Passed'|'Failed'} AccessibilityStatus
+ * @typedef {import('./utils/Enum').EnumValues<typeof AccessibilityStatuses>} AccessibilityStatus
  */
 
 const AccessibilityStatuses = Enum('AccessibilityStatus', {
+  /** @type {'Passed'} */
   Passed: 'Passed',
+  /** @type {'Failed'} */
   Failed: 'Failed',
 })
 

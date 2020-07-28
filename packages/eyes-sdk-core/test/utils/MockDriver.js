@@ -16,8 +16,11 @@ const DEFAULT_PROPS = {
 }
 
 class MockDriver {
-  constructor() {
+  constructor({isNative = false, isMobile = false} = {}) {
+    this._isNative = isNative
+    this._isMobile = isMobile
     this._window = {
+      title: 'Default Page Title',
       url: 'http://default.url',
       rect: {x: 0, y: 0, width: 1000, height: 1000},
     }
@@ -199,9 +202,15 @@ class MockDriver {
     Object.assign(this._window.rect, rect)
   }
   async getUrl() {
+    if (this._isNative) throw new Error("Native context doesn't support this method")
     return this._window.url
   }
+  async getTitle() {
+    if (this._isNative) throw new Error("Native context doesn't support this method")
+    return this._window.title
+  }
   async visit(url) {
+    if (this._isNative) throw new Error("Native context doesn't support this method")
     this._window.url = url
   }
   async takeScreenshot() {

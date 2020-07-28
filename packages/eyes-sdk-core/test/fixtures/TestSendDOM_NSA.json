@@ -1406,5 +1406,5 @@
   "css": "\n/** https://nikita-andreev.github.io/applitools/style1.css **/\np {\ntext-decoration: underline;\n}\n\n/** https://nikita-andreev.github.io/applitools/style0.css **/\n@import url('style1.css');\np {\ncolor: red;\ndisplay: block;\nborder: 1px solid blue;\n}\n",
   "images": {},
   "version": "1.3.0",
-  "scriptVersion": "7.2.4"
+  "scriptVersion": "7.2.6"
 }

@@ -4,34 +4,19 @@ const {expect} = require('chai');
 const {getCaptureDomForIEScript, getCaptureDomAndPollForIE} = require('../');
 const {loadFixture} = require('./util/loadFixture');
 const {beautifyOutput} = require('./util/beautifyOutput');
-const fs = require('fs');
-const path = require('path');
 const {Builder} = require('selenium-webdriver');
 const ie = require('selenium-webdriver/ie');
 const {ptimeoutWithError} = require('@applitools/functional-commons');
 const {version} = require('../package.json');
+const saveFixture = require('./util/saveFixture');
 
-function executeAsyncScript(driver, func) {
-  const script = `
-    const callback = arguments[arguments.length - 1];
-    (${func})().then(callback, function (err) { callback({ error: err && err.message || err })});
-  `;
-  return driver.executeAsyncScript(script);
-}
-
-describe('captureDom for IE', () => {
-  let captureDom;
+describe('captureDom for IE 10', () => {
   let captureDomAndPoll;
 
   before(async () => {
     const _captureDom = await getCaptureDomForIEScript();
     captureDomAndPoll = await getCaptureDomAndPollForIE();
-    captureDom = driver => executeAsyncScript(driver, _captureDom);
   });
-
-  function saveFixture(name, content) {
-    fs.writeFileSync(path.resolve(__dirname, `fixtures/${name}`), content);
-  }
 
   async function openPageWith({
     browserName,
@@ -66,48 +51,6 @@ describe('captureDom for IE', () => {
     await driver.get(url);
     return driver;
   }
-
-  it('works in Edge', async () => {
-    const driver = await openPageWith({browserName: 'MicrosoftEdge', version: '18'});
-    try {
-      const fixtureName = 'edge.dom.json';
-      const result = await captureDom(driver);
-      const domStr = beautifyOutput(result);
-      if (process.env.APPLITOOLS_UPDATE_FIXTURES) {
-        saveFixture(fixtureName, domStr);
-      }
-
-      const expected = loadFixture(fixtureName).replace(
-        'DOM_CAPTURE_SCRIPT_VERSION_TO_BE_REPLACED',
-        version,
-      );
-
-      expect(domStr).to.eql(expected);
-    } finally {
-      await driver.quit();
-    }
-  });
-
-  it('works in IE 11', async () => {
-    const driver = await openPageWith({browserName: 'internet explorer'});
-    try {
-      const fixtureName = 'ie11.dom.json';
-      const domStr = beautifyOutput(await captureDom(driver));
-
-      if (process.env.APPLITOOLS_UPDATE_FIXTURES) {
-        saveFixture(fixtureName, domStr);
-      }
-
-      const expected = loadFixture(fixtureName).replace(
-        'DOM_CAPTURE_SCRIPT_VERSION_TO_BE_REPLACED',
-        version,
-      );
-
-      expect(domStr).to.equal(expected);
-    } finally {
-      await driver.quit();
-    }
-  });
 
   it('works in IE 10 with poll', async () => {
     const driver = await openPageWith({browserName: 'internet explorer'});

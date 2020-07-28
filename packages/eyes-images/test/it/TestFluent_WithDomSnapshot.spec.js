@@ -1,25 +1,8 @@
 'use strict'
 
-const {
-  MouseTrigger,
-  ImageProvider,
-  MutableImage,
-  Location,
-  FileUtils,
-} = require('@applitools/eyes-sdk-core')
-const {
-  Eyes,
-  BatchInfo,
-  ConsoleLogHandler,
-  MatchLevel,
-  RectangleSize,
-  Region,
-  Target,
-} = require('../../index')
+const {Eyes, BatchInfo, ConsoleLogHandler, Target} = require('../../index')
 
 describe('TestEyesImages', function() {
-  this.timeout(5 * 60 * 1000)
-
   let batch
 
   before(() => {
@@ -44,133 +27,6 @@ describe('TestEyesImages', function() {
     }
   }
 
-  it('TestImageProvider', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'TestImageProvider(Bitmap)', {width: 800, height: 500})
-
-    const ImageProviderImpl = class ImageProviderImpl extends ImageProvider {
-      /**
-       * @override
-       */
-      async getImage() {
-        const data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/minions-800x500.png`)
-        return new MutableImage(data)
-      }
-    }
-
-    await eyes.checkImage(new ImageProviderImpl(), this.test.title)
-    await teardown(eyes)
-  })
-
-  it('TestBitmap', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage(Bitmap)')
-
-    const gbg1Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg1.png`)
-    const gbg2Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg2.png`)
-    await eyes.checkImage(gbg1Data, 'TestBitmap1')
-    await eyes.checkImage(gbg2Data, 'TestBitmap2')
-    await teardown(eyes)
-  })
-
-  it('TestRegion', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'TestRegion(Bitmap)')
-
-    eyes.addMouseTrigger(
-      MouseTrigger.MouseAction.Click,
-      new Region(288, 44, 92, 36),
-      new Location(10, 10),
-    )
-
-    const gbg1Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg1.png`)
-    await eyes.checkRegion(gbg1Data, new Region(309, 227, 381, 215), this.test.title)
-    await teardown(eyes)
-  })
-
-  it('TestBytes', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage(byte[])', new RectangleSize(1024, 768))
-
-    const gbg1Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg1.png`)
-    const gbg2Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg2.png`)
-    await eyes.checkImage(new MutableImage(gbg1Data), 'TestBytes1')
-    await eyes.checkImage(new MutableImage(gbg2Data), 'TestBytes2')
-    await teardown(eyes)
-  })
-
-  it('TestBase64', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage(base64)', new RectangleSize(1024, 768))
-
-    const gbg1Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg1.png`)
-    const gbg2Data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg2.png`)
-    await eyes.checkImage(gbg1Data.toString('base64'), 'TestBase64 1')
-    await eyes.checkImage(gbg2Data.toString('base64'), 'TestBase64 2')
-    await teardown(eyes)
-  })
-
-  it('TestFile', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImageFile', new RectangleSize(1024, 768))
-
-    await eyes.checkImage(`${__dirname}/../fixtures/gbg1.png`, 'TestPath1')
-    await eyes.checkImage(`${__dirname}/../fixtures/gbg2.png`, 'TestPath2')
-    await teardown(eyes)
-  })
-
-  it('TestUrl', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImageAtUrl', new RectangleSize(1024, 768))
-
-    await eyes.checkImage('https://applitools.github.io/demo/images/gbg1.png', 'TestUrl1')
-    await eyes.checkImage('https://applitools.github.io/demo/images/gbg2.png', 'TestUrl2')
-    await teardown(eyes)
-  })
-
-  it('TestFluent_Path', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage_Fluent', new RectangleSize(1024, 768))
-
-    await eyes.check('CheckImage_Fluent', Target.image(`${__dirname}/../fixtures/gbg1.png`))
-    await teardown(eyes)
-  })
-
-  it('TestFluent_Bitmap', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage_Fluent', new RectangleSize(1024, 768))
-
-    const data = await FileUtils.readToBuffer(`${__dirname}/../fixtures/gbg1.png`)
-    await eyes.check('CheckImage_Fluent', Target.image(data))
-    await teardown(eyes)
-  })
-
-  it('TestFluent_WithIgnoreRegion', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open(
-      'TestEyesImages',
-      'CheckImage_WithIgnoreRegion_Fluent',
-      new RectangleSize(1024, 768),
-    )
-
-    await eyes.check(
-      'CheckImage_WithIgnoreRegion_Fluent',
-      Target.image(`${__dirname}/../fixtures/gbg1.png`).ignoreRegions(new Region(10, 20, 30, 40)),
-    )
-    await teardown(eyes)
-  })
-
-  it('TestFluent_WithRegion', async function() {
-    const eyes = setup(this.test.title)
-    await eyes.open('TestEyesImages', 'CheckImage_WithRegion_Fluent')
-
-    await eyes.check(
-      'CheckImage_WithRegion_Fluent',
-      Target.image(`${__dirname}/../fixtures/gbg1.png`).region(new Region(10, 20, 30, 40)),
-    )
-    await teardown(eyes)
-  })
-
   it('TestFluent_WithDomSnapshot', async function() {
     const eyes = setup(this.test.title)
     await eyes.open('TestEyesImages', 'CheckImage_WithDomSnapshot_Fluent')
@@ -183,15 +39,6 @@ describe('TestEyesImages', function() {
         .withDom(randomDom)
         .withLocation({x: 10, y: 50}),
     )
-    await teardown(eyes)
-  })
-
-  it('TestLayout2', async function() {
-    const eyes = setup(this.test.title)
-    eyes.setMatchLevel(MatchLevel.Layout2)
-
-    await eyes.open('TestEyesImages', this.test.title, new RectangleSize(1024, 768))
-    await eyes.check(this.test.title, Target.image(`${__dirname}/../fixtures/yahoo1a.png`))
     await teardown(eyes)
   })
 })

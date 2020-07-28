@@ -153,7 +153,7 @@ class Region {
       })
     }
 
-    if (varArg1 instanceof Region) {
+    if (TypeUtils.instanceOf(varArg1, Region)) {
       // eslint-disable-next-line max-len
       return new Region({
         left: varArg1.getLeft(),
@@ -181,6 +181,10 @@ class Region {
       this._height = height
       this._coordinatesType = coordinatesType || CoordinatesTypes.SCREENSHOT_AS_IS
     }
+  }
+
+  static get __Region() {
+    return true
   }
 
   /**

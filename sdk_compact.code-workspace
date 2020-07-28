@@ -1,0 +1,85 @@
+{
+	"folders": [
+		{
+			"name": "coverage",
+			"path": "packages/sdk-coverage-tests"
+		},
+		{
+			"name": "core",
+			"path": "packages/eyes-sdk-core"
+		},
+		{
+			"name": "playwright",
+			"path": "packages/eyes-playwright"
+		},
+		{
+			"name": "wdio",
+			"path": "packages/eyes-webdriverio-5"
+		},
+		{
+			"name": "selenium",
+			"path": "packages/eyes-selenium"
+		},
+		{
+			"name": "protractor",
+			"path": "packages/eyes-protractor"
+		},
+		{
+			"name": "cypress",
+			"path": "packages/eyes-cypress"
+		},
+		{
+			"name": "storybook",
+			"path": "packages/eyes-storybook"
+		},
+		{
+			"name": "testcafe",
+			"path": "packages/eyes-testcafe"
+		},
+		{
+			"name": "images",
+			"path": "packages/eyes-images"
+		},
+		{
+			"name": "wdio-legacy",
+			"path": "packages/eyes-webdriverio-4"
+		},
+		{
+			"name": "wdio-service",
+			"path": "packages/eyes-webdriverio-5-service"
+		},
+		{
+			"name": "wdio-legacy-service",
+			"path": "packages/eyes-webdriverio-4-service"
+		},
+		{
+			"name": "snippets",
+			"path": "packages/snippets"
+		},
+		{
+			"name": "dom-capture",
+			"path": "packages/dom-capture"
+		},
+		{
+			"name": "dom-snapshot",
+			"path": "packages/dom-snapshot"
+		},
+		{
+			"name": "vgc",
+			"path": "packages/visual-grid-client"
+		},
+		{
+			"name": "release-kit",
+			"path": "packages/sdk-release-kit"
+		},
+		{
+			"name": "fake-server",
+			"path": "packages/sdk-fake-eyes-server"
+		},
+		{
+			"name": "shared",
+			"path": "packages/sdk-shared"
+		},
+	],
+	"settings": {}
+}

@@ -101,6 +101,15 @@ async function getUrl(driver) {
 async function visit(driver, url) {
   return driver.url(url)
 }
+async function getNativeElementLocation(driver, element) {
+  const resp = await driver.elementIdLocation(element.ELEMENT)
+  return resp.value
+}
+
+async function getNativeElementSize(driver, element) {
+  const resp = await driver.elementIdSize(element.ELEMENT)
+  return resp.value
+}
 
 /* -------- FOR TESTING PURPOSES -------- */
 
@@ -180,6 +189,8 @@ module.exports = {
   getTitle,
   getUrl,
   visit,
+  getNativeElementLocation,
+  getNativeElementSize,
   build,
   cleanup,
   click,

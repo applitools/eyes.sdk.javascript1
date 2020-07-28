@@ -1,6 +1,6 @@
 {
   "name": "applitools-for-selenium-ide",
-  "version": "1.11.0",
+  "version": "1.11.2",
   "repository": "git@github.com:applitools/applitools-for-selenium-ide.git",
   "private": true,
   "scripts": {
@@ -85,9 +85,9 @@
   },
   "dependencies": {
     "@applitools/dom-capture": "7.2.4",
-    "@applitools/dom-snapshot": "3.5.3",
-    "@applitools/eyes-images": "4.14.0",
-    "@applitools/visual-grid-client": "14.4.4",
+    "@applitools/dom-snapshot": "3.6.2",
+    "@applitools/eyes-images": "4.14.2",
+    "@applitools/visual-grid-client": "14.5.7",
     "buffer": "^5.2.1",
     "classnames": "^2.2.5",
     "fuse.js": "^3.3.0",

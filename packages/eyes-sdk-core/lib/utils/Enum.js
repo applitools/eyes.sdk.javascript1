@@ -1,6 +1,11 @@
 'use strict'
 
 /**
+ * @template {{[key: string]: any}} T
+ * @typedef {T[keyof T]} EnumValues
+ */
+
+/**
  * @template E
  * @param {string} name
  * @param {E} valuesObj

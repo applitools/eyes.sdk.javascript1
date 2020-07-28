@@ -6,10 +6,8 @@ test/cypress/videos
 .applitools
 .private
 .History.md.swp
-test/fixtures/testApp/cypress/screenshots
-test/fixtures/testApp/cypress/videos
-test/fixtures/testApp/package-lock.json
-test/fixtures/testApp/cypress/fixtures/
+test/fixtures/testAppCopies/*
+!test/fixtures/testAppCopies/noempty
 *.tap
 cdt.json
 .vscode

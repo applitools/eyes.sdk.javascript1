@@ -1,0 +1,7 @@
+<link rel="stylesheet" href="frame/style.css">
+<iframe src="blank.html"></iframe>
+<script>
+  const frame = document.querySelector('iframe')
+  frame.contentDocument.location.href = 'frame/inner-page.html'
+</script>
+<div>page</div>

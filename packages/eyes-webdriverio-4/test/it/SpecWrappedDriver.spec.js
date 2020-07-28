@@ -231,16 +231,16 @@ describe('SpecWrappedDriver', async () => {
         host: 'ondemand.saucelabs.com',
         desiredCapabilities: {
           browserName: '',
-          name: 'AndroidNativeAppTest1',
+          name: 'Android Demo',
           platformName: 'Android',
-          platformVersion: '6.0',
-          deviceName: 'Android Emulator',
+          platformVersion: '7.0',
+          appiumVersion: '1.17.1',
+          deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
+          app: 'https://applitools.bintray.com/Examples/eyes-android-hello-world.apk',
           deviceOrientation: 'landscape',
-          app: 'http://saucelabs.com/example_files/ContactManager.apk',
-          clearSystemFiles: true,
-          noReset: true,
+          automationName: 'uiautomator2',
           username: process.env.SAUCE_USERNAME,
-          accessKey: process.env.SAUCE_ACCESS_KEY,
+          accesskey: process.env.SAUCE_ACCESS_KEY,
         },
       })
       await driver.init()
@@ -277,7 +277,19 @@ describe('SpecWrappedDriver', async () => {
 
     it('getPlatformVersion()', async () => {
       const result = await specs.getPlatformVersion(driver)
-      assert.strictEqual(result, '6.0')
+      assert.strictEqual(result, '7.0')
+    })
+
+    it('getNativeElementLocation()', async () => {
+      const el = await specs.findElement(driver, 'android.widget.Button')
+      const result = await specs.getNativeElementLocation(driver, el)
+      assert.deepStrictEqual(result, {x: 904, y: 781})
+    })
+
+    it('getNativeElementSize()', async () => {
+      const el = await specs.findElement(driver, 'android.widget.Button')
+      const result = await specs.getNativeElementSize(driver, el)
+      assert.deepStrictEqual(result, {height: 144, width: 269})
     })
   })
 })

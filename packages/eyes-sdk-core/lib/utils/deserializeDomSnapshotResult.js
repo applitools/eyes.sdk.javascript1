@@ -11,8 +11,11 @@ function deserializeDomSnapshotResult(domSnapshotResult) {
 }
 
 function blobDataToResourceContents(blobs) {
-  return blobs.reduce((acc, {url, type, value}) => {
-    acc[url] = {url, type, value: Buffer.from(value, 'base64')}
+  return blobs.reduce((acc, blob) => {
+    acc[blob.url] =
+      blob.value !== undefined
+        ? Object.assign(blob, {value: Buffer.from(blob.value, 'base64')})
+        : blob
     return acc
   }, {})
 }

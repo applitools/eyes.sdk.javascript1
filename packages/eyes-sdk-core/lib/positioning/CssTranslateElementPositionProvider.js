@@ -58,18 +58,16 @@ class CssTranslateElementPositionProvider extends PositionProvider {
    */
   async getCurrentPosition(customScrollRootElement) {
     try {
-      const [scrollPosition, translatePosition] = await Promise.all([
-        EyesUtils.getScrollLocation(
-          this._logger,
-          this._executor,
-          customScrollRootElement || this._element,
-        ),
-        EyesUtils.getTranslateLocation(
-          this._logger,
-          this._executor,
-          customScrollRootElement || this._element,
-        ),
-      ])
+      const scrollPosition = await EyesUtils.getScrollLocation(
+        this._logger,
+        this._executor,
+        customScrollRootElement || this._element,
+      )
+      const translatePosition = await EyesUtils.getTranslateLocation(
+        this._logger,
+        this._executor,
+        customScrollRootElement || this._element,
+      )
       return scrollPosition.offsetByLocation(translatePosition)
     } catch (err) {
       // Sometimes it is expected e.g. on Appium, otherwise, take care

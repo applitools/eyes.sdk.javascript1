@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-selenium",
-  "version": "4.40.0",
+  "version": "4.43.1",
   "description": "Applitools Eyes SDK for Selenium WebDriver",
   "keywords": [
     "eyes-selenium",
@@ -37,11 +37,11 @@
   "main": "./index.js",
   "typings": "./typings/index.d.ts",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "11.2.1",
-    "@applitools/visual-grid-client": "14.5.1"
+    "@applitools/eyes-sdk-core": "11.5.0",
+    "@applitools/visual-grid-client": "14.6.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "1.0.5",
+    "@applitools/sdk-coverage-tests": "1.0.9",
     "@applitools/sdk-fake-eyes-server": "^2.0.0",
     "@applitools/sdk-release-kit": "0.1.0",
     "@applitools/sdk-shared": "0.1.0",
@@ -53,6 +53,7 @@
     "chromedriver": "^83.0.0",
     "mocha": "^8.0.1",
     "module-alias": "^2.2.2",
+    "ncp": "^2.0.0",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "selenium-webdriver-3": "npm:selenium-webdriver@^3.6.0",
     "selenium-webdriver-4": "npm:selenium-webdriver@^4.0.0-alpha.7",
@@ -70,9 +71,9 @@
     "coverage:generate": "coverage-tests create-tests",
     "coverage:sandbox": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha -r ./test/util/version-alias.js --no-timeouts --reporter spec-xunit-file --parallel --jobs 15 {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha -r ./test/util/version-alias.js --no-timeouts --reporter spec-xunit-file --parallel --jobs 15 --grep 'AppiumAndroidCheckRegion' --invert {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
     "types:generate": "rm -rf ./typings && tsc --declaration --declarationDir ./typings --allowJs --emitDeclarationOnly ./index.js",
-    "preversion": "bongo preversion && yarn types:generate && yarn test && yarn coverage:prod",
+    "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion"
   },

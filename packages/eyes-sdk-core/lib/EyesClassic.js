@@ -5,21 +5,13 @@ const ArgumentGuard = require('./utils/ArgumentGuard')
 const CoordinatesType = require('./geometry/CoordinatesType')
 const Region = require('./geometry/Region')
 const Location = require('./geometry/Location')
-const UserAgent = require('./useragent/UserAgent')
-const SimplePropertyHandler = require('./handler/SimplePropertyHandler')
 const FailureReports = require('./FailureReports')
 const MatchResult = require('./match/MatchResult')
 const FullPageCaptureAlgorithm = require('./capture/FullPageCaptureAlgorithm')
 const EyesScreenshot = require('./capture/EyesScreenshotNew')
 const EyesScreenshotFactory = require('./capture/EyesScreenshotFactory')
-const ImageProviderFactory = require('./capture/ImageProviderFactory')
 const NullRegionProvider = require('./positioning/NullRegionProvider')
 const RegionProvider = require('./positioning/RegionProvider')
-const NullCutProvider = require('./cropping/NullCutProvider')
-const NullScaleProvider = require('./scaling/NullScaleProvider')
-const ScaleProviderIdentityFactory = require('./scaling/ScaleProviderIdentityFactory')
-const ContextBasedScaleProviderFactory = require('./scaling/ContextBasedScaleProviderFactory')
-const FixedScaleProviderFactory = require('./scaling/FixedScaleProviderFactory')
 const RegionPositionCompensationFactory = require('./positioning/RegionPositionCompensationFactory')
 const CssTranslatePositionProvider = require('./positioning/CssTranslatePositionProvider')
 const ScrollPositionProvider = require('./positioning/ScrollPositionProvider')
@@ -80,9 +72,6 @@ const EyesCore = require('./EyesCore')
  * @typedef {import('./fluent/DriverCheckSettings')<TElement, TSelector>} CheckSettings
  */
 
-const UNKNOWN_DEVICE_PIXEL_RATIO = 0
-const DEFAULT_DEVICE_PIXEL_RATIO = 1
-
 /**
  * @template TDriver
  * @template TElement
@@ -140,19 +129,6 @@ class EyesClassic extends EyesCore {
     this._runner = runner
     this._runner.attachEyes(this, this._serverConnector)
 
-    /** @type {EyesWrappedDriver<TDriver, TElement, TSelector>} */
-    this._driver = undefined
-    /** @private @type {EyesJsExecutor<TDriver, TElement, TSelector>} */
-    this._executor = undefined
-    /** @private @type {EyesElementFinder<TDriver, TElement, TSelector>} */
-    this._finder = undefined
-    /** @private @type {EyesBrowsingContext<TDriver, TElement, TSelector>} */
-    this._context = undefined
-    /** @private @type {EyesDriverController<TDriver, TElement, TSelector>} */
-    this._controller = undefined
-    /** @private @type {boolean} */
-    this._dontGetTitle = false
-
     /** @private */
     this._imageRotationDegrees = 0
     /** @private */
@@ -169,14 +145,8 @@ class EyesClassic extends EyesCore {
 
     /** @private @type {String} */
     this._originalOverflow = null
-    /** @private */
-    this._rotation = undefined
-    /** @private @type {ImageProvider} */
-    this._imageProvider = undefined
     /** @private @type {RegionPositionCompensation} */
     this._regionPositionCompensation = undefined
-    /** @private @type {number} */
-    this._devicePixelRatio = UNKNOWN_DEVICE_PIXEL_RATIO
     /** @private @type {Region} */
     this._regionToCheck = null
     /** @private @type {PositionProvider} */
@@ -193,12 +163,13 @@ class EyesClassic extends EyesCore {
     this._closePromise = Promise.resolve()
   }
   /**
-   * @param {TDriver} driver - driver object for the specific framework
+   * @template {TDriver} CDriver
+   * @param {CDriver} driver - driver object for the specific framework
    * @param {String} [appName] - application name
    * @param {String} [testName] - test name
    * @param {RectangleSize|{width: number, height: number}} [viewportSize] - viewport size
    * @param {SessionType} [sessionType] - type of test (e.g.,  standard test / visual performance test).
-   * @return {Promise<TDriver & EyesWrappedDriver<TDriver, TElement, TSelector>>}
+   * @return {Promise<CDriver & EyesWrappedDriver<TDriver, TElement, TSelector>>}
    */
   async open(driver, appName, testName, viewportSize, sessionType) {
     ArgumentGuard.notNull(driver, 'driver')
@@ -234,26 +205,15 @@ class EyesClassic extends EyesCore {
       return driver
     }
 
-    this._devicePixelRatio = UNKNOWN_DEVICE_PIXEL_RATIO
-
     if (await this._controller.isMobile()) {
       // set viewportSize to null if browser is mobile
       this._configuration.setViewportSize(null)
     }
-    const userAgentString = await this._controller.getUserAgent()
-    if (userAgentString) {
-      this._userAgent = UserAgent.parseUserAgentString(userAgentString, true)
-    }
+
+    await this._initCommon()
 
     this._screenshotFactory = new EyesScreenshotFactory(this._logger, this)
-    this._imageProvider = ImageProviderFactory.getImageProvider(
-      this._logger,
-      this._driver,
-      this._rotation,
-      this,
-      this._userAgent,
-      this._rotation,
-    )
+
     this._regionPositionCompensation = RegionPositionCompensationFactory.getRegionPositionCompensation(
       this._userAgent,
       this,
@@ -821,90 +781,7 @@ class EyesClassic extends EyesCore {
       originalFramePosition,
     )
   }
-  /**
-   * Create a viewport page screenshot
-   * @return {Promise<EyesScreenshot>}
-   */
-  async _getViewportScreenshot() {
-    this._logger.verbose('Screenshot requested...')
-    const scaleProviderFactory = await this._updateScalingParams()
 
-    let screenshotImage = await this._imageProvider.getImage()
-    await this._debugScreenshotsProvider.save(screenshotImage, 'original')
-
-    const scaleProvider = scaleProviderFactory.getScaleProvider(screenshotImage.getWidth())
-    if (scaleProvider.getScaleRatio() !== 1) {
-      this._logger.verbose('scaling...')
-      screenshotImage = await screenshotImage.scale(scaleProvider.getScaleRatio())
-      await this._debugScreenshotsProvider.save(screenshotImage, 'scaled')
-    }
-
-    const cutProvider = this._cutProviderHandler.get()
-    if (!(cutProvider instanceof NullCutProvider)) {
-      this._logger.verbose('cutting...')
-      screenshotImage = await cutProvider.cut(screenshotImage)
-      await this._debugScreenshotsProvider.save(screenshotImage, 'cut')
-    }
-
-    this._logger.verbose('Building screenshot object...')
-    return EyesScreenshot.fromScreenshotType(this._logger, this, screenshotImage)
-  }
-  /**
-   * @private
-   * @return {Promise<ScaleProviderFactory>}
-   */
-  async _updateScalingParams() {
-    // Update the scaling params only if we haven't done so yet, and the user hasn't set anything else manually.
-    if (
-      this._devicePixelRatio !== UNKNOWN_DEVICE_PIXEL_RATIO &&
-      !(this._scaleProviderHandler.get() instanceof NullScaleProvider)
-    ) {
-      // If we already have a scale provider set, we'll just use it, and pass a mock as provider handler.
-      const nullProvider = new SimplePropertyHandler()
-      return new ScaleProviderIdentityFactory(this._scaleProviderHandler.get(), nullProvider)
-    }
-
-    this._logger.verbose('Trying to extract device pixel ratio...')
-    this._devicePixelRatio = await EyesUtils.getDevicePixelRatio(this._logger, this._driver)
-      .catch(async err => {
-        const isNative = await this._controller.isNative()
-        if (!isNative) throw err
-        const viewportSize = await this.getViewportSize()
-        return EyesUtils.getMobilePixelRatio(this._logger, this._driver, viewportSize)
-      })
-      .catch(err => {
-        this._logger.verbose('Failed to extract device pixel ratio! Using default.', err)
-        return DEFAULT_DEVICE_PIXEL_RATIO
-      })
-
-    this._logger.verbose(`Device pixel ratio: ${this._devicePixelRatio}`)
-    this._logger.verbose('Setting scale provider...')
-    const factory = await this._getScaleProviderFactory().catch(err => {
-      this._logger.verbose('Failed to set ContextBasedScaleProvider.', err)
-      this._logger.verbose('Using FixedScaleProvider instead...')
-      return new FixedScaleProviderFactory(1 / this._devicePixelRatio, this._scaleProviderHandler)
-    })
-    this._logger.verbose('Done!')
-    return factory
-  }
-  /**
-   * @private
-   * @return {Promise<ScaleProviderFactory>}
-   */
-  async _getScaleProviderFactory() {
-    const entireSize = await EyesUtils.getCurrentFrameContentEntireSize(
-      this._logger,
-      this._executor,
-    )
-    return new ContextBasedScaleProviderFactory(
-      this._logger,
-      entireSize,
-      this._viewportSizeHandler.get(),
-      this._devicePixelRatio,
-      false,
-      this._scaleProviderHandler,
-    )
-  }
   /**
    * @param {boolean} [throwEx=true] - true if need to throw exception for unresolved tests, otherwise false
    * @return {Promise<TestResults>}
@@ -922,7 +799,7 @@ class EyesClassic extends EyesCore {
           this._runner._allTestResult.push(results)
         }
         if (isErrorCaught) {
-          if (throwEx) throw results
+          if (throwEx || !results.getTestResults) throw results
           else return results.getTestResults()
         }
         return results
@@ -993,20 +870,6 @@ class EyesClassic extends EyesCore {
     } catch (err) {
       return null
     }
-  }
-  /**
-   * @private
-   */
-  async getAndSaveRenderingInfo() {
-    const renderingInfo = await this._runner.getRenderingInfoWithCache()
-    this._serverConnector.setRenderingInfo(renderingInfo)
-  }
-  /**
-   * @private
-   */
-  async _getAndSaveBatchInfoFromServer(batchId) {
-    ArgumentGuard.notNullOrEmpty(batchId, 'batchId')
-    return this._runner.getBatchInfoWithCache(batchId)
   }
 
   // TODO Do we need this method?

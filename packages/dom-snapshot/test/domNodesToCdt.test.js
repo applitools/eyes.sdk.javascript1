@@ -2,7 +2,6 @@
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const {JSDOM} = require('jsdom');
-const path = require('path');
 const domNodesToCdt = require('../src/browser/domNodesToCdt');
 const {loadFixture, loadJsonFixture} = require('./util/loadFixture');
 const fs = require('fs');
@@ -1039,6 +1038,74 @@ describe('domNodesToCdt', () => {
       {nodeType: 3, nodeValue: '\n    '},
       {nodeType: 1, nodeName: 'BODY', attributes: [], childNodeIndexes: [12, 13]},
       {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [1, 14]},
+    ];
+    expect(cdt).to.eql(expectedCdt);
+  });
+
+  it('sets "selected" attribute on option elements', () => {
+    const docNode = getDocNode(`
+      <select><option value>betty</option><option value>boop</option></select>
+    `);
+    const {cdt} = domNodesToCdt(docNode);
+
+    const expectedCdt = [
+      {nodeType: 9, childNodeIndexes: [9]},
+      {nodeType: 1, nodeName: 'HEAD', attributes: [], childNodeIndexes: []},
+      {nodeType: 3, nodeValue: 'betty'},
+      {
+        nodeType: 1,
+        nodeName: 'OPTION',
+        attributes: [
+          {name: 'value', value: ''},
+          {name: 'selected', value: ''},
+        ],
+        childNodeIndexes: [2],
+      },
+      {nodeType: 3, nodeValue: 'boop'},
+      {
+        nodeType: 1,
+        nodeName: 'OPTION',
+        attributes: [{name: 'value', value: ''}],
+        childNodeIndexes: [4],
+      },
+      {nodeType: 1, nodeName: 'SELECT', attributes: [], childNodeIndexes: [3, 5]},
+      {nodeType: 3, nodeValue: '\n    '},
+      {nodeType: 1, nodeName: 'BODY', attributes: [], childNodeIndexes: [6, 7]},
+      {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [1, 8]},
+    ];
+    expect(cdt).to.eql(expectedCdt);
+  });
+
+  it('sets "selected" attribute on option elements when selected attribute exists', () => {
+    const docNode = getDocNode(`
+      <select><option value>betty</option><option value selected>boop</option></select>
+    `);
+    const {cdt} = domNodesToCdt(docNode);
+
+    const expectedCdt = [
+      {nodeType: 9, childNodeIndexes: [9]},
+      {nodeType: 1, nodeName: 'HEAD', attributes: [], childNodeIndexes: []},
+      {nodeType: 3, nodeValue: 'betty'},
+      {
+        nodeType: 1,
+        nodeName: 'OPTION',
+        attributes: [{name: 'value', value: ''}],
+        childNodeIndexes: [2],
+      },
+      {nodeType: 3, nodeValue: 'boop'},
+      {
+        nodeType: 1,
+        nodeName: 'OPTION',
+        attributes: [
+          {name: 'value', value: ''},
+          {name: 'selected', value: ''},
+        ],
+        childNodeIndexes: [4],
+      },
+      {nodeType: 1, nodeName: 'SELECT', attributes: [], childNodeIndexes: [3, 5]},
+      {nodeType: 3, nodeValue: '\n    '},
+      {nodeType: 1, nodeName: 'BODY', attributes: [], childNodeIndexes: [6, 7]},
+      {nodeType: 1, nodeName: 'HTML', attributes: [], childNodeIndexes: [1, 8]},
     ];
     expect(cdt).to.eql(expectedCdt);
   });
