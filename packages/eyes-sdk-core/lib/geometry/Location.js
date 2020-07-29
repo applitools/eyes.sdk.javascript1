@@ -1,3 +1,4 @@
+'use strict'
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const TypeUtils = require('../utils/TypeUtils')
 

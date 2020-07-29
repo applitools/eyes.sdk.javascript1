@@ -87,7 +87,7 @@ class EyesClassic extends EyesCore {
    * @param {EyesWrappedDriverCtor<TDriver, TElement, TSelector>} implementations.WrappedDriver - implementation for {@link EyesWrappedDriver}
    * @param {EyesWrappedElementCtor<TDriver, TElement, TSelector> & EyesWrappedElementStatics<TDriver, TElement, TSelector>} implementations.WrappedElement - implementation for {@link EyesWrappedElement}
    * @param {CheckSettings<TElement, TSelector>} implementations.CheckSettings - specialized version of {@link DriverCheckSettings}
-   * @return {new (...args: ConstructorParameters<typeof EyesClassic>) => EyesClassic<TDriver, TElement, TSelector>} specialized version of this class
+   * @return {new (...args: ConstructorParameters<typeof EyesClassic>) => EyesClassic<TDriver, TElement, TSelector>} - specialized version of this class
    */
   static specialize({agentId, WrappedDriver, WrappedElement, CheckSettings}) {
     return class extends EyesClassic {
