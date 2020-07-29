@@ -1,3 +1,4 @@
+'use strict'
 const ArgumentGuard = require('./utils/ArgumentGuard')
 const Region = require('./geometry/Region')
 const Location = require('./geometry/Location')
@@ -48,6 +49,10 @@ const DEFAULT_DEVICE_PIXEL_RATIO = 1
  * @template TSelector
  */
 class EyesCore extends EyesBase {
+/**
+  * @param {string} serverUrl
+  * @param {boolean} isDisabled
+*/
   constructor(serverUrl, isDisabled) {
     super(serverUrl, isDisabled)
 
@@ -607,7 +612,7 @@ class EyesCore extends EyesBase {
     return this._stitchContent
   }
   /**
-   * @param {EyesWrappedElement<TDriver, TElement, TSelector>|TElement|TSelector} element
+   * @param {EyesWrappedElement<TDriver, TElement, TSelector>|TElement|TSelector} scrollRootElement
    */
   setScrollRootElement(scrollRootElement) {
     if (this.constructor.WrappedElement.isSelector(scrollRootElement)) {

@@ -1,3 +1,4 @@
+'use strict'
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const TypeUtils = require('../utils/TypeUtils')
 
@@ -32,7 +33,7 @@ class Location {
     this._y = Math.ceil(y)
   }
 
-  static get __Location() {
+  static get __Location() { 
     return true
   }
 

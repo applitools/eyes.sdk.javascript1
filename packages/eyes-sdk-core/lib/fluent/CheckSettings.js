@@ -535,7 +535,7 @@ class CheckSettings {
    * bigger region.
    *
    * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
-   * @param {...Region} regionsOrContainers - One or more content rectangles or region containers
+   * @param {...Region} regions - One or more content rectangles or region containers
    * @return {this} - This instance of the settings object.
    */
   floatings(maxOffset, ...regions) {
@@ -547,7 +547,7 @@ class CheckSettings {
    * bigger region.
    *
    * @param {number} maxOffset - How much each of the content rectangles can move in any direction.
-   * @param {...Region} regionsOrContainers - One or more content rectangles or region containers
+   * @param {...Region} regions - One or more content rectangles or region containers
    * @return {this} - This instance of the settings object.
    */
   floatingRegions(maxOffset, ...regions) {

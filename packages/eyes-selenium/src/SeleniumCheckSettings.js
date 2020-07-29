@@ -31,9 +31,8 @@ const SpecCheckSettings = {
   },
 }
 /**
-    @class SeleniumCheckSettings
-    @instantiate SeleniumCheckSettings from DriverCheckSettings
-    
+  *  @class SeleniumCheckSettings
+  *  @instantiate SeleniumCheckSettings from DriverCheckSettings
 */
 const CheckSettings = DriverCheckSettings.specialize(SpecCheckSettings)
 
