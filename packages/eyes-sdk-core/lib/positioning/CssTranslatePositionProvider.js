@@ -3,7 +3,7 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
 const Location = require('../geometry/Location')
 const PositionProvider = require('./PositionProvider')
 const PositionMemento = require('./PositionMemento')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../geometry/RectangleSize')} RectangleSize
@@ -58,13 +58,14 @@ class CssTranslatePositionProvider extends PositionProvider {
   async getCurrentPosition(customScrollRootElement) {
     try {
       this._logger.verbose('CssTranslatePositionProvider - getCurrentPosition()')
-      const position = await EyesUtils.getTranslateLocation(
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
+      const position = await EyesUtils.getTranslateOffset(
         this._logger,
-        this._executor,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement ? scrollRootElement.context : this._executor,
+        scrollRootElement,
       )
       this._logger.verbose(`Current position: ${position}`)
-      return position
+      return new Location(position)
     } catch (err) {
       // Sometimes it is expected e.g. on Appium, otherwise, take care
       this._logger.verbose(`Failed to extract current translate position!`, err)
@@ -82,17 +83,18 @@ class CssTranslatePositionProvider extends PositionProvider {
     try {
       ArgumentGuard.notNull(position, 'position')
       this._logger.verbose(`CssTranslatePositionProvider - Setting position to: ${position}`)
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
       await EyesUtils.scrollTo(
         this._logger,
-        this._executor,
+        scrollRootElement ? scrollRootElement.context : this._executor,
         Location.ZERO,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement,
       )
       const actualPosition = await EyesUtils.translateTo(
         this._logger,
-        this._executor,
+        scrollRootElement ? scrollRootElement.context : this._executor,
         position,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement,
       )
       return actualPosition
     } catch (err) {
@@ -130,10 +132,11 @@ class CssTranslatePositionProvider extends PositionProvider {
    */
   async getState(customScrollRootElement) {
     try {
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
       const transforms = await EyesUtils.getTransforms(
         this._logger,
-        this._executor,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement ? scrollRootElement.context : this._executor,
+        scrollRootElement,
       )
       this._logger.verbose('Current transform', transforms)
       return new PositionMemento({transforms})
@@ -151,11 +154,12 @@ class CssTranslatePositionProvider extends PositionProvider {
    */
   async restoreState(state, customScrollRootElement) {
     try {
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
       await EyesUtils.setTransforms(
         this._logger,
-        this._executor,
+        scrollRootElement ? scrollRootElement.context : this._executor,
         state.transforms,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement,
       )
       this._logger.verbose('Transform (position) restored.')
     } catch (err) {

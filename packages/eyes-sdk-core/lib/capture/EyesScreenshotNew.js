@@ -7,9 +7,7 @@ const Location = require('../geometry/Location')
 const RectangleSize = require('../geometry/RectangleSize')
 const CoordinatesTypeConversionError = require('../errors/CoordinatesTypeConversionError')
 const OutOfBoundsError = require('../errors/OutOfBoundsError')
-const FrameChain = require('../frames/FrameChain')
 const Enum = require('../utils/Enum')
-const EyesUtils = require('../EyesUtils')
 
 /**
  * @typedef {import('../logging/Logger')} Logger
@@ -44,8 +42,7 @@ class EyesScreenshot {
     this._logger = logger
     this._image = image
     this._eyes = eyes
-    /** @type {FrameChain} */
-    this._frameChain = eyes._context.frameChain
+    this._context = eyes._context
     /** @type {ScreenshotType} */
     this._screenshotType = null
     /** @type {Location} */
@@ -83,7 +80,7 @@ class EyesScreenshot {
     if (
       (image.getWidth() <= viewportSize.getWidth() &&
         image.getHeight() <= viewportSize.getHeight()) ||
-      (eyes._checkSettings.getFrameChain().length > 0 && // workaround: define screenshotType as VIEWPORT
+      (eyes._checkSettings.getContext() && // workaround: define screenshotType as VIEWPORT
         eyes._userAgent.getBrowser() === BrowserNames.Firefox &&
         Number.parseInt(eyes._userAgent.getBrowserMajorVersion(), 10) < 48)
     ) {
@@ -143,35 +140,20 @@ class EyesScreenshot {
   async init(screenshotType) {
     this._screenshotType =
       screenshotType || (await EyesScreenshot.getScreenshotType(this._image, this._eyes))
-    this._frameChain = this._eyes._context.frameChain
-    const positionProvider = this._eyes.getPositionProvider()
-
-    const scrollRootElement = !this._frameChain.isEmpty
-      ? this._frameChain.current.scrollRootElement
-      : positionProvider.scrollRootElement
+    this._context = this._eyes._context
 
     // TODO this throws exception on mobile native apps
-    this._currentFrameScrollPosition = await EyesUtils.getInnerOffsets(
-      this._logger,
-      this._eyes._executor,
-      scrollRootElement,
-    ).catch(() => Location.ZERO)
+    this._currentFrameScrollPosition = await this._context
+      .getInnerOffset()
+      .catch(() => Location.ZERO)
 
-    if (!this._frameChain.isEmpty) {
-      this._frameLocationInScreenshot = this._frameChain.getCurrentFrameLocationInViewport()
-      if (this._screenshotType === ScreenshotTypes.ENTIRE_FRAME) {
-        this._frameLocationInScreenshot = this._frameLocationInScreenshot.offsetByLocation(
-          this._frameChain.first.parentScrollLocation,
-        )
-      }
-      this._frameSize = this._frameChain.current.innerSize
-    } else {
-      this._frameLocationInScreenshot = Location.ZERO
-      // get entire page size might throw an exception for applications which don't support Javascript (e.g., Appium).
-      // In that case we'll use the viewport size as the frame's size.
-      this._frameSize = await positionProvider
-        .getEntireSize()
-        .catch(() => EyesUtils.getTopContextViewportSize(this._logger, this._eyes.getDriver()))
+    this._frameLocationInScreenshot = await this._context.getLocationInViewport()
+    this._frameSize = await this._context.getClientSize()
+
+    if (this._context.isMain && this._screenshotType === ScreenshotTypes.ENTIRE_FRAME) {
+      this._frameLocationInScreenshot = this._frameLocationInScreenshot.offsetByLocation(
+        await this._context.main.getInnerOffset().catch(() => Location.ZERO),
+      )
     }
 
     this._logger.verbose('Calculating frame window...')
@@ -197,13 +179,6 @@ class EyesScreenshot {
    */
   getFrameWindow() {
     return this._frameRect
-  }
-
-  /**
-   * @return {FrameChain} - copy of the frame chain which was available when the screenshot was created
-   */
-  getFrameChain() {
-    return new FrameChain(this._logger, this._frameChain)
   }
 
   /**
@@ -317,7 +292,7 @@ class EyesScreenshot {
 
     // If we're not inside a frame, and the screenshot is the entire page, then the context as-is/relative are the same (notice
     // screenshot as-is might be different, e.g., if it is actually a sub-screenshot of a region).
-    if (this._frameChain.size === 0 && this._screenshotType === ScreenshotTypes.ENTIRE_FRAME) {
+    if (this._context.isMain && this._screenshotType === ScreenshotTypes.ENTIRE_FRAME) {
       if (
         (from === CoordinatesType.CONTEXT_RELATIVE || from === CoordinatesType.CONTEXT_AS_IS) &&
         to === CoordinatesType.SCREENSHOT_AS_IS

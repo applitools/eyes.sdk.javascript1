@@ -139,6 +139,8 @@ describe('Configuration', () => {
           name: 'chrome',
         },
       ]
+    } else if (type === '_visualGridOptions') {
+      modifiedValue = {polyfillAdoptedStyleSheets: true}
     }
     return modifiedValue
   }
@@ -606,6 +608,7 @@ describe('Configuration', () => {
         name: 'myBatchName',
         notifyOnCompletion: true,
       },
+      visualGridOptions: {polyfillAdoptedStyleSheets: true},
     }
     const config = new Configuration(conf)
     const result = config.toOpenEyesConfiguration()
@@ -615,6 +618,7 @@ describe('Configuration', () => {
     assert.strictEqual(result.batch.getId(), conf.batch.id)
     assert.strictEqual(result.batch.getName(), conf.batch.name)
     assert.strictEqual(result.batch.getNotifyOnCompletion(), conf.batch.notifyOnCompletion)
+    assert.deepStrictEqual(result.visualGridOptions, conf.visualGridOptions)
   })
 
   it('setMatchLevel("Layout")', () => {

@@ -48,7 +48,7 @@
     "@applitools/eyes-sdk-core-legacy": "1.0.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
     "axios": "^0.19.2",
     "chai": "^4.2.0",

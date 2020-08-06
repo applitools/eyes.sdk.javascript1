@@ -64,7 +64,17 @@ class EyesRunner {
 
   async _awaitAllClosePromises() {
     if (this._eyesInstances.length > 0) {
-      await Promise.all(this._eyesInstances.map(eyes => eyes._closePromise))
+      await Promise.all(
+        this._eyesInstances.map(eyes =>
+          eyes._closePromise.catch(err => {
+            this._eyesInstances[0]
+              .getLogger()
+              .verbose(
+                `Properly handling close error while await all close promises in getAllTestResults: ${err}`,
+              )
+          }),
+        ),
+      )
     }
   }
 

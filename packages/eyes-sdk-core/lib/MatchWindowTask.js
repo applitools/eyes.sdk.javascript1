@@ -111,7 +111,7 @@ class MatchWindowTask {
     const totalRegions = []
     for (let i = 0; i < regionProviders.length; i += 1) {
       try {
-        const regions = await regionProviders[i].getRegion(eyes, screenshot)
+        const regions = await regionProviders[i].getRegion(eyes._context, screenshot)
         totalRegions.push(...regions)
       } catch (e) {
         eyes.log('WARNING - region was out of bounds.', e)

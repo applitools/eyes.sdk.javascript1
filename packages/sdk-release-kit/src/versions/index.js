@@ -10,7 +10,7 @@ const {
 } = require('./versions-utils')
 const {writeUnreleasedItemToChangelog} = require('../changelog')
 
-async function verifyCommits({pkgPath, isForce}) {
+async function verifyCommits({pkgPath}) {
   const pkgs = makePackagesList()
   const packageJson = require(path.resolve(pkgPath, 'package.json'))
   const {dependencies} = packageJson
@@ -24,11 +24,11 @@ async function verifyCommits({pkgPath, isForce}) {
     )
   ).filter(x => x.output)
 
-  if (results.length && !isForce) {
+  if (results.length) {
     throw new Error(
       'There are unreleased commits in dependencies of this package:\n' +
         results.map(({name, output}) => `${chalk.yellow(name)}\n${chalk.cyan(output)}`).join('\n') +
-        `\nTo ignore these, re-run with BONGO_VERIFY_COMMITS_FORCE=1`,
+        `\nTo ignore these, re-run with BONGO_SKIP_VERIFY_COMMITS=1`,
     )
   }
 }

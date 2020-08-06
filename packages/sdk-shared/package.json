@@ -1,6 +1,5 @@
 {
   "name": "@applitools/sdk-shared",
-  "private": true,
   "version": "0.1.0",
   "engines": {
     "node": ">=10.0.0"
@@ -25,13 +24,17 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
+    "@applitools/sdk-coverage-tests": "1.0.12",
     "@applitools/functional-commons": "1.5.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "chromedriver": "^83.0.0",
-    "yargs": "^15.3.1"
+    "yargs": "^15.3.1",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "ncp": "2.0.0"
   },
   "devDependencies": {}
 }

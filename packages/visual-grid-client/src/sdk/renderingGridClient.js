@@ -80,6 +80,7 @@ function makeRenderingGridClient({
   batchNotify,
   globalState: _globalState,
   dontCloseBatches,
+  visualGridOptions,
 }) {
   const openEyesConcurrency = Number(concurrency)
 
@@ -200,6 +201,7 @@ function makeRenderingGridClient({
     userAgent,
     globalState,
     getUserAgents,
+    visualGridOptions,
   }
 
   const openEyes = makeOpenEyes(openConfig)

@@ -19,7 +19,7 @@ class RenderRequest {
    * @param {string[]} request.selectorsToFindRegionsFor
    * @param {boolean} request.sendDom
    * @param {string} request.renderId
-   * @param {string} request.agentId
+   * @param {Object} request.visualGridOptions
    */
   constructor({
     webhook,
@@ -35,6 +35,7 @@ class RenderRequest {
     sendDom,
     renderId,
     agentId,
+    visualGridOptions,
   } = {}) {
     ArgumentGuard.notNullOrEmpty(webhook, 'webhook')
     ArgumentGuard.notNull(url, 'url')
@@ -54,6 +55,7 @@ class RenderRequest {
     this._selectorsToFindRegionsFor = selectorsToFindRegionsFor
     this._sendDom = sendDom
     this._agentId = agentId
+    this._visualGridOptions = visualGridOptions
   }
 
   /**
@@ -182,6 +184,14 @@ class RenderRequest {
     this._sendDom = value
   }
 
+  getVisualGridOptions() {
+    return this._visualGridOptions
+  }
+
+  setVisualGridOptions(options) {
+    this._visualGridOptions = options
+  }
+
   /**
    * @override
    */
@@ -233,6 +243,10 @@ class RenderRequest {
 
     if (this._sendDom !== undefined) {
       object.sendDom = this._sendDom
+    }
+
+    if (this._visualGridOptions) {
+      object.options = this._visualGridOptions
     }
 
     return object

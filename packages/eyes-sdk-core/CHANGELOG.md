@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- add utility function to verify that the object is an instance of a class by class name
+
+## 12.1.0 - 2020/8/6
+
+- add support for RenderRequst `visualGridOptions` in Configuration and CheckSettings
+
+## 12.0.1 - 2020/8/5
+
+- Fix bug in runner.getAllTestResults(false)
+
+## 12.0.0 - 2020/8/4
+
+- support devtools protocol ([Trello](https://trello.com/c/fNxDJDId))
+
+## 11.5.1 - 2020/7/28
+
+- fix parsing of translate values in Firefox ([Trello](https://trello.com/c/encLpr4g))
 
 ## 11.5.0 - 2020/7/26
 

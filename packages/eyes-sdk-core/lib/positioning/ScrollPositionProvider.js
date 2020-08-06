@@ -3,7 +3,7 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
 const Location = require('../geometry/Location')
 const PositionProvider = require('./PositionProvider')
 const PositionMemento = require('./PositionMemento')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../geometry/RectangleSize')} RectangleSize
@@ -57,13 +57,14 @@ class ScrollPositionProvider extends PositionProvider {
   async getCurrentPosition(customScrollRootElement) {
     try {
       this._logger.verbose('ScrollPositionProvider - getCurrentPosition()')
-      const position = await EyesUtils.getScrollLocation(
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
+      const position = await EyesUtils.getScrollOffset(
         this._logger,
-        this._executor,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement ? scrollRootElement.context : this._executor,
+        scrollRootElement,
       )
       this._logger.verbose(`Current position: ${position}`)
-      return position
+      return new Location(position)
     } catch (err) {
       // Sometimes it is expected e.g. on Appium, otherwise, take care
       this._logger.verbose(`Failed to extract current scroll position!`, err)
@@ -81,11 +82,12 @@ class ScrollPositionProvider extends PositionProvider {
     try {
       ArgumentGuard.notNull(position, 'position')
       this._logger.verbose(`ScrollPositionProvider - Scrolling to ${position}`)
+      const scrollRootElement = customScrollRootElement || this._scrollRootElement
       const actualLocation = await EyesUtils.scrollTo(
         this._logger,
-        this._executor,
+        scrollRootElement ? scrollRootElement.context : this._executor,
         position,
-        customScrollRootElement || this._scrollRootElement,
+        scrollRootElement,
       )
       return actualLocation
     } catch (err) {

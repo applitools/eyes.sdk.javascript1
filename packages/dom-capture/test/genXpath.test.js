@@ -3,7 +3,7 @@ const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const {JSDOM} = require('jsdom');
 const genXpath = require('../src/browser/genXpath');
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const psetTimeout = require('util').promisify(setTimeout);
 
 describe('genXpath', () => {

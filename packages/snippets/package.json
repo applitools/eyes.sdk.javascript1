@@ -1,0 +1,36 @@
+{
+  "name": "@applitools/snippets",
+  "version": "1.0.2",
+  "main": "./dist/index.js",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "test": "mocha --no-timeouts --require test/util/hook.js ./test/*.spec.js",
+    "test:chrome": "mocha --no-timeouts --parallel --jobs 15 ./test/*.spec.js",
+    "build": "node ./rollup/cli bundle --format json --format snippet",
+    "build:watch": "node ./rollup/cli watch --format json --format snippet",
+    "preversion": "bongo preversion && yarn build && yarn test",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@applitools/sdk-release-kit": "0.2.2",
+    "@applitools/sdk-shared": "^0.1.0",
+    "@babel/preset-env": "^7.10.2",
+    "@rollup/plugin-babel": "^5.0.3",
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "chalk": "^4.1.0",
+    "glob": "^7.1.6",
+    "mocha": "^8.0.1",
+    "playwright": "^1.1.1",
+    "rollup": "^2.16.1",
+    "rollup-plugin-progress": "^1.1.2",
+    "rollup-plugin-terser": "^6.1.0",
+    "webdriverio": "^6.1.24",
+    "yargs": "^15.3.1"
+  }
+}

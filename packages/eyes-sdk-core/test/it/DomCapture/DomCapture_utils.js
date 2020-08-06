@@ -17,37 +17,18 @@ async function captureDom(logger, driver, url, testName) {
     await driver.get(url)
 
     const timeStart = PerformanceUtils.start()
+    const capabilities = await driver.getCapabilities()
     const actualDomJsonString = await DomCapture.getFullWindowDom(logger, {
+      browserName: capabilities.get('browserName'),
+      browserVersion: capabilities.get('browserVersion'),
+      execute: driver.executeScript.bind(driver),
+      element: driver.findElement.bind(driver),
+      getUrl: driver.getCurrentUrl.bind(driver),
+      switchToChildContext: driver.switchTo().frame.bind(driver.switchTo()),
+      switchTopParentContext: driver.switchTo().parentFrame.bind(driver.switchTo()),
       specs: {
         toSupportedSelector({type, selector}) {
           return By[type](selector)
-        },
-      },
-      controller: {
-        async getBrowserName() {
-          const capabilities = await driver.getCapabilities()
-          return capabilities.get('browserName')
-        },
-        async getBrowserVersion() {
-          const capabilities = await driver.getCapabilities()
-          return capabilities.get('browserVersion')
-        },
-        async getSource() {
-          return driver.getCurrentUrl()
-        },
-      },
-      executor: {
-        executeScript: driver.executeScript.bind(driver),
-      },
-      finder: {
-        findElement: driver.findElement.bind(driver),
-      },
-      context: {
-        frame(reference) {
-          return driver.switchTo().frame(reference)
-        },
-        frameParent() {
-          return driver.switchTo().parentFrame()
         },
       },
     })

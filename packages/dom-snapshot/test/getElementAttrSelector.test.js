@@ -1,13 +1,8 @@
 'use strict';
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
-const {JSDOM} = require('jsdom');
 const getElementAttrSelector = require('../src/browser/getElementAttrSelector');
-
-function getDocNode(htmlStr) {
-  const dom = new JSDOM(htmlStr, {url: 'http://something.org/'});
-  return dom.window.document;
-}
+const getDocNode = require('./util/getDocNode');
 
 describe('getElementAttrSelector', () => {
   it('works', () => {

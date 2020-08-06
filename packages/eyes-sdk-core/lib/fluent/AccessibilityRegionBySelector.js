@@ -2,7 +2,7 @@
 const AccessibilityMatchSettings = require('../config/AccessibilityMatchSettings')
 const CoordinatesTypes = require('../geometry/CoordinatesType')
 const GetAccessibilityRegion = require('./GetAccessibilityRegion')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../config/AccessibilityRegionType').AccessibilityRegionType} AccessibilityRegionType
@@ -40,7 +40,7 @@ class AccessibilityRegionBySelector extends GetAccessibilityRegion {
    */
   async getRegion(eyes, screenshot) {
     // TODO eyes should be replaced with driver once all SDKs will use this implementation
-    const elements = await eyes.getDriver().finder.findElements(this._selector)
+    const elements = await eyes.getDriver().elements(this._selector)
 
     const regions = []
     for (const element of elements) {

@@ -29,7 +29,7 @@ class TakesScreenshotImageProvider extends ImageProvider {
    */
   async getImage() {
     this._logger.verbose('Getting screenshot as base64...')
-    const image = await this._driver.controller.takeScreenshot()
+    const image = await this._driver.takeScreenshot()
     if (this._rotation) {
       await image.rotate(this._rotation)
     }

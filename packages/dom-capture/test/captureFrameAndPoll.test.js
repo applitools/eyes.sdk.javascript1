@@ -3,7 +3,7 @@ const {describe, it, before, after, beforeEach, afterEach} = require('mocha');
 const {expect} = require('chai');
 const puppeteer = require('puppeteer');
 const {getCaptureDomAndPollScript, getCaptureDomScript} = require('../index');
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const {ptimeoutWithError, delay} = require('@applitools/functional-commons');
 
 describe('captureDomAndPoll', () => {

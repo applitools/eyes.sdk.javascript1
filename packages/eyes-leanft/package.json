@@ -37,7 +37,7 @@
     "eyes.sdk": "0.0.71"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.0",
     "webpack": "^3.12.0",

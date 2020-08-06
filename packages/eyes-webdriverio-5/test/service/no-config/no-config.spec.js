@@ -2,7 +2,7 @@
 'use strict'
 const {expect} = require('chai')
 const {Target} = require('../../..')
-const {ApiAssertions} = require('@applitools/sdk-coverage-tests/coverage-tests')
+const {ApiAssertions} = require('@applitools/sdk-shared')
 const {version} = require('../../../package.json')
 
 describe('EyesServiceTest', () => {

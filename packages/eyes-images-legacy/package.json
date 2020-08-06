@@ -44,7 +44,7 @@
     "eyes.utils": "^3.8.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
     "browserify": "^16.5.0",
     "browserify-fs": "^1.0.0",

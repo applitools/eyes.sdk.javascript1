@@ -9,6 +9,10 @@
 			"path": "packages/dom-snapshot"
 		},
 		{
+			"name": "snippets",
+			"path": "packages/snippets"
+		},
+		{
 			"name": "eyes-cypress",
 			"path": "packages/eyes-cypress"
 		},

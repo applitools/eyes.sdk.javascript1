@@ -7,7 +7,7 @@ const MAJOR_MINOR = '(\\d+)(?:[_.](\\d+))?'
 const PRODUCT = `(?:(%s)/${MAJOR_MINOR})`
 
 // Browser Regexes
-const VALUES_FOR_BROWSER_REGEX_EXCEPT_IE = ['Opera', 'Chrome', 'Safari', 'Firefox', 'Edge']
+const VALUES_FOR_BROWSER_REGEX_EXCEPT_IE = ['Opera', 'Edg', 'Chrome', 'Safari', 'Firefox', 'Edge']
 const IE_BROWSER_REGEX = new RegExp(`(?:MS(IE) ${MAJOR_MINOR})`)
 
 const getBrowserRegExes = () => {
@@ -183,6 +183,10 @@ class UserAgent {
         result._browserMinorVersion = ieMatch[2]
         browserOK = true
       }
+    }
+
+    if (result._browser === 'Edg') {
+      result._browser = 'Edge'
     }
 
     if (!browserOK) {

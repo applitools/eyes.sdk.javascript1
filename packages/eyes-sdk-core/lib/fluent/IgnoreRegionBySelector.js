@@ -2,7 +2,7 @@
 const Region = require('../geometry/Region')
 const CoordinatesTypes = require('../geometry/CoordinatesType')
 const GetRegion = require('./GetRegion')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../config/AccessibilityRegionType').AccessibilityRegionType} AccessibilityRegionType
@@ -38,7 +38,7 @@ class IgnoreRegionBySelector extends GetRegion {
    */
   async getRegion(eyes, screenshot) {
     // TODO eyes should be replaced with driver once all SDKs will use this implementation
-    const elements = await eyes.getDriver().finder.findElements(this._selector)
+    const elements = await eyes.getDriver().elements(this._selector)
 
     const regions = []
     for (const element of elements) {

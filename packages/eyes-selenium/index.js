@@ -6,18 +6,13 @@ if (!process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION) {
   process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION = major
 }
 
-const SeleniumCheckSettings = require('./src/SeleniumCheckSettings')
-const {
-  SeleniumEyesClassic,
-  SeleniumEyesVisualGrid,
-  SeleniumEyesFactory,
-} = require('./src/SeleniumSpecializedEyes')
+const {EyesClassic, EyesVisualGrid, EyesFactory, CheckSettings} = require('./src/SeleniumSDK')
 
-exports.Eyes = SeleniumEyesFactory
-exports.EyesSelenium = SeleniumEyesClassic
-exports.EyesVisualGrid = SeleniumEyesVisualGrid
-exports.Target = SeleniumCheckSettings
-exports.SeleniumCheckSettings = SeleniumCheckSettings
+exports.Eyes = EyesFactory
+exports.EyesSelenium = EyesClassic
+exports.EyesVisualGrid = EyesVisualGrid
+exports.Target = CheckSettings
+exports.SeleniumCheckSettings = CheckSettings
 
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion

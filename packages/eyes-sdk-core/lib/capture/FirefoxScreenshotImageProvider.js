@@ -12,7 +12,7 @@ const EyesScreenshot = require('./EyesScreenshotNew')
 class FirefoxScreenshotImageProvider extends ImageProvider {
   /**
    * @param {Logger} logger
-   * @param {EyesWrappedDriver} driver
+   * @param {EyesDriver} driver
    * @param {ImageRotation} rotation
    * @param {Eyes} eyes
    */
@@ -35,18 +35,18 @@ class FirefoxScreenshotImageProvider extends ImageProvider {
    */
   async getImage() {
     this._logger.verbose('Getting screenshot as base64...')
-    const image = await this._driver.controller.takeScreenshot()
+    const image = await this._driver.takeScreenshot()
     if (this._rotation) {
       await image.rotate(this._rotation)
     }
     await this._eyes.getDebugScreenshotsProvider().save(image, 'FIREFOX_FRAME')
 
-    const frameChain = this._driver.context.frameChain
-    if (frameChain.size > 0) {
+    const context = this._driver.currentContext
+    if (!context.isMain) {
       const screenshotType = await EyesScreenshot.getScreenshotType(image, this._eyes)
-      let location = this._frameChain.getCurrentFrameLocationInViewport()
+      let location = context.getLocationInViewport()
       if (screenshotType === EyesScreenshot.ScreenshotTypes.ENTIRE_FRAME) {
-        location = location.offsetByLocation(frameChain.first.parentScrollLocation)
+        location = location.offsetByLocation(await context.main.getInnerOffset())
       }
       const viewportSize = await this._eyes.getViewportSize()
       const scaleRatio = this._eyes.getDevicePixelRatio()

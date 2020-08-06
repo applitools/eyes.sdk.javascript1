@@ -3,7 +3,7 @@
 require('chromedriver')
 const {expect} = require('chai')
 const {By} = require('selenium-webdriver')
-const {getDriver} = require('../coverage/custom/util/TestSetup')
+const spec = require('../../src/SpecDriver')
 const {
   Eyes,
   VisualGridRunner,
@@ -17,7 +17,7 @@ const {
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes
 describe('VisualGridCheckFluent', () => {
   before(async () => {
-    driver = await getDriver('CHROME')
+    driver = await spec.build({browser: 'chrome'})
     eyes = new Eyes(new VisualGridRunner())
     eyes.setLogHandler(new ConsoleLogHandler(false))
     await driver.get('http://applitools.github.io/demo/TestPages/FramesTestPage/')
@@ -80,7 +80,7 @@ describe('VisualGridCheckFluent', () => {
 
 describe('Multi version browsers in Visual Grid', () => {
   before(async () => {
-    driver = await getDriver('CHROME')
+    driver = await spec.build({browser: 'chrome'})
   })
 
   beforeEach(async function() {

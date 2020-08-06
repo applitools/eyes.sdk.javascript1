@@ -1,8 +1,7 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const FakeEyesClassic = require('../utils/FakeEyesClassic')
-const FakeCheckSettings = require('../utils/FakeCheckSettings')
+const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
 
 describe('codedRegions', async () => {
   let server, serverUrl, driver, eyes
@@ -16,7 +15,7 @@ describe('codedRegions', async () => {
       {selector: 'element3', rect: {x: 30, y: 31, width: 301, height: 302}},
       {selector: 'element4', rect: {x: 40, y: 41, width: 401, height: 402}},
     ])
-    eyes = new FakeEyesClassic()
+    eyes = new EyesClassic()
     server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'always'})
     serverUrl = `http://localhost:${server.port}`
     eyes.setServerUrl(serverUrl)
@@ -36,7 +35,7 @@ describe('codedRegions', async () => {
     const layout = 'element4'
     await eyes.check(
       '',
-      FakeCheckSettings.window()
+      CheckSettings.window()
         .ignore(ignore)
         .floating(floating, 4, 3, 2, 1)
         .accessibility(accessibility)
@@ -69,7 +68,7 @@ describe('codedRegions', async () => {
     const layout = 'element4'
     await eyes.check(
       '',
-      FakeCheckSettings.region(region)
+      CheckSettings.region(region)
         .ignore(ignore)
         .floating(floating, 4, 3, 2, 1)
         .accessibility(accessibility)

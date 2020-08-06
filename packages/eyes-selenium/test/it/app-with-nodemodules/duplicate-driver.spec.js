@@ -5,12 +5,12 @@ const path = require('path')
 const {expect} = require('chai')
 const {Target} = require('../../..')
 const {
-  TestSetup: {getEyes, Browsers},
-} = require('@applitools/sdk-coverage-tests/coverage-tests')
+  testSetup: {getEyes},
+} = require('@applitools/sdk-shared')
 const ncp = require('ncp')
 const {promisify} = require('util')
 const pncp = promisify(ncp)
-const SpecWrappedElement = require('../../../src/SpecWrappedElement')
+const spec = require('../../../src/SpecDriver')
 
 describe('JS Coverage tests', () => {
   it('works in a project with duplicate protractor', async () => {
@@ -31,7 +31,7 @@ describe('JS Coverage tests', () => {
     module.constructor._pathCache = {}
 
     // we can't use TestSetup because the driver needs to be require'd from this module
-    const driver = await buildDriver({capabilities: Browsers.chrome()})
+    const driver = await spec.build({browser: 'chrome'})
 
     try {
       await driver.get('https://example.org')
@@ -39,7 +39,7 @@ describe('JS Coverage tests', () => {
       // verify that the specific API that this test was written to fix is working
       const {By: By2} = require(targetSeleniumFolder)
       const el = await driver.findElement(By2.css('html'))
-      expect(SpecWrappedElement.isCompatible(el)).to.be.true
+      expect(spec.isElement(el)).to.be.true
 
       // verify that overall everything is working
       const eyes = getEyes()
@@ -52,11 +52,3 @@ describe('JS Coverage tests', () => {
     }
   })
 })
-
-async function buildDriver({capabilities, serverUrl = process.env.CVG_TESTS_REMOTE}) {
-  const {Builder} = require('selenium-webdriver')
-  return new Builder()
-    .withCapabilities(capabilities)
-    .usingServer(serverUrl)
-    .build()
-}

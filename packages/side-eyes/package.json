@@ -39,7 +39,7 @@
     "testURL": "http://localhost"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
@@ -84,10 +84,10 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
-    "@applitools/dom-capture": "7.2.4",
-    "@applitools/dom-snapshot": "3.6.2",
+    "@applitools/dom-capture": "7.2.6",
+    "@applitools/dom-snapshot": "4.0.0",
     "@applitools/eyes-images": "4.14.2",
-    "@applitools/visual-grid-client": "14.5.7",
+    "@applitools/visual-grid-client": "14.6.0",
     "buffer": "^5.2.1",
     "classnames": "^2.2.5",
     "fuse.js": "^3.3.0",

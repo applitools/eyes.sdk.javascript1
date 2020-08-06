@@ -89,7 +89,7 @@
     }
   ],
   "dependencies": {
-    "@applitools/eyes-selenium": "4.42.0"
+    "@applitools/eyes-selenium": "4.43.1"
   },
   "jest": {
     "extraGlobals": [

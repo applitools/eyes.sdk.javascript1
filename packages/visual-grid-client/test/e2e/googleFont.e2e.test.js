@@ -5,7 +5,7 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
-const {testServer} = require('@applitools/sdk-shared')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 

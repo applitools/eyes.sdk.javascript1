@@ -1,11 +1,9 @@
 const {EyesService} = require('../..')
-const {
-  TestSetup: {Browsers},
-} = require('@applitools/sdk-coverage-tests/coverage-tests')
+const {testSetup} = require('@applitools/sdk-shared')
 
 exports.config = {
   runner: 'local',
-  capabilities: [Browsers.chrome()],
+  capabilities: [testSetup.Env({browser: 'chrome'}).capabilities],
   logLevel: 'error',
   services: [[EyesService]],
   port: 4444,

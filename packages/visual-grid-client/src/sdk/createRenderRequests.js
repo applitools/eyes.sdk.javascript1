@@ -17,6 +17,7 @@ function createRenderRequests({
   noOffsetSelectors = [],
   offsetSelectors = [],
   sendDom,
+  visualGridOptions,
 }) {
   const selectorsToFindRegionsFor = calculateSelectorsToFindRegionsFor({
     sizeMode,
@@ -68,6 +69,7 @@ function createRenderRequests({
         selectorsToFindRegionsFor,
         sendDom,
         platform: filledPlatform,
+        visualGridOptions,
       })
     },
   )

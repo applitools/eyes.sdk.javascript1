@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "14.6.0",
+  "version": "14.7.1",
   "description": "",
   "keywords": [
     "applitools",
@@ -31,9 +31,8 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/dom-snapshot": "4.0.0",
-    "@applitools/eyes-sdk-core": "11.5.0",
-    "@applitools/feature-flags": "2.1.1",
+    "@applitools/dom-snapshot": "4.0.3",
+    "@applitools/eyes-sdk-core": "12.1.0",
     "@applitools/functional-commons": "1.5.4",
     "@applitools/http-commons": "2.3.12",
     "@applitools/isomorphic-fetch": "3.0.0",
@@ -50,7 +49,7 @@
     "@applitools/jsdom": false
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@applitools/sdk-shared": "0.1.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",

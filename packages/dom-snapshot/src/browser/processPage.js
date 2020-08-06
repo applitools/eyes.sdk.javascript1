@@ -1,5 +1,4 @@
 'use strict';
-const extractLinks = require('./extractLinks');
 const domNodesToCdt = require('./domNodesToCdt');
 const aggregateResourceUrlsAndBlobs = require('./aggregateResourceUrlsAndBlobs');
 const makeGetResourceUrlsAndBlobs = require('./getResourceUrlsAndBlobs');
@@ -8,7 +7,6 @@ const makeExtractResourcesFromSvg = require('./makeExtractResourcesFromSvg');
 const makeFetchUrl = require('./fetchUrl');
 const makeFindStyleSheetByUrl = require('./findStyleSheetByUrl');
 const makeExtractResourcesFromStyleSheet = require('./extractResourcesFromStyleSheet');
-const extractResourceUrlsFromStyleAttrs = require('./extractResourceUrlsFromStyleAttrs');
 const makeExtractResourceUrlsFromStyleTags = require('./extractResourceUrlsFromStyleTags');
 const getCorsFreeStyleSheet = require('./getCorsFreeStyleSheet');
 const buildCanvasBlobs = require('./buildCanvasBlobs');
@@ -66,16 +64,15 @@ function processPage(
 
   function doProcessPage(doc, pageUrl = doc.location.href) {
     const baseUrl = getBaesUrl(doc) || pageUrl;
-    const {cdt, docRoots, canvasElements, inlineFrames} = domNodesToCdt(doc, baseUrl, log);
+    const {cdt, docRoots, canvasElements, inlineFrames, linkUrls} = domNodesToCdt(
+      doc,
+      baseUrl,
+      log,
+    );
 
-    const linkUrls = flat(docRoots.map(extractLinks));
-    const styleTagUrls = flat(docRoots.map(extractResourceUrlsFromStyleTags));
+    const styleTagUrls = flat(docRoots.map(docRoot => extractResourceUrlsFromStyleTags(docRoot)));
     const absolutizeThisUrl = getAbsolutizeByUrl(baseUrl);
-    const urls = uniq(
-      Array.from(linkUrls)
-        .concat(Array.from(styleTagUrls))
-        .concat(extractResourceUrlsFromStyleAttrs(cdt)),
-    )
+    const urls = uniq(Array.from(linkUrls).concat(Array.from(styleTagUrls)))
       .map(toUriEncoding)
       .map(absolutizeThisUrl)
       .map(toUnAnchoredUri)

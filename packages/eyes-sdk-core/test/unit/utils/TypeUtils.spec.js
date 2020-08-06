@@ -403,4 +403,13 @@ describe('TypeUtils', () => {
       assert.ok(!TypeUtils.getOrDefault(false, true))
     })
   })
+
+  describe('instanceOf()', () => {
+    it('should detect base class by name', () => {
+      class A {}
+      class B extends A {}
+      class C extends B {}
+      assert.ok(TypeUtils.instanceOf(new C(), 'A'))
+    })
+  })
 })

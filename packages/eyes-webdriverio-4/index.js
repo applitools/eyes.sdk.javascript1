@@ -1,13 +1,12 @@
 const core = require('@applitools/eyes-sdk-core')
-const WDIOCheckSettings = require('./src/WDIOCheckSettings')
-const {WDIOEyesClassic, WDIOEyesVisualGrid, WDIOEyesFactory} = require('./src/WDIOSpecializedEyes')
-const LegacySelector = require('./src/LegacySelector')
+const {EyesClassic, EyesVisualGrid, EyesFactory, CheckSettings} = require('./src/WDIOSDK')
+const {LegacySelector} = require('./src/LegacyAPI')
 
-exports.Eyes = WDIOEyesFactory
-exports.EyesWDIO = WDIOEyesClassic
-exports.EyesVisualGrid = WDIOEyesVisualGrid
-exports.Target = WDIOCheckSettings
-exports.WebdriverioCheckSettings = WDIOCheckSettings
+exports.Eyes = EyesFactory
+exports.EyesWDIO = EyesClassic
+exports.EyesVisualGrid = EyesVisualGrid
+exports.Target = CheckSettings
+exports.WebdriverioCheckSettings = CheckSettings
 
 exports.By = LegacySelector
 exports.EyesScreenshot = core.EyesScreenshotNew

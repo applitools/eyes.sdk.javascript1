@@ -1,4 +1,4 @@
-/* @applitools/dom-snapshot@4.0.0 */
+/* @applitools/dom-snapshot@4.0.3 */
 
 function __processPageAndSerializePoll() {
   var processPageAndSerializePoll = (function () {
@@ -86,55 +86,6 @@ function __processPageAndSerializePoll() {
   }
 
   var arrayBufferToBase64_1 = arrayBufferToBase64;
-
-  function extractLinks(doc = document) {
-    const srcsetRegexp = /(\S+)(?:\s+[\d.]+[wx])?(?:,|$)/g;
-    const srcsetUrls = Array.from(doc.querySelectorAll('img[srcset],source[srcset]'), srcsetEl =>
-      execAll(srcsetRegexp, srcsetEl.getAttribute('srcset'), match => match[1]),
-    ).reduce((acc, urls) => acc.concat(urls), []);
-
-    const srcUrls = Array.from(
-      doc.querySelectorAll('img[src],source[src],input[type="image"][src],audio[src],video[src]'),
-    ).map(srcEl => srcEl.getAttribute('src'));
-
-    const imageUrls = Array.from(doc.querySelectorAll('image,use'))
-      .map(hrefEl => hrefEl.getAttribute('href') || hrefEl.getAttribute('xlink:href'))
-      .filter(u => u && u[0] !== '#');
-
-    const objectUrls = Array.from(doc.querySelectorAll('object'))
-      .map(el => el.getAttribute('data'))
-      .filter(Boolean);
-
-    const cssUrls = Array.from(
-      doc.querySelectorAll('link[rel~="stylesheet"], link[as="stylesheet"]'),
-    ).map(link => link.getAttribute('href'));
-
-    const videoPosterUrls = Array.from(doc.querySelectorAll('video[poster]')).map(videoEl =>
-      videoEl.getAttribute('poster'),
-    );
-
-    return Array.from(srcsetUrls)
-      .concat(Array.from(srcUrls))
-      .concat(Array.from(imageUrls))
-      .concat(Array.from(cssUrls))
-      .concat(Array.from(videoPosterUrls))
-      .concat(Array.from(objectUrls));
-
-    // can be replaced with matchAll once Safari supports it
-    function execAll(regexp, string, mapper) {
-      const matches = [];
-      const clonedRegexp = new RegExp(regexp.source, regexp.flags);
-      const isGlobal = clonedRegexp.global;
-      let match;
-      while ((match = clonedRegexp.exec(string))) {
-        matches.push(mapper(match));
-        if (!isGlobal) break;
-      }
-      return matches;
-    }
-  }
-
-  var extractLinks_1 = extractLinks;
 
   function uuid() {
     return window.crypto.getRandomValues(new Uint32Array(1))[0];
@@ -13135,6 +13086,96 @@ function __processPageAndSerializePoll() {
 
   var processInlineCss_1 = processInlineCss;
 
+  function getUrlFromCssText(cssText) {
+    const re = /url\((?!['"]?:)['"]?([^'")]*)['"]?\)/g;
+    const ret = [];
+    let result;
+    while ((result = re.exec(cssText)) !== null) {
+      ret.push(result[1]);
+    }
+    return ret;
+  }
+
+  var getUrlFromCssText_1 = getUrlFromCssText;
+
+  function extractResourceUrlsFromStyleAttrs(el) {
+    const style = el.getAttribute('style');
+    if (style) return getUrlFromCssText_1(style);
+  }
+
+  var extractResourceUrlsFromStyleAttrs_1 = extractResourceUrlsFromStyleAttrs;
+
+  const srcsetRegexp = /(\S+)(?:\s+[\d.]+[wx])?(?:,|$)/g;
+
+  function extractLinksFromElement(el) {
+    const matches = (el.matches || el.msMatchesSelector).bind(el);
+
+    let urls = [];
+
+    // srcset urls
+    if (matches('img[srcset],source[srcset]')) {
+      urls = urls.concat(execAll(srcsetRegexp, el.getAttribute('srcset'), match => match[1]));
+    }
+
+    // src urls
+    if (matches('img[src],source[src],input[type="image"][src],audio[src],video[src]')) {
+      urls.push(el.getAttribute('src'));
+    }
+
+    // image urls
+    if (matches('image,use')) {
+      const href = el.getAttribute('href') || el.getAttribute('xlink:href');
+      if (href && href[0] !== '#') {
+        urls.push(href);
+      }
+    }
+
+    // object urls
+    if (matches('object') && el.getAttribute('data')) {
+      urls.push(el.getAttribute('data'));
+    }
+
+    // css urls
+    if (matches('link[rel~="stylesheet"], link[as="stylesheet"]')) {
+      urls.push(el.getAttribute('href'));
+    }
+
+    // video poster urls
+    if (matches('video[poster]')) {
+      urls.push(el.getAttribute('poster'));
+    }
+
+    // style attribute urls
+    const styleAttrUrls = extractResourceUrlsFromStyleAttrs_1(el);
+    if (styleAttrUrls) {
+      urls = urls.concat(styleAttrUrls);
+    }
+
+    return urls;
+
+    // can be replaced with matchAll once Safari supports it
+    function execAll(regexp, string, mapper) {
+      const matches = [];
+      const clonedRegexp = new RegExp(regexp.source, regexp.flags);
+      const isGlobal = clonedRegexp.global;
+      let match;
+      while ((match = clonedRegexp.exec(string))) {
+        matches.push(mapper(match));
+        if (!isGlobal) break;
+      }
+      return matches;
+    }
+  }
+
+  var extractLinksFromElement_1 = extractLinksFromElement;
+
+  function styleSheetToCssText(sheet) {
+    const cssomAst = createAstFromCssom_1(sheet.cssRules);
+    return lib.generate(lib.fromPlainObject({type: 'StyleSheet', children: cssomAst}));
+  }
+
+  var styleSheetToCssText_1 = styleSheetToCssText;
+
   const NEED_MAP_INPUT_TYPES = new Set([
     'date',
     'datetime-local',
@@ -13156,9 +13197,13 @@ function __processPageAndSerializePoll() {
     const docRoots = [docNode];
     const canvasElements = [];
     const inlineFrames = [];
+    let linkUrls = [];
 
     cdt[0].childNodeIndexes = childrenFactory(cdt, docNode.childNodes);
-    return {cdt, docRoots, canvasElements, inlineFrames};
+    if (docNode.adoptedStyleSheets && docNode.adoptedStyleSheets.length > 0) {
+      cdt[0].exp_adoptedStyleSheets = getAdoptedStyleSheets(docNode);
+    }
+    return {cdt, docRoots, canvasElements, inlineFrames, linkUrls};
 
     function childrenFactory(cdt, elementNodes) {
       if (!elementNodes || elementNodes.length === 0) return null;
@@ -13184,7 +13229,7 @@ function __processPageAndSerializePoll() {
             elementNode.sheet &&
             elementNode.sheet.cssRules.length
           ) {
-            cdt.push(getCssRulesNode(elementNode));
+            cdt.push(getCssRulesNode(elementNode, log));
             manualChildNodeIndexes = [cdt.length - 1];
           }
 
@@ -13199,8 +13244,18 @@ function __processPageAndSerializePoll() {
             (elementNode.childNodes.length ? childrenFactory(cdt, elementNode.childNodes) : []);
 
           if (elementNode.shadowRoot) {
-            node.shadowRootIndex = elementNodeFactory(cdt, elementNode.shadowRoot);
-            docRoots.push(elementNode.shadowRoot);
+            if (
+              typeof window === 'undefined' ||
+              (typeof elementNode.attachShadow === 'function' &&
+                /native code/.test(elementNode.attachShadow.toString()))
+            ) {
+              node.shadowRootIndex = elementNodeFactory(cdt, elementNode.shadowRoot);
+              docRoots.push(elementNode.shadowRoot);
+            } else {
+              node.childNodeIndexes = node.childNodeIndexes.concat(
+                childrenFactory(cdt, elementNode.shadowRoot.childNodes),
+              );
+            }
           }
 
           if (elementNode.nodeName === 'CANVAS') {
@@ -13218,6 +13273,10 @@ function __processPageAndSerializePoll() {
             node.attributes.push({name: 'data-applitools-src', value: dummyUrl});
             inlineFrames.push({element: elementNode, url: dummyUrl});
           }
+
+          if (elementNode.adoptedStyleSheets && elementNode.adoptedStyleSheets.length > 0) {
+            node.exp_adoptedStyleSheets = getAdoptedStyleSheets(elementNode);
+          }
         } else {
           node = getScriptNode(elementNode);
         }
@@ -13228,140 +13287,150 @@ function __processPageAndSerializePoll() {
       }
 
       if (node) {
+        if (nodeType === Node.ELEMENT_NODE) {
+          const linkUrlsFromElement = extractLinksFromElement_1(elementNode);
+          if (linkUrlsFromElement.length > 0) {
+            linkUrls = linkUrls.concat(linkUrlsFromElement);
+          }
+        }
         cdt.push(node);
         return cdt.length - 1;
       } else {
         return null;
       }
     }
+  }
 
-    function nodeAttributes({attributes = {}}) {
-      return Object.keys(attributes).filter(k => attributes[k] && attributes[k].name);
+  function nodeAttributes({attributes = {}}) {
+    return Object.keys(attributes).filter(k => attributes[k] && attributes[k].name);
+  }
+
+  function getCssRulesNode(elementNode, log) {
+    return {
+      nodeType: Node.TEXT_NODE,
+      nodeValue: processInlineCss_1(elementNode, log),
+    };
+  }
+
+  function getTextContentNode(elementNode) {
+    return {
+      nodeType: Node.TEXT_NODE,
+      nodeValue: elementNode.value,
+    };
+  }
+
+  function getBasicNode(elementNode) {
+    const node = {
+      nodeType: elementNode.nodeType,
+      nodeName: elementNode.nodeName,
+      attributes: nodeAttributes(elementNode).map(key => {
+        let value = elementNode.attributes[key].value;
+        const name = elementNode.attributes[key].name;
+        if (/^blob:/.test(value)) {
+          value = value.replace(/^blob:/, '');
+        } else if (ON_EVENT_REGEX.test(name)) {
+          value = '';
+        } else if (
+          elementNode.nodeName === 'IFRAME' &&
+          isAccessibleFrame_1(elementNode) &&
+          name === 'src' &&
+          elementNode.contentDocument.location.href !== 'about:blank' &&
+          elementNode.contentDocument.location.href !==
+            absolutizeUrl_1(value, elementNode.ownerDocument.location.href)
+        ) {
+          value = elementNode.contentDocument.location.href;
+        }
+        return {
+          name,
+          value,
+        };
+      }),
+    };
+
+    if (elementNode.tagName === 'INPUT' && ['checkbox', 'radio'].includes(elementNode.type)) {
+      if (elementNode.attributes.checked && !elementNode.checked) {
+        const idx = node.attributes.findIndex(a => a.name === 'checked');
+        node.attributes.splice(idx, 1);
+      }
+      if (!elementNode.attributes.checked && elementNode.checked) {
+        node.attributes.push({name: 'checked'});
+      }
     }
 
-    function getCssRulesNode(elementNode) {
-      return {
-        nodeType: Node.TEXT_NODE,
-        nodeValue: processInlineCss_1(elementNode, log),
-      };
+    if (
+      elementNode.tagName === 'INPUT' &&
+      NEED_MAP_INPUT_TYPES.has(elementNode.type) &&
+      (elementNode.attributes.value && elementNode.attributes.value.value) !== elementNode.value
+    ) {
+      addOrUpdateAttribute(node.attributes, 'value', elementNode.value);
     }
 
-    function getTextContentNode(elementNode) {
-      return {
-        nodeType: Node.TEXT_NODE,
-        nodeValue: elementNode.value,
-      };
+    if (
+      elementNode.tagName === 'OPTION' &&
+      elementNode.parentElement.selectedOptions &&
+      Array.from(elementNode.parentElement.selectedOptions).indexOf(elementNode) > -1
+    ) {
+      addOrUpdateAttribute(node.attributes, 'selected', '');
     }
 
-    function getBasicNode(elementNode) {
-      const node = {
-        nodeType: elementNode.nodeType,
-        nodeName: elementNode.nodeName,
-        attributes: nodeAttributes(elementNode).map(key => {
-          let value = elementNode.attributes[key].value;
+    if (elementNode.tagName === 'STYLE' && elementNode.sheet && elementNode.sheet.disabled) {
+      node.attributes.push({name: 'data-applitools-disabled', value: ''});
+    }
+    if (
+      elementNode.tagName === 'LINK' &&
+      elementNode.type === 'text/css' &&
+      elementNode.sheet &&
+      elementNode.sheet.disabled
+    ) {
+      addOrUpdateAttribute(node.attributes, 'disabled', '');
+    }
+
+    return node;
+  }
+
+  function addOrUpdateAttribute(attributes, name, value) {
+    const nodeAttr = attributes.find(a => a.name === name);
+    if (nodeAttr) {
+      nodeAttr.value = value;
+    } else {
+      attributes.push({name, value});
+    }
+  }
+
+  function getScriptNode(elementNode) {
+    return {
+      nodeType: Node.ELEMENT_NODE,
+      nodeName: 'SCRIPT',
+      attributes: nodeAttributes(elementNode)
+        .map(key => {
           const name = elementNode.attributes[key].name;
-          if (/^blob:/.test(value)) {
-            value = value.replace(/^blob:/, '');
-          } else if (ON_EVENT_REGEX.test(name)) {
-            value = '';
-          } else if (
-            elementNode.nodeName === 'IFRAME' &&
-            isAccessibleFrame_1(elementNode) &&
-            name === 'src' &&
-            elementNode.contentDocument.location.href !== 'about:blank' &&
-            elementNode.contentDocument.location.href !==
-              absolutizeUrl_1(value, elementNode.ownerDocument.location.href)
-          ) {
-            value = elementNode.contentDocument.location.href;
-          }
+          const value = ON_EVENT_REGEX.test(name) ? '' : elementNode.attributes[key].value;
           return {
             name,
             value,
           };
-        }),
-      };
+        })
+        .filter(attr => attr.name !== 'src'),
+      childNodeIndexes: [],
+    };
+  }
 
-      if (elementNode.tagName === 'INPUT' && ['checkbox', 'radio'].includes(elementNode.type)) {
-        if (elementNode.attributes.checked && !elementNode.checked) {
-          const idx = node.attributes.findIndex(a => a.name === 'checked');
-          node.attributes.splice(idx, 1);
-        }
-        if (!elementNode.attributes.checked && elementNode.checked) {
-          node.attributes.push({name: 'checked'});
-        }
-      }
+  function getTextNode(elementNode) {
+    return {
+      nodeType: Node.TEXT_NODE,
+      nodeValue: elementNode.nodeValue,
+    };
+  }
 
-      if (
-        elementNode.tagName === 'INPUT' &&
-        NEED_MAP_INPUT_TYPES.has(elementNode.type) &&
-        (elementNode.attributes.value && elementNode.attributes.value.value) !== elementNode.value
-      ) {
-        addOrUpdateAttribute(node.attributes, 'value', elementNode.value);
-      }
+  function getDocNode(elementNode) {
+    return {
+      nodeType: Node.DOCUMENT_TYPE_NODE,
+      nodeName: elementNode.nodeName,
+    };
+  }
 
-      if (
-        elementNode.tagName === 'OPTION' &&
-        elementNode.parentElement.selectedOptions &&
-        Array.from(elementNode.parentElement.selectedOptions).indexOf(elementNode) > -1
-      ) {
-        addOrUpdateAttribute(node.attributes, 'selected', '');
-      }
-
-      if (elementNode.tagName === 'STYLE' && elementNode.sheet && elementNode.sheet.disabled) {
-        node.attributes.push({name: 'data-applitools-disabled', value: ''});
-      }
-      if (
-        elementNode.tagName === 'LINK' &&
-        elementNode.type === 'text/css' &&
-        elementNode.sheet &&
-        elementNode.sheet.disabled
-      ) {
-        addOrUpdateAttribute(node.attributes, 'disabled', '');
-      }
-
-      return node;
-    }
-
-    function addOrUpdateAttribute(attributes, name, value) {
-      const nodeAttr = attributes.find(a => a.name === name);
-      if (nodeAttr) {
-        nodeAttr.value = value;
-      } else {
-        attributes.push({name, value});
-      }
-    }
-
-    function getScriptNode(elementNode) {
-      return {
-        nodeType: Node.ELEMENT_NODE,
-        nodeName: 'SCRIPT',
-        attributes: nodeAttributes(elementNode)
-          .map(key => {
-            const name = elementNode.attributes[key].name;
-            const value = ON_EVENT_REGEX.test(name) ? '' : elementNode.attributes[key].value;
-            return {
-              name,
-              value,
-            };
-          })
-          .filter(attr => attr.name !== 'src'),
-        childNodeIndexes: [],
-      };
-    }
-
-    function getTextNode(elementNode) {
-      return {
-        nodeType: Node.TEXT_NODE,
-        nodeValue: elementNode.nodeValue,
-      };
-    }
-
-    function getDocNode(elementNode) {
-      return {
-        nodeType: Node.DOCUMENT_TYPE_NODE,
-        nodeName: elementNode.nodeName,
-      };
-    }
+  function getAdoptedStyleSheets(node) {
+    return Array.from(node.adoptedStyleSheets).map(styleSheetToCssText_1);
   }
 
   var domNodesToCdt_1 = domNodesToCdt;
@@ -13581,18 +13650,6 @@ function __processPageAndSerializePoll() {
 
   var processResource = makeProcessResource;
 
-  function getUrlFromCssText(cssText) {
-    const re = /url\((?!['"]?:)['"]?([^'")]*)['"]?\)/g;
-    const ret = [];
-    let result;
-    while ((result = re.exec(cssText)) !== null) {
-      ret.push(result[1]);
-    }
-    return ret;
-  }
-
-  var getUrlFromCssText_1 = getUrlFromCssText;
-
   function makeExtractResourcesFromSvg({parser, decoder, extractResourceUrlsFromStyleTags}) {
     return function(svgArrayBuffer) {
       const decooder = decoder || new TextDecoder('utf-8');
@@ -13741,7 +13798,12 @@ function __processPageAndSerializePoll() {
             [CSSRule.STYLE_RULE]: () => {
               let rv = [];
               for (let i = 0, ii = rule.style.length; i < ii; i++) {
-                const urls = getUrlFromCssText_1(rule.style.getPropertyValue(rule.style[i]));
+                const property = rule.style[i];
+                let propertyValue = rule.style.getPropertyValue(property);
+                if (/^\s*var\s*\(/.test(propertyValue) || /^--/.test(property)) {
+                  propertyValue = unescapeCss(propertyValue);
+                }
+                const urls = getUrlFromCssText_1(propertyValue);
                 rv = rv.concat(urls);
               }
               return rv;
@@ -13756,21 +13818,16 @@ function __processPageAndSerializePoll() {
     };
   }
 
-  var extractResourcesFromStyleSheet = makeExtractResourcesFromStyleSheet;
-
-  function extractResourceUrlsFromStyleAttrs(cdt) {
-    return cdt.reduce((acc, node) => {
-      if (node.nodeType === 1) {
-        const styleAttr =
-          node.attributes && node.attributes.find(attr => attr.name.toUpperCase() === 'STYLE');
-
-        if (styleAttr) acc = acc.concat(getUrlFromCssText_1(styleAttr.value));
-      }
-      return acc;
-    }, []);
+  // copied from https://github.com/applitools/mono/commit/512ed8b805ab0ee6701ee04301e982afb382a7f0#diff-4d4bb24a63912943219ab77a43b29ee3R99
+  function unescapeCss(text) {
+    return text
+      .replace(/(\\[0-9a-fA-F]{1,6}\s?)/g, original =>
+        String.fromCodePoint(parseInt(original.substr(1).trim(), 16)),
+      )
+      .replace(/\\([^0-9a-fA-F])/g, '$1');
   }
 
-  var extractResourceUrlsFromStyleAttrs_1 = extractResourceUrlsFromStyleAttrs;
+  var extractResourcesFromStyleSheet = makeExtractResourcesFromStyleSheet;
 
   function makeExtractResourceUrlsFromStyleTags(extractResourcesFromStyleSheet) {
     return function extractResourceUrlsFromStyleTags(doc, onlyDocStylesheet = true) {
@@ -13991,22 +14048,21 @@ function __processPageAndSerializePoll() {
 
     return doProcessPage(doc).then(result => {
       log$$1('processPage end');
-      result.scriptVersion = '4.0.0';
+      result.scriptVersion = '4.0.3';
       return result;
     });
 
     function doProcessPage(doc, pageUrl = doc.location.href) {
       const baseUrl = getBaseUrl(doc) || pageUrl;
-      const {cdt, docRoots, canvasElements, inlineFrames} = domNodesToCdt_1(doc, baseUrl, log$$1);
+      const {cdt, docRoots, canvasElements, inlineFrames, linkUrls} = domNodesToCdt_1(
+        doc,
+        baseUrl,
+        log$$1,
+      );
 
-      const linkUrls = flat_1(docRoots.map(extractLinks_1));
-      const styleTagUrls = flat_1(docRoots.map(extractResourceUrlsFromStyleTags$$1));
+      const styleTagUrls = flat_1(docRoots.map(docRoot => extractResourceUrlsFromStyleTags$$1(docRoot)));
       const absolutizeThisUrl = getAbsolutizeByUrl(baseUrl);
-      const urls = uniq_1(
-        Array.from(linkUrls)
-          .concat(Array.from(styleTagUrls))
-          .concat(extractResourceUrlsFromStyleAttrs_1(cdt)),
-      )
+      const urls = uniq_1(Array.from(linkUrls).concat(Array.from(styleTagUrls)))
         .map(toUriEncoding_1)
         .map(absolutizeThisUrl)
         .map(toUnAnchoredUri_1)

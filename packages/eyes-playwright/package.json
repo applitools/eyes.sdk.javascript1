@@ -1,0 +1,65 @@
+{
+  "name": "@applitools/eyes-playwright",
+  "version": "1.0.0",
+  "description": "Applitools Eyes SDK for Playwright",
+  "keywords": [
+    "eyes-playwright",
+    "applitools",
+    "eyes",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests",
+    "playwright"
+  ],
+  "homepage": "https://applitools.com",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:applitools/eyes.sdk.javascript1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "directories": {
+    "example": "./example",
+    "lib": "./src",
+    "test": "./test"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "@applitools/eyes-sdk-core": "12.0.1",
+    "@applitools/visual-grid-client": "14.6.4"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@applitools/sdk-coverage-tests": "^1.0.7",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
+    "@applitools/sdk-release-kit": "0.2.2",
+    "@applitools/sdk-shared": "0.1.0",
+    "eslint": "^7.2.0",
+    "mocha": "^8.0.1",
+    "spec-xunit-file": "0.0.1-3",
+    "playwright": "^1.0.0"
+  },
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "render": "node ../sdk-shared/src/render.js",
+    "test": "yarn test:it",
+    "test:it": "mocha --no-timeouts ./test/it/*.spec.js",
+    "coverage:generate": "coverage-tests create-tests",
+    "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
+    "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}

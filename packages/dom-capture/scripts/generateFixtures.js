@@ -1,5 +1,5 @@
 const {getCaptureDomScript} = require('../');
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const {beautifyOutput} = require('../test/util/beautifyOutput');

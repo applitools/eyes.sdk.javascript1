@@ -52,6 +52,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
+        matchLevel: undefined,
+        visualGridOptions: undefined,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -118,6 +120,8 @@ describe('eyesCheckWindow', () => {
     const enablePatterns = 'enablePatterns';
     const ignoreDisplacements = 'ignoreDisplacements';
     const accessibility = 'accessibility';
+    const matchLevel = 'matchLevel';
+    const visualGridOptions = 'visualGridOptions';
 
     await eyesCheckWindow('bla doc', {
       tag,
@@ -137,6 +141,8 @@ describe('eyesCheckWindow', () => {
       enablePatterns,
       ignoreDisplacements,
       accessibility,
+      matchLevel,
+      visualGridOptions,
     });
 
     expect(sendRequestInput).to.eql({
@@ -167,6 +173,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns,
         ignoreDisplacements,
         accessibility,
+        matchLevel,
+        visualGridOptions,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -275,6 +283,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
+        matchLevel: undefined,
+        visualGridOptions: undefined,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -357,6 +367,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
+        matchLevel: undefined,
+        visualGridOptions: undefined,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -428,6 +440,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
+        matchLevel: undefined,
+        visualGridOptions: undefined,
       },
     });
     expect(resourcesPutted).to.eql([
@@ -499,6 +513,8 @@ describe('eyesCheckWindow', () => {
         enablePatterns: undefined,
         ignoreDisplacements: undefined,
         accessibility: undefined,
+        matchLevel: undefined,
+        visualGridOptions: undefined,
       },
     });
     expect(resourcesPutted).to.eql([]);

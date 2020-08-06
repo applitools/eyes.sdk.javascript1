@@ -38,6 +38,7 @@ describe('package and install', () => {
 
   after(async () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
+    fs.unlinkSync(packageFilePath);
   });
 
   it('runs properly on installed package', async () => {

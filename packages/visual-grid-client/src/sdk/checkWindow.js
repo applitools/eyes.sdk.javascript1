@@ -29,6 +29,7 @@ function makeCheckWindow({
   matchLevel: _matchLevel,
   isSingleWindow,
   getUserAgents,
+  visualGridOptions: _visualGridOptions,
 }) {
   return function checkWindow({
     resourceUrls = [],
@@ -54,6 +55,7 @@ function makeCheckWindow({
     useDom,
     enablePatterns,
     ignoreDisplacements,
+    visualGridOptions = _visualGridOptions,
   }) {
     if (target === 'window' && !fully) {
       sizeMode = 'viewport'
@@ -292,6 +294,7 @@ function makeCheckWindow({
         noOffsetSelectors: noOffsetSelectors.all,
         offsetSelectors: offsetSelectors.all,
         sendDom,
+        visualGridOptions,
       })
 
       globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() + 1)

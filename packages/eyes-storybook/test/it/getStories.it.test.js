@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const testStorybook = require('../util/testStorybook');
 const getStories = require('../../dist/getStories');
 const {delay: psetTimeout} = require('@applitools/functional-commons');

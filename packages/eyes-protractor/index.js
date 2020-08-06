@@ -1,17 +1,12 @@
 const core = require('@applitools/eyes-sdk-core')
 
-const ProtractorCheckSettings = require('./src/ProtractorCheckSettings')
-const {
-  ProtractorEyesClassic,
-  ProtractorEyesVisualGrid,
-  ProtractorEyesFactory,
-} = require('./src/ProtractorSpecializedEyes')
+const {CheckSettings, EyesClassic, EyesVisualGrid, EyesFactory} = require('./src/ProtractorSDK')
 
-exports.Eyes = ProtractorEyesFactory
-exports.EyesProtractor = ProtractorEyesClassic
-exports.EyesVisualGrid = ProtractorEyesVisualGrid
-exports.Target = ProtractorCheckSettings
-exports.ProtractorCheckSettings = ProtractorCheckSettings
+exports.Eyes = EyesFactory
+exports.EyesProtractor = EyesClassic
+exports.EyesVisualGrid = EyesVisualGrid
+exports.Target = CheckSettings
+exports.CheckSettings = CheckSettings
 
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion

@@ -1,7 +1,7 @@
 /* global browser */
 'use strict'
 const {expect} = require('chai')
-const {ApiAssertions} = require('@applitools/sdk-coverage-tests/coverage-tests')
+const {ApiAssertions} = require('@applitools/sdk-shared')
 const {version} = require('../../../package.json')
 
 describe('vg', () => {

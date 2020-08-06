@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adopted stylesheets</title>
+</head>
+<body>
+  <div>hi there, i'm red</div>
+  <div class="host"></div>
+  <script>
+const sheet = new CSSStyleSheet();
+sheet.replaceSync('div { color: red; } span {justify-content:center; align-content:center;}');
+document.adoptedStyleSheets = [sheet]
+
+const host = document.querySelector('.host')
+const shadow = host.attachShadow({mode: 'open'})
+shadow.innerHTML = "<div>hi there, i'm blue</div>"
+const shadowSheet = new CSSStyleSheet();
+shadowSheet.replaceSync('div { color: blue; }');
+shadow.adoptedStyleSheets = [shadowSheet]
+</script>
+</body>
+</html>

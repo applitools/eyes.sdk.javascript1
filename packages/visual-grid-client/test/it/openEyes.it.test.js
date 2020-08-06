@@ -5,7 +5,7 @@ const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const FakeEyesWrapper = require('../util/FakeEyesWrapper')
 const FakeRunningRender = require('../util/FakeRunningRender')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const {testServer} = require('@applitools/sdk-shared')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {loadJsonFixture, loadFixtureBuffer} = require('../util/loadFixture')
 const {failMsg} = require('../../src/sdk/waitForRenderedStatus')
 const {promisify: p} = require('util')
@@ -2257,6 +2257,62 @@ Received: 'firefox-1'.`,
     const r = results.getStepsInfo()[0].result
     expect(r.__checkSettings.getUseDom()).to.be.false
     expect(r.__checkSettings.getEnablePatterns()).to.be.false
+  })
+
+  it('handles visualGridOptions in renderingGridClient', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      renderWrapper: wrapper,
+      visualGridOptions: {aaa: true},
+    }).openEyes
+
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    })
+
+    await checkWindow({cdt: [], url: ''})
+    const [results] = await close()
+    const r = results.getStepsInfo()[0].getRenderId()
+    expect(JSON.parse(r).visualGridOptions).to.eql({aaa: true})
+  })
+
+  it('handles visualGridOptions in openEyes', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      renderWrapper: wrapper,
+    }).openEyes
+
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+      visualGridOptions: {aaa: true},
+    })
+
+    await checkWindow({cdt: [], url: ''})
+    const [results] = await close()
+    const r = results.getStepsInfo()[0].getRenderId()
+    expect(JSON.parse(r).visualGridOptions).to.eql({aaa: true})
+  })
+
+  it('handles visualGridOptions in checkWindow', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      renderWrapper: wrapper,
+    }).openEyes
+
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    })
+
+    await checkWindow({cdt: [], url: '', visualGridOptions: {aaa: true}})
+    const [results] = await close()
+    const r = results.getStepsInfo()[0].getRenderId()
+    expect(JSON.parse(r).visualGridOptions).to.eql({aaa: true})
   })
 
   it('doesnt throw error on chrome canary browser name', async () => {

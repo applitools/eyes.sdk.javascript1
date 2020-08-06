@@ -10,8 +10,7 @@ const {
   ClassicRunner,
   ConsoleLogHandler,
 } = require('../../../index')
-const FakeEyesFactory = require('../../utils/FakeEyesFactory')
-const FakeCheckSettings = require('../../utils/FakeCheckSettings')
+const {EyesFactory, CheckSettings} = require('../../utils/FakeSDK')
 
 async function runTest(driver, useVisualGrid) {
   const accessibilitySettings = {
@@ -20,7 +19,7 @@ async function runTest(driver, useVisualGrid) {
   }
 
   const runner = useVisualGrid ? new VisualGridRunner(10) : new ClassicRunner()
-  const eyes = new FakeEyesFactory(runner)
+  const eyes = new EyesFactory(runner)
   eyes.setConfiguration({
     matchTimeout: 0,
     defaultMatchSettings: {
@@ -43,7 +42,7 @@ async function runTest(driver, useVisualGrid) {
 
   const element1 = await wrappedDriver.findElement('element1')
 
-  const checkSettings = FakeCheckSettings.window()
+  const checkSettings = CheckSettings.window()
     .accessibilityRegion(
       {left: 10, top: 20, width: 30, height: 40},
       AccessibilityRegionType.LargeText,
@@ -93,7 +92,7 @@ async function runTest(driver, useVisualGrid) {
     'SessionStartInfo',
     `TestAccessibility_No_Accessibility${useVisualGrid ? '_VG' : ''}`,
   )
-  await eyes.check('', FakeCheckSettings.window())
+  await eyes.check('', CheckSettings.window())
   const testResultsWithoutAccessibility = await eyes.close(false)
 
   assert.deepStrictEqual(testResultsWithoutAccessibility.getAccessibilityStatus(), undefined)

@@ -4,7 +4,7 @@ const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const puppeteer = require('puppeteer');
 const createTempStylsheet = require('../src/browser/createTempStyleSheet');
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 
 const style = `div {background-image: url("/smurfs5.jpg")}`;
 const doCreateTempStylsheet = new Function(`

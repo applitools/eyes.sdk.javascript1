@@ -114,6 +114,8 @@ function makeHandlers({
       enablePatterns,
       ignoreDisplacements,
       accessibility,
+      matchLevel,
+      visualGridOptions,
     }) => {
       logger.log(`[handlers] checkWindow: checkWindow=${typeof checkWindow}`);
       if (!checkWindow) {
@@ -152,6 +154,8 @@ function makeHandlers({
         enablePatterns,
         ignoreDisplacements,
         accessibility,
+        matchLevel,
+        visualGridOptions,
       });
     },
 

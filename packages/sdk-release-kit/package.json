@@ -1,7 +1,6 @@
 {
   "name": "@applitools/sdk-release-kit",
-  "private": true,
-  "version": "0.1.0",
+  "version": "0.2.2",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -19,7 +18,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
-  }, "scripts": {
+  },
+  "scripts": {
     "test": "mocha test/**/*.spec.js",
     "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc"
   },
@@ -28,9 +28,9 @@
   },
   "dependencies": {
     "chalk": "3.0.0",
+    "micromatch": "^4.0.2",
     "node-fetch": "^2.6.0",
-    "yargs": "^15.0.2",
-    "micromatch": "^4.0.2"
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
     "mocha": "^6.2.2"

@@ -1,7 +1,13 @@
 const core = require('@applitools/eyes-sdk-core')
-const WDIOCheckSettings = require('./src/WDIOCheckSettings')
-const {WDIOEyesClassic, WDIOEyesVisualGrid, WDIOEyesFactory} = require('./src/WDIOSpecializedEyes')
-const LegacySelector = require('./src/LegacySelector')
+
+if (!process.env.APPLITOOLS_WDIO_MAJOR_VERSION) {
+  const {version} = require('webdriverio/package.json')
+  const [major] = version.split('.', 1)
+  process.env.APPLITOOLS_WDIO_MAJOR_VERSION = major
+}
+
+const {EyesClassic, EyesVisualGrid, EyesFactory, CheckSettings} = require('./src/WDIOSDK')
+const {LegacySelector} = require('./src/LegacyAPI')
 
 /**
  * @typedef {import('./src/SpecWrappedDriver').Driver} Driver
@@ -23,11 +29,11 @@ const LegacySelector = require('./src/LegacySelector')
  * @typedef {typeof core.ClassicRunner} ClassicRunner
  */
 
-exports.Eyes = WDIOEyesFactory
-exports.EyesWDIO = WDIOEyesClassic
-exports.EyesVisualGrid = WDIOEyesVisualGrid
-exports.Target = WDIOCheckSettings
-exports.WebdriverioCheckSettings = WDIOCheckSettings
+exports.Eyes = EyesFactory
+exports.EyesWDIO = EyesClassic
+exports.EyesVisualGrid = EyesVisualGrid
+exports.Target = CheckSettings
+exports.WebdriverioCheckSettings = CheckSettings
 exports.By = LegacySelector
 exports.EyesService = require('./src/EyesService')
 

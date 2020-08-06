@@ -2,7 +2,7 @@
 const CoordinatesType = require('../geometry/CoordinatesType')
 const FloatingMatchSettings = require('../config/FloatingMatchSettings')
 const GetFloatingRegion = require('./GetFloatingRegion')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../config/AccessibilityRegionType').AccessibilityRegionType} AccessibilityRegionType
@@ -49,9 +49,8 @@ class FloatingRegionByElement extends GetFloatingRegion {
    * @param {EyesScreenshot} screenshot
    * @return {Promise<FloatingMatchSettings[]>}
    */
-  async getRegion(eyes, screenshot) {
-    // TODO eyes should be replaced with driver once all SDKs will use this implementation
-    await this._element.init(eyes.getDriver())
+  async getRegion(_eyes, screenshot) {
+    this._element = await this._element
     const rect = await this._element.getRect()
     const lTag = screenshot.convertLocation(
       rect.getLocation(),
@@ -76,12 +75,8 @@ class FloatingRegionByElement extends GetFloatingRegion {
    * @param {EyesWrappedDriver<TDriver, TElement, TSelector>} driver
    * @return {Promise<FloatingPersistedRegion[]>}
    */
-  async toPersistedRegions(driver) {
-    const xpath = await EyesUtils.getElementAbsoluteXpath(
-      driver._logger,
-      driver.executor,
-      this._element,
-    )
+  async toPersistedRegions(context) {
+    const xpath = await EyesUtils.getElementXpath(context._logger, context, await this._element)
     return [
       {
         type: 'xpath',

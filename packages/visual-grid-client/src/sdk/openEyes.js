@@ -65,6 +65,7 @@ function makeOpenEyes({
   globalState,
   wrappers: _wrappers,
   isSingleWindow = false,
+  visualGridOptions: _visualGridOptions,
 }) {
   return async function openEyes({
     testName,
@@ -103,6 +104,7 @@ function makeOpenEyes({
     ignoreBaseline = _ignoreBaseline,
     notifyOnCompletion,
     getUserAgents = _getUserAgents,
+    visualGridOptions = _visualGridOptions,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser)
 
@@ -264,6 +266,7 @@ function makeOpenEyes({
       userAgent,
       isSingleWindow,
       getUserAgents,
+      visualGridOptions,
     })
 
     const close = makeClose({

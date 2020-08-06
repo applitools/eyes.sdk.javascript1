@@ -57,14 +57,21 @@ const {gitAdd, gitCommit, gitPullWithRebase, gitPushWithTags, isStagedForCommit}
         await gitPullWithRebase()
         await lint(cwd)
         await verifyChangelog(cwd)
-        await verifyVersions({isFix: args.fix, pkgPath: cwd})
-        await verifyCommits({pkgPath: cwd, isForce: process.env.BONGO_VERIFY_COMMITS_FORCE})
-        createDotFolder(cwd)
-        await packInstall(cwd)
-        return await verifyInstalledVersions({
-          pkgPath: cwd,
-          installedDirectory: path.join('.bongo', 'dry-run'),
-        })
+        if (!process.env.BONGO_SKIP_VERIFY_VERSIONS) {
+          await verifyVersions({isFix: args.fix, pkgPath: cwd})
+        }
+        if (!process.env.BONGO_SKIP_VERIFY_COMMITS) {
+          await verifyCommits({pkgPath: cwd})
+        }
+        if (!process.env.BONGO_SKIP_VERIFY_INSTALLED_VERSIONS) {
+          createDotFolder(cwd)
+          await packInstall(cwd)
+          return await verifyInstalledVersions({
+            pkgPath: cwd,
+            installedDirectory: path.join('.bongo', 'dry-run'),
+          })
+        }
+        return
       case 'send-release-notification':
       case 'hello-world':
         return await sendReleaseNotification(cwd, args.recipient)
@@ -76,7 +83,10 @@ const {gitAdd, gitCommit, gitPullWithRebase, gitPushWithTags, isStagedForCommit}
         return await verifyChangelog(cwd)
       case 'verify-commits':
       case 'vco':
-        return await verifyCommits({pkgPath: cwd, isForce: process.env.BONGO_VERIFY_COMMITS_FORCE})
+        if (!process.env.BONGO_SKIP_VERIFY_COMMITS) {
+          return await verifyCommits({pkgPath: cwd})
+        }
+        return
       case 'verify-installed-versions':
       case 'viv':
         createDotFolder(cwd)
@@ -105,6 +115,7 @@ const {gitAdd, gitCommit, gitPullWithRebase, gitPushWithTags, isStagedForCommit}
     }
   } catch (error) {
     console.log(chalk.red(error.message))
+    console.log(error)
     process.exit(1)
   }
 })()

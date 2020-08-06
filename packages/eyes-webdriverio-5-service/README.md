@@ -19,7 +19,7 @@ Offical Applitools Eyes service for version 5 of the [webdriver.io](https://webd
 - [Usage](#usage)
   * [Example](#example)
   * [Configuration](#configuration)
-    + [Running with the Ultra fast grid](#running-with-the-ultra-fast-grid)
+    + [Running with the Ultrafast grid](#running-with-the-ultra-fast-grid)
     + [Verbose logging](#verbose-logging)
     + [Override `testName` and `appName`](#override--testname--and--appname-)
     + [Batch completion notifications](#batch-completion-notifications)
@@ -129,9 +129,9 @@ exports.config = {
 
 _For more information, visit our documentation page: https://applitools.com/docs/api/eyes-sdk/index-gen/class-configuration-webdriverio_sdk5-javascript.html_
 
-#### Running with the Ultra fast grid
+#### Running with the Ultrafast grid
 
-To run tests with the Ultra fast grid, specify the following in the `wdio.conf.js` file:
+To run tests with the Ultrafast grid, specify the following in the `wdio.conf.js` file:
 
 ```js
 exports.config = {
@@ -142,7 +142,7 @@ exports.config = {
 }
 ```
 
-To specify which viewport sizes and browsers to render on the Ultra fast grid, use the `browsersInfo` entry in the configuration. For example:
+To specify which viewport sizes and browsers to render on the Ultrafast grid, use the `browsersInfo` entry in the configuration. For example:
 
 ```js
 exports.config = {

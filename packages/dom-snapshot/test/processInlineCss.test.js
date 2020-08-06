@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const {testServer} = require('@applitools/sdk-shared');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const {getProcessPageAndSerialize} = require('../index');
 const {loadJsonFixture} = require('./util/loadFixture');
 

@@ -221,7 +221,14 @@ function isIterator(value) {
  * @return {boolean}
  */
 function instanceOf(obj, constructor) {
-  return obj && obj.constructor[`__${constructor.name}`]
+  if (!obj) return false
+  if (!isString(constructor)) return obj.constructor[`__${constructor.name}`]
+  let proto = Object.getPrototypeOf(obj)
+  while (proto) {
+    if (proto.constructor.name === constructor) return true
+    proto = Object.getPrototypeOf(proto)
+  }
+  return false
 }
 
 module.exports = {

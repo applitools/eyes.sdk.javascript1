@@ -33,14 +33,14 @@
   * [close](#close)
 - [Runners](#runners)
   * [Purpose of runners](#purpose-of-runners)
-    + [1. Use the Ultra fast grid](#1-use-the-ultra-fast-grid)
+    + [1. Use the Ultrafast grid](#1-use-the-ultra-fast-grid)
     + [2. Manage tests across multiple `Eyes` instances](#2-manage-tests-across-multiple--eyes--instances)
 - [Using the SDK as a service](#using-the-sdk-as-a-service)
   * [What is the service?](#what-is-the-service-)
   * [What is the difference from just using the SDK directly?](#what-is-the-difference-from-just-using-the-sdk-directly-)
   * [How to use the service](#how-to-use-the-service)
   * [Configure the service](#configure-the-service)
-    + [Running with the Ultra fast grid](#running-with-the-ultra-fast-grid)
+    + [Running with the Ultrafast grid](#running-with-the-ultra-fast-grid)
     + [Verbose logging](#verbose-logging)
     + [Override `testName` and `appName`](#override--testname--and--appname-)
     + [Batch completion notifications](#batch-completion-notifications)
@@ -367,7 +367,7 @@ const {ClassicRunner} = require('@applitools/eyes-webdriverio')
 const runner = new ClassicRunner()
 ```
 
-2. `VisualGridRunner` - used when the screenshot is taken by the **Ultra fast grid**.
+2. `VisualGridRunner` - used when the screenshot is taken by the **Ultrafast grid**.
 
 ```js
 const {VisualGridRunner} = require('@applitools/eyes-webdriverio')
@@ -380,7 +380,7 @@ const runner = new VisualGridRunner(concurrentSessions)
 
 There are two purposes for using runners:
 
-#### 1. Use the Ultra fast grid
+#### 1. Use the Ultrafast grid
 
 This is done simply by specifying the `VisualGridRunner`. Browsers are specified by using the [`Configuration`](#configuration) API. For example:
 
@@ -555,9 +555,9 @@ exports.config = {
 
 _For more information, visit our documentation page: https://applitools.com/docs/api/eyes-sdk/index-gen/class-configuration-webdriverio_sdk5-javascript.html_
 
-#### Running with the Ultra fast grid
+#### Running with the Ultrafast grid
 
-To run tests with the Ultra fast grid, specify the following in the `wdio.conf.js` file:
+To run tests with the Ultrafast grid, specify the following in the `wdio.conf.js` file:
 
 ```js
 exports.config = {
@@ -568,7 +568,7 @@ exports.config = {
 }
 ```
 
-To specify which viewport sizes and browsers to render on the Ultra fast grid, use the `browsersInfo` entry in the configuration. For example:
+To specify which viewport sizes and browsers to render on the Ultrafast grid, use the `browsersInfo` entry in the configuration. For example:
 
 ```js
 exports.config = {
@@ -810,15 +810,15 @@ This method is not sensitive to scroll events, and is usually the recommended me
 
 ### Stitch overlap
 
+The stitch overlap is the length of the intersecting area between two screenshots that are stitched together. It's like placing two printed pictures one on top of the other with some overlapping area between them.
+
+This is useful in cases of fixed elements, like a footer, that show up in each of the sub-screenshots. Using a stitch overlap bigger than the size of the footer would make it disappear from every image, and only show up at the bottom of the full page screenshot.
+
 The default stitch overlap is 50 pixels. To change it:
 
 ```js
 eyes.setStitchOverlap(60)
 ```
-
-The stitch overlap is the length of the intersecting area between two screenshots that are stitched together. It's like placing two printed pictures one on top of the other with some overlapping area between them.
-
-This is useful in cases of fixed elements, like a footer, that show up in each of the sub-screenshots. Using a stitch overlap bigger than the size of the footer would make it disappear from every image, and only show up at the bottom of the full page screenshot.
 
 ### Match level
 
@@ -954,9 +954,9 @@ eyes.setLogHandler(new FileLogHandler(false, path.resolve('logs', 'eyes.log')))
 eyes.setLogHandler(new FileLogHandler(true, path.resolve('logs', `eyes-${Date.now()}.log`), false))
 ```
 
-### Configuring browsers for the Ultra fast grid
+### Configuring browsers for the Ultrafast grid
 
-When it comes to multiple browsers and mobile devices, the Ultra fast grid shines.
+When it comes to multiple browsers and mobile devices, the Ultrafast grid shines.
 It's now possible to run one functional test, and in the background have multiple screenshots rendered for different browsers, viewport sizes, and mobile devices.
 
 The API methods are:

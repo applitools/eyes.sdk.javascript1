@@ -278,15 +278,15 @@ This method is not sensitive to scroll events, and is usually the recommended me
 
 ### Stitch overlap
 
+The stitch overlap is the length of the intersecting area between two screenshots that are stitched together. It's like placing two printed pictures one on top of the other with some overlapping area between them.
+
+This is useful in cases of fixed elements, like a footer, that show up in each of the sub-screenshots. Using a stitch overlap bigger than the size of the footer would make it disappear from every image, and only show up at the bottom of the full page screenshot.
+
 The default stitch overlap is 50 pixels. To change it:
 
 ```js
 eyes.setStitchOverlap(60)
 ```
-
-The stitch overlap is the length of the intersecting area between two screenshots that are stitched together. It's like placing two printed pictures one on top of the other with some overlapping area between them.
-
-This is useful in cases of fixed elements, like a footer, that show up in each of the sub-screenshots. Using a stitch overlap bigger than the size of the footer would make it disappear from every image, and only show up at the bottom of the full page screenshot.
 
 ### Match level
 

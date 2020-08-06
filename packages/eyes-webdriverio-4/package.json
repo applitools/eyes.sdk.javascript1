@@ -3,7 +3,6 @@
   "version": "2.20.1",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "main": "index.js",
-  "typings": "./typings/index.d.ts",
   "scripts": {
     "lint": "eslint '**/*.js'",
     "render": "node ../sdk-shared/src/render.js",
@@ -14,7 +13,7 @@
     "coverage:generate": "coverage-tests create-tests",
     "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
     "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
-    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --no-timeouts --reporter spec-xunit-file --parallel --jobs 15 {'./test/coverage/generic/*.spec.js','../sdk-coverage-tests/coverage-tests/custom/**/*.spec.js'}",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "types:generate": "rm -rf ./typings && tsc --declaration --declarationDir ./typings --allowJs --emitDeclarationOnly ./index.js",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
@@ -27,16 +26,17 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": "https://github.com/applitools/eyes.sdk.javascript1",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "11.5.0",
-    "@applitools/visual-grid-client": "14.6.0"
+    "@applitools/eyes-sdk-core": "12.1.0",
+    "@applitools/visual-grid-client": "14.7.0"
   },
   "peerDependencies": {
     "webdriverio": "~4.14.4"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "1.0.0",
+    "@applitools/sdk-coverage-tests": "1.0.12",
     "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
+    "@applitools/sdk-shared": "0.1.0",
     "@types/webdriverio": "^4.13.3",
     "axios": "^0.19.2",
     "chai": "^4.2.0",

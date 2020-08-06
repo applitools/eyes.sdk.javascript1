@@ -3,6 +3,34 @@
 ## Unreleased
 
 
+## 14.7.1 - 2020/8/6
+
+- updated to @applitools/dom-snapshot@4.0.3 (from 4.0.2)
+
+## 14.7.0 - 2020/8/6
+
+- support adoptedStyleSheets ([Trello](https://trello.com/c/cX4q0DzH) [Trello](https://trello.com/c/a22B3tUB))
+- add support for `visualGridOptions` in render requests
+- updated to @applitools/dom-snapshot@4.0.2 (from 4.0.1)
+- updated to @applitools/eyes-sdk-core@12.1.0 (from 12.0.1)
+
+## 14.6.4 - 2020/8/5
+
+- updated to @applitools/eyes-sdk-core@12.0.1 (from 12.0.0)
+
+## 14.6.3 - 2020/8/5
+
+- updated to @applitools/eyes-sdk-core@12.0.0 (from 11.5.1)
+
+## 14.6.2 - 2020/7/30
+
+- remove feature-flags package dependency
+- updated to @applitools/dom-snapshot@4.0.1 (from 4.0.0)
+
+## 14.6.1 - 2020/7/28
+
+- updated to @applitools/eyes-sdk-core@11.5.1 (from 11.5.0)
+
 ## 14.6.0 - 2020/7/26
 
 - support non-200 resources ([Trello](https://trello.com/c/J5lBWutP))

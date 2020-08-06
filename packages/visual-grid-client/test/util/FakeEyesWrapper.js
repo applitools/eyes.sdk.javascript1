@@ -119,6 +119,7 @@ class FakeEyesWrapper extends EventEmitter {
     const iosDeviceInfo = renderInfo.getIosDeviceInfo()
     const selectorsToFindRegionsFor = renderRequest.getSelectorsToFindRegionsFor()
     const platform = renderRequest.getPlatform()
+    const visualGridOptions = renderRequest.getVisualGridOptions()
 
     const isGood = isGoodCdt && isGoodResources
     const renderId = JSON.stringify({
@@ -131,6 +132,7 @@ class FakeEyesWrapper extends EventEmitter {
       iosDeviceInfo,
       selectorsToFindRegionsFor,
       platform,
+      visualGridOptions,
       salt: salt++,
     })
 

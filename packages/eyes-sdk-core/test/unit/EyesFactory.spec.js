@@ -12,35 +12,35 @@ const {
   BatchInfo,
   PropertyData,
 } = require('../../index')
-const FakeEyesFactory = require('../utils/FakeEyesFactory')
+const {EyesFactory} = require('../utils/FakeSDK')
 
 describe('EyesFactory', function() {
   it('should create EyesClassic by default', async function() {
-    const eyes = new FakeEyesFactory()
+    const eyes = new EyesFactory()
     assert.ok(!eyes.isVisualGrid())
     assert.ok(eyes instanceof EyesClassic)
   })
 
   it('should create EyesVisualGrid with VisualGridRunner', async function() {
-    const eyes = new FakeEyesFactory(new VisualGridRunner())
+    const eyes = new EyesFactory(new VisualGridRunner())
     assert.ok(eyes.isVisualGrid())
     assert.ok(eyes instanceof EyesVisualGrid)
   })
 
   it('should create an EyesClassic instance through fromBrowserInfo', () => {
-    const eyes = FakeEyesFactory.fromBrowserInfo()
+    const eyes = EyesFactory.fromBrowserInfo()
     assert.ok(eyes instanceof EyesClassic)
   })
 
   it('should create an EyesVisualGrid instance through fromBrowserInfo', () => {
-    const eyes = FakeEyesFactory.fromBrowserInfo(undefined, undefined, {
+    const eyes = EyesFactory.fromBrowserInfo(undefined, undefined, {
       browser: [{name: 'iPhone 4', width: 400, height: 600}],
     })
     assert.ok(eyes instanceof EyesVisualGrid)
   })
 
   it('set configuration from object', async function() {
-    const eyes = new FakeEyesFactory(new VisualGridRunner())
+    const eyes = new EyesFactory(new VisualGridRunner())
     const date = new Date()
     eyes.setConfiguration({
       apiKey: 'sameApiKey',

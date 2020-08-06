@@ -1,0 +1,4 @@
+scripts/*.json
+.env
+.vscode
+.idea

@@ -24,8 +24,7 @@ class FirefoxRegionPositionCompensation extends RegionPositionCompensation {
       return region
     }
 
-    const frameChain = this._eyes.getDriver().context.frameChain
-    if (frameChain.size > 0) {
+    if (!this._eyes.getDriver().currentContext.isMain) {
       return region
     }
 

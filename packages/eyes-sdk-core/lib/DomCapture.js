@@ -73,13 +73,13 @@ class DomCapture {
   }
 
   async isInternetExplorer() {
-    const browserName = await this._driver.controller.getBrowserName()
+    const browserName = this._driver.browserName
     return browserName === 'internet explorer'
   }
 
   async isEdgeClassic() {
-    const browserName = await this._driver.controller.getBrowserName()
-    const browserVersion = await this._driver.controller.getBrowserVersion()
+    const browserName = this._driver.browserName
+    const browserVersion = this._driver.browserVersion
     if (browserName)
       return browserName.toLowerCase().includes('edge') && Math.floor(browserVersion) <= 44
   }
@@ -105,7 +105,7 @@ class DomCapture {
       script = this._customScript
     }
 
-    const url = await this._driver.controller.getSource()
+    const url = await this._driver.getUrl()
     return this.getFrameDom(script, url)
   }
 
@@ -126,7 +126,7 @@ class DomCapture {
 
       do {
         this._logger.verbose('executing dom capture')
-        const resultAsString = await this._driver.executor.executeScript(script)
+        const resultAsString = await this._driver.execute(script)
         result = JSON.parse(resultAsString)
         await GeneralUtils.sleep(DOM_CAPTURE_PULL_TIMEOUT)
       } while (result.status === SCRIPT_RESPONSE_STATUS.WIP && !isCheckTimerTimedOut)
@@ -212,7 +212,7 @@ class DomCapture {
   }
 
   async getLocation() {
-    return this._driver.executor.executeScript(DOCUMENT_LOCATION_HREF_SCRIPT)
+    return this._driver.execute(DOCUMENT_LOCATION_HREF_SCRIPT)
   }
 
   /**
@@ -227,9 +227,7 @@ class DomCapture {
 
     let framesCount = 0
     for (const xpath of xpaths) {
-      const iframeEl = await this._driver.finder.findElement(
-        this._driver.specs.toSupportedSelector({type: 'xpath', selector: `/${xpath}`}),
-      )
+      const iframeEl = await this._driver.element({type: 'xpath', selector: `/${xpath}`})
       await this._driver.context.frame(iframeEl)
       framesCount += 1
     }

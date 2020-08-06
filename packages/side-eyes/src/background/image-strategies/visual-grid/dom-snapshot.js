@@ -19,7 +19,7 @@ function mapFrameResourceContents(frames) {
 function mapResourceContents(snapshot) {
   return snapshot.blobs.map(r => ({
     ...r,
-    value: Buffer.from(r.value),
+    value: r.value ? Buffer.from(r.value) : undefined,
   }))
 }
 

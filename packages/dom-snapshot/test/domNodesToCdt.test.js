@@ -1,17 +1,12 @@
 'use strict';
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
-const {JSDOM} = require('jsdom');
 const domNodesToCdt = require('../src/browser/domNodesToCdt');
 const {loadFixture, loadJsonFixture} = require('./util/loadFixture');
 const fs = require('fs');
 const {resolve} = require('path');
-const {testServer} = require('@applitools/sdk-shared');
-
-function getDocNode(htmlStr) {
-  const dom = new JSDOM(htmlStr, {url: 'http://something.org/', resources: 'usable'});
-  return dom.window.document;
-}
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
+const getDocNode = require('./util/getDocNode');
 
 const Node = {
   ELEMENT_NODE: 1,

@@ -44,7 +44,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
     "mocha": "^6.2.2",
     "typescript": "^3.6.4"

@@ -4,7 +4,7 @@ const path = require('path')
 const chromedriver = require('chromedriver')
 const {URL} = require('url')
 const cwd = process.cwd()
-const spec = require(path.resolve(cwd, 'src/SpecWrappedDriver'))
+const spec = require(path.resolve(cwd, 'src/SpecDriver'))
 const {
   Eyes,
   ClassicRunner,
@@ -194,6 +194,10 @@ const args = yargs
     describe: 'stitch overlap',
     type: 'number',
   })
+  .option('save-debug-screenshots', {
+    describe: 'saveDebugScreenshots',
+    type: 'boolean',
+  })
   .help().argv
 
 let [url] = args._
@@ -288,6 +292,14 @@ if (!url && !args.attach) {
   logger.log('[render script] Running Selenium render for', url)
   logger.log(`[render script] process versions: ${JSON.stringify(process.versions)}`)
   console.log('log file at:', logFilePath)
+
+  if (args.saveDebugScreenshots) {
+    eyes.setSaveDebugScreenshots(true)
+    const debugScreenshotsPath = logFilePath.replace('.log', '')
+    console.log('debug screenshots at:', debugScreenshotsPath)
+    fs.mkdirSync(debugScreenshotsPath)
+    eyes.setDebugScreenshotsPath(debugScreenshotsPath)
+  }
 
   if (!args.attach) {
     await spec.visit(driver, url)

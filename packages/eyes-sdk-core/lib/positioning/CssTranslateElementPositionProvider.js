@@ -3,7 +3,7 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
 const Location = require('../geometry/Location')
 const PositionProvider = require('./PositionProvider')
 const PositionMemento = require('./PositionMemento')
-const EyesUtils = require('../EyesUtils')
+const EyesUtils = require('../sdk/EyesUtils')
 
 /**
  * @typedef {import('../geometry/RectangleSize')} RectangleSize
@@ -58,17 +58,18 @@ class CssTranslateElementPositionProvider extends PositionProvider {
    */
   async getCurrentPosition(customScrollRootElement) {
     try {
-      const scrollPosition = await EyesUtils.getScrollLocation(
+      const scrollRootElement = customScrollRootElement || this._element
+      const scrollPosition = await EyesUtils.getScrollOffset(
         this._logger,
-        this._executor,
-        customScrollRootElement || this._element,
+        scrollRootElement ? scrollRootElement.context : this._executor,
+        scrollRootElement,
       )
-      const translatePosition = await EyesUtils.getTranslateLocation(
+      const translatePosition = await EyesUtils.getTranslateOffset(
         this._logger,
-        this._executor,
-        customScrollRootElement || this._element,
+        scrollRootElement ? scrollRootElement.context : this._executor,
+        scrollRootElement,
       )
-      return scrollPosition.offsetByLocation(translatePosition)
+      return new Location(scrollPosition).offsetByLocation(new Location(translatePosition))
     } catch (err) {
       // Sometimes it is expected e.g. on Appium, otherwise, take care
       this._logger.verbose(`Failed to set current scroll position!.`, err)
@@ -133,7 +134,7 @@ class CssTranslateElementPositionProvider extends PositionProvider {
    */
   async getState(customScrollRootElement) {
     try {
-      const position = await EyesUtils.getScrollLocation(
+      const position = await EyesUtils.getScrollOffset(
         this._logger,
         this._executor,
         customScrollRootElement || this._element,

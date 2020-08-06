@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.12.5",
+  "version": "3.13.1",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -37,10 +37,10 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "4.0.0",
-    "@applitools/eyes-sdk-core": "11.5.0",
+    "@applitools/dom-snapshot": "4.0.3",
+    "@applitools/eyes-sdk-core": "12.1.0",
     "@applitools/functional-commons": "1.5.4",
-    "@applitools/visual-grid-client": "14.6.0",
+    "@applitools/visual-grid-client": "14.7.1",
     "body-parser": "^1.19.0",
     "chalk": "3.0.0",
     "cors": "^2.8.5",
@@ -48,7 +48,7 @@
     "lodash.flatten": "^4.4.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@applitools/sdk-shared": "0.1.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",

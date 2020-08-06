@@ -5,12 +5,12 @@ const path = require('path')
 const {expect} = require('chai')
 const {Target} = require('../../..')
 const {
-  TestSetup: {getEyes, Browsers},
-} = require('@applitools/sdk-coverage-tests/coverage-tests')
+  testSetup: {getEyes},
+} = require('@applitools/sdk-shared')
 const ncp = require('ncp')
 const {promisify} = require('util')
 const pncp = promisify(ncp)
-const SpecWrappedElement = require('../../../src/SpecWrappedElement')
+const spec = require('../../../src/SpecDriver')
 
 describe('JS Coverage tests', () => {
   it('works in a project with duplicate protractor', async () => {
@@ -25,7 +25,7 @@ describe('JS Coverage tests', () => {
       path.resolve(otherNodeModules, 'protractor'),
     )
     await pncp(
-      path.resolve(require.resolve('selenium-webdriver'), '..'), // eslint-disable-line node/no-extraneous-require
+      path.resolve(require.resolve('selenium-webdriver'), '..'), // eslint-disable-line node/no-extraneous-require,node/no-missing-require
       path.resolve(otherNodeModules, 'selenium-webdriver'),
     )
 
@@ -33,14 +33,14 @@ describe('JS Coverage tests', () => {
     module.constructor._pathCache = {}
 
     // we can't use TestSetup because the driver needs to be require'd from this module
-    const driver = await buildDriver()
+    const driver = await spec.build({browser: 'chrome'})
 
     try {
       await driver.get('https://example.org')
 
       // verify that the specific API that this test was written to fix is working
       const el = await driver.findElement(driver.by.css('html'))
-      expect(SpecWrappedElement.isCompatible(el)).to.be.true
+      expect(spec.isElement(el)).to.be.true
 
       // verify that overall everything is working
       const eyes = getEyes()
@@ -53,21 +53,3 @@ describe('JS Coverage tests', () => {
     }
   })
 })
-
-async function buildDriver() {
-  const {Builder, Runner} = require('protractor')
-  const seleniumWebDriver = await new Builder()
-    .withCapabilities(Browsers.chrome())
-    .usingServer(process.env.CVG_TESTS_REMOTE)
-    .build()
-  const runner = new Runner({
-    seleniumWebDriver,
-    logLevel: 'ERROR',
-    allScriptsTimeout: 60000,
-    getPageTimeout: 10000,
-  })
-  const driver = await runner.createBrowser().ready
-  driver.by = driver.constructor.By
-  driver.waitForAngularEnabled(false)
-  return driver
-}

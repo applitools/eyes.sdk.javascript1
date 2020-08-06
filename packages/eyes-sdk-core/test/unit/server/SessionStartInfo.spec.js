@@ -17,12 +17,11 @@ const {
   AccessibilityGuidelinesVersion,
   AccessibilityRegionType,
   AccessibilityRegionByRectangle,
-  DriverCheckSettings,
   MatchWindowTask,
 } = require('../../../index')
 const {EyesBaseImpl} = require('../../testUtils')
 
-const CheckSettings = DriverCheckSettings.specialize({WrappedElement: () => {}, Frame: () => {}})
+const {CheckSettings} = require('../../utils/FakeSDK')
 
 describe('SessionStartInfo', () => {
   it('TestSerialization', () => {

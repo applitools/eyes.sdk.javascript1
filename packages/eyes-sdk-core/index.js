@@ -9,7 +9,7 @@
 
 /**
  * @template TDriver, TElement, TSelector
- * @typedef {import('./lib/wrappers/EyesWrappedDriver').SpecDriver<TDriver, TElement, TSelector>} SpecDriver
+ * @typedef {import('./lib/wrappers/EyesDriver').SpecDriver<TDriver, TElement, TSelector>} SpecDriver
  */
 
 /**
@@ -128,6 +128,7 @@ exports.ValidationResult = require('./lib/events/ValidationResult')
 
 exports.CheckSettings = require('./lib/fluent/CheckSettings')
 exports.DriverCheckSettings = require('./lib/fluent/DriverCheckSettings')
+exports.FluentRegion = require('./lib/fluent/FluentRegion')
 exports.GetRegion = require('./lib/fluent/GetRegion')
 exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle')
 exports.IgnoreRegionBySelector = require('./lib/fluent/IgnoreRegionBySelector')
@@ -207,11 +208,6 @@ exports.TextTrigger = require('./lib/triggers/TextTrigger')
 exports.Trigger = require('./lib/triggers/Trigger')
 
 exports.AppEnvironment = require('./lib/AppEnvironment')
-exports.EyesBase = require('./lib/EyesBase')
-exports.EyesClassic = require('./lib/EyesClassic')
-exports.EyesVisualGrid = require('./lib/EyesVisualGrid')
-exports.EyesFactory = require('./lib/EyesFactory')
-exports.EyesUtils = require('./lib/EyesUtils')
 exports.FailureReports = require('./lib/FailureReports')
 exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask')
 exports.MatchWindowTask = require('./lib/MatchWindowTask')
@@ -221,14 +217,15 @@ exports.AccessibilityStatus = require('./lib/AccessibilityStatus')
 exports.TestResultsFormatter = require('./lib/TestResultsFormatter')
 exports.TestResultsStatus = require('./lib/TestResultsStatus')
 
-exports.FrameChain = require('./lib/frames/FrameChain')
-exports.Frame = require('./lib/frames/Frame')
-
-exports.EyesWrappedDriver = require('./lib/wrappers/EyesWrappedDriver')
-exports.EyesWrappedElement = require('./lib/wrappers/EyesWrappedElement')
-exports.EyesJsExecutor = require('./lib/wrappers/EyesJsExecutor')
-exports.EyesElementFinder = require('./lib/wrappers/EyesElementFinder')
-exports.EyesBrowsingContext = require('./lib/wrappers/EyesBrowsingContext')
+exports.EyesBase = require('./lib/sdk/EyesBase')
+exports.EyesClassic = require('./lib/sdk/EyesClassic')
+exports.EyesVisualGrid = require('./lib/sdk/EyesVisualGrid')
+exports.EyesFactory = require('./lib/sdk/EyesFactory')
+exports.EyesUtils = require('./lib/sdk/EyesUtils')
+exports.EyesDriver = require('./lib/sdk/EyesDriver')
+exports.EyesContext = require('./lib/sdk/EyesContext')
+exports.EyesElement = require('./lib/sdk/EyesElement')
+exports.EyesSDK = require('./lib/sdk/EyesSDK')
 
 exports.EyesRunner = require('./lib/runner/EyesRunner')
 exports.ClassicRunner = require('./lib/runner/ClassicRunner')
