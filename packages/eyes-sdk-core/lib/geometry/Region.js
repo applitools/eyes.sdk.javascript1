@@ -124,6 +124,19 @@ const getSubRegionsWithVaryingSize = (containerRegion, maxSubRegionSize, scrollD
 class Region {
   /**
    * Creates a Region instance.
+   * @signature `new Region(left,top,width,height)`
+   * @sigparam {number} left
+   * @sigparam {number} top
+   * @sigparam {number} width
+   * @sigparam {number} height 
+   *
+   * @signature `new Region(region)`
+   * @sigparam {Region|RegionObject} region  
+   *  
+   * @signature `new Region(location, size)`
+   * @sigparam {Location} location
+   * @sigparam {Location} size
+   *
    * @param {Region|RegionObject|Location|number} varArg1 - The Region (or object) to clone from, the Location of new region or the left offset of new region.
    * @param {RectangleSize|number} [varArg2] - The Region size or the top offset of new region.
    * @param {CoordinatesType|number} [varArg3] - The width of new region.

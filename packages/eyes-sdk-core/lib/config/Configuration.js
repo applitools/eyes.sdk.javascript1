@@ -1246,6 +1246,12 @@ class Configuration {
   }
 
   /**
+   * @signature `addBrowser(renderInfo)`
+   * @sigparam  {RenderInfo} renderInfo
+   * @signature `addBrowser(width, height, browserType)`   
+   * @sigparam {number} width
+   * @sigparam {number} height
+   * @sigparam {BrowserType} [browserType = BrowserType.CHROME]
    * @param {number|RenderInfo} widthOrBrowserInfo
    * @param {number} [height]
    * @param {BrowserType} [browserType]

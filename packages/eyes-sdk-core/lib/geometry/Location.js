@@ -12,6 +12,11 @@ const TypeUtils = require('../utils/TypeUtils')
 class Location {
   /**
    * Creates a Location instance.
+   * @signature `new Location(x,y)`
+   * @sigparam {number} x
+   * @sigparam {number} y
+   * @signature `new Location(location)`
+   * @sigparam {Location|LocationObject} location
    * @param {Location|LocationObject|number} varArg1 - The Location (or object) to clone from or the X coordinate of new Location.
    * @param {number} [varArg2] - The Y coordinate of new Location.
    */

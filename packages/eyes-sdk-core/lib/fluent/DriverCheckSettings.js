@@ -82,10 +82,10 @@ const GeneralUtils = require('../utils/GeneralUtils')
  * @prop {RegionReference<TElement, TSelector>} [region]
  * @prop {({frame: FrameReference<TElement, TSelector>, scrollRootElement?: ElementReference<TElement, TSelector>}|FrameReference<TElement, TSelector>)[]} [frames]
  * @prop {ElementReference<TElement, TSelector>} [scrollRootElement]
- * @prop {RegionReference<TElement, TSelector>[]} [ignoreRegions]
- * @prop {RegionReference<TElement, TSelector>[]} [layoutRegion]
- * @prop {RegionReference<TElement, TSelector>[]} [strictRegions]
- * @prop {RegionReference<TElement, TSelector>[]} [contentRegions]
+ * @prop {(RegionReference<TElement, TSelector>)[]} [ignoreRegions]
+ * @prop {(RegionReference<TElement, TSelector>)[]} [layoutRegion]
+ * @prop {(RegionReference<TElement, TSelector>)[]} [strictRegions]
+ * @prop {(RegionReference<TElement, TSelector>)[]} [contentRegions]
  * @prop {(FloatingRegionReference<TElement, TSelector>|RegionReference<TElement, TSelector>)[]} [floatingRegions]
  * @prop {(AccessibilityRegionReference<TElement, TSelector>|RegionReference<TElement, TSelector>)[]} [accessibilityRegions]
  */
@@ -418,7 +418,7 @@ class CheckSettings {
   }
   /**
    * Adds one or more ignore regions.
-   * @param {RegionReference<TElement, TSelector>[]} regions - region references to ignore when validating the screenshot.
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - region references to ignore when validating the screenshot.
    * @return {this} this instance of the settings object.
    */
   ignoreRegions(...regions) {
@@ -427,7 +427,7 @@ class CheckSettings {
   }
   /**
    * Adds one or more ignore regions.
-   * @param {RegionReference<TElement, TSelector>[]} regions - region references to ignore when validating the screenshot.
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - region references to ignore when validating the screenshot.
    * @return {this} this instance of the settings object.
    */
   ignores(...regions) {
@@ -464,7 +464,7 @@ class CheckSettings {
   }
   /**
    * Adds one or more layout regions.
-   * @param {RegionReference<TElement, TSelector>[]} regions - region references to match using the Layout method.
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - region references to match using the Layout method.
    * @return {this} this instance of the settings object.
    */
   layoutRegions(...regions) {
@@ -509,7 +509,7 @@ class CheckSettings {
   }
   /**
    * Adds one or more strict regions.
-   * @param {RegionReference<TElement, TSelector>[]} regions - region references to match using the Strict method.
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - region references to match using the Strict method.
    * @return {this} this instance of the settings object.
    */
   strictRegions(...regions) {
@@ -540,7 +540,7 @@ class CheckSettings {
   }
   /**
    * Adds one or more content regions.
-   * @param {RegionReference<TElement, TSelector>[]} regions - region references to match using the Content method.
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - region references to match using the Content method.
    * @return {this} this instance of the settings object.
    */
   contentRegions(...regions) {
@@ -624,7 +624,7 @@ class CheckSettings {
    * Adds one or more floating regions. A floating region is a a region that can be placed within the boundaries
    * of a bigger region.
    * @param {number} maxOffset - how much each of the content rectangles can move in any direction.
-   * @param {RegionReference<TElement, TSelector>[]} regions - one or more content rectangles or region containers
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - one or more content rectangles or region containers
    * @return {this} this instance of the settings object.
    */
   floatingRegions(maxOffset, ...regions) {
@@ -637,7 +637,7 @@ class CheckSettings {
    * Adds one or more floating regions. A floating region is a a region that can be placed within the boundaries
    * of a bigger region.
    * @param {number} maxOffset - how much each of the content rectangles can move in any direction.
-   * @param {RegionReference<TElement, TSelector>[]} regions - one or more content rectangles or region containers
+   * @param {(RegionReference<TElement, TSelector>)[]} regions - one or more content rectangles or region containers
    * @return {this} this instance of the settings object.
    */
   floatings(maxOffset, ...regions) {

@@ -81,6 +81,7 @@ const EyesCore = require('./EyesCore')
 class EyesClassic extends EyesCore {
   /**
    * Create a specialized version of this class
+   * @internal
    * @template TDriver, TElement, TSelector
    * @param {Object} implementations - implementations of related classes
    * @param {string} implementations.agentId - base agent id
@@ -163,6 +164,12 @@ class EyesClassic extends EyesCore {
     this._closePromise = Promise.resolve()
   }
   /**
+   * @signature `open(driver, appName, testName, viewportSize)`
+   * @sigparam {TDriver} driver
+   * @sigparam {String} [appName] - application name
+   * @sigparam {String} [testName] - test name
+   * @sigparam {RectangleSize|{width: number, height: number}} [viewportSize] - viewport size
+   * @sigreturn {Promise<EyesWebDriver>}
    * @template {TDriver} CDriver
    * @param {CDriver} driver - driver object for the specific framework
    * @param {String} [appName] - application name
@@ -230,6 +237,10 @@ class EyesClassic extends EyesCore {
     return this._driver
   }
   /**
+   * @signature `check(name, checkSettings)`
+   * @sigparam {string} checkSettings
+   * @sigparam {CheckSettings<TElement, TSelector>} name   
+   * @signature `check(checkSettings)`   
    * @param {string|CheckSettings<TElement, TSelector>} [nameOrCheckSettings] - name of the test case
    * @param {CheckSettings<TElement, TSelector>} [checkSettings] - check settings for the described test case
    * @returns {Promise<MatchResult>}

@@ -14,6 +14,11 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
 class RectangleSize {
   /**
    * Creates a RectangleSize instance.
+   * @signature `new RectangleSize(object)`
+   * @sigparam {RectangleSize | PlainRectangleSize} object
+   * @signature `new RectangleSize(width, height)`
+   * @sigparam {number} width
+   * @sigparam {number} height
    * @param {RectangleSize|PlainRectangleSize|number} varArg1 - The RectangleSize (or object) to clone from or the width of new RectangleSize.
    * @param {number} [varArg2] - The height of new RectangleSize.
    */

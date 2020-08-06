@@ -255,7 +255,7 @@ class EyesCore extends EyesBase {
   /**
    * Adds a mouse trigger.
    * @param {MouseTrigger.MouseAction} action  Mouse action.
-   * @param {EyesWrappedElement<TDriver, TElement, TSelector>} element The element on which the click was called.
+   * @param {EyesWrappedElement<TDriver, TElement, TSelector>} element - The element on which the click was called.
    * @return {Promise}
    */
   async addMouseTriggerForElement(action, element) {
@@ -351,6 +351,7 @@ class EyesCore extends EyesBase {
   /**
    * Use this method only if you made a previous call to {@link #open(WebDriver, String, String)} or one of its variants.
    * @override
+   * @return {TBD} - The viewport size of the AUT.
    */
   async getViewportSize() {
     const viewportSize = this._viewportSizeHandler.get()
@@ -363,6 +364,7 @@ class EyesCore extends EyesBase {
    * Sets the browser's viewport size
    * @param {TDriver} driver - driver object for the specific framework
    * @param {RectangleSize|{width: number, height: number}} viewportSize - viewport size
+   * @return {Promise}
    */
   static async setViewportSize(driver, viewportSize) {
     const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
@@ -402,6 +404,9 @@ class EyesCore extends EyesBase {
 
   /**
    * Run visual locators
+   * @signature `locate(visualLocatorSettings)`
+   * @sigparam { {locatorNames: TLocatorName[], firstOnly : boolean} } visualLocatorSettings
+   * @sigreturn {RegionObject[]}
    * @template {string} TLocatorName
    * @param {Object} visualLocatorSettings
    * @param {Readonly<TLocatorName[]>} visualLocatorSettings.locatorNames
