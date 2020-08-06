@@ -1,15 +1,4 @@
-<<<<<<< HEAD:packages/eyes-sdk-core/lib/EyesCore.js
 'use strict'
-const ArgumentGuard = require('./utils/ArgumentGuard')
-const Region = require('./geometry/Region')
-const Location = require('./geometry/Location')
-const RectangleSize = require('./geometry/RectangleSize')
-const FrameChain = require('./frames/FrameChain')
-const ImageRotation = require('./positioning/ImageRotation')
-const ReadOnlyPropertyHandler = require('./handler/ReadOnlyPropertyHandler')
-const TestFailedError = require('./errors/TestFailedError')
-const EyesUtils = require('./EyesUtils')
-=======
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const Region = require('../geometry/Region')
 const Location = require('../geometry/Location')
@@ -17,7 +6,6 @@ const RectangleSize = require('../geometry/RectangleSize')
 const ImageRotation = require('../positioning/ImageRotation')
 const ReadOnlyPropertyHandler = require('../handler/ReadOnlyPropertyHandler')
 const TestFailedError = require('../errors/TestFailedError')
->>>>>>> master:packages/eyes-sdk-core/lib/sdk/EyesCore.js
 const EyesBase = require('./EyesBase')
 const Logger = require('../logging/Logger')
 const NullCutProvider = require('../cropping/NullCutProvider')
