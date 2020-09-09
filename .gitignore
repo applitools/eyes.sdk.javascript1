@@ -31,6 +31,9 @@ coverage-tests-metadata.json
 # yarn
 .yarn
 
+# Docker
+docker-compose.json
+
 # other
 tags
 support
