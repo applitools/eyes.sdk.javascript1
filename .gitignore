@@ -32,7 +32,7 @@ coverage-tests-metadata.json
 .yarn
 
 # Docker
-docker-compose.json
+docker-compose.yaml
 
 # other
 tags

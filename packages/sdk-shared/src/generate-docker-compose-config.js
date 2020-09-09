@@ -18,7 +18,7 @@ function generateDockerComposeConfig({saveToDisk, platform = process.platform} =
   }
   const result = JSON.stringify(config)
   if (!saveToDisk) return result
-  fs.writeFileSync(path.resolve(process.cwd(), 'docker-compose.json'), result)
+  fs.writeFileSync(path.resolve(process.cwd(), 'docker-compose.yaml'), result)
 }
 
 function generateNetworkConfigForPlatform(platform) {
