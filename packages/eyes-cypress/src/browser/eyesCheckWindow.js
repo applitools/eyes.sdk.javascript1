@@ -50,19 +50,18 @@ function makeEyesCheckWindow({sendRequest, processPage}) {
       const allBlobs = getAllBlobs(mainFrame)
         .filter(blob => !blob.errorStatusCode)
         .map(mapBlob);
-      const {resourceUrls, blobData, frames, url, cdt} = replaceBlobsWithBlobDataInFrame(mainFrame);
+      const snapshot = replaceBlobsWithBlobDataInFrame(mainFrame);
+      delete snapshot.url;
       return Promise.all(allBlobs.map(putResource)).then(() =>
         sendRequest({
           command: 'checkWindow',
           data: {
-            url,
-            resourceUrls,
-            cdt,
+            url: mainFrame.url,
+            snapshot,
             tag,
             sizeMode,
             target,
             fully,
-            blobData,
             selector,
             region,
             scriptHooks,
@@ -71,7 +70,6 @@ function makeEyesCheckWindow({sendRequest, processPage}) {
             layout,
             content,
             strict,
-            frames,
             sendDom,
             useDom,
             enablePatterns,
@@ -90,11 +88,11 @@ function makeEyesCheckWindow({sendRequest, processPage}) {
           method: 'PUT',
           headers: {'Content-Type': 'application/octet-stream'},
         }).catch(_e => {
-          blobData.splice(
-            blobData.findIndex(({url: blobUrl}) => blobUrl === url),
+          snapshot.blobData.splice(
+            snapshot.blobData.findIndex(({url: blobUrl}) => blobUrl === url),
             1,
           );
-          resourceUrls.push(url);
+          snapshot.resourceUrls.push(url);
         });
       }
     });

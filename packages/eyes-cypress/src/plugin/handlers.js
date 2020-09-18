@@ -93,10 +93,8 @@ function makeHandlers({
 
     checkWindow: async ({
       url,
-      resourceUrls,
-      cdt,
+      snapshot = {},
       tag,
-      blobData = [],
       sizeMode,
       target,
       fully,
@@ -108,7 +106,6 @@ function makeHandlers({
       layout,
       content,
       strict,
-      frames = [],
       sendDom,
       useDom,
       enablePatterns,
@@ -122,8 +119,11 @@ function makeHandlers({
         throw new Error('Please call cy.eyesOpen() before calling cy.eyesCheckWindow()');
       }
 
-      const resourceContents = blobDataToResourceContents(blobData);
-      const framesWithResources = createResourceContents(frames);
+      const _snapshot = Object.assign({}, snapshot);
+      // using Object.assign instead of spread operator to support older Node 8 versions
+      _snapshot.resourceContents = blobDataToResourceContents(snapshot.blobData);
+      delete _snapshot.blobData;
+      _snapshot.frames = createResourceContents(snapshot.frames);
 
       if (sizeMode) {
         console.warn(
@@ -133,9 +133,7 @@ function makeHandlers({
       }
       return await checkWindow({
         url,
-        resourceUrls,
-        resourceContents,
-        cdt,
+        snapshot: _snapshot,
         tag,
         sizeMode,
         target,
@@ -148,7 +146,6 @@ function makeHandlers({
         layout,
         content,
         strict,
-        frames: framesWithResources,
         sendDom,
         useDom,
         enablePatterns,
@@ -189,7 +186,7 @@ function makeHandlers({
     };
   }
 
-  function createResourceContents(frames) {
+  function createResourceContents(frames = []) {
     return frames.map(frame => {
       return {
         url: frame.url,
@@ -201,7 +198,7 @@ function makeHandlers({
     });
   }
 
-  function blobDataToResourceContents(blobData) {
+  function blobDataToResourceContents(blobData = []) {
     return blobData.reduce((acc, {url, type, errorStatusCode}) => {
       const data = errorStatusCode ? {url, errorStatusCode} : {url, type, value: resources[url]};
       acc[url] = data;

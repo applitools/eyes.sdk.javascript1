@@ -28,13 +28,15 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls,
-        blobData: [
-          {url: 'blobUrl1', type: 'blobType1'},
-          {url: 'blobUrl2', type: 'blobType2'},
-        ],
-        frames,
+        snapshot: {
+          cdt,
+          resourceUrls,
+          blobData: [
+            {url: 'blobUrl1', type: 'blobType1'},
+            {url: 'blobUrl2', type: 'blobType2'},
+          ],
+          frames,
+        },
         tag,
         ignore: undefined,
         floating: undefined,
@@ -149,13 +151,15 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls,
-        blobData: [
-          {url: 'blobUrl1', type: 'blobType1'},
-          {url: 'blobUrl2', type: 'blobType2'},
-        ],
-        frames,
+        snapshot: {
+          cdt,
+          resourceUrls,
+          blobData: [
+            {url: 'blobUrl1', type: 'blobType1'},
+            {url: 'blobUrl2', type: 'blobType2'},
+          ],
+          frames,
+        },
         tag,
         sizeMode,
         target,
@@ -240,32 +244,34 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls,
-        blobData: [{url: 'blobUrl1', type: 'blobType1'}],
-        frames: [
-          {
-            url: 'url1',
-            resourceUrls: [],
-            blobData: [
-              {url: 'blobUrl1', type: 'blobType1'},
-              {url: 'blobUrl2', type: 'blobType2'},
-            ],
-            cdt: 'cdt1',
-            frames: [
-              {
-                url: 'url2',
-                resourceUrls: [],
-                blobData: [
-                  {url: 'blobUrl1', type: 'blobType1'},
-                  {url: 'blobUrl3', type: 'blobType3'},
-                ],
-                cdt: 'cdt2',
-                frames: [],
-              },
-            ],
-          },
-        ],
+        snapshot: {
+          cdt,
+          resourceUrls,
+          blobData: [{url: 'blobUrl1', type: 'blobType1'}],
+          frames: [
+            {
+              url: 'url1',
+              resourceUrls: [],
+              blobData: [
+                {url: 'blobUrl1', type: 'blobType1'},
+                {url: 'blobUrl2', type: 'blobType2'},
+              ],
+              cdt: 'cdt1',
+              frames: [
+                {
+                  url: 'url2',
+                  resourceUrls: [],
+                  blobData: [
+                    {url: 'blobUrl1', type: 'blobType1'},
+                    {url: 'blobUrl3', type: 'blobType3'},
+                  ],
+                  cdt: 'cdt2',
+                  frames: [],
+                },
+              ],
+            },
+          ],
+        },
         tag: undefined,
         sizeMode: undefined,
         target: undefined,
@@ -346,10 +352,12 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls,
-        blobData: [{url: 'blobUrl', type: 'application/x-applitools-unknown'}],
-        frames: [],
+        snapshot: {
+          cdt,
+          resourceUrls,
+          blobData: [{url: 'blobUrl', type: 'application/x-applitools-unknown'}],
+          frames: [],
+        },
         tag: undefined,
         sizeMode: undefined,
         target: undefined,
@@ -419,10 +427,12 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls: ['resourceUrls', 'blobUrl2', 'blobUrl3'],
-        blobData: [{url: 'blobUrl1', type: 'blobType1'}],
-        frames,
+        snapshot: {
+          cdt,
+          resourceUrls: ['resourceUrls', 'blobUrl2', 'blobUrl3'],
+          blobData: [{url: 'blobUrl1', type: 'blobType1'}],
+          frames,
+        },
         tag,
         ignore: undefined,
         floating: undefined,
@@ -492,10 +502,12 @@ describe('eyesCheckWindow', () => {
       command: 'checkWindow',
       data: {
         url,
-        cdt,
-        resourceUrls,
-        blobData: [{url: 'blobUrl1', errorStatusCode: 500}],
-        frames,
+        snapshot: {
+          cdt,
+          resourceUrls,
+          blobData: [{url: 'blobUrl1', errorStatusCode: 500}],
+          frames,
+        },
         tag,
         ignore: undefined,
         floating: undefined,
