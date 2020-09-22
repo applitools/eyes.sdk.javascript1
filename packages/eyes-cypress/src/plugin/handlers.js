@@ -119,11 +119,11 @@ function makeHandlers({
         throw new Error('Please call cy.eyesOpen() before calling cy.eyesCheckWindow()');
       }
 
-      const _snapshot = Object.assign({}, snapshot);
+      const snapshotWithResourceContents = Object.assign({}, snapshot);
       // using Object.assign instead of spread operator to support older Node 8 versions
-      _snapshot.resourceContents = blobDataToResourceContents(snapshot.blobData);
-      delete _snapshot.blobData;
-      _snapshot.frames = createResourceContents(snapshot.frames);
+      snapshotWithResourceContents.resourceContents = blobDataToResourceContents(snapshot.blobData);
+      delete snapshotWithResourceContents.blobData;
+      snapshotWithResourceContents.frames = createResourceContents(snapshot.frames);
 
       if (sizeMode) {
         console.warn(
@@ -133,7 +133,7 @@ function makeHandlers({
       }
       return await checkWindow({
         url,
-        snapshot: _snapshot,
+        snapshot: snapshotWithResourceContents,
         tag,
         sizeMode,
         target,
