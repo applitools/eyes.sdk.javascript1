@@ -119,11 +119,11 @@ function makeHandlers({
         throw new Error('Please call cy.eyesOpen() before calling cy.eyesCheckWindow()');
       }
 
-      const snapshotWithResourceContents = Object.assign({}, snapshot);
-      // using Object.assign instead of spread operator to support older Node 8 versions
-      snapshotWithResourceContents.resourceContents = blobDataToResourceContents(snapshot.blobData);
+      const snapshotWithResourceContents = Object.assign({}, snapshot, {
+        resourceContents: blobDataToResourceContents(snapshot.blobData),
+        frames: createResourceContents(snapshot.frames),
+      });
       delete snapshotWithResourceContents.blobData;
-      snapshotWithResourceContents.frames = createResourceContents(snapshot.frames);
 
       if (sizeMode) {
         console.warn(
