@@ -21,6 +21,8 @@ function processResults({results = [], totalTime, concurrency}) {
   );
   errors = flatten(errors).filter(({err}) => err.constructor.name === 'Error');
 
+  outputStr += `See details at ${(passedOrNew[0] || unresolved[0]).getAppUrls().getBatch()}\n\n`;
+
   outputStr += '[EYES: TEST RESULTS]:\n\n';
   if (passedOrNew.length > 0) {
     outputStr += testResultsOutput(passedOrNew);
