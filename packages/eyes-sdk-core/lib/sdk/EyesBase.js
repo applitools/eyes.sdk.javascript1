@@ -2028,7 +2028,7 @@ class EyesBase {
 
     try {
       if (this._configuration._batch) {
-        const batchId = this._getSetBatchId()
+        const batchId = this.getBatchIdWithoutGenerating()
         await this._serverConnector.deleteBatchSessions(batchId)
       } else {
         this._logger.log('Failed to close batch: no batch found.')
@@ -2042,7 +2042,7 @@ class EyesBase {
     const isGeneratedId =
       this._configuration._batch && this._configuration._batch.getIsGeneratedId()
     if (!isGeneratedId) {
-      return this._getSetBatchId()
+      return this.getBatchIdWithoutGenerating()
     }
   }
 
@@ -2051,7 +2051,7 @@ class EyesBase {
    * do not do eyesInstance.getBatch().getId() because it would generate
    * a new id if called before open.
    */
-  _getSetBatchId() {
+  getBatchIdWithoutGenerating() {
     // TODO
     // we need the Configuration to check for default values like getEnvValue('BATCH_ID') instead of
     // it creating new Objects (with defaults) on demand, see Configuration#getBatch().

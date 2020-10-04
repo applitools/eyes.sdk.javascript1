@@ -20,7 +20,7 @@ function makeAbort({
   return async () => {
     testController.setIsAbortedByUser()
 
-    const batchId = wrappers[0].getUserSetBatchId()
+    const batchId = wrappers[0].getBatchIdWithoutGenerating()
     globalState.batchStore.addId(batchId)
 
     return waitAndResolveTests(async testIndex => {
