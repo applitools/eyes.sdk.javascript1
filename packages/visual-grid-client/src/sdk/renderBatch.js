@@ -2,6 +2,7 @@
 
 const {RenderStatus} = require('@applitools/eyes-sdk-core')
 const toCacheEntry = require('./toCacheEntry')
+const resourceType = require('./resourceType')
 
 function makeRenderBatch({putResources, resourceCache, fetchCache, logger, doRenderBatch}) {
   return async function renderBatch(renderRequests) {
@@ -15,10 +16,11 @@ function makeRenderBatch({putResources, resourceCache, fetchCache, logger, doRen
           await putResources(renderRequest.getDom(), runningRender, renderRequest.getResources())
         }
         for (const resource of renderRequest.getResources()) {
-          logger.verbose('adding resource to cache: ', resource.getUrl())
+          logger.verbose('setting resource to cache: ', resource.getUrl())
           const url = resource.getUrl()
           fetchCache.remove(url)
-          resourceCache.setValue(url, toCacheEntry(resource))
+          const doesRequireProcessing = !!resourceType(resource.getContentType())
+          resourceCache.setValue(url, toCacheEntry(resource, doesRequireProcessing))
         }
       }),
     )

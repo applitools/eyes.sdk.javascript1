@@ -24,6 +24,8 @@ function makeHandlers({
     open: async args => {
       try {
         logger.log(`[handlers] open: close=${typeof close}, args=`, args);
+        args.accessibilitySettings = args.accessibilityValidation;
+        delete args.accessibilityValidation;
         const eyes = await openEyes(args);
         const runningTest = {
           abort: eyes.abort,
@@ -91,10 +93,8 @@ function makeHandlers({
 
     checkWindow: async ({
       url,
-      resourceUrls,
-      cdt,
+      snapshot = {},
       tag,
-      blobData = [],
       sizeMode,
       target,
       fully,
@@ -106,22 +106,24 @@ function makeHandlers({
       layout,
       content,
       strict,
-      frames = [],
       sendDom,
       useDom,
       enablePatterns,
       ignoreDisplacements,
-      referrer,
-      accessibilityLevel,
       accessibility,
+      matchLevel,
+      visualGridOptions,
     }) => {
       logger.log(`[handlers] checkWindow: checkWindow=${typeof checkWindow}`);
       if (!checkWindow) {
         throw new Error('Please call cy.eyesOpen() before calling cy.eyesCheckWindow()');
       }
 
-      const resourceContents = blobDataToResourceContents(blobData);
-      const framesWithResources = createResourceContents(frames);
+      const snapshotWithResourceContents = Object.assign({}, snapshot, {
+        resourceContents: blobDataToResourceContents(snapshot.blobData),
+        frames: createResourceContents(snapshot.frames),
+      });
+      delete snapshotWithResourceContents.blobData;
 
       if (sizeMode) {
         console.warn(
@@ -131,9 +133,7 @@ function makeHandlers({
       }
       return await checkWindow({
         url,
-        resourceUrls,
-        resourceContents,
-        cdt,
+        snapshot: snapshotWithResourceContents,
         tag,
         sizeMode,
         target,
@@ -146,14 +146,13 @@ function makeHandlers({
         layout,
         content,
         strict,
-        frames: framesWithResources,
         sendDom,
         useDom,
         enablePatterns,
         ignoreDisplacements,
-        referrer,
         accessibility,
-        accessibilityLevel,
+        matchLevel,
+        visualGridOptions,
       });
     },
 
@@ -187,7 +186,7 @@ function makeHandlers({
     };
   }
 
-  function createResourceContents(frames) {
+  function createResourceContents(frames = []) {
     return frames.map(frame => {
       return {
         url: frame.url,
@@ -199,9 +198,10 @@ function makeHandlers({
     });
   }
 
-  function blobDataToResourceContents(blobData) {
-    return blobData.reduce((acc, {url, type}) => {
-      acc[url] = {url, type, value: resources[url]};
+  function blobDataToResourceContents(blobData = []) {
+    return blobData.reduce((acc, {url, type, errorStatusCode}) => {
+      const data = errorStatusCode ? {url, errorStatusCode} : {url, type, value: resources[url]};
+      acc[url] = data;
       return acc;
     }, {});
   }

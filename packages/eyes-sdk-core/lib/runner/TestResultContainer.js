@@ -35,4 +35,4 @@ class TestResultContainer {
   }
 }
 
-exports.TestResultContainer = TestResultContainer
+module.exports = TestResultContainer

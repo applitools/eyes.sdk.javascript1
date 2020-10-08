@@ -20,6 +20,9 @@ function getTestCssResources(baseUrl) {
   const importedNestedUrl = `${baseUrl}/${importedNestedName}`
   const fontZillaUrl = `${baseUrl}/${fontZillaName}`
   const fontShadowUrl = `${baseUrl}/${fontShadowName}`
+  const err404Url = `${baseUrl}/predefined-status/404`
+  const err403Url = `${baseUrl}/predefined-status/403`
+  const errHangupUrl = `${baseUrl}/predefined-status/hangup`
   const jpgContent1 = loadFixtureBuffer(jpgName1)
   const jpgContent2 = loadFixtureBuffer(jpgName2)
   const jpgContent3 = loadFixtureBuffer(jpgName3)
@@ -45,8 +48,12 @@ function getTestCssResources(baseUrl) {
       [jpgUrl3]: {type: jpgType, value: jpgContent3},
       [jpgUrl1]: {type: jpgType, value: jpgContent1},
       [jpgUrl2]: {type: jpgType, value: jpgContent2},
+      [err404Url]: {errorStatusCode: 404},
+      [err403Url]: {errorStatusCode: 403},
+      [errHangupUrl]: {errorStatusCode: 504},
     },
-    (o, url) => toRGridResource({type: o.type, value: o.value, url}),
+    (o, url) =>
+      toRGridResource({type: o.type, value: o.value, url, errorStatusCode: o.errorStatusCode}),
   )
 }
 

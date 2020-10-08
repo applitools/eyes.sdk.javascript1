@@ -20,7 +20,8 @@ declare namespace Eyes {
        * It could be a different size and also a different browser.
        * Default value: { width: 800, height: 600, name: 'chrome' }
        */
-      browser?:DeviceViewport|BrowserViewport|(DeviceViewport|BrowserViewport)[]
+      browser?:ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo|
+              (ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo)[]
 
       /**
        * Whether to save troubleshooting data. See the troubleshooting section of this doc for more info.
@@ -143,7 +144,7 @@ declare namespace Eyes {
        * The accessibility level to use for the screenshots
        * Default value: 'None'
        */
-      accessibilityLevel?:AccessibilityLevel
+      accessibilitySettings?:AccessibilitySettings
 
       /**
        * DEPRECATED, use batchNotify.
@@ -161,33 +162,69 @@ declare namespace Eyes {
        * Default value: false
        */
       isDisabled?:boolean
+
+      /**
+       * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
+       * Default value: false
+       */
+      ignoreDisplacements?:boolean
     }
 
-    interface BrowserViewport {
+    interface DesktopBrowserInfo {
       height:number
       width:number
-      name:'chrome'                   |
-           'firefox'                  |
-           'edge'                     |
-           'ie10'                     |
-           'ie11'                     |
-           'safari'                   |
-           'chrome-one-version-back'  |
-           'chrome-two-versions-back' |
-           'firefox-one-version-back' |
-           'firefox-two-versions-back'|
-           'safari-one-version-back'  |
-           'safari-two-versions-back'
+      name?:'chrome'                       |
+           'firefox'                       |
+           'edgechromium'                  |
+           'edgelegacy'                    |
+           'ie10'                          |
+           'ie11'                          |
+           'safari'                        |
+           'chrome-one-version-back'       |
+           'chrome-two-versions-back'      |
+           'firefox-one-version-back'      |
+           'firefox-two-versions-back'     |
+           'safari-one-version-back'       |
+           'safari-two-versions-back'      |
+           'edgechromium-one-version-back' |
+           'edgechromium-two-versions-back'
     }
 
-    interface DeviceViewport {
+    interface EmulationInfo {
       deviceName: string
       screenOrientation?: 'portrait'|'landscape'
       name?:string
     }
+
+    interface ChromeEmulationInfo {
+      chromeEmulationInfo: EmulationInfo
+    }
+
+    interface IosDeviceInfo {
+      iosDeviceInfo: {
+        screenOrientation?: 'portrait'|'landscapeLeft'|'landscapeRight'
+        deviceName: 'iPhone 11 Pro'                         |
+                    'iPhone 11 Pro Max'                     |
+                    'iPhone 11'                             |
+                    'iPhone XR'                             |
+                    'iPhone Xs'                             |
+                    'iPhone X'                              |
+                    'iPhone 8'                              |
+                    'iPhone 7'                              |
+                    'iPad Pro (12.9-inch) (3rd generation)' |
+                    'iPad (7th generation)'                 |
+                    'iPad Air (2nd generation)                              '
+      }
+    }
   }
 
-  type AccessibilityLevel = "None"|"AA"|"AAA"
+  type AccessibilityLevel = "AA"|"AAA"
+  type AccessibilityGuidelinesVersion = "WCAG_2_0"|"WCAG_2_1"
+
+  interface AccessibilitySettings {
+    level: AccessibilityLevel
+    guidelinesVersion: AccessibilityGuidelinesVersion
+  }
 
   export namespace Check {
     interface Options {
@@ -273,10 +310,10 @@ declare namespace Eyes {
       sendDom?:boolean
 
       /**
-       * The accessibility level to use for the screenshot
-       * Default value: 'None'
+       * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
+       * Default value: false
        */
-      accessibilityLevel?:AccessibilityLevel
+      ignoreDisplacements?:boolean
     }
 
     interface Selector {

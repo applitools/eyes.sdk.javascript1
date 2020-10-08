@@ -4,10 +4,21 @@ Fake Eyes server for testing purposes
 
 ## Usage
 
-```js
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server');
+1. From `Node.js` code:
 
-const {port, close} = await fakeEyesServer();
+```js
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
+
+const {port, close} = await startFakeEyesServer();
+```
+
+2. Standalone:
+
+use the `PORT` environment variable to control the port
+
+```sh
+npm i @applitools/sdk-fake-eyes-server
+PORT=3000 npx fake-eyes-server
 ```
 
 ## Configuration

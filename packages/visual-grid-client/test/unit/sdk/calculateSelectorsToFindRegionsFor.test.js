@@ -232,4 +232,25 @@ describe('calculateSelectorsToFindRegionsFor', () => {
       'float',
     ])
   })
+
+  it('handles well formated typed selectors', () => {
+    expect(
+      calculateSelectorsToFindRegionsFor({
+        noOffsetSelectors: [
+          {selector: 'bla'},
+          {type: 'css', selector: 'bla1'},
+          {type: 'xpath', selector: 'bla2'},
+          {type: 'css selector', selector: 'kuku'},
+          {type: 'link text', selector: 'kuku1'},
+        ],
+        offsetSelectors: [],
+      }),
+    ).to.eql([
+      'bla',
+      {type: 'css', selector: 'bla1'},
+      {type: 'xpath', selector: 'bla2'},
+      'kuku',
+      'kuku1',
+    ])
+  })
 })

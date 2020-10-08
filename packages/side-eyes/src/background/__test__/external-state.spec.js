@@ -1,9 +1,4 @@
-import {
-  getExternalState,
-  setExternalState,
-  setExternalStateInternally,
-  resetMode,
-} from '../external-state'
+import { getExternalState, setExternalState, setExternalStateInternally, resetMode } from '../external-state'
 jest.mock('webextension-polyfill')
 
 describe('external-state', () => {

@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, RectangleSize} = require('@applitools/eyes-common')
+const {GeneralUtils, RectangleSize} = require('..')
 
 /**
  * The environment in which the application under test is executing.
@@ -8,13 +8,13 @@ const {GeneralUtils, RectangleSize} = require('@applitools/eyes-common')
 class AppEnvironment {
   /**
    * Creates a new AppEnvironment instance.
-   *
-   * @param {string} [os]
-   * @param {string} [hostingApp]
-   * @param {RectangleSize} [displaySize]
-   * @param {string} [deviceInfo]
-   * @param {string} [osInfo]
-   * @param {string} [hostingAppInfo]
+   * @param data
+   * @param {string} [data.os]
+   * @param {string} [data.hostingApp]
+   * @param {RectangleSize} [data.displaySize]
+   * @param {string} [data.deviceInfo]
+   * @param {string} [data.osInfo]
+   * @param {string} [data.hostingAppInfo]
    */
   constructor({os, hostingApp, displaySize, deviceInfo, osInfo, hostingAppInfo} = {}) {
     if (displaySize && !(displaySize instanceof RectangleSize)) {
@@ -187,4 +187,4 @@ class AppEnvironment {
   }
 }
 
-exports.AppEnvironment = AppEnvironment
+module.exports = AppEnvironment

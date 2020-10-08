@@ -78,3 +78,20 @@ This will automatically update the `package.json` and changelog for the package,
 _NOTE: If you don't provide a version argument, you will be prompted for a version._
 
 _NOTE: Client facing SDKs have additional things that will run as part of versioning/publishing. They will run end-to-end coverage tests and send out a release notification.__
+
+### Coverage tests
+
+#### Custom
+
+Test code is located at `sdk-shared/coverage-tests/custom`.
+Tests use several utilities:
+
+1. Eyes instantiation: `getEyes` from `sdk-shared/src/test-setup.js`. This helps in getting the right batch, api key, configuration (failure for new tests to avoid wrong baselines, match timeout 0 for better perf), and logging with env var.
+
+2. Driver instantiation: use `cwd` to require `SpecDriver`, and build the driver with `spec.build`.
+
+3. Browser presets: defined in `sdk-shared/src/test-setup.js` for use when building the driver. For example: `spec.build({browser: 'safari-11'})`.
+
+#### Generic
+
+TBD

@@ -1,12 +1,17 @@
 'use strict'
+
 const {
+  BatchInfo,
   GeneralUtils: {backwardCompatible, cachify},
-} = require('@applitools/eyes-common')
+  BrowserType,
+} = require('@applitools/eyes-sdk-core')
 const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
-const translateBrowserNameVersion = require('./translateBrowserNameVersion')
 const isEmulation = require('./isEmulation')
+const mapChromeEmulationInfo = require('./mapChromeEmulationInfo')
+const getSupportedBrowsers = require('./supportedBrowsers')
+const chalk = require('chalk')
 
 const {
   initWrappers,
@@ -16,36 +21,11 @@ const {
   apiKeyFailMsg,
 } = require('./wrapperUtils')
 
-// This is a map from the value we get from the user to the value we send to the visual grid
-// user --> VG
-const SUPPORTED_BROWSERS = {
-  chrome: 'chrome',
-  'chrome-canary': 'chrome-canary',
-  firefox: 'firefox',
-  ie10: 'ie10',
-  ie11: 'ie11',
-  edge: 'edge',
-  ie: 'ie',
-  safari: 'safari',
-  [translateBrowserNameVersion('chrome-1')]: 'chrome-1',
-  [translateBrowserNameVersion('chrome-2')]: 'chrome-2',
-  [translateBrowserNameVersion('firefox-1')]: 'firefox-1',
-  [translateBrowserNameVersion('firefox-2')]: 'firefox-2',
-  [translateBrowserNameVersion('safari-1')]: 'safari-1',
-  [translateBrowserNameVersion('safari-2')]: 'safari-2',
-}
-const SUPPORTED_BROWSER_KEYS = Object.keys(SUPPORTED_BROWSERS)
-const SUPPORTED_BROWSER_KEYS_STR = `\n* ${SUPPORTED_BROWSER_KEYS.join('\n* ')}\n`
-
 function makeOpenEyes({
   appName: _appName,
   browser: _browser,
   saveDebugData: _saveDebugData,
-  batchSequenceName: _batchSequenceName,
-  batchSequence: _batchSequence,
-  batchName: _batchName,
-  batchId: _batchId,
-  batchNotify: _batchNotify,
+  batch: _batch,
   properties: _properties,
   baselineBranchName: _baselineBranchName,
   baselineBranch: _baselineBranch,
@@ -55,7 +35,7 @@ function makeOpenEyes({
   ignoreCaret: _ignoreCaret,
   isDisabled: _isDisabled,
   matchLevel: _matchLevel,
-  accessibilityLevel: _accessibilityLevel,
+  accessibilitySettings: _accessibilitySettings,
   useDom: _useDom,
   enablePatterns: _enablePatterns,
   ignoreDisplacements: _ignoreDisplacements,
@@ -68,7 +48,7 @@ function makeOpenEyes({
   compareWithParentBranch: _compareWithParentBranch,
   ignoreBaseline: _ignoreBaseline,
   userAgent: _userAgent,
-  createRGridDOMAndGetResourceMapping: _createRGridDOMAndGetResourceMapping,
+  createRGridDOMAndGetResourceMapping,
   apiKey,
   proxy,
   serverUrl,
@@ -81,11 +61,11 @@ function makeOpenEyes({
   getHandledRenderInfoPromise,
   getRenderInfo,
   agentId,
-  notifyOnCompletion: _notifyOnCompletion,
   getUserAgents: _getUserAgents,
   globalState,
   wrappers: _wrappers,
   isSingleWindow = false,
+  visualGridOptions: _visualGridOptions,
 }) {
   return async function openEyes({
     testName,
@@ -95,12 +75,12 @@ function makeOpenEyes({
     appName = _appName,
     browser = _browser,
     saveDebugData = _saveDebugData,
-    batchSequenceName = _batchSequenceName,
-    batchSequence = _batchSequence,
-    batchName = _batchName,
-    batchId = _batchId,
-    batchNotify = _batchNotify,
-    batch,
+    batchSequenceName,
+    batchSequence,
+    batchName,
+    batchId,
+    batchNotify,
+    batch = _batch,
     properties = _properties,
     baselineBranchName = _baselineBranchName,
     baselineBranch = _baselineBranch,
@@ -110,7 +90,7 @@ function makeOpenEyes({
     ignoreCaret = _ignoreCaret,
     isDisabled = _isDisabled,
     matchLevel = _matchLevel,
-    accessibilityLevel = _accessibilityLevel,
+    accessibilitySettings = _accessibilitySettings,
     useDom = _useDom,
     enablePatterns = _enablePatterns,
     ignoreDisplacements = _ignoreDisplacements,
@@ -122,8 +102,9 @@ function makeOpenEyes({
     saveNewTests = _saveNewTests,
     compareWithParentBranch = _compareWithParentBranch,
     ignoreBaseline = _ignoreBaseline,
-    notifyOnCompletion = _notifyOnCompletion,
+    notifyOnCompletion,
     getUserAgents = _getUserAgents,
+    visualGridOptions = _visualGridOptions,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser)
 
@@ -144,7 +125,14 @@ function makeOpenEyes({
       throw new Error(appNameFailMsg)
     }
 
-    const browsersArray = Array.isArray(browser) ? browser : [browser]
+    const supportedBrowsers = getSupportedBrowsers()
+    const supportedBrowserKeys = Object.keys(supportedBrowsers)
+    const supportedBrowserKeysStr = `\n* ${supportedBrowserKeys
+      .filter(x => x !== BrowserType.EDGE)
+      .join('\n* ')}\n`
+
+    let browsersArray = Array.isArray(browser) ? browser : [browser]
+    browsersArray = browsersArray.map(mapChromeEmulationInfo)
     const browserError = browsersArray.length
       ? browsersArray.map(getBrowserError).find(Boolean)
       : getBrowserError()
@@ -153,9 +141,11 @@ function makeOpenEyes({
       throw new Error(browserError)
     }
 
+    showBrowserWarning(browsersArray)
+
     const browsers = browsersArray.map(browser => ({
       ...browser,
-      name: SUPPORTED_BROWSERS[browser.name] || browser.name,
+      name: supportedBrowsers[browser.name] || browser.name,
     }))
 
     ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
@@ -166,6 +156,14 @@ function makeOpenEyes({
       [{notifyOnCompletion}, {batchNotify}],
       logger,
     ))
+
+    const mergedBatch = mergeBatchProperties({
+      batch,
+      batchId,
+      batchName,
+      batchSequence,
+      batchNotify,
+    })
 
     let doGetBatchInfoWithCache
     const getBatchInfoWithCache = batchId => {
@@ -190,11 +188,7 @@ function makeOpenEyes({
       browsers,
       isDisabled,
       displayName,
-      batchSequence,
-      batchName,
-      batchId,
-      batchNotify,
-      batch,
+      batch: mergedBatch,
       properties,
       baselineBranch,
       baselineEnvName,
@@ -202,7 +196,7 @@ function makeOpenEyes({
       envName,
       ignoreCaret,
       matchLevel,
-      accessibilityLevel,
+      accessibilitySettings,
       useDom,
       enablePatterns,
       ignoreDisplacements,
@@ -251,10 +245,6 @@ function makeOpenEyes({
       logger,
     })
 
-    const headers = {'User-Agent': userAgent}
-    const createRGridDOMAndGetResourceMapping = args =>
-      _createRGridDOMAndGetResourceMapping(Object.assign({fetchOptions: {headers}}, args))
-
     const checkWindow = makeCheckWindow({
       globalState,
       testController,
@@ -273,10 +263,10 @@ function makeOpenEyes({
       testName,
       openEyesPromises,
       matchLevel,
-      accessibilityLevel,
-      fetchHeaders: headers,
+      userAgent,
       isSingleWindow,
       getUserAgents,
+      visualGridOptions,
     })
 
     const close = makeClose({
@@ -328,10 +318,15 @@ function makeOpenEyes({
       if (!browser) {
         return 'invalid browser configuration provided.'
       }
-      if (browser.name && !SUPPORTED_BROWSER_KEYS.includes(browser.name)) {
-        return `browser name should be one of the following:${SUPPORTED_BROWSER_KEYS_STR}\nReceived: '${browser.name}'.`
+      if (browser.name && !supportedBrowserKeys.includes(browser.name)) {
+        return `browser name should be one of the following:${supportedBrowserKeysStr}\nReceived: '${browser.name}'.`
       }
-      if (browser.name && !browser.deviceName && (!browser.height || !browser.width)) {
+      if (
+        browser.name &&
+        !browser.deviceName &&
+        !browser.iosDeviceInfo &&
+        (!browser.height || !browser.width)
+      ) {
         return `browser '${browser.name}' should include 'height' and 'width' parameters.`
       }
       if (isEmulation(browser) && !isSupportsDeviceEmulation(browser.name)) {
@@ -342,7 +337,28 @@ function makeOpenEyes({
     function isSupportsDeviceEmulation(browserName) {
       return !browserName || /^chrome/.test(browserName)
     }
+
+    function showBrowserWarning(browsersArr) {
+      if (browsersArr.some(({name}) => name === BrowserType.EDGE)) {
+        console.log(
+          chalk.yellow(
+            `The 'edge' option that is being used in your browsers' configuration will soon be deprecated. Please change it to either 'edgelegacy' for the legacy version or to 'edgechromium' for the new Chromium-based version. Please note, when using the built-in BrowserType enum, then the values are BrowserType.EDGE_LEGACY and BrowserType.EDGE_CHROMIUM, respectively.`,
+          ),
+        )
+      }
+    }
   }
+}
+
+function mergeBatchProperties({batch, batchId, batchName, batchSequence, batchNotify}) {
+  const isGeneratedId = batchId !== undefined ? false : batch.getIsGeneratedId()
+  return new BatchInfo({
+    id: batchId !== undefined ? batchId : batch.getId(),
+    name: batchName !== undefined ? batchName : batch.getName(),
+    sequenceName: batchSequence !== undefined ? batchSequence : batch.getSequenceName(),
+    notifyOnCompletion: batchNotify !== undefined ? batchNotify : batch.getNotifyOnCompletion(),
+    isGeneratedId,
+  })
 }
 
 module.exports = makeOpenEyes

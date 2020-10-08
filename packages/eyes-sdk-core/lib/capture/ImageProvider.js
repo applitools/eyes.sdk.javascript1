@@ -14,4 +14,4 @@ class ImageProvider {
   }
 }
 
-exports.ImageProvider = ImageProvider
+module.exports = ImageProvider

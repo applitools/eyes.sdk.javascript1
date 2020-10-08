@@ -1,66 +1,123 @@
 'use strict';
-const {TestResultsFormatter} = require('@applitools/eyes-sdk-core');
+const flatten = require('lodash.flatten');
 const chalk = require('chalk');
+const {TestResultsError, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
+const uniq = require('./uniq');
 const concurrencyMsg = require('./concurrencyMsg');
 
 function processResults({results = [], totalTime, concurrency}) {
   let outputStr = '\n';
   const formatter = new TestResultsFormatter();
 
-  const testResults = results.filter(result => !(result instanceof Error));
-  const errors = results.filter(result => result instanceof Error);
+  let testResults = results.map(r => r.resultsOrErr);
+  testResults = flatten(testResults).filter(r => r.constructor.name !== 'Error');
+  const unresolved = testResults.filter(r => r.getIsDifferent());
+  const passedOrNew = testResults.filter(r => !r.getIsDifferent());
 
-  let exitCode = errors.length ? 1 : 0;
-  if (testResults.length > 0) {
-    outputStr += '[EYES: TEST RESULTS]:\n';
-    const sortedTestResults = testResults.sort((a, b) => a.getName().localeCompare(b.getName()));
-    sortedTestResults.forEach(result => {
-      formatter.addTestResults(result);
+  let errors = results.map(({title, resultsOrErr}) =>
+    Array.isArray(resultsOrErr)
+      ? resultsOrErr.map(err => ({err, title}))
+      : [{err: resultsOrErr, title}],
+  );
+  errors = flatten(errors).filter(({err}) => err.constructor.name === 'Error');
 
-      const storyTitle = `${result.getName()} [${result.getHostDisplaySize().toString()}] - `;
+  const hasResults = unresolved.length || passedOrNew.length;
+  const seeDetailsStr =
+    hasResults && `See details at ${(passedOrNew[0] || unresolved[0]).getAppUrls().getBatch()}`;
 
-      if (result.getIsNew()) {
-        outputStr += `${storyTitle}${chalk.blue('New')}\n`;
-      } else if (result.isPassed()) {
-        outputStr += `${storyTitle}${chalk.green('Passed')}\n`;
-      } else {
-        const stepsFailed = result.getMismatches() + result.getMissing();
-        outputStr += `${storyTitle}${chalk.red(`Failed ${stepsFailed} of ${result.getSteps()}`)}\n`;
-        exitCode = exitCode || 1;
-      }
-    });
-  } else if (!errors.length) {
+  if (hasResults) {
+    outputStr += `${seeDetailsStr}\n\n`;
+  }
+
+  outputStr += '[EYES: TEST RESULTS]:\n\n';
+  if (passedOrNew.length > 0) {
+    outputStr += testResultsOutput(passedOrNew);
+  }
+  if (unresolved.length > 0) {
+    outputStr += testResultsOutput(unresolved);
+  }
+  if (errors.length) {
+    const sortedErrors = errors.sort((a, b) => a.title.localeCompare(b.title));
+    outputStr += uniq(
+      sortedErrors.map(
+        ({title, err}) => `${title} - ${chalk.red('Failed')} ${err.message || err.toString()}`,
+      ),
+    ).join('\n');
+    outputStr += '\n';
+  }
+
+  if (!errors.length && !hasResults) {
     outputStr += 'Test is finished but no results returned.\n';
   }
 
-  if (errors.length) {
-    outputStr += '\nThe following errors were found:\n';
-    outputStr += errors.map(err => chalk.red(err.toString())).join('\n');
+  if (errors.length && !unresolved.length) {
+    outputStr += chalk.red(
+      `\nA total of ${errors.length} stor${
+        errors.length > 1 ? 'ies' : 'y'
+      } failed for unexpected error${errors.length > 1 ? 's' : ''}.`,
+    );
+  } else if (unresolved.length && !errors.length) {
+    outputStr += chalk.keyword('orange')(
+      `\nA total of ${unresolved.length} difference${
+        unresolved.length > 1 ? 's were' : ' was'
+      } found.`,
+    );
+  } else if (unresolved.length || errors.length) {
+    outputStr += chalk.red(
+      `\nA total of ${unresolved.length} difference${
+        unresolved.length > 1 ? 's were' : ' was'
+      } found and ${errors.length} stor${errors.length > 1 ? 'ies' : 'y'} failed for ${
+        errors.length > 1 ? '' : 'an '
+      }unexpected error${errors.length > 1 ? 's' : ''}.`,
+    );
+  } else if (passedOrNew.length) {
+    outputStr += chalk.green(`\nNo differences were found!`);
   }
 
-  if (testResults[0]) {
-    const diffCount = testResults.filter(result => !result.getIsNew() && !result.isPassed()).length;
-    if (diffCount) {
-      outputStr += chalk.red(`
-A total of ${diffCount} difference${diffCount > 1 ? 's were' : ' was'} found.`);
-    } else {
-      outputStr += chalk.green(`
-No differences were found!`);
-    }
-    outputStr += `\n
-See details at ${testResults[0].getAppUrls().getBatch()}
-Total time: ${Math.round(totalTime / 1000)} seconds\n`;
+  if (hasResults) {
+    outputStr += `\n${seeDetailsStr}\nTotal time: ${Math.round(totalTime / 1000)} seconds\n`;
   }
 
   if (concurrency == 10) {
     outputStr += `\n${concurrencyMsg}\n`;
   }
 
+  passedOrNew.forEach(formatter.addTestResults.bind(formatter));
+  unresolved.forEach(formatter.addTestResults.bind(formatter));
+  errors.forEach(error => {
+    formatter.addTestResults(
+      new TestResultsError({
+        name: error.title,
+        error: error.err,
+      }),
+    );
+  });
+  const exitCode = passedOrNew.length && !errors.length && !unresolved.length ? 0 : 1;
   return {
     outputStr,
     formatter,
     exitCode,
   };
+}
+
+function testResultsOutput(results) {
+  let outputStr = '';
+  const sortedTestResults = results.sort((a, b) => a.getName().localeCompare(b.getName()));
+  sortedTestResults.forEach(result => {
+    const storyTitle = `${result.getName()} [${result.getHostApp()}] [${result
+      .getHostDisplaySize()
+      .toString()}] - `;
+
+    if (result.getIsNew()) {
+      outputStr += `${storyTitle}${chalk.blue('New')}\n`;
+    } else if (result.isPassed()) {
+      outputStr += `${storyTitle}${chalk.green('Passed')}\n`;
+    } else {
+      outputStr += `${storyTitle}${chalk.keyword('orange')(`Unresolved`)}\n`;
+    }
+  });
+  outputStr += '\n';
+  return outputStr;
 }
 
 module.exports = processResults;

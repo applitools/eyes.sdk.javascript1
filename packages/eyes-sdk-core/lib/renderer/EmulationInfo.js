@@ -1,14 +1,15 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
-const {EmulationDevice} = require('./EmulationDevice')
+const EmulationDevice = require('./EmulationDevice')
 
 class EmulationInfo {
   /**
-   * @param {EmulationDevice|object} device
-   * @param {string} deviceName
-   * @param {ScreenOrientation} screenOrientation
+   * @param info
+   * @param {EmulationDevice|object} info.device
+   * @param {string} info.deviceName
+   * @param {ScreenOrientation} info.screenOrientation
    */
   constructor({device, deviceName, screenOrientation} = {}) {
     if (device && !(device instanceof EmulationDevice)) {
@@ -86,4 +87,4 @@ class EmulationInfo {
   }
 }
 
-exports.EmulationInfo = EmulationInfo
+module.exports = EmulationInfo

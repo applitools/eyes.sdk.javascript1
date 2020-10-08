@@ -1,19 +1,20 @@
 ;(function() {
   'use strict'
 
-  var request = require('request')
-  var GeneralUtils = require('eyes.utils').GeneralUtils
-  var RenderingInfo = require('./RenderingInfo').RenderingInfo
+  const request = require('request')
+  const GeneralUtils = require('@applitools/eyes-common-legacy').GeneralUtils
+  const ArgumentGuard = require('@applitools/eyes-common-legacy').ArgumentGuard
+  const RenderingInfo = require('./RenderingInfo').RenderingInfo
 
   // constants
-  var TIMEOUT = 5 * 60 * 1000,
+  const TIMEOUT = 5 * 60 * 1000,
     API_PATH = '/api/sessions/running',
     DEFAULT_HEADERS = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     }
 
-  var LONG_REQUEST_DELAY = 2000, // ms
+  const LONG_REQUEST_DELAY = 2000, // ms
     MAX_LONG_REQUEST_DELAY = 10000, // ms
     LONG_REQUEST_DELAY_MULTIPLICATIVE_INCREASE_FACTOR = 1.5
 
@@ -38,6 +39,7 @@
   ]
 
   const REQUEST_FAILED_CODES = ['ECONNRESET', 'ECONNABORTED', 'ETIMEDOUT', 'ENOTFOUND', 'EAI_AGAIN']
+  const AGENT_ID_HEADER = 'x-applitools-eyes-client'
 
   /**
    * Provides an API for communication with the Applitools server.
@@ -47,8 +49,9 @@
    * @param {Logger} logger
    * @constructor
    **/
-  function ServerConnector(promiseFactory, serverUrl, logger) {
+  function ServerConnector({promiseFactory, serverUrl, logger, getAgentId}) {
     this._promiseFactory = promiseFactory
+    this._getAgentId = getAgentId
     this._logger = logger
     this._runKey = undefined
     this._renderingInfo = undefined
@@ -195,7 +198,10 @@
           sessionId: results.body.id,
           legacySessionId: results.body.legacySessionId,
           sessionUrl: results.body.url,
-          isNewSession: results.status === HTTP_STATUS_CODES.CREATED,
+          isNewSession:
+            results.body.isNew === undefined
+              ? results.status === HTTP_STATUS_CODES.CREATED
+              : results.body.isNew,
         }
       }
 
@@ -275,7 +281,9 @@
       },
     }
 
-    return _sendLongRequest(this, 'uploadScreenshot', uri, 'put', options, 3).then(function(results) {
+    return _sendLongRequest(this, 'uploadScreenshot', uri, 'put', options, 3).then(function(
+      results,
+    ) {
       if (results.status !== HTTP_STATUS_CODES.CREATED) {
         throw new Error(
           `ServerConnector.uploadScreenshot - unexpected status ${_makeResponseOutputString(
@@ -508,6 +516,7 @@
     options = options || {}
 
     const req = GeneralUtils.clone(that._httpOptions)
+    req.headers = {...req.headers, [AGENT_ID_HEADER]: that._getAgentId()}
     req.uri = uri
     req.method = method
     if (options.query) req.qs = GeneralUtils.objectAssign(req.qs, options.query)

@@ -4,7 +4,7 @@ const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const makeGlobalState = require('../../src/sdk/globalState')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {promisify: p} = require('util')
 const psetTimeout = p(setTimeout)
 const {presult} = require('@applitools/functional-commons')
@@ -50,7 +50,11 @@ describe('closeEyes', () => {
       wrappers: [wrapper],
       appName,
     })
-    checkWindow({cdt: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     const [err, result] = await presult(close())
     console.log('err', err)
     expect(err).to.be.undefined
@@ -62,7 +66,11 @@ describe('closeEyes', () => {
       wrappers: [wrapper],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'bad!', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'bad!',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0]
     expect(result[0].message).to.equal('Tag bad! should be one of the good tags good1,good2')
@@ -78,7 +86,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'ok-in-1-test', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'ok-in-1-test',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0]
     expect(result[0].message).to.equal(
@@ -97,7 +109,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0]
     expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
@@ -115,7 +131,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const resultWithErr = (await presult(close()))[0]
     expect(resultWithErr[0].message).to.equal('mismatch')
@@ -133,7 +153,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const [, resultWithErr] = await presult(close(false))
     expect(resultWithErr[0].message).to.equal('mismatch')
@@ -157,7 +181,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const resultWithErr = (await presult(close()))[0]
     expect(resultWithErr[0].message).to.equal('render error')
@@ -181,7 +209,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const resultWithErr = (await presult(close(false)))[1]
     expect(resultWithErr[0].message).to.equal('render error')
@@ -197,7 +229,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await abort()
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const resultWithErr = (await presult(close()))[0]
@@ -222,7 +258,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await close()
 
     // this simulates setting batchId: 'secondBatchId' in openEyes
@@ -251,7 +291,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'good1', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'good1',
+      url: `${baseUrl}/basic.html`,
+    })
     await abort()
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const resultWithErr = (await presult(close(false)))[1]
@@ -271,7 +315,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'ok-in-1-test', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'ok-in-1-test',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0]
     expect(result[0].message).to.equal('mismatch')
@@ -294,7 +342,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'ok', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'ok',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close()))[0]
     expect(result[0].message).to.equal('mismatch')
@@ -314,7 +366,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'ok', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'ok',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close(false)))[1]
     expect(result[0].message).to.equal('mismatch')
@@ -334,7 +390,11 @@ describe('closeEyes', () => {
       ],
       appName,
     })
-    checkWindow({cdt: [], resourceUrls: [], tag: 'ok-in-1-test', url: `${baseUrl}/basic.html`})
+    checkWindow({
+      snapshot: {cdt: [], resourceUrls: []},
+      tag: 'ok-in-1-test',
+      url: `${baseUrl}/basic.html`,
+    })
     await psetTimeout(0) // because FakeEyesWrapper throws, and then the error is set async and will be read in the next call to close()
     const result = (await presult(close(false)))[1]
     expect(result[0].message).to.equal('mismatch')

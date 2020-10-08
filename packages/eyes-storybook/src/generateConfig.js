@@ -3,6 +3,7 @@ const pick = require('lodash.pick');
 const {ConfigUtils} = require('@applitools/eyes-sdk-core');
 const {resolve} = require('path');
 const deprecationWarning = require('./deprecationWarning');
+const uniq = require('./uniq');
 
 function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = []}) {
   const configPath = argv.conf ? resolve(process.cwd(), argv.conf) : undefined;
@@ -40,10 +41,6 @@ function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = [
     result.storyDataGap = result.concurrency * result.renderConcurrencyFactor;
   }
   return result;
-}
-
-function uniq(arr) {
-  return Array.from(new Set(arr));
 }
 
 module.exports = generateConfig;

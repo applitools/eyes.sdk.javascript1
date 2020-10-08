@@ -1,10 +1,7 @@
 import browser from 'webextension-polyfill'
 
 export function setViewportSize(width, height, playbackOptions) {
-  if (!width || !height)
-    return Promise.reject(
-      'Invalid value. Value should be WidthxHeight (e.g. 1280x800)'
-    )
+  if (!width || !height) return Promise.reject('Invalid value. Value should be WidthxHeight (e.g. 1280x800)')
   const compensatedSize = {}
   return getSizeCompensation(playbackOptions.tabId, playbackOptions.windowId)
     .then(compensation => {
@@ -41,12 +38,10 @@ export function getWindowSize(windowId) {
 }
 
 export function getSizeCompensation(tabId, windowId) {
-  return Promise.all([getViewportSize(tabId), getWindowSize(windowId)]).then(
-    ([viewportSize, windowSize]) => ({
-      height: windowSize.height - viewportSize.height,
-      width: windowSize.width - viewportSize.width,
-    })
-  )
+  return Promise.all([getViewportSize(tabId), getWindowSize(windowId)]).then(([viewportSize, windowSize]) => ({
+    height: windowSize.height - viewportSize.height,
+    width: windowSize.width - viewportSize.width,
+  }))
 }
 
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
@@ -55,18 +50,11 @@ function fixInaccuracies(sizes, playbackOptions, retries = 3) {
       `Unable to set viewport size as requested, set as ${sizes.actualSize.width}x${sizes.actualSize.height} instead`
     )
   return getViewportSize(playbackOptions.tabId).then(actualSize => {
-    if (
-      actualSize.width === sizes.wantedSize.width &&
-      actualSize.height === sizes.wantedSize.height
-    ) {
+    if (actualSize.width === sizes.wantedSize.width && actualSize.height === sizes.wantedSize.height) {
       return Promise.resolve(true)
     } else {
-      let resizedWidth =
-        sizes.compensatedSize.width +
-        (sizes.wantedSize.width - actualSize.width)
-      let resizedHeight =
-        sizes.compensatedSize.height +
-        (sizes.wantedSize.height - actualSize.height)
+      let resizedWidth = sizes.compensatedSize.width + (sizes.wantedSize.width - actualSize.width)
+      let resizedHeight = sizes.compensatedSize.height + (sizes.wantedSize.height - actualSize.height)
       return browser.windows
         .update(playbackOptions.windowId, {
           width: resizedWidth,

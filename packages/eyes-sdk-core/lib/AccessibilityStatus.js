@@ -1,13 +1,15 @@
 'use strict'
+const Enum = require('./utils/Enum')
 
 /**
- * @readonly
- * @enum {string}
+ * @typedef {import('./utils/Enum').EnumValues<typeof AccessibilityStatuses>} AccessibilityStatus
  */
-const AccessibilityStatus = {
-  Passed: 'Passed',
-  Failed: 'Failed',
-}
 
-Object.freeze(AccessibilityStatus)
-exports.AccessibilityStatus = AccessibilityStatus
+const AccessibilityStatuses = Enum('AccessibilityStatus', {
+  /** @type {'Passed'} */
+  Passed: 'Passed',
+  /** @type {'Failed'} */
+  Failed: 'Failed',
+})
+
+module.exports = AccessibilityStatuses

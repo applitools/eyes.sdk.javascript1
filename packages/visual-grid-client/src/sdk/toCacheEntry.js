@@ -1,13 +1,18 @@
 'use strict'
-const resourceType = require('./resourceType')
 
-function toCacheEntry(rGridResource) {
-  const contentType = rGridResource.getContentType()
-  return {
-    url: rGridResource.getUrl(),
-    type: contentType,
-    hash: rGridResource.getSha256Hash(),
-    content: resourceType(contentType) ? rGridResource.getContent() : undefined,
+function toCacheEntry(rGridResource, isContentNeeded = true) {
+  if (rGridResource.getErrorStatusCode()) {
+    return {
+      url: rGridResource.getUrl(),
+      errorStatusCode: rGridResource.getErrorStatusCode(),
+    }
+  } else {
+    return {
+      url: rGridResource.getUrl(),
+      type: rGridResource.getContentType(),
+      hash: rGridResource.getSha256Hash(),
+      content: isContentNeeded ? rGridResource.getContent() : undefined,
+    }
   }
 }
 

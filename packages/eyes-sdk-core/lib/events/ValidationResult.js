@@ -26,4 +26,4 @@ class ValidationResult {
   }
 }
 
-exports.ValidationResult = ValidationResult
+module.exports = ValidationResult

@@ -74,4 +74,4 @@ class SessionEventHandler {
   validationEnded(autSessionId, validationId, validationResult) {}
 }
 
-exports.SessionEventHandler = SessionEventHandler
+module.exports = SessionEventHandler

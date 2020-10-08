@@ -3,7 +3,7 @@
 const {describe, it, before, after} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
-const testServer = require('../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const fs = require('fs')
 const path = require('path')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
@@ -31,7 +31,7 @@ describe('browser visual grid', () => {
     })
     page = await browser.newPage()
     page.on('console', msg => {
-      console.log(msg.text())
+      console.log('[page]', msg.text())
     })
 
     await page.setCookie({name: 'auth', value: 'secret', url: baseUrl})
@@ -48,7 +48,7 @@ describe('browser visual grid', () => {
     const processPageAndSerializeScript = await getProcessPageAndSerialize()
     await page.evaluate(browserVisualGrid)
     const showLogs = !!process.env.APPLITOOLS_SHOW_LOGS
-    const results = await page.evaluate(`const { openEyes } = makeRenderingGridClient({ apiKey: '${apiKey}', showLogs: ${showLogs} });
+    const testScript = `const { openEyes } = makeRenderingGridClient({ apiKey: '${apiKey}', showLogs: ${showLogs} });
     openEyes({
       appName: 'some app',
       testName: 'browser version - passes with correct screenshot',
@@ -59,16 +59,12 @@ describe('browser visual grid', () => {
       ]
     }).then(({checkWindow, close}) => {
       return ((${processPageAndSerializeScript})()).then(({cdt, url, blobs, resourceUrls}) => {
-        const resourceContents = blobs.map(({url, type, value}) => ({
-          url,
-          type,
-          value: Buffer.from(value, 'base64'),
-        }));
+        const resourceContents = blobs.map(blob =>
+          blob.value ? Object.assign(blob, {value: Buffer.from(blob.value, 'base64')}) : blob
+        );
 
         checkWindow({
-          resourceUrls,
-          resourceContents,
-          cdt,
+          snapshot: {resourceUrls, resourceContents, cdt},
           tag: 'first',
           url,
         });
@@ -76,7 +72,8 @@ describe('browser visual grid', () => {
         return close();
       });
     });
-`)
+`
+    const results = await page.evaluate(testScript)
     expect(results[0]._status).to.equal('Passed')
     expect(results[1]._status).to.equal('Passed')
     expect(results[2]._status).to.equal('Passed')

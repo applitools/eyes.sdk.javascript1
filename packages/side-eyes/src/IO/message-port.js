@@ -21,9 +21,7 @@ function bundledId() {
 }
 
 function getId() {
-  return browser.storage.local
-    .get(['seideId'])
-    .then(results => (results.seideId ? results.seideId : bundledId()))
+  return browser.storage.local.get(['seideId']).then(results => (results.seideId ? results.seideId : bundledId()))
 }
 
 let interval

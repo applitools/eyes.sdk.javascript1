@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TestCafe Tests: Chrome 81.0.4044.113 / macOS 10.15.4" tests="4" failures="0" skipped="0" errors="0" time="143.544" timestamp="Tue, 21 Apr 2020 12:11:41 GMT" >
+  <testcase classname="TestCheckPageWithHeader_Window_Fully_Scroll" name="TestCheckPageWithHeader_Window_Fully_Scroll (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots)" time="48.94">
+  </testcase>
+  <testcase classname="TestCheckPageWithHeader_Window_Fully" name="TestCheckPageWithHeader_Window_Fully (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots)" time="48.117">
+  </testcase>
+  <testcase classname="TestCheckWindow_Fluent_Scroll" name="TestCheckWindow_Fluent_Scroll (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-d78b8a0c-95d0-4820-a5f0-b86b464d22cd/screenshot.png)" time="24.101">
+  </testcase>
+  <testcase classname="TestCheckWindow_Fluent" name="TestCheckWindow_Fluent (screenshots: /Users/tourdedave/_dev/applitools/eyes.sdk.javascript1/packages/eyes-testcafe/screenshots/.applitools-70dea208-3333-4f0a-b7e8-0b1fb3e40a43/screenshot.png)" time="22.338">
+  </testcase>
+</testsuite>

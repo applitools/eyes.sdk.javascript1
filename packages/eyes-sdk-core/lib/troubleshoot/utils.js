@@ -2,6 +2,7 @@
 
 'use strict'
 
+const {URL} = require('url')
 const {exec} = require('child_process')
 const {promisify: p} = require('util')
 const {ServerConnector} = require('../../index')
@@ -20,15 +21,29 @@ const Utils = {
       err => [err],
     ),
   apiKey: _configuration.getApiKey(),
-  curlGet: async url => {
-    const {stdout} = await Utils.pexec(`curl -s ${url}`, {maxBuffer: 10000000})
-    return stdout
+  getProxyStr: proxy => {
+    if (!proxy) {
+      return
+    }
+    // HTTP_PROXY and HTTPS_PROXY are read by cURL.
+    let proxyParam = new URL(proxy.constructor.name === 'String' ? proxy : proxy.url)
+    if (proxy.username) {
+      proxyParam.username = proxy.username
+    }
+    if (proxyParam.password) {
+      proxyParam.password = proxy.password
+    }
+    return proxyParam.href
   },
   getServer: (() => {
     let server
     return () => {
       if (!server) {
-        server = new ServerConnector({verbose: () => {}, log: () => {}}, _configuration)
+        server = new ServerConnector({
+          logger: {verbose: () => {}, log: () => {}},
+          configuration: _configuration,
+          getAgentId: () => 'core/util',
+        })
       }
       return server
     }

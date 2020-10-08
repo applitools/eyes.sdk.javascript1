@@ -2,7 +2,7 @@
 
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
-const fakeEyesServer = require('..')
+const {startFakeEyesServer} = require('..')
 const fetch = require('node-fetch')
 const path = require('path')
 const fs = require('fs')
@@ -10,7 +10,7 @@ const fs = require('fs')
 describe('fake eyes server', () => {
   let baseUrl, closeServer
   before(async () => {
-    const {port, close} = await fakeEyesServer({
+    const {port, close} = await startFakeEyesServer({
       expectedFolder: path.resolve(__dirname, 'fixtures'),
       updateFixtures: process.env.APPLITOOLS_UPDATE_FIXTURES,
     })

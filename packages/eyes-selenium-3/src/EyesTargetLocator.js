@@ -1,7 +1,7 @@
 ;(function() {
   'use strict'
 
-  var EyesUtils = require('eyes.utils'),
+  var EyesUtils = require('@applitools/eyes-common-legacy'),
     FrameChain = require('./FrameChain').FrameChain,
     ScrollPositionProvider = require('./ScrollPositionProvider').ScrollPositionProvider,
     EyesRemoteWebElement = require('./EyesRemoteWebElement').EyesRemoteWebElement

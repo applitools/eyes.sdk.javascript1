@@ -7,7 +7,7 @@ const makeGetAllResources = require('../../../src/sdk/getAllResources')
 const extractCssResources = require('../../../src/sdk/extractCssResources')
 const makeFetchResource = require('../../../src/sdk/fetchResource')
 const createResourceCache = require('../../../src/sdk/createResourceCache')
-const testServer = require('../../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const testLogger = require('../../util/testLogger')
 const {loadFixtureBuffer} = require('../../util/loadFixture')
 const resourceType = require('../../../src/sdk/resourceType')
@@ -171,9 +171,12 @@ describe('getAllResources', () => {
     expect(resourcesFromCache).to.eql(expected)
   })
 
-  it('fetches with fetchOptions', async () => {
-    let actualOptions
-    const fetchResource = async (_url, options) => (actualOptions = options)
+  it('fetches with user-agent and referer headers', async () => {
+    const fetchResource = async (url, options) => ({
+      url,
+      type: 'text/plain',
+      value: JSON.stringify(options),
+    })
     resourceCache = createResourceCache()
     getAllResources = makeGetAllResources({
       resourceCache,
@@ -182,11 +185,22 @@ describe('getAllResources', () => {
       logger: testLogger,
     })
 
-    await getAllResources({
-      resourceUrls: ['http://localhost/some/url.html'],
-      fetchOptions: {someOp: {hello: true}},
+    const url = 'http://localhost/some/url.html'
+    const userAgent = 'some-user-agent'
+    const referer = 'some-referer'
+    const resources = await getAllResources({
+      resourceUrls: [url],
+      userAgent,
+      referer,
     })
-    expect(actualOptions).to.eql({someOp: {hello: true}})
+
+    expect(resources).to.eql({
+      [url]: toRGridResource({
+        url,
+        type: 'text/plain',
+        value: JSON.stringify({headers: {Referer: referer, 'User-Agent': 'some-user-agent'}}),
+      }),
+    })
   })
 
   it('works for urls with long paths', async () => {
@@ -551,9 +565,12 @@ describe('getAllResources', () => {
         },
       },
     })
-    const resources = await getAllResources({resourceUrls: ['http://localhost:1234/err/bla.css']})
-    expect(resources).to.eql({})
-    expect(output).to.contain('error fetching resource at http://localhost:1234/err/bla.css')
+    const url = 'http://localhost:1234/err/bla.css'
+    const resources = await getAllResources({resourceUrls: [url]})
+    expect(resources).to.eql({[url]: toRGridResource({url, errorStatusCode: 504})})
+    expect(output).to.contain(
+      'error fetching resource at http://localhost:1234/err/bla.css, setting errorStatusCode to 504',
+    )
   })
 
   it('handles the case when the same resource appears both in resourceUrls and preResources', async () => {
@@ -676,5 +693,92 @@ describe('getAllResources', () => {
     } finally {
       await server.close()
     }
+  })
+
+  it('returns resource from cache with content', async () => {
+    const fontResource = {url: 'font.ttf', type: 'font/ttf', value: 'should have this value!'}
+    await getAllResources({
+      resourceUrls: [],
+      preResources: {[fontResource.url]: fontResource},
+    })
+    const resources = await getAllResources({
+      resourceUrls: [fontResource.url],
+      preResources: {},
+    })
+    expect(resources[fontResource.url]).to.eql(toRGridResource(fontResource))
+  })
+
+  it("doesn't send user-agent header when fetching google fonts", async () => {
+    const fetchResource = async (url, options) => ({
+      url,
+      type: 'text/plain',
+      value: JSON.stringify(options),
+    })
+    resourceCache = createResourceCache()
+    getAllResources = makeGetAllResources({
+      resourceCache,
+      extractCssResources,
+      fetchResource,
+      logger: testLogger,
+    })
+    const resources = await getAllResources({
+      resourceUrls: ['https://some/url', 'https://fonts.googleapis.com/css?family=Zilla+Slab'],
+      preResources: {},
+      userAgent: 'bla',
+    })
+    expect(resources).to.eql({
+      'https://some/url': toRGridResource({
+        url: 'https://some/url',
+        type: 'text/plain',
+        value: JSON.stringify({headers: {'User-Agent': 'bla'}}),
+      }),
+      'https://fonts.googleapis.com/css?family=Zilla+Slab': toRGridResource({
+        url: 'https://fonts.googleapis.com/css?family=Zilla+Slab',
+        type: 'text/plain',
+        value: JSON.stringify({headers: {}}),
+      }),
+    })
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from preResources', async () => {
+    const resources = await getAllResources({
+      resourceUrls: [],
+      preResources: {'http://resource-1': {url: 'http://resource-1', errorStatusCode: 500}},
+    })
+    expect(resources).to.eql({
+      'http://resource-1': toRGridResource({url: 'http://resource-1', errorStatusCode: 500}),
+    })
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from resourceUrls', async () => {
+    const server = await testServer()
+    const baseUrl = `http://localhost:${server.port}`
+    closeServer = server.close
+
+    try {
+      const url = `${baseUrl}/predefined-status/401`
+      const resources = await getAllResources({
+        resourceUrls: [url],
+        preResources: {},
+      })
+      expect(resources).to.eql({
+        [url]: toRGridResource({url, errorStatusCode: 401}),
+      })
+    } finally {
+      await closeServer()
+    }
+  })
+
+  it('handles resources with errorStatusCode (non-200 resources) from cache', async () => {
+    const url = 'http://resource-1'
+    await getAllResources({
+      resourceUrls: [],
+      preResources: {[url]: {url, errorStatusCode: 500}},
+    })
+
+    const resources = await getAllResources({resourceUrls: [url], preResources: {}})
+    expect(resources).to.eql({
+      [url]: toRGridResource({url, errorStatusCode: 500}),
+    })
   })
 })

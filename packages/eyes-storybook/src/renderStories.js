@@ -103,28 +103,24 @@ function makeRenderStories({
             throw new Error(errMsg);
           }
 
-          const {cdt, resourceUrls, resourceContents, frames} = storyData;
           const testResults = await renderStory({
-            cdt,
-            resourceUrls,
-            resourceContents,
-            frames,
+            snapshot: storyData,
             url: storyUrl,
             story,
           });
 
-          return onDoneStory(testResults);
+          return onDoneStory(testResults, story);
         } catch (ex) {
-          return onDoneStory(ex);
+          return onDoneStory(ex, story);
         }
       }
     }
 
-    function didTestPass(testResultsOrErr) {
+    function didTestPass({resultsOrErr}) {
       return (
-        !(testResultsOrErr instanceof Error) &&
-        testResultsOrErr.every(
-          r => !(r instanceof Error) && r.getStatus && r.getStatus() === 'Passed',
+        resultsOrErr.constructor.name !== 'Error' &&
+        resultsOrErr.every(
+          r => r.constructor.name !== 'Error' && r.getStatus && r.getStatus() === 'Passed',
         )
       );
     }
@@ -133,10 +129,11 @@ function makeRenderStories({
       allTestResults.every(didTestPass) ? spinner.succeed() : spinner.fail();
     }
 
-    function onDoneStory(resultsOrErr) {
+    function onDoneStory(resultsOrErr, story) {
       spinner.text = `Done ${++doneStories} stories out of ${stories.length}`;
-      allTestResults.push(resultsOrErr);
-      return resultsOrErr;
+      const title = getStoryTitle(story);
+      allTestResults.push({title, resultsOrErr});
+      return {title, resultsOrErr};
     }
 
     async function prepareNewPage() {

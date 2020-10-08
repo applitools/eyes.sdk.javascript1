@@ -1,8 +1,8 @@
 'use strict'
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
+const {ArgumentGuard} = require('../..')
 
-const {Trigger} = require('./Trigger')
+const Trigger = require('./Trigger')
 
 /**
  * Encapsulates a text input by the user.
@@ -52,4 +52,4 @@ class TextTrigger extends Trigger {
   }
 }
 
-exports.TextTrigger = TextTrigger
+module.exports = TextTrigger

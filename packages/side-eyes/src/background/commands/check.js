@@ -1,112 +1,59 @@
 import browser from 'webextension-polyfill'
 import Modes from '../../commons/modes'
 import { sendMessage } from '../../IO/message-port'
-import {
-  getEyes,
-  closeEyes,
-  getCommandsForEyes,
-  isPatternsDomEnabled,
-  getAccessibilityLevel,
-} from '../utils/eyes'
+import { getEyes, closeEyes, getCommandsForEyes, isPatternsDomEnabled } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
 import { getDomCapture, isDomCaptureEnabled } from '../dom-capture'
 import { Target, ImageProvider } from '@applitools/eyes-images'
-import {
-  buildCheckWindowFullFunction,
-  buildCheckRegionFunction,
-} from '../image-strategies/css-stitching'
+import { buildCheckWindowFullFunction, buildCheckRegionFunction } from '../image-strategies/css-stitching'
 import { buildCheckUsingVisualGrid } from '../image-strategies/visual-grid'
 import { isFirefox } from '../utils/userAgent'
 
 const imageProvider = new ImageProvider()
 
-export async function checkWindow(
-  runId,
-  testId,
-  commandId,
-  tabId,
-  _windowId,
-  stepName,
-  viewport
-) {
+export async function checkWindow(runId, testId, commandId, tabId, _windowId, stepName, viewport) {
   const eyes = await getEyes(`${runId}${testId}`)
   return await (eyes.isVisualGrid
-    ? checkWithVisualGrid(
-        eyes,
-        commandId,
-        tabId,
-        stepName,
-        viewport,
-        buildCheckUsingVisualGrid(eyes, tabId),
-        {
-          sizeMode: 'full-page',
-          scriptHooks: {
-            beforeCaptureScreenshot: eyes.getPreRenderHook(),
-          },
-        }
-      )
+    ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, tabId), {
+        sizeMode: 'full-page',
+        scriptHooks: {
+          beforeCaptureScreenshot: eyes.getPreRenderHook(),
+        },
+      })
     : check(
         eyes,
         commandId,
         tabId,
         stepName,
         viewport,
-        buildCheckWindowFullFunction(
-          eyes,
-          tabId,
-          await getDevicePixelRatio(tabId)
-        )
+        buildCheckWindowFullFunction(eyes, tabId, await getDevicePixelRatio(tabId))
       ))
 }
 
-export async function checkRegion(
-  runId,
-  testId,
-  commandId,
-  tabId,
-  _windowId,
-  region,
-  stepName,
-  viewport
-) {
+export async function checkRegion(runId, testId, commandId, tabId, _windowId, region, stepName, viewport) {
   if (!region || !region.x || !region.y || !region.width || !region.height)
-    throw new Error(
-      'Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]'
-    )
+    throw new Error('Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]')
   const eyes = await getEyes(`${runId}${testId}`)
 
   return await (eyes.isVisualGrid
-    ? checkWithVisualGrid(
-        eyes,
-        commandId,
-        tabId,
-        stepName,
-        viewport,
-        buildCheckUsingVisualGrid(eyes, tabId),
-        {
-          sizeMode: 'region',
-          region: {
-            top: region.y,
-            left: region.x,
-            width: region.width,
-            height: region.height,
-          },
-        }
-      )
+    ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, tabId), {
+        sizeMode: 'region',
+        region: {
+          top: region.y,
+          left: region.x,
+          width: region.width,
+          height: region.height,
+        },
+      })
     : check(
         eyes,
         commandId,
         tabId,
         stepName,
         viewport,
-        buildCheckRegionFunction(
-          eyes,
-          tabId,
-          await getDevicePixelRatio(tabId),
-          region
-        )
+        buildCheckRegionFunction(eyes, tabId, await getDevicePixelRatio(tabId), region)
       ))
 }
 
@@ -156,26 +103,13 @@ export async function checkElement(
       tabId,
       stepName,
       viewport,
-      buildCheckRegionFunction(
-        eyes,
-        tabId,
-        await getDevicePixelRatio(tabId),
-        region
-      ),
+      buildCheckRegionFunction(eyes, tabId, await getDevicePixelRatio(tabId), region),
       { x: region.x, y: region.y }
     )
   }
 }
 
-async function check(
-  eyes,
-  commandId,
-  tabId,
-  stepName,
-  viewport,
-  checkFunction,
-  location
-) {
+async function check(eyes, commandId, tabId, stepName, viewport, checkFunction, location) {
   await preCheck(eyes, viewport)
   eyes.commands.push(commandId)
   eyes.setViewportSize(viewport)
@@ -193,20 +127,11 @@ async function check(
     target.withDom(domCap)
     if (location) target.withLocation(location)
   }
-  target.accessibilityValidation(await getAccessibilityLevel())
   const imageResult = await eyes.check(stepName || pathname, target)
   return imageResult ? true : { status: 'undetermined' }
 }
 
-async function checkWithVisualGrid(
-  eyes,
-  commandId,
-  tabId,
-  stepName,
-  viewport,
-  checkFunction,
-  params
-) {
+async function checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, checkFunction, params) {
   await preCheck(eyes, viewport)
   eyes.commands.push(commandId)
 
@@ -219,7 +144,6 @@ async function checkWithVisualGrid(
     tag: stepName || pathname,
     sendDOM: (await isDomCaptureEnabled()) || (await isPatternsDomEnabled()),
     matchLevel: eyes.getMatchLevel() || 'Strict',
-    accessibilityValidation: await getAccessibilityLevel(),
     ...params,
   })
 
@@ -238,18 +162,13 @@ export function endTest(id) {
           if (results.length) {
             // check if at least one of the tests step failed
             state = results.find(
-              result =>
-                result._stepsInfo && result._stepsInfo[index]
-                  ? result._stepsInfo[index]._isDifferent
-                  : true // returning true in case the image never made it to eyes for processing, thus is should fail
+              result => (result._stepsInfo && result._stepsInfo[index] ? result._stepsInfo[index]._isDifferent : true) // returning true in case the image never made it to eyes for processing, thus is should fail
             )
               ? 'failed'
               : 'passed'
           } else {
             if (results._stepsInfo && results._stepsInfo[index]) {
-              state = results._stepsInfo[index]._isDifferent
-                ? 'failed'
-                : 'passed'
+              state = results._stepsInfo[index]._isDifferent ? 'failed' : 'passed'
             } else {
               // image never made it to eyes, thus should fail
               state = 'failed'
@@ -326,9 +245,7 @@ async function preCheck(eyes, viewport) {
         batchName: eyes.getBatch().name || eyes.getTestName(),
         appName: eyes.getAppName(),
         eyesServer: eyes.getServerUrl(),
-        environment: eyes.isVisualGrid
-          ? 'Ultrafast Grid'
-          : parseEnvironment(navigator.userAgent, viewport),
+        environment: eyes.isVisualGrid ? 'Ultrafast Grid' : parseEnvironment(navigator.userAgent, viewport),
         branch: eyes.getBranchName(),
       },
     })

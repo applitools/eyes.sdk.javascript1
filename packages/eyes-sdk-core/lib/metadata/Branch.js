@@ -1,13 +1,14 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 class Branch {
   /**
-   * @param {string} id
-   * @param {string} name
-   * @param {boolean} isDeleted
-   * @param {object} updateInfo - TODO: add typed `updateInfo`
+   * @param data
+   * @param {string} data.id
+   * @param {string} data.name
+   * @param {boolean} data.isDeleted
+   * @param {object} data.updateInfo - TODO: add typed `updateInfo`
    */
   constructor({id, name, isDeleted, updateInfo} = {}) {
     this._id = id
@@ -87,4 +88,4 @@ class Branch {
   }
 }
 
-exports.Branch = Branch
+module.exports = Branch

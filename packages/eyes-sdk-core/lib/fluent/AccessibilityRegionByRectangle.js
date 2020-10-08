@@ -1,14 +1,24 @@
 'use strict'
-
-const {
-  AccessibilityMatchSettings,
-  AccessibilityRegionType,
-  ArgumentGuard,
-} = require('@applitools/eyes-common')
-const {GetAccessibilityRegion} = require('./GetAccessibilityRegion')
+const AccessibilityMatchSettings = require('../config/AccessibilityMatchSettings')
+const GetAccessibilityRegion = require('./GetAccessibilityRegion')
+const AccessibilityRegionTypes = require('../config/AccessibilityRegionType')
+const ArgumentGuard = require('../utils/ArgumentGuard')
 
 /**
- * @ignore
+ * @typedef {import('../config/AccessibilityRegionType').AccessibilityRegionType} AccessibilityRegionType
+ */
+
+/**
+ * @typedef AccessibilityPersistedRegion
+ * @prop {number} left
+ * @prop {number} top
+ * @prop {number} width
+ * @prop {number} height
+ * @prop {AccessibilityRegionType} accessibilityType
+ */
+
+/**
+ * @internal
  */
 class AccessibilityRegionByRectangle extends GetAccessibilityRegion {
   /**
@@ -17,15 +27,14 @@ class AccessibilityRegionByRectangle extends GetAccessibilityRegion {
    */
   constructor(rect, type) {
     super()
-    ArgumentGuard.isValidEnumValue(type, AccessibilityRegionType, false)
+    ArgumentGuard.isValidEnumValue(type, AccessibilityRegionTypes, false)
     this._rect = rect
     this._type = type
   }
-
   /**
-   * @inheritDoc
+   * @return {Promise<AccessibilityMatchSettings[]>}
    */
-  async getRegion(_eyesBase, _screenshot) {
+  async getRegion() {
     const accessibilityRegion = new AccessibilityMatchSettings({
       left: this._rect.getLeft(),
       top: this._rect.getTop(),
@@ -35,8 +44,10 @@ class AccessibilityRegionByRectangle extends GetAccessibilityRegion {
     })
     return [accessibilityRegion]
   }
-
-  async toPersistedRegions(_driver) {
+  /**
+   * @return {Promise<AccessibilityPersistedRegion[]>}
+   */
+  async toPersistedRegions() {
     return [
       {
         left: this._rect.getLeft(),
@@ -49,4 +60,4 @@ class AccessibilityRegionByRectangle extends GetAccessibilityRegion {
   }
 }
 
-exports.AccessibilityRegionByRectangle = AccessibilityRegionByRectangle
+module.exports = AccessibilityRegionByRectangle

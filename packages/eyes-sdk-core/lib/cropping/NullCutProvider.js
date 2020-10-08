@@ -1,6 +1,5 @@
 'use strict'
-
-const {UnscaledFixedCutProvider} = require('./UnscaledFixedCutProvider')
+const UnscaledFixedCutProvider = require('./UnscaledFixedCutProvider')
 
 class NullCutProvider extends UnscaledFixedCutProvider {
   constructor() {
@@ -16,4 +15,4 @@ class NullCutProvider extends UnscaledFixedCutProvider {
   }
 }
 
-exports.NullCutProvider = NullCutProvider
+module.exports = NullCutProvider

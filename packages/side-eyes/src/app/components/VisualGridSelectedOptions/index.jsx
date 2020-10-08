@@ -15,9 +15,7 @@ export default class VisualGridSelectedOptions extends React.Component {
           return (
             <div className="option" key={item}>
               <div className="option-text">{item}</div>
-              <RemoveButton
-                onClick={this.props.removeOption.bind(this, item)}
-              />
+              <RemoveButton onClick={this.props.removeOption.bind(this, item)} />
             </div>
           )
         }, this)}

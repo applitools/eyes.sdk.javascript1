@@ -1,7 +1,7 @@
 'use strict'
 
-const {EyesScreenshotFactory} = require('./EyesScreenshotFactory')
-const {EyesSimpleScreenshot} = require('./EyesSimpleScreenshot')
+const EyesScreenshotFactory = require('./EyesScreenshotFactory')
+const EyesSimpleScreenshot = require('./EyesSimpleScreenshot')
 
 /**
  * Encapsulates the instantiation of an EyesSimpleScreenshot.
@@ -18,4 +18,4 @@ class EyesSimpleScreenshotFactory extends EyesScreenshotFactory {
   }
 }
 
-exports.EyesSimpleScreenshotFactory = EyesSimpleScreenshotFactory
+module.exports = EyesSimpleScreenshotFactory

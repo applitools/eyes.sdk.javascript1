@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {Eyes, ClassicRunner, VisualGridRunner, Logger, Configuration} = require('../../index')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
@@ -20,7 +20,7 @@ describe('Eyes', function() {
     eyesVG2 = new Eyes(vgr)
     eyesVG3 = new Eyes(vgr)
 
-    const {port, close} = await fakeEyesServer({logger})
+    const {port, close} = await startFakeEyesServer({logger})
     closeServer = close
     const serverUrl = `http://localhost:${port}`
     const configuration = new Configuration()

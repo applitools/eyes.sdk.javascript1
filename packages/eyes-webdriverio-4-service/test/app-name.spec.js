@@ -29,7 +29,9 @@ describe('appName2', () => {
 describe('appName3', () => {
   beforeEach(() => {
     browser.url(url)
-    browser.eyesGetConfiguration().setAppName('appName3_')
+    const configuration = browser.eyesGetConfiguration()
+    configuration.setAppName('appName3_')
+    browser.eyesSetConfiguration(configuration)
   })
 
   it('check3', () => {
@@ -40,7 +42,9 @@ describe('appName3', () => {
 
 describe('appName4', () => {
   it('check4', () => {
-    browser.eyesGetConfiguration().setAppName('appName4_1')
+    const configuration = browser.eyesGetConfiguration()
+    configuration.setAppName('appName4_1')
+    browser.eyesSetConfiguration(configuration)
     browser.eyesCheck('region')
     strictEqual('appName4_1', browser.eyesGetConfiguration().getAppName())
   })

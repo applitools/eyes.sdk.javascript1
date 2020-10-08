@@ -6,7 +6,11 @@ const absolutizeUrl = require('./absolutizeUrl')
 const resourceType = require('./resourceType')
 const toCacheEntry = require('./toCacheEntry')
 const extractSvgResources = require('./extractSvgResources')
+const getFetchOptions = require('./getFetchOptions')
 
+// NOTE regarding support for errorStatusCode:
+// why is this function still valid? because it is meant to add resources to the return value of getAllResources, if and only if it's not already there OR it is there but there is no content (for some reason I don't remember).
+// when handling errorStatusCode resources, they are added if they are not already there, and if they are there, they will never have content so it's fine.
 function assignContentfulResources(obj1, obj2) {
   for (const p in obj2) {
     if (!obj1[p] || !obj1[p].getContent()) {
@@ -15,37 +19,46 @@ function assignContentfulResources(obj1, obj2) {
   }
 }
 
-function fromCacheToRGridResource({url, type, hash, content}) {
-  const resource = new RGridResource()
-  resource.setUrl(url)
-  resource.setContentType(type)
-  resource.setContent(content || '')
-  resource._sha256hash = hash // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
+function fromCacheToRGridResource({url, type, hash, content, errorStatusCode}) {
+  const resource = new RGridResource({url})
+  if (errorStatusCode) {
+    resource.setErrorStatusCode(errorStatusCode)
+  } else {
+    resource.setContentType(type)
+    resource.setContent(content || '')
+    // yuck! but RGridResource assumes it always has the content, which we prefer not to save in cache.
+    // after renderBatch we clear the content of the resource, for saving space.
+    resource._sha256hash = hash
+  }
   return resource
 }
 
 function makeGetAllResources({resourceCache, fetchResource, extractCssResources, logger}) {
-  function fromFetchedToRGridResource({url, type, value}) {
-    const rGridResource = new RGridResource()
-    rGridResource.setUrl(url)
-    rGridResource.setContentType(type || 'application/x-applitools-unknown') // TODO test this
-    rGridResource.setContent(value || '')
-    if (!value) {
-      logger.log(`warning! the resource ${url} ${type} has no content.`)
+  function fromFetchedToRGridResource({url, type, value, errorStatusCode}) {
+    const rGridResource = new RGridResource({url})
+    if (errorStatusCode) {
+      rGridResource.setErrorStatusCode(errorStatusCode)
+    } else {
+      rGridResource.setContentType(type || 'application/x-applitools-unknown') // TODO test this
+      rGridResource.setContent(value || '')
+      if (!value) {
+        logger.log(`warning! the resource ${url} ${type} has no content.`)
+      }
     }
     return rGridResource
   }
 
-  return function getAllResources({resourceUrls, preResources, fetchOptions}) {
+  return function getAllResources({resourceUrls, preResources, userAgent, referer, proxySettings}) {
     const handledResources = new Set()
     return getOrFetchResources(resourceUrls, preResources)
 
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
       const resources = {}
       for (const [url, resource] of Object.entries(preResources)) {
-        resourceCache.setValue(url, toCacheEntry(fromFetchedToRGridResource(resource)))
-        handledResources.add(url)
+        // "preResources" are not fetched and not in "fetchCache" so cache them to "resourceCache".
         const rGridResource = fromFetchedToRGridResource(resource)
+        resourceCache.setValue(url, toCacheEntry(rGridResource))
+        handledResources.add(url)
         assignContentfulResources(resources, {[url]: rGridResource})
       }
 
@@ -62,15 +75,19 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
       }
 
       await Promise.all(
-        missingResourceUrls.map(url =>
-          fetchResource(url, fetchOptions)
+        missingResourceUrls.map(url => {
+          const fetchOptions = getFetchOptions({url, referer, userAgent, proxySettings})
+          return fetchResource(url, fetchOptions)
             .then(async resource =>
               assignContentfulResources(resources, await processResource(resource)),
             )
             .catch(ex => {
-              logger.log(`error fetching resource at ${url}: ${ex}`)
-            }),
-        ),
+              logger.log(
+                `error fetching resource at ${url}, setting errorStatusCode to 504. err=${ex}`,
+              )
+              resources[url] = new RGridResource({url, errorStatusCode: 504})
+            })
+        }),
       )
 
       return resources
@@ -79,18 +96,9 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     async function processResource(resource) {
       let {dependentResources, fetchedResources} = await getDependantResources(resource)
       const rGridResource = fromFetchedToRGridResource(resource)
-      /*
-       * Note: We set the cache with resources only after we don't need their content anymore (to save up space);
-       * We set it in renderBatch() after all PUTs are done.
-       * ( toCacheEntry() removes the content of non css/svg resources )
-       *
-       * getAllresources calls before the render ends don't get the cache (it's ok fetch-wise since fetch is cached)
-       * but it is time consuming to do css/svg processing - and so we set these resources to cache here.
-       *
-       * Consider changing this, maybe setting all resources here (and keeping the cache entery content).
-       */
-      const contentType = rGridResource.getContentType()
-      if (resourceType(contentType)) {
+      // It is time consuming to process css/svg so use "resourceCache".
+      const doesRequireProcessing = !!resourceType(rGridResource.getContentType())
+      if (doesRequireProcessing) {
         resourceCache.setValue(resource.url, toCacheEntry(rGridResource))
       }
       resourceCache.setDependencies(resource.url, dependentResources)

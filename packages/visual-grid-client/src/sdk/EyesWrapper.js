@@ -8,7 +8,6 @@ const {
   TestFailedError,
 } = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
-
 const VERSION = require('../../package.json').version
 
 class EyesWrapper extends EyesBase {
@@ -28,7 +27,7 @@ class EyesWrapper extends EyesBase {
   }
 
   async ensureAborted() {
-    if (!this.getRunningSession()) {
+    if (!this.getRunningSession() && this._viewportSizeHandler.get()) {
       const [err] = await presult(this._ensureRunningSession())
       if (err) {
         this._logger.log(
@@ -80,15 +79,15 @@ class EyesWrapper extends EyesBase {
 
   /** @override */
   getBaseAgentId() {
-    return this.agentId || `visual-grid-client/${VERSION}`
+    return this._baseAgentId || `visual-grid-client/${VERSION}`
   }
 
-  setBaseAgentId(agentId) {
-    this.agentId = agentId
+  setBaseAgentId(baseAgentId) {
+    this._baseAgentId = baseAgentId
   }
 
-  setAccessibilityValidation(accessibilityLevel) {
-    this._configuration.getDefaultMatchSettings().setAccessibilityValidation(accessibilityLevel)
+  setAccessibilityValidation(value) {
+    this._configuration.getDefaultMatchSettings().setAccessibilitySettings(value)
   }
 
   /**
@@ -127,12 +126,12 @@ class EyesWrapper extends EyesBase {
     return this._serverConnector.getUserAgents()
   }
 
-  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, source}) {
+  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, url}) {
     const regionProvider = new NullRegionProvider()
     this.screenshotUrl = screenshotUrl
     this.domUrl = domUrl
     this.imageLocation = imageLocation
-    return this.checkWindowBase(regionProvider, tag, false, checkSettings, source)
+    return this.checkWindowBase(regionProvider, tag, false, checkSettings, url)
   }
 
   testWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {

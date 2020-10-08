@@ -1,8 +1,6 @@
 'use strict'
-
-const {EyesError} = require('@applitools/eyes-common')
-
-const {SessionStartInfo} = require('../server/SessionStartInfo')
+const EyesError = require('./EyesError')
+const SessionStartInfo = require('../server/SessionStartInfo')
 
 /**
  * Indicates that a test did not pass (i.e., test either failed or is a new test).
@@ -11,8 +9,8 @@ class TestFailedError extends EyesError {
   /**
    * Creates a new TestFailedError instance.
    *
-   * @param {?TestResults} testResults - The results of the current test if available, {@code null} otherwise.
-   * @param {string|SessionStartInfo} messageOrSession - The error description or SessionStartInfo with test details.
+   * @param {TestResults} [testResults] - The results of the current test if available, {@code null} otherwise.
+   * @param {string|SessionStartInfo} [messageOrSession] - The error description or SessionStartInfo with test details.
    */
   constructor(testResults, messageOrSession) {
     if (messageOrSession instanceof SessionStartInfo) {
@@ -33,4 +31,4 @@ class TestFailedError extends EyesError {
   }
 }
 
-exports.TestFailedError = TestFailedError
+module.exports = TestFailedError

@@ -1,7 +1,7 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
-const {EyesRunner} = require('./EyesRunner')
+const {GeneralUtils} = require('../..')
+const EyesRunner = require('./EyesRunner')
 
 class VisualGridRunner extends EyesRunner {
   /**
@@ -36,4 +36,4 @@ class VisualGridRunner extends EyesRunner {
   }
 }
 
-exports.VisualGridRunner = VisualGridRunner
+module.exports = VisualGridRunner

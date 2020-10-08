@@ -1,20 +1,12 @@
 'use strict'
-
 /* eslint-disable no-unused-vars */
 
 /**
- * @ignore
- * @abstract
+ * @internal
  */
 class GetAccessibilityRegion {
-  /**
-   * @param {EyesBase} eyesBase
-   * @param {EyesScreenshot} screenshot
-   * @return {Promise<AccessibilityMatchSettings[]>}
-   */
-  async getRegion(eyesBase, screenshot) {
+  async getRegion(eyes, screenshot) {
     throw new TypeError('The method is not implemented!')
   }
 }
-
-exports.GetAccessibilityRegion = GetAccessibilityRegion
+module.exports = GetAccessibilityRegion

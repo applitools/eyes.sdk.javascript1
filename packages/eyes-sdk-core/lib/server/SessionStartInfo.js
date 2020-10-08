@@ -1,32 +1,33 @@
 'use strict'
-
-const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
+const GeneralUtils = require('../utils/GeneralUtils')
+const ArgumentGuard = require('../utils/ArgumentGuard')
 
 /**
  * Encapsulates data required to start session using the Session API.
  */
 class SessionStartInfo {
   /**
-   * @param {string} agentId
-   * @param {SessionType} [sessionType]
-   * @param {string} appIdOrName
-   * @param {string} [verId]
-   * @param {string} scenarioIdOrName
-   * @param {string} [displayName]
-   * @param {BatchInfo} batchInfo
-   * @param {string} [baselineEnvName]
-   * @param {string} [environmentName]
-   * @param {AppEnvironment} environment
-   * @param {ImageMatchSettings} defaultMatchSettings
-   * @param {string} [branchName]
-   * @param {string} [parentBranchName]
-   * @param {string} [parentBranchBaselineSavedBefore]
-   * @param {string} [baselineBranchName]
-   * @param {boolean} [compareWithParentBranch]
-   * @param {boolean} [ignoreBaseline]
-   * @param {boolean} [saveDiffs]
-   * @param {boolean} [render]
-   * @param {PropertyData[]} [properties]
+   * @param {object} info
+   * @param {string} info.agentId
+   * @param {SessionType} [info.sessionType]
+   * @param {string} info.appIdOrName
+   * @param {string} [info.verId]
+   * @param {string} info.scenarioIdOrName
+   * @param {string} [info.displayName]
+   * @param {BatchInfo} info.batchInfo
+   * @param {string} [info.baselineEnvName]
+   * @param {string} [info.environmentName]
+   * @param {AppEnvironment} info.environment
+   * @param {ImageMatchSettings} info.defaultMatchSettings
+   * @param {string} [info.branchName]
+   * @param {string} [info.parentBranchName]
+   * @param {string} [info.parentBranchBaselineSavedBefore]
+   * @param {string} [info.baselineBranchName]
+   * @param {boolean} [info.compareWithParentBranch]
+   * @param {boolean} [info.ignoreBaseline]
+   * @param {boolean} [info.saveDiffs]
+   * @param {boolean} [info.render]
+   * @param {PropertyData[]} [info.properties]
    */
   constructor({
     agentId,
@@ -235,4 +236,4 @@ class SessionStartInfo {
   }
 }
 
-exports.SessionStartInfo = SessionStartInfo
+module.exports = SessionStartInfo

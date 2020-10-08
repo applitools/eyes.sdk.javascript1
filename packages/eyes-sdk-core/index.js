@@ -1,167 +1,235 @@
 'use strict'
-
 /* eslint-disable max-len */
 
-const common = require('@applitools/eyes-common')
+/**
+ * @typedef {import('./lib/config/Configuration').PlainConfiguration} PlainConfiguration
+ * @typedef {import('./lib/config/Configuration').PlainConfigurationClassic} PlainConfigurationClassic
+ * @typedef {import('./lib/config/Configuration').PlainConfigurationVisualGrid} PlainConfigurationVisualGrid
+ */
 
-exports.AppOutputProvider = require('./lib/capture/AppOutputProvider').AppOutputProvider
-exports.AppOutputWithScreenshot = require('./lib/capture/AppOutputWithScreenshot').AppOutputWithScreenshot
-exports.EyesScreenshot = require('./lib/capture/EyesScreenshot').EyesScreenshot
-exports.EyesScreenshotFactory = require('./lib/capture/EyesScreenshotFactory').EyesScreenshotFactory
-exports.EyesSimpleScreenshot = require('./lib/capture/EyesSimpleScreenshot').EyesSimpleScreenshot
-exports.EyesSimpleScreenshotFactory = require('./lib/capture/EyesSimpleScreenshotFactory').EyesSimpleScreenshotFactory
-exports.FullPageCaptureAlgorithm = require('./lib/capture/FullPageCaptureAlgorithm').FullPageCaptureAlgorithm
-exports.ImageProvider = require('./lib/capture/ImageProvider').ImageProvider
-exports.CorsIframeHandle = require('./lib/capture/CorsIframeHandler').CorsIframeHandle
-exports.CorsIframeHandler = require('./lib/capture/CorsIframeHandler').CorsIframeHandler
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {import('./lib/wrappers/EyesDriver').SpecDriver<TDriver, TElement, TSelector>} SpecDriver
+ */
 
-exports.CutProvider = require('./lib/cropping/CutProvider').CutProvider
-exports.FixedCutProvider = require('./lib/cropping/FixedCutProvider').FixedCutProvider
-exports.NullCutProvider = require('./lib/cropping/NullCutProvider').NullCutProvider
-exports.UnscaledFixedCutProvider = require('./lib/cropping/UnscaledFixedCutProvider').UnscaledFixedCutProvider
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {import('./lib/wrappers/EyesWrappedElement').SpecElement<TDriver, TElement, TSelector>} SpecElement
+ */
 
-exports.RemoteSessionEventHandler = require('./lib/events/RemoteSessionEventHandler').RemoteSessionEventHandler
-exports.SessionEventHandler = require('./lib/events/SessionEventHandler').SessionEventHandler
-exports.ValidationInfo = require('./lib/events/ValidationInfo').ValidationInfo
-exports.ValidationResult = require('./lib/events/ValidationResult').ValidationResult
+/**
+ * @template TDriver, TElement, TSelector
+ * @typedef {import('./lib/frames/Frame').SpecFrame<TDriver, TElement, TSelector>} SpecFrame
+ */
 
-exports.CoordinatesTypeConversionError = require('./lib/errors/CoordinatesTypeConversionError').CoordinatesTypeConversionError
-exports.DiffsFoundError = require('./lib/errors/DiffsFoundError').DiffsFoundError
-exports.NewTestError = require('./lib/errors/NewTestError').NewTestError
-exports.OutOfBoundsError = require('./lib/errors/OutOfBoundsError').OutOfBoundsError
-exports.TestFailedError = require('./lib/errors/TestFailedError').TestFailedError
+/**
+ * @template TElement, TSelector
+ * @typedef {import('./lib/fluent/DriverCheckSettings').SpecCheckSettings<TElement, TSelector>} SpecCheckSettings
+ */
 
-exports.AccessibilityRegionByRectangle = require('./lib/fluent/AccessibilityRegionByRectangle').AccessibilityRegionByRectangle
-exports.CheckSettings = require('./lib/fluent/CheckSettings').CheckSettings
-exports.CheckTarget = require('./lib/fluent/CheckTarget').CheckTarget
-exports.FloatingRegionByRectangle = require('./lib/fluent/FloatingRegionByRectangle').FloatingRegionByRectangle
-exports.GetAccessibilityRegion = require('./lib/fluent/GetAccessibilityRegion').GetAccessibilityRegion
-exports.GetFloatingRegion = require('./lib/fluent/GetFloatingRegion').GetFloatingRegion
-exports.GetRegion = require('./lib/fluent/GetRegion').GetRegion
-exports.GetSelector = require('./lib/fluent/GetSelector').GetSelector
-exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle').IgnoreRegionByRectangle
-exports.locatorToPersistedRegions = require('./lib/fluent/locatorToPersistedRegions')
+// config
+exports.AccessibilityLevel = require('./lib/config/AccessibilityLevel')
+exports.AccessibilityGuidelinesVersion = require('./lib/config/AccessibilityGuidelinesVersion')
+exports.AccessibilityMatchSettings = require('./lib/config/AccessibilityMatchSettings')
+exports.AccessibilityRegionType = require('./lib/config/AccessibilityRegionType')
+exports.BatchInfo = require('./lib/config/BatchInfo')
+exports.BrowserType = require('./lib/config/BrowserType')
+exports.Configuration = require('./lib/config/Configuration')
+exports.DeviceName = require('./lib/config/DeviceName')
+exports.ExactMatchSettings = require('./lib/config/ExactMatchSettings')
+exports.FloatingMatchSettings = require('./lib/config/FloatingMatchSettings')
+exports.ImageMatchSettings = require('./lib/config/ImageMatchSettings')
+exports.MatchLevel = require('./lib/config/MatchLevel')
+exports.PropertyData = require('./lib/config/PropertyData')
+exports.ProxySettings = require('./lib/config/ProxySettings')
+exports.ScreenOrientation = require('./lib/config/ScreenOrientation')
+exports.SessionType = require('./lib/config/SessionType')
+exports.StitchMode = require('./lib/config/StitchMode')
+exports.IosDeviceName = require('./lib/config/IosDeviceName')
+exports.IosVersion = require('./lib/config/IosVersion')
 
-exports.AppOutput = require('./lib/match/AppOutput').AppOutput
-exports.MatchResult = require('./lib/match/MatchResult').MatchResult
-exports.MatchSingleWindowData = require('./lib/match/MatchSingleWindowData').MatchSingleWindowData
-exports.MatchWindowData = require('./lib/match/MatchWindowData').MatchWindowData
-exports.ImageMatchOptions = require('./lib/match/MatchWindowData').ImageMatchOptions
-exports.MatchWindowDataWithScreenshot = require('./lib/match/MatchWindowDataWithScreenshot').MatchWindowDataWithScreenshot
+// debug
+exports.DebugScreenshotsProvider = require('./lib/debug/DebugScreenshotsProvider')
+exports.FileDebugScreenshotsProvider = require('./lib/debug/FileDebugScreenshotsProvider')
+exports.NullDebugScreenshotProvider = require('./lib/debug/NullDebugScreenshotProvider')
 
-exports.metadata = require('./lib/metadata/index')
+// errors
+exports.EyesError = require('./lib/errors/EyesError')
+exports.CoordinatesTypeConversionError = require('./lib/errors/CoordinatesTypeConversionError')
+exports.DiffsFoundError = require('./lib/errors/DiffsFoundError')
+exports.NewTestError = require('./lib/errors/NewTestError')
+exports.OutOfBoundsError = require('./lib/errors/OutOfBoundsError')
+exports.TestFailedError = require('./lib/errors/TestFailedError')
+exports.EyesDriverOperationError = require('./lib/errors/EyesDriverOperationError')
+exports.ElementNotFoundError = require('./lib/errors/ElementNotFoundError')
 
-exports.InvalidPositionProvider = require('./lib/positioning/InvalidPositionProvider').InvalidPositionProvider
-exports.NullRegionPositionCompensation = require('./lib/positioning/NullRegionPositionCompensation').NullRegionPositionCompensation
-exports.NullRegionProvider = require('./lib/positioning/NullRegionProvider').NullRegionProvider
-exports.PositionMemento = require('./lib/positioning/PositionMemento').PositionMemento
-exports.PositionProvider = require('./lib/positioning/PositionProvider').PositionProvider
-exports.RegionPositionCompensation = require('./lib/positioning/RegionPositionCompensation').RegionPositionCompensation
-exports.RegionProvider = require('./lib/positioning/RegionProvider').RegionProvider
+// geometry
+exports.CoordinatesType = require('./lib/geometry/CoordinatesType')
+exports.Location = require('./lib/geometry/Location')
+exports.RectangleSize = require('./lib/geometry/RectangleSize')
+exports.Region = require('./lib/geometry/Region')
 
-exports.RenderInfo = require('./lib/renderer/RenderInfo').RenderInfo
-exports.RenderRequest = require('./lib/renderer/RenderRequest').RenderRequest
-exports.RenderStatus = require('./lib/renderer/RenderStatus').RenderStatus
-exports.RenderStatusResults = require('./lib/renderer/RenderStatusResults').RenderStatusResults
-exports.RGridDom = require('./lib/renderer/RGridDom').RGridDom
-exports.RGridResource = require('./lib/renderer/RGridResource').RGridResource
-exports.RunningRender = require('./lib/renderer/RunningRender').RunningRender
-exports.EmulationInfo = require('./lib/renderer/EmulationInfo').EmulationInfo
-exports.EmulationDevice = require('./lib/renderer/EmulationDevice').EmulationDevice
+// handler
+exports.PropertyHandler = require('./lib/handler/PropertyHandler')
+exports.ReadOnlyPropertyHandler = require('./lib/handler/ReadOnlyPropertyHandler')
+exports.SimplePropertyHandler = require('./lib/handler/SimplePropertyHandler')
 
-exports.ContextBasedScaleProvider = require('./lib/scaling/ContextBasedScaleProvider').ContextBasedScaleProvider
-exports.ContextBasedScaleProviderFactory = require('./lib/scaling/ContextBasedScaleProviderFactory').ContextBasedScaleProviderFactory
-exports.FixedScaleProvider = require('./lib/scaling/FixedScaleProvider').FixedScaleProvider
-exports.FixedScaleProviderFactory = require('./lib/scaling/FixedScaleProviderFactory').FixedScaleProviderFactory
-exports.NullScaleProvider = require('./lib/scaling/NullScaleProvider').NullScaleProvider
-exports.ScaleProvider = require('./lib/scaling/ScaleProvider').ScaleProvider
-exports.ScaleProviderFactory = require('./lib/scaling/ScaleProviderFactory').ScaleProviderFactory
-exports.ScaleProviderIdentityFactory = require('./lib/scaling/ScaleProviderIdentityFactory').ScaleProviderIdentityFactory
+// images
+exports.ImageDeltaCompressor = require('./lib/images/ImageDeltaCompressor')
+exports.MutableImage = require('./lib/images/MutableImage')
 
-exports.RenderingInfo = require('./lib/server/RenderingInfo').RenderingInfo
-exports.RunningSession = require('./lib/server/RunningSession').RunningSession
-exports.ServerConnector = require('./lib/server/ServerConnector').ServerConnector
-exports.SessionStartInfo = require('./lib/server/SessionStartInfo').SessionStartInfo
+// logging
+exports.ConsoleLogHandler = require('./lib/logging/ConsoleLogHandler')
+exports.DebugLogHandler = require('./lib/logging/DebugLogHandler')
+exports.FileLogHandler = require('./lib/logging/FileLogHandler') // -browser
+exports.Logger = require('./lib/logging/Logger')
+exports.LogHandler = require('./lib/logging/LogHandler')
+exports.NullLogHandler = require('./lib/logging/NullLogHandler')
 
-exports.MouseTrigger = require('./lib/triggers/MouseTrigger').MouseTrigger
-exports.TextTrigger = require('./lib/triggers/TextTrigger').TextTrigger
-exports.Trigger = require('./lib/triggers/Trigger').Trigger
+// useragent
+exports.BrowserNames = require('./lib/useragent/BrowserNames')
+exports.OSNames = require('./lib/useragent/OSNames')
+exports.UserAgent = require('./lib/useragent/UserAgent')
 
-exports.AppEnvironment = require('./lib/AppEnvironment').AppEnvironment
-exports.EyesBase = require('./lib/EyesBase').EyesBase
-exports.EyesJsBrowserUtils = require('./lib/EyesJsBrowserUtils').EyesJsBrowserUtils
-exports.EyesJsExecutor = require('./lib/EyesJsExecutor').EyesJsExecutor
-exports.FailureReports = require('./lib/FailureReports').FailureReports
-exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask').MatchSingleWindowTask
-exports.MatchWindowTask = require('./lib/MatchWindowTask').MatchWindowTask
-exports.RenderWindowTask = require('./lib/RenderWindowTask').RenderWindowTask
-exports.TestResults = require('./lib/TestResults').TestResults
-exports.TestAccessibilityStatus = require('./lib/TestResults').TestAccessibilityStatus
-exports.AccessibilityStatus = require('./lib/AccessibilityStatus').AccessibilityStatus
-exports.TestResultsFormatter = require('./lib/TestResultsFormatter').TestResultsFormatter
-exports.TestResultsStatus = require('./lib/TestResultsStatus').TestResultsStatus
+// utils
+exports.ArgumentGuard = require('./lib/utils/ArgumentGuard')
+exports.ConfigUtils = require('./lib/utils/ConfigUtils')
+exports.DateTimeUtils = require('./lib/utils/DateTimeUtils')
+exports.FileUtils = require('./lib/utils/FileUtils')
+exports.GeneralUtils = require('./lib/utils/GeneralUtils')
+exports.ImageUtils = require('./lib/utils/ImageUtils')
+exports.PerformanceUtils = require('./lib/utils/PerformanceUtils')
+exports.StreamUtils = require('./lib/utils/StreamUtils')
+exports.TypeUtils = require('./lib/utils/TypeUtils')
+exports.deserializeDomSnapshotResult = require('./lib/utils/deserializeDomSnapshotResult')
+exports.AppOutputProvider = require('./lib/capture/AppOutputProvider')
+exports.AppOutputWithScreenshot = require('./lib/capture/AppOutputWithScreenshot')
+exports.EyesScreenshot = require('./lib/capture/EyesScreenshot')
+exports.EyesScreenshotNew = require('./lib/capture/EyesScreenshotNew')
+exports.EyesScreenshotFactory = require('./lib/capture/EyesScreenshotFactory')
+exports.EyesSimpleScreenshot = require('./lib/capture/EyesSimpleScreenshot')
+exports.EyesSimpleScreenshotFactory = require('./lib/capture/EyesSimpleScreenshotFactory')
+exports.FullPageCaptureAlgorithm = require('./lib/capture/FullPageCaptureAlgorithm')
+exports.ImageProvider = require('./lib/capture/ImageProvider')
+exports.ImageProviderFactory = require('./lib/capture/ImageProviderFactory')
+exports.CorsIframeHandle = require('./lib/capture/CorsIframeHandles')
+exports.CorsIframeHandler = require('./lib/capture/CorsIframeHandler')
 
-exports.EyesRunner = require('./lib/runner/EyesRunner').EyesRunner
-exports.ClassicRunner = require('./lib/runner/ClassicRunner').ClassicRunner
-exports.VisualGridRunner = require('./lib/runner/VisualGridRunner').VisualGridRunner
-exports.TestResultContainer = require('./lib/runner/TestResultContainer').TestResultContainer
-exports.TestResultsSummary = require('./lib/runner/TestResultsSummary').TestResultsSummary
+exports.CutProvider = require('./lib/cropping/CutProvider')
+exports.FixedCutProvider = require('./lib/cropping/FixedCutProvider')
+exports.NullCutProvider = require('./lib/cropping/NullCutProvider')
+exports.UnscaledFixedCutProvider = require('./lib/cropping/UnscaledFixedCutProvider')
 
-// Classes from eyes-common which may be used as part of public API
-exports.AccessibilityLevel = common.AccessibilityLevel
-exports.AccessibilityMatchSettings = common.AccessibilityMatchSettings
-exports.AccessibilityRegionType = common.AccessibilityRegionType
-exports.BatchInfo = common.BatchInfo
-exports.BrowserType = common.BrowserType
-exports.Configuration = common.Configuration
-exports.DeviceName = common.DeviceName
-exports.ExactMatchSettings = common.ExactMatchSettings
-exports.FloatingMatchSettings = common.FloatingMatchSettings
-exports.ImageMatchSettings = common.ImageMatchSettings
-exports.MatchLevel = common.MatchLevel
-exports.PropertyData = common.PropertyData
-exports.ProxySettings = common.ProxySettings
-exports.ScreenOrientation = common.ScreenOrientation
-exports.SessionType = common.SessionType
-exports.StitchMode = common.StitchMode
+exports.RemoteSessionEventHandler = require('./lib/events/RemoteSessionEventHandler')
+exports.SessionEventHandler = require('./lib/events/SessionEventHandler')
+exports.ValidationInfo = require('./lib/events/ValidationInfo')
+exports.ValidationResult = require('./lib/events/ValidationResult')
 
-exports.DebugScreenshotsProvider = common.DebugScreenshotsProvider
-exports.FileDebugScreenshotsProvider = common.FileDebugScreenshotsProvider
-exports.NullDebugScreenshotProvider = common.NullDebugScreenshotProvider
+exports.CheckSettings = require('./lib/fluent/CheckSettings')
+exports.DriverCheckSettings = require('./lib/fluent/DriverCheckSettings')
+exports.FluentRegion = require('./lib/fluent/FluentRegion')
+exports.GetRegion = require('./lib/fluent/GetRegion')
+exports.IgnoreRegionByRectangle = require('./lib/fluent/IgnoreRegionByRectangle')
+exports.IgnoreRegionBySelector = require('./lib/fluent/IgnoreRegionBySelector')
+exports.IgnoreRegionByElement = require('./lib/fluent/IgnoreRegionByElement')
+exports.GetFloatingRegion = require('./lib/fluent/GetFloatingRegion')
+exports.FloatingRegionByRectangle = require('./lib/fluent/FloatingRegionByRectangle')
+exports.FloatingRegionBySelector = require('./lib/fluent/FloatingRegionBySelector')
+exports.FloatingRegionByElement = require('./lib/fluent/FloatingRegionByElement')
+exports.GetAccessibilityRegion = require('./lib/fluent/GetAccessibilityRegion')
+exports.AccessibilityRegionByRectangle = require('./lib/fluent/AccessibilityRegionByRectangle')
+exports.AccessibilityRegionBySelector = require('./lib/fluent/AccessibilityRegionBySelector')
+exports.AccessibilityRegionByElement = require('./lib/fluent/AccessibilityRegionByElement')
+exports.TargetRegionByElement = require('./lib/fluent/TargetRegionByElement')
 
-exports.EyesError = common.EyesError
+exports.AppOutput = require('./lib/match/AppOutput')
+exports.MatchResult = require('./lib/match/MatchResult')
+exports.MatchSingleWindowData = require('./lib/match/MatchSingleWindowData')
+exports.MatchWindowData = require('./lib/match/MatchWindowData')
+exports.ImageMatchOptions = require('./lib/match/ImageMatchOptions')
+exports.MatchWindowDataWithScreenshot = require('./lib/match/MatchWindowDataWithScreenshot')
 
-exports.CoordinatesType = common.CoordinatesType
-exports.Location = common.Location
-exports.RectangleSize = common.RectangleSize
-exports.Region = common.Region
+exports.metadata = {
+  ActualAppOutput: require('./lib/metadata/ActualAppOutput'),
+  Annotations: require('./lib/metadata/Annotations'),
+  BatchInfo: require('./lib/metadata/BatchInfo'),
+  Branch: require('./lib/metadata/Branch'),
+  ExpectedAppOutput: require('./lib/metadata/ExpectedAppOutput'),
+  Image: require('./lib/metadata/Image'),
+  ImageMatchSettings: require('./lib/metadata/ImageMatchSettings'),
+  SessionResults: require('./lib/metadata/SessionResults'),
+  StartInfo: require('./lib/metadata/StartInfo'),
+}
 
-exports.PropertyHandler = common.PropertyHandler
-exports.ReadOnlyPropertyHandler = common.ReadOnlyPropertyHandler
-exports.SimplePropertyHandler = common.SimplePropertyHandler
+exports.ImageRotation = require('./lib/positioning/ImageRotation')
+exports.RegionProvider = require('./lib/positioning/RegionProvider')
+exports.NullRegionProvider = require('./lib/positioning/NullRegionProvider')
+exports.RegionPositionCompensation = require('./lib/positioning/RegionPositionCompensation')
+exports.NullRegionPositionCompensation = require('./lib/positioning/NullRegionPositionCompensation')
+exports.FirefoxRegionPositionCompensation = require('./lib/positioning/FirefoxRegionPositionCompensation')
+exports.SafariRegionPositionCompensation = require('./lib/positioning/SafariRegionPositionCompensation')
+exports.RegionPositionCompensationFactory = require('./lib/positioning/RegionPositionCompensationFactory')
+exports.PositionProvider = require('./lib/positioning/PositionProvider')
+exports.InvalidPositionProvider = require('./lib/positioning/InvalidPositionProvider')
+exports.ScrollPositionProvider = require('./lib/positioning/ScrollPositionProvider')
+exports.CssTranslatePositionProvider = require('./lib/positioning/CssTranslatePositionProvider')
+exports.ScrollElementPositionProvider = require('./lib/positioning/ScrollElementPositionProvider')
+exports.CssTranslateElementPositionProvider = require('./lib/positioning/CssTranslateElementPositionProvider')
+exports.PositionMemento = require('./lib/positioning/PositionMemento')
 
-exports.ImageDeltaCompressor = common.ImageDeltaCompressor
-exports.MutableImage = common.MutableImage
+exports.RenderInfo = require('./lib/renderer/RenderInfo')
+exports.RenderRequest = require('./lib/renderer/RenderRequest')
+exports.RenderStatus = require('./lib/renderer/RenderStatus')
+exports.RenderStatusResults = require('./lib/renderer/RenderStatusResults')
+exports.RGridDom = require('./lib/renderer/RGridDom')
+exports.RGridResource = require('./lib/renderer/RGridResource')
+exports.RunningRender = require('./lib/renderer/RunningRender')
+exports.EmulationInfo = require('./lib/renderer/EmulationInfo')
+exports.EmulationDevice = require('./lib/renderer/EmulationDevice')
 
-exports.ConsoleLogHandler = common.ConsoleLogHandler
-exports.DebugLogHandler = common.DebugLogHandler
-exports.FileLogHandler = common.FileLogHandler
-exports.Logger = common.Logger
-exports.LogHandler = common.LogHandler
-exports.NullLogHandler = common.NullLogHandler
+exports.ContextBasedScaleProvider = require('./lib/scaling/ContextBasedScaleProvider')
+exports.ContextBasedScaleProviderFactory = require('./lib/scaling/ContextBasedScaleProviderFactory')
+exports.FixedScaleProvider = require('./lib/scaling/FixedScaleProvider')
+exports.FixedScaleProviderFactory = require('./lib/scaling/FixedScaleProviderFactory')
+exports.NullScaleProvider = require('./lib/scaling/NullScaleProvider')
+exports.ScaleProvider = require('./lib/scaling/ScaleProvider')
+exports.ScaleProviderFactory = require('./lib/scaling/ScaleProviderFactory')
+exports.ScaleProviderIdentityFactory = require('./lib/scaling/ScaleProviderIdentityFactory')
 
-// Classes which can be used internally, but should not be exported from final SDKs
-exports.BrowserNames = common.BrowserNames
-exports.OSNames = common.OSNames
-exports.UserAgent = common.UserAgent
+exports.RenderingInfo = require('./lib/server/RenderingInfo')
+exports.RunningSession = require('./lib/server/RunningSession')
+exports.ServerConnector = require('./lib/server/ServerConnector')
+exports.getTunnelAgentFromProxy = require('./lib/server/getTunnelAgentFromProxy')
+exports.SessionStartInfo = require('./lib/server/SessionStartInfo')
 
-exports.ArgumentGuard = common.ArgumentGuard
-exports.ConfigUtils = common.ConfigUtils
-exports.DateTimeUtils = common.DateTimeUtils
-exports.FileUtils = common.FileUtils
-exports.GeneralUtils = common.GeneralUtils
-exports.ImageUtils = common.ImageUtils
-exports.PerformanceUtils = common.PerformanceUtils
-exports.StreamUtils = common.StreamUtils
-exports.TypeUtils = common.TypeUtils
-exports.deserializeDomSnapshotResult = common.deserializeDomSnapshotResult
+exports.MouseTrigger = require('./lib/triggers/MouseTrigger')
+exports.TextTrigger = require('./lib/triggers/TextTrigger')
+exports.Trigger = require('./lib/triggers/Trigger')
+
+exports.AppEnvironment = require('./lib/AppEnvironment')
+exports.FailureReports = require('./lib/FailureReports')
+exports.MatchSingleWindowTask = require('./lib/MatchSingleWindowTask')
+exports.MatchWindowTask = require('./lib/MatchWindowTask')
+exports.TestResults = require('./lib/TestResults')
+exports.TestResultsError = require('./lib/TestResultsError')
+exports.AccessibilityStatus = require('./lib/AccessibilityStatus')
+exports.TestResultsFormatter = require('./lib/TestResultsFormatter')
+exports.TestResultsStatus = require('./lib/TestResultsStatus')
+
+exports.EyesBase = require('./lib/sdk/EyesBase')
+exports.EyesClassic = require('./lib/sdk/EyesClassic')
+exports.EyesVisualGrid = require('./lib/sdk/EyesVisualGrid')
+exports.EyesFactory = require('./lib/sdk/EyesFactory')
+exports.EyesUtils = require('./lib/sdk/EyesUtils')
+exports.EyesDriver = require('./lib/sdk/EyesDriver')
+exports.EyesContext = require('./lib/sdk/EyesContext')
+exports.EyesElement = require('./lib/sdk/EyesElement')
+exports.EyesSDK = require('./lib/sdk/EyesSDK')
+
+exports.takeDomCapture = require('./lib/utils/takeDomCapture')
+
+exports.EyesRunner = require('./lib/runner/EyesRunner')
+exports.ClassicRunner = require('./lib/runner/ClassicRunner')
+exports.VisualGridRunner = require('./lib/runner/VisualGridRunner')
+exports.TestResultContainer = require('./lib/runner/TestResultContainer')
+exports.TestResultsSummary = require('./lib/runner/TestResultsSummary')

@@ -1,10 +1,7 @@
 'use strict'
-
 const axios = require('axios')
-
-const {GeneralUtils} = require('@applitools/eyes-common')
-
-const {SessionEventHandler} = require('./SessionEventHandler')
+const GeneralUtils = require('../utils/GeneralUtils')
+const SessionEventHandler = require('./SessionEventHandler')
 
 // Constants
 const DEFAULT_CONNECTION_TIMEOUT_MS = 30000
@@ -159,4 +156,4 @@ class RemoteSessionEventHandler extends SessionEventHandler {
   }
 }
 
-exports.RemoteSessionEventHandler = RemoteSessionEventHandler
+module.exports = RemoteSessionEventHandler

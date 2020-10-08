@@ -3,10 +3,10 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {loadJsonFixture} = require('../util/loadFixture')
 const nock = require('nock')
-const {ptimeoutWithError} = require('@applitools/functional-commons')
+const {ptimeoutWithError, presult} = require('@applitools/functional-commons')
 
 describe('testWindow', () => {
   let baseUrl, closeServer, testWindow
@@ -16,7 +16,7 @@ describe('testWindow', () => {
   const testName = 'some test name'
 
   before(async () => {
-    const server = await testServer({port: 3456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServer({port: 3453}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
   })
@@ -28,7 +28,7 @@ describe('testWindow', () => {
   beforeEach(() => {
     wrapper = createFakeWrapper(baseUrl)
     testWindow = makeRenderingGridClient({
-      showLogs: true,
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
       apiKey,
       renderWrapper: wrapper,
       fetchResourceTimeout: 2000,
@@ -50,7 +50,7 @@ describe('testWindow', () => {
     }
     const resourceUrls = wrapper.goodResourceUrls
     const cdt = loadJsonFixture('test.cdt.json')
-    const checkParams = {resourceUrls, cdt, tag: 'good1', url: `${baseUrl}/test.html`}
+    const checkParams = {snapshot: {resourceUrls, cdt}, tag: 'good1', url: `${baseUrl}/test.html`}
 
     let done
     const p = new Promise(r => (done = r))
@@ -69,7 +69,10 @@ describe('testWindow', () => {
       done3(args)
     })
 
-    const [results] = await testWindow({openParams, checkParams})
+    const [err, resultsArr] = await presult(testWindow({openParams, checkParams}))
+
+    expect(err).to.be.undefined
+    const results = resultsArr[0]
 
     const [openArgs, testWindowArgs, closeTestWindowArgs] = await ptimeoutWithError(
       Promise.all([p, p2, p3]),
@@ -176,8 +179,8 @@ describe('testWindow', () => {
         domUrl: undefined,
         imageLocation: undefined,
         screenshotUrl: '{"isGood":true,"sizeMode":"full-page"}',
-        source: undefined,
         tag: 'good1',
+        url: `${baseUrl}/test.html`,
       },
     ])
   })
@@ -190,7 +193,7 @@ describe('testWindow', () => {
     }
     const resourceUrls = wrapper.goodResourceUrls
     const cdt = loadJsonFixture('test.cdt.json')
-    const checkParams = {resourceUrls, cdt, tag: 'good1', url: `${baseUrl}/test.html`}
+    const checkParams = {snapshot: {resourceUrls, cdt}, tag: 'good1', url: `${baseUrl}/test.html`}
 
     wrapper.closeTestWindow = () => {
       return Promise.reject(new Error('test diff'))

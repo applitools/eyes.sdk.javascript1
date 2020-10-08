@@ -3,6 +3,309 @@
 ## Unreleased
 
 
+## 12.3.1 - 2020/10/7
+
+- add support for proxy configurations that use a default port (e.g., port 80) with isHttpOnly ([Trello 539](https://trello.com/c/0RPLxkOo), [commit](https://github.com/applitools/eyes.sdk.javascript1/commit/f0225dd9d5d761f5941eea1fa145bfaea9170877))
+
+## 12.3.0 - 2020/10/6
+
+- added support of chunked dom snapshot results
+- used common polling logic for dom snapshot and dom capture
+- add warnings when `setViewportSize` fails during taking dom snapshot with layout breakpoints
+- support multiple versions of ios for visual grid
+- updated to @applitools/dom-snapshot@4.1.2 (from 4.1.0)
+- updated to @applitools/snippets@2.0.3 (from 2.0.1)
+- updated to @applitools/dom-capture@8.0.0 (from 7.3.0)
+- updated to @applitools/dom-snapshot@4.2.0 (from 4.1.2)
+
+## 12.2.9 - 2020/9/28
+
+- increase the default number of retries for request
+- add delay before retry
+- updated to @applitools/snippets@2.0.1 (from 2.0.0)
+
+## 12.2.8 - 2020/9/24
+
+- new release process
+
+## 12.2.7 - 2020/9/23
+
+- remove yarn workspaces
+
+## 12.2.6 - 2020/9/23
+
+- support cross origin iframes
+
+## 12.2.5 - 2020/9/17
+
+- fix viewport position calculations ([Trello](https://trello.com/c/TuXUZUNO))
+- fix `takeDomCapture`
+
+## 12.2.4 - 2020/9/15
+
+- add new `takeDomSnapshot` implementation
+- remove `selenium-webdriver` dependency
+
+## 12.2.3 - 2020/9/2
+
+- add `disableBrowserFetching` configuration parameter ([Trello](https://trello.com/c/ixJJZdiA))
+
+## 12.2.2 - 2020/9/1
+
+- fix layout breakpoints configuration
+
+## 12.2.1 - 2020/9/1
+
+- fix layout breakpoints configuration
+
+## 12.2.0 - 2020/8/30
+
+- add support for `layoutBreakpoints`
+- avoid javascript execution on native devices during viewport size extraction
+- mark coded regions and target elements with unique selectors for the visual grid
+- improve handling of fractional metrics ([Trello](https://trello.com/c/TuXUZUNO/441-sonatype-wdio-5-targetregion-appears-off-by-one-pixel))
+- updated to @applitools/snippets@1.1.0 (from 1.0.3)
+- updated to @applitools/snippets@1.1.1 (from 1.1.0)
+
+## 12.1.4 - 2020/8/13
+
+- avoid starting session with missing displaySize ([Trello 1](https://trello.com/c/jppq7ILy) [Trello 2](https://trello.com/c/5zDFhiMG))
+
+## 12.1.3 - 2020/8/12
+
+- fix priority of the default match level value ([Trello](https://trello.com/c/XxBQFIWQ/438-wdio-5-fluent-api-inconsistent-behavior-between-classicrunner-and-visualgrid-runner-with-matchlevel-specified-on-per-step-basis))
+- populate device name from capabilities ([Trello](https://trello.com/c/qyf1baqT/464-wdio5-mobile-web-device-name-not-reported-on-dashboard))
+- populate isMobile from ua in case of chrome emulation
+
+## 12.1.2 - 2020/8/10
+
+- handle case when SpecDrive.childContext doesn't return a new context
+- remove workaround in EyesScreenshot
+- add typedef for SpecDriver
+- updated to @applitools/snippets@1.0.3 (from 1.0.2)
+
+## 12.1.1 - 2020/8/6
+
+- add utility function to verify that the object is an instance of a class by class name
+- add JSON output to TestResultsFormatter [PR 224](https://github.com/applitools/eyes.sdk.javascript1/pull/224)
+
+## 12.1.0 - 2020/8/6
+
+- add support for RenderRequst `visualGridOptions` in Configuration and CheckSettings
+
+## 12.0.1 - 2020/8/5
+
+- Fix bug in runner.getAllTestResults(false)
+
+## 12.0.0 - 2020/8/4
+
+- support devtools protocol ([Trello](https://trello.com/c/fNxDJDId))
+
+## 11.5.1 - 2020/7/28
+
+- fix parsing of translate values in Firefox ([Trello](https://trello.com/c/encLpr4g))
+
+## 11.5.0 - 2020/7/26
+
+- support non-200 resources ([Trello](https://trello.com/c/J5lBWutP))
+
+## 11.4.1 - 2020/7/24
+
+- fix issue with duplicate copies of the SDK ([Trello](https://trello.com/c/4Gd7uWtS))
+
+## 11.4.0 - 2020/7/24
+
+- updated enum types to be more explicit about values
+- remove type definitions
+- support Appium mobile selectors
+- updated to @applitools/dom-capture@7.2.6 (from 7.2.4)
+
+## 11.3.9 - 2020/7/22
+
+- avoid `error.getTestResults is not a function` error ([Trello 1](https://trello.com/c/XAmA255U) [Trello 2](https://trello.com/c/1Bl2EaDE))
+
+## 11.3.8 - 2020/7/19
+
+- fix `Date` typo in BatchInfo JSDoc
+- support duplicate copies of the SDK in CheckSettings constructor ([Trello](https://trello.com/c/4Gd7uWtS))
+
+## 11.3.7 - 2020/7/15
+
+- use EyesClassic type as a return type for EyesFactoryCtor
+
+## 11.3.6 - 2020/7/14
+
+- return extended driver from EyesVisualGrid#open
+
+## 11.3.5 - 2020/7/13
+
+- improve typings
+
+## 11.3.4 - 2020/7/7
+
+- REVERT: avoid creating a test if no check command was called ([Trello](https://trello.com/c/ZhKO8sqA/404-wdiojs-sdkempty-test-results-with-new-eyes-core))
+
+## 11.3.3 - 2020/7/7
+
+- fix types
+
+## 11.3.2 - 2020/7/7
+
+- [REVERTED] avoid creating a test if no check command was called ([Trello](https://trello.com/c/ZhKO8sqA/404-wdiojs-sdkempty-test-results-with-new-eyes-core))
+- fix setting blank src on same-origin iframes in visual grid
+
+## 11.3.1 - 2020/7/7
+
+- fix issue with redirected frames in dom-snapshot ([Trello](https://trello.com/c/egprwtNp))
+
+## 11.3.0 - 2020/7/7
+
+- support visual locators
+
+## 11.2.2 - 2020/7/5
+
+- cache correct viewport size value after fail set viewport size
+- improve for element client rect js snippet
+- fix js snippet to be compatible with IE ([Trello](https://trello.com/c/Y0Q6QAHK/406-wdio5-error-executing-javascript-fully-fullpagescreenshot))
+- replace concurrent requests to the browser with sequential requests ([Trello](https://trello.com/c/Idx6gS3e/419-gartner-ie-errors))
+- prevent call unnecessary methods in native context ([Trello](https://trello.com/c/SSWShJPg/345-wdio-5-sdk-support-for-wdio6))
+- static Eyes.setViewportSize method ([Trello](https://trello.com/c/1KTjqPjI))
+
+## 11.2.1 - 2020/6/30
+
+- bring back input validation of accessibility type for AccessibilityRegionByRectangle
+- handle stale element reference error wrapped with eyes error
+
+## 11.2.0 - 2020/6/30
+
+- Add type definitions
+
+## 11.1.0 - 2020/6/28
+
+- remove IosScreenOrientation ([Trello](https://trello.com/c/abSJ68Rl/409-ufg-safari-on-ios-orientations-changes))
+
+## 11.0.10 - 2020/6/17
+
+- fix stale scroll root element issue
+
+## 11.0.9 - 2020/6/15
+
+- change default concurrent sessions in visual grid from 3 to 1
+
+## 11.0.8 - 2020/6/14
+
+- raise minimum payload size in requests ([Trello](https://trello.com/c/4JMV3NKN))
+
+## 11.0.7 - 2020/6/12
+
+- improved support of the regions with fixed position ([Trello](https://trello.com/c/9G1aau4d/357-wdio5-unable-to-capture-scrollable-region)
+- support scroll root elements with a position different from (0, 0) ([Trello](https://trello.com/c/04pdU1Up/328-js4-incorrect-stitching-using-targetregion-with-scrollrootelement))
+
+## 11.0.6 - 2020/6/11
+
+- added support of  check settings as a plain object
+- handle bug when Safari 11(!) take a full page screenshot by default ([Trello](https://trello.com/c/A9AUxYlP))
+- fix OOM issue with big images ([Trello](https://trello.com/c/4JMV3NKN))
+
+## 11.0.5 - 2020/6/9
+
+- addBrowser can now accept browserInfo object as first argument
+- fixed iosDeviceInfo in renderRequest and added JSdoc for iosDeviceInfo
+
+## 11.0.4 - 2020/6/4
+
+- fix marking the scroll root element
+- support correct driver API in DomCapture
+
+## 11.0.3 - 2020/6/3
+
+- added EDGE_CHROMIUM_TWO_VERSIONS_BACK to BrowserType
+- updated to @applitools/dom-capture@7.2.4 (from v7.2.0)
+
+## 11.0.2 - 2020/6/2
+
+- avoid 404 error in internet explorer due to parallel script executions
+
+## 11.0.1 - 2020/6/2
+
+- change document.scrollingElement to document.documentElement as the default scroll root element
+
+## 11.0.0 - 2020/5/31
+
+- Unified core to power all SDK's
+
+## 10.3.1 - 2020/5/26
+
+- fix MatchLevel.Layout value ([Trello 1](https://trello.com/c/IBESoj8Q/371-cypress-unable-to-set-match-level-to-layout), [Trello 2](https://trello.com/c/EQD3JUOf/296-wdio-5-long-image-sometimes-fails-sometimes-succeeds))
+
+## 10.3.0 - 2020/5/24
+
+- add ability to output XUnit XML from the TestResultFormatter (per [Trello 261](https://trello.com/c/ozmI1rav))
+- fix to implicitly use the correct dom-capture script when running on Internet Explorer or Edge Classic (per [Trello 296](https://trello.com/c/EQD3JUOf/296-wdio-5-long-image-sometimes-fails-sometimes-succeeds))
+- merge dom-utils into the core
+- merge eyes-common into the core
+
+## 10.2.0 - 2020/5/19
+
+- add AccessibilityGuidelinesVersion enum
+- remove accessibilityLevel from checkSettings
+- updated to @applitools/eyes-common@3.24.0
+
+   ## 10.1.2 - 2020/5/13
+
+- added retry for requests returning with a status code of 503   
+
+## 10.1.1 - 2020/5/11
+
+- updated to @applitools/eyes-common@3.23.1
+
+## 10.1.0 - 2020/5/11
+
+- add iosDeviceInfo support
+- updated to @applitools/eyes-common@3.23.0
+
+## 10.0.2 - 2020/5/11
+
+- updated to @applitools/eyes-common@3.22.2
+
+## 10.0.1 - 2020/5/4
+
+- added resource info on putRender Error
+
+## 10.0.0 - 2020/4/30
+
+- consolidate classes into core (no changes from 9.3.0)
+
+## 9.3.0 - 2020/4/30
+
+- consolidate classes into core
+
+## 9.2.1 - 2020/4/26
+
+- updated to @applitools/eyes-common@3.22.1
+
+## 9.2.0 - 2020/4/26
+
+- updated to @applitools/eyes-common@3.22.0
+
+## 9.1.2 - 2020/4/23
+
+- updated to @applitools/eyes-common@3.21.1
+
+## 9.1.1 - 2020/4/19
+
+- added SDK agent id header for eyes server requests
+
+## 9.1.0 - 2020/4/5
+
+- updated to @applitools/eyes-common@3.21.0
+
+## 9.0.3
+
+- Fix getElementXpath in EyesJsBrowserUtils
+- Added toCheckWindowConfiguration() to CheckSettings
+- EyesRunner: `getAllTestResults` method now awaits existing close operations
+
 ## 9.0.2
 
 - Support both new and old server versions for identifying new running sessions. ([Trello](https://trello.com/c/mtSiheZ9/267-support-startsession-as-long-running-task))

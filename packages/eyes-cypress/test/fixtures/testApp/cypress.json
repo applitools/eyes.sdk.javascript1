@@ -1,0 +1,5 @@
+{
+    "chromeWebSecurity": true,
+    "video":false,
+    "nodeVersion":"system"
+}

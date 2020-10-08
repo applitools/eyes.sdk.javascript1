@@ -32,18 +32,11 @@ export default class SpinnerBanner extends React.Component {
   }
   renderSpinner(style) {
     return (
-      <div
-        className={classNames('banner', this.props.state)}
-        style={Object.assign({}, this.props.style, style)}
-      >
+      <div className={classNames('banner', this.props.state)} style={Object.assign({}, this.props.style, style)}>
         {this.props.spin && <span className="loader" />}
         {!this.props.spin &&
           (StatusImages[this.props.state] ? (
-            <img
-              width="32px"
-              src={StatusImages[this.props.state]}
-              style={{ marginRight: '10px' }}
-            />
+            <img width="32px" src={StatusImages[this.props.state]} style={{ marginRight: '10px' }} />
           ) : (
             <span className="loader stopped" />
           ))}

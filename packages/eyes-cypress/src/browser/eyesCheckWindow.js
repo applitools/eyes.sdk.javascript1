@@ -1,8 +1,7 @@
-/* global window */
 'use strict';
 const getAllBlobs = require('./getAllBlobs');
 
-function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
+function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions}) {
   return function eyesCheckWindow(doc, args) {
     let tag,
       sizeMode,
@@ -20,8 +19,9 @@ function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
       useDom,
       enablePatterns,
       ignoreDisplacements,
-      accessibilityLevel,
-      accessibility;
+      accessibility,
+      matchLevel,
+      visualGridOptions;
     if (typeof args === 'string') {
       tag = args;
     } else if (typeof args === 'object') {
@@ -41,25 +41,27 @@ function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
       useDom = args.useDom;
       enablePatterns = args.enablePatterns;
       ignoreDisplacements = args.ignoreDisplacements;
-      accessibilityLevel = args.accessibilityLevel;
       accessibility = args.accessibility;
+      matchLevel = args.matchLevel;
+      visualGridOptions = args.visualGridOptions;
     }
 
-    return processPage(doc).then(mainFrame => {
-      const allBlobs = getAllBlobs(mainFrame).map(mapBlob);
-      const {resourceUrls, blobData, frames, url, cdt} = replaceBlobsWithBlobDataInFrame(mainFrame);
+    return processPage(doc, domSnapshotOptions).then(mainFrame => {
+      const allBlobs = getAllBlobs(mainFrame)
+        .filter(blob => !blob.errorStatusCode)
+        .map(mapBlob);
+      const snapshot = replaceBlobsWithBlobDataInFrame(mainFrame);
+      delete snapshot.url;
       return Promise.all(allBlobs.map(putResource)).then(() =>
         sendRequest({
           command: 'checkWindow',
           data: {
-            url,
-            resourceUrls,
-            cdt,
+            url: mainFrame.url,
+            snapshot,
             tag,
             sizeMode,
             target,
             fully,
-            blobData,
             selector,
             region,
             scriptHooks,
@@ -68,14 +70,13 @@ function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
             layout,
             content,
             strict,
-            frames,
             sendDom,
             useDom,
             enablePatterns,
             ignoreDisplacements,
-            accessibilityLevel,
             accessibility,
-            referrer: win.location.href,
+            matchLevel,
+            visualGridOptions,
           },
         }),
       );
@@ -87,11 +88,11 @@ function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
           method: 'PUT',
           headers: {'Content-Type': 'application/octet-stream'},
         }).catch(_e => {
-          blobData.splice(
-            blobData.findIndex(({url: blobUrl}) => blobUrl === url),
+          snapshot.blobData.splice(
+            snapshot.blobData.findIndex(({url: blobUrl}) => blobUrl === url),
             1,
           );
-          resourceUrls.push(url);
+          snapshot.resourceUrls.push(url);
         });
       }
     });
@@ -107,8 +108,12 @@ function makeEyesCheckWindow({sendRequest, processPage, win = window}) {
     };
   }
 
-  function mapBlobData({url, type}) {
-    return {url, type: type || 'application/x-applitools-unknown'};
+  function mapBlobData(blob) {
+    if (blob.errorStatusCode) {
+      return {url: blob.url, errorStatusCode: blob.errorStatusCode};
+    } else {
+      return {url: blob.url, type: blob.type || 'application/x-applitools-unknown'};
+    }
   }
 
   function mapBlob({url, type, value}) {

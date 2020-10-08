@@ -24,6 +24,26 @@ function makePutResources(resourcesPutted) {
   }
 }
 
+function FakeRGridResource({url, contentType, content, sha256Hash, errorStatusCode}) {
+  return {
+    getUrl() {
+      return url
+    },
+    getSha256Hash() {
+      return sha256Hash
+    },
+    getContentType() {
+      return contentType
+    },
+    getContent() {
+      return content
+    },
+    getErrorStatusCode() {
+      return errorStatusCode
+    },
+  }
+}
+
 describe('renderBatch', () => {
   let resourceCache, renderBatch, fetchCache, resourcesPutted
 
@@ -45,34 +65,18 @@ describe('renderBatch', () => {
       new FakeRenderRequest('dom1', []),
       new FakeRenderRequest('dom2', []),
       new FakeRenderRequest('dom3', [
-        {
-          getUrl() {
-            return 'url-1'
-          },
-          getSha256Hash() {
-            return 'sha256hash'
-          },
-          getContentType() {
-            return 'contentType'
-          },
-          getContent() {
-            return 'content'
-          },
-        },
-        {
-          getUrl() {
-            return 'url-2'
-          },
-          getSha256Hash() {
-            return 'sha256hash-2'
-          },
-          getContentType() {
-            return 'text/css'
-          },
-          getContent() {
-            return 'content-2'
-          },
-        },
+        FakeRGridResource({
+          url: 'url-1',
+          sha256Hash: 'sha256hash',
+          contentType: 'contentType',
+          content: 'content',
+        }),
+        FakeRGridResource({
+          url: 'url-2',
+          sha256Hash: 'sha256hash-2',
+          contentType: 'text/css',
+          content: 'content-2',
+        }),
       ]),
     ]
 
@@ -122,5 +126,26 @@ describe('renderBatch', () => {
     )
 
     expect(error).to.be.an.instanceof(Error)
+  })
+
+  it('caches resources with errorStatusCode', async () => {
+    const renderRequest = new FakeRenderRequest('dom', [
+      FakeRGridResource({
+        url: 'url-1',
+        errorStatusCode: 500,
+      }),
+    ])
+
+    const renderIds = await renderBatch([renderRequest])
+    expect(renderIds).to.eql(['id1'])
+
+    expect(renderRequest.getRenderId()).to.equal('id1')
+
+    expect(resourcesPutted).to.eql([{dom: 'dom', renderId: 'id1'}])
+
+    expect(resourceCache.getValue('url-1')).to.eql({
+      url: 'url-1',
+      errorStatusCode: 500,
+    })
   })
 })

@@ -49,7 +49,7 @@
       "env": {
         "DEBUG": "applitools:${workspaceFolderBasename}*"
       },
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/packages/eyes-selenium",
       "protocol": "inspector",
       "console": "integratedTerminal",
       "showAsyncStacks": true

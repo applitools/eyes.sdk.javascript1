@@ -1,9 +1,10 @@
+#!/usr/bin/env node
 'use strict'
 
-const fakeEyesServer = require('../lib/sdk-fake-eyes-server')
+const {startFakeEyesServer} = require('../lib/start-fake-eyes-server')
 
 ;(async () => {
-  const {port} = await fakeEyesServer({
+  const {port} = await startFakeEyesServer({
     port: process.env.PORT || 0,
     hangUp: process.env.FAKE_SERVER_HANGUP,
   })

@@ -1,14 +1,14 @@
-'use strict'
+const Enum = require('./utils/Enum')
 
 /**
- * @readonly
- * @enum {string}
+ * @enum
+ * @typedef {string} TestResultsStatus
  */
-const TestResultsStatus = {
+
+const TestResultsStatuses = Enum('TestResultsStatus', {
   Passed: 'Passed',
   Unresolved: 'Unresolved',
   Failed: 'Failed',
-}
+})
 
-Object.freeze(TestResultsStatus)
-exports.TestResultsStatus = TestResultsStatus
+module.exports = TestResultsStatuses

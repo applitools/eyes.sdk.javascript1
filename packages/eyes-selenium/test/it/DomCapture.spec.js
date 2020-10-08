@@ -3,30 +3,25 @@
 const {describe, it, before} = require('mocha')
 const {expect} = require('chai')
 const {EyesSelenium, Target, Logger, ConsoleLogHandler} = require('../../')
-const {Builder, By} = require('selenium-webdriver')
-const {Options} = require('selenium-webdriver/chrome')
-const fakeEyesServer = require('@applitools/sdk-fake-eyes-server')
+const {By} = require('selenium-webdriver')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
+const {startFakeEyesServer, getDom, getSession} = require('@applitools/sdk-fake-eyes-server')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 const path = require('path')
-const fetch = require('node-fetch')
-const zlib = require('zlib')
 const fs = require('fs')
 
 describe('DOM Capture', () => {
   let driver, eyes, serverUrl, closeServer
-  const expectedFolder = path.resolve(__dirname, '../fixtures/tmp')
+  const expectedFolder = path.resolve(__dirname, '/tmp')
 
   before(async () => {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new Options().headless())
-      .build()
+    driver = await getDriver('CHROME')
 
     if (!fs.existsSync(expectedFolder)) {
       fs.mkdirSync(expectedFolder)
     }
 
-    const {port, close} = await fakeEyesServer({
+    const {port, close} = await startFakeEyesServer({
       logger,
       updateFixtures: true,
       expectedFolder,
@@ -60,11 +55,11 @@ describe('DOM Capture', () => {
     await driver.executeScript('window.scrollTo(0,0)')
     await eyes.check('', Target.window())
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(0)
     expect(dom.rect.left).to.equal(0)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
   })
 
   it('gets the correct coordinates when taking a viewport screenshot even when scrolled', async () => {
@@ -76,11 +71,11 @@ describe('DOM Capture', () => {
     await driver.executeScript('window.scrollTo(30,30)')
     await eyes.check('', Target.window())
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(-30)
     expect(dom.rect.left).to.equal(-30)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
   })
 
   it('gets the correct coordinates when taking a full page screenshot and not scrolled', async () => {
@@ -92,11 +87,11 @@ describe('DOM Capture', () => {
     await driver.executeScript('window.scrollTo(0,0)')
     await eyes.check('', Target.window().fully())
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(0)
     expect(dom.rect.left).to.equal(0)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
   })
 
   it('gets the correct coordinates when taking a full page screenshot even when scrolled', async () => {
@@ -106,14 +101,13 @@ describe('DOM Capture', () => {
     }) // this width causes horizontal scroll on the page
 
     await driver.executeScript('window.scrollTo(30,30)')
-    debugger
     await eyes.check('', Target.window().fully())
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(0)
     expect(dom.rect.left).to.equal(0)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({x: 0, y: 0})
   })
 
   it('gets the correct coordinates when taking a region screenshot and not scrolled', async () => {
@@ -127,11 +121,11 @@ describe('DOM Capture', () => {
     await eyes.check('', Target.region(el).fully())
     const expectedRect = await getEffectiveLocation(el)
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(0)
     expect(dom.rect.left).to.equal(0)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({
       x: expectedRect.x,
       y: expectedRect.y,
     })
@@ -148,11 +142,11 @@ describe('DOM Capture', () => {
     await eyes.check('', Target.region(el).fully())
     const expectedRect = await getEffectiveLocation(el)
     const testResults = await eyes.close()
-    const runningSession = await getRunningSession(testResults.getId())
-    const dom = await getDom(runningSession)
+    const session = await getSession(testResults, serverUrl)
+    const dom = await getDom(session)
     expect(dom.rect.top).to.equal(0)
     expect(dom.rect.left).to.equal(0)
-    expect(runningSession.steps[0].matchWindowData.appOutput.location).to.eql({
+    expect(session.steps[0].matchWindowData.appOutput.location).to.eql({
       x: expectedRect.x,
       y: expectedRect.y,
     })
@@ -164,22 +158,9 @@ describe('DOM Capture', () => {
 
   it.skip("gets the correct coordinates when taking a region screenshot inside a frame that's scrolled", async () => {})
 
-  // TODO utilities for fake server, i.e. a way to observe inputs
-  function getRunningSession(sessionId) {
-    return fetch(`${serverUrl}/api/sessions/running/${sessionId}`).then(r => r.json())
-  }
-
-  async function getDom(runningSession) {
-    const compressedDom = await fetch(
-      runningSession.steps[0].matchWindowData.appOutput.domUrl,
-    ).then(r => r.buffer())
-
-    return JSON.parse(zlib.unzipSync(compressedDom).toString())
-  }
-
   // TODO this should be a central utility also for production code (well, modified for cross browser compat and optimize to get also dimensions), not only tests!
   async function getEffectiveLocation(el) {
-    const rect = await el.getRect()
+    const rect = await (el.getRect ? el.getRect() : el.getLocation())
     const [borderLeft, borderTop] = await el
       .getDriver()
       .executeScript(

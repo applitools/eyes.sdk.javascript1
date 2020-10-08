@@ -8,8 +8,7 @@ export async function hideCaret(tabId) {
 
   return async () =>
     await browser.tabs.executeScript(tabId, {
-      code:
-        '__eyes_active_element && __eyes_active_element.focus(); delete window.__eyes_active_element;',
+      code: '__eyes_active_element && __eyes_active_element.focus(); delete window.__eyes_active_element;',
     })
 }
 

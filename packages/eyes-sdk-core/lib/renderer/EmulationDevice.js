@@ -1,13 +1,14 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 class EmulationDevice {
   /**
-   * @param {number} width
-   * @param {number} height
-   * @param {string} deviceScaleFactor
-   * @param {string} mobile
+   * @param data
+   * @param {number} data.width
+   * @param {number} data.height
+   * @param {string} data.deviceScaleFactor
+   * @param {string} data.mobile
    */
   constructor({width, height, deviceScaleFactor, mobile} = {}) {
     this._width = width
@@ -87,4 +88,4 @@ class EmulationDevice {
   }
 }
 
-exports.EmulationDevice = EmulationDevice
+module.exports = EmulationDevice

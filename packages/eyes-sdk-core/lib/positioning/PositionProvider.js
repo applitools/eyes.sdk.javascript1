@@ -70,4 +70,4 @@ class PositionProvider {
   }
 }
 
-exports.PositionProvider = PositionProvider
+module.exports = PositionProvider

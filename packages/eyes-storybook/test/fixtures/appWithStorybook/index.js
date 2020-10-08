@@ -20,7 +20,7 @@ storiesOf('Button', module)
   ), {
     someParam: 'i was here, goodbye',
     eyes: {
-      ignore: [{selector: '.ignore-this'}]
+      ignoreRegions: [{selector: '.ignore-this'}]
     }
   })
   .add('with some emoji', () => (
@@ -35,7 +35,7 @@ storiesOf('Image', module)
   </React.Fragment>));
 
 storiesOf('Nested', module)
-  .add('story 1', () => <div>story 1</div>);
+  .add('story 1', () => <div>story 1 <span className="global-ignore-this">{Date.now()}</span></div>);
 
 storiesOf('Nested/Component', module)
   .add('story 1.1', () => <div>story 1.1</div>)

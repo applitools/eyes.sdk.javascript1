@@ -20,4 +20,4 @@ class AppOutputProvider {
   }
 }
 
-exports.AppOutputProvider = AppOutputProvider
+module.exports = AppOutputProvider

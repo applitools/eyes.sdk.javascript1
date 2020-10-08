@@ -37,7 +37,7 @@
     "eyes.sdk": "0.0.71"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.0",
     "webpack": "^3.12.0",
@@ -61,16 +61,13 @@
     "leanft.sdk.wpf": "*"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
     "test": "mocha ./test/**/*.js",
     "build": "webpack",
     "minify": "uglifyjs -c -m reserved=[module.exports] --warn bundle.js -o bundle.js",
     "prepublishOnly": "npm run build && npm run minify",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

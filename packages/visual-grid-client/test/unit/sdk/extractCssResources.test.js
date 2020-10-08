@@ -94,12 +94,12 @@ describe('extractCssResources', () => {
   it('supports image sets with url()', () => {
     const cssText = `.img {
       background-image: url(examples/images/image-0.jpg);
-      background-image: 
+      background-image:
         -webkit-image-set(
           url(examples/images/image-1.jpg) 1x,
           url(examples/images/image-2.jpg) 2x,
         );
-      background-image: 
+      background-image:
         image-set(
           url(examples/images/image-3.jpg) 1x,
           url(examples/images/image-4.jpg) 2x,
@@ -118,12 +118,12 @@ describe('extractCssResources', () => {
   it('supports image sets without url()', () => {
     const cssText = `.img {
       background-image: url(original.jpg);
-      background-image: 
+      background-image:
         -webkit-image-set(
             "one.jpg" 1x,
           "two.jpg" 2x,
         );
-      background-image: 
+      background-image:
         image-set(
           "three.jpg" 1x,
           "four.jpg" 2x,
@@ -156,7 +156,7 @@ describe('extractCssResources', () => {
     const resourceUrls = extractCssResources(cssText)
     expect(resourceUrls).to.eql([
       '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.eot',
-      '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.eot',
+      '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.eot?',
       '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.woff2',
       '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.woff',
       '//use.fontawesome.com/releases/v4.7.0/fonts/fontawesome-webfont.ttf',

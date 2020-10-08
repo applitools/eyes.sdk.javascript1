@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="test.css" rel="stylesheet" />
+  <link href="auth/auth.css" rel="stylesheet" />
+  <style>
+    @import 'imported2.css';
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Zilla+Slab" />
+  <link rel="stylesheet" href="/predefined-status/500" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <!-- oh so many colors --><div style="color:red;">hi, I'm red</div>
+  <div class="blue">We've met already, I'm blue</div>
+  <div class="font-zilla" style="font-size:36px">This is Zilla Slab font</div>
+  <div class="font-shadows" style="font-size:36px">This is Shadows Into Light font</div>
+  <div>just an image:</div>
+  <img src="smurfs.jpg">
+  <div>background image from imported css #1:</div>
+  <div class="bg-smurfs1" style="margin-bottom:10px;"></div>
+  <div>background image from imported css #2:</div>
+  <div class="bg-smurfs2" style="margin-bottom:10px;"></div>
+  <div class="region">
+      <div>background image from blob css:</div>
+      <div class="bg-smurfs-blob" style="margin-bottom:10px;"></div>
+      <div style="margin-bottom:10px;">
+          <div class="imported2" style="margin-bottom:10px;">@import from &lt;style&gt; - background should be <a href="https://meyerweb.com/eric/thoughts/2014/06/19/rebeccapurple/">rebeccapurple</a></div>
+          <div class="imported-nested">@import from css file - background should be teal</div>
+          <div class="blob">blob - background should be orangered</div>
+          <div class="auth">auth - background should be olive</div>
+          <div class="auth-nested">auth nested - background should be hotpink</div>
+      </div>
+  </div>
+  <div class="absolutely" style="color:firebrick;display:flex;align-items:center;text-align:center;font-size:36px;font-family:'Zilla Slab';position:absolute;top:160px;left:190px;width:200px;height:200px;border:10px solid seagreen;border-radius:10px;">Absolutely positioned floating content</div>
+  <script>
+      fetch('smurfs.jpg').then(resp => resp.blob()).then(blob => {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        document.body.appendChild(img);
+      });
+
+      fetch('blob.css').then(resp =>  resp.blob()).then(blob => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = URL.createObjectURL(blob);
+        document.head.appendChild(link);
+      });
+  </script>
+</body>
+</html>

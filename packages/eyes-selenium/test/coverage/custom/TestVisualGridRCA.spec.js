@@ -8,7 +8,8 @@ describe.skip(appName, async () => {
   let driver, eyes, runner
   beforeEach(async () => {
     driver = await getDriver('CHROME')
-    ;({eyes, runner} = await getEyes('VG'))
+    eyes = await getEyes('VG')
+    runner = eyes.getRunner()
     eyes.setBatch(batch)
   })
 
@@ -18,7 +19,7 @@ describe.skip(appName, async () => {
   })
 
   it('Test_VG_RCA_Config', async () => {
-    driver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage')
+    await driver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage')
     await eyes.open(driver, 'Test Visual Grid', 'Test RCA Config')
     eyes.sendDom = true
     await eyes.check('check', Target.window())
@@ -27,7 +28,7 @@ describe.skip(appName, async () => {
   })
 
   it('Test_VG_RCA_Fluent', async () => {
-    driver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage')
+    await driver.get('https://applitools.github.io/demo/TestPages/VisualGridTestPage')
     let frame = await driver.findElement(By.css('iframe'))
     await driver.switchTo().frame(frame)
     let element = await driver.findElement(By.css('#p2'))

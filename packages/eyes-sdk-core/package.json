@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "9.0.2",
+  "version": "12.3.1",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -30,35 +30,53 @@
     "test": "./test"
   },
   "main": "./index.js",
+  "typings": "./typings/index.d.ts",
   "dependencies": {
-    "@applitools/eyes-common": "3.20.1",
+    "@applitools/dom-capture": "8.0.0",
+    "@applitools/dom-snapshot": "4.2.0",
     "@applitools/isomorphic-fetch": "3.0.0",
+    "@applitools/snippets": "2.0.3",
     "axios": "0.19.2",
     "chalk": "3.0.0",
-    "es6-promise-pool": "2.5.0",
+    "cosmiconfig": "6.0.0",
+    "dateformat": "3.0.3",
+    "debug": "4.2.0",
+    "deepmerge": "4.2.2",
+    "png-async": "0.9.4",
+    "stack-trace": "0.0.10",
     "tunnel": "0.0.6"
   },
   "devDependencies": {
-    "@applitools/sdk-fake-eyes-server": "1.0.5",
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
+    "@applitools/sdk-release-kit": "^0.3.4",
+    "@applitools/visual-grid-client": "^15.0.8",
+    "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
-    "mocha": "7.0.1"
+    "chromedriver": "^83.0.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jsdoc": "3.6.4",
+    "mocha": "^8.0.1",
+    "ncp": "^2.0.0",
+    "prettier": "1.19.0",
+    "typescript": "^3.9.5"
   },
   "browser": {
     "tunnel": false
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "lint": "eslint . --ext .js --no-eslintrc --config ../../.eslintrc",
-    "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
+    "lint": "eslint . --ext .js",
+    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "types:generate": "node ./scripts/build-typings",
+    "preversion": "bongo preversion && yarn test",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification",
+    "deps": "bongo deps"
   },
   "bin": {
     "eyes-check-network": "./bin/runCheckNetwork.js"

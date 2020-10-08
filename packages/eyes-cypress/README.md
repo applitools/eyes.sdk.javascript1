@@ -72,7 +72,7 @@ Add this file to your project with either:
 
 In order to authenticate via the Applitools server, you need to supply the Eyes-Cypress SDK with the API key you got from Applitools. Read more about how to obtain the API key [here](https://applitools.com/docs/topics/overview/obtain-api-key.html).
 
-To to this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
+To do this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
 For example, on Linux/Mac:
 
 ```bash
@@ -169,8 +169,7 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [layout](#layout)
     - [strict](#strict)
     - [content](#content)
-    <!-- - [accessibility](#accessibility)
-    - [accessibilityLevel](#accessibilityLevel) -->
+    - [accessibility](#accessibility)
     - [scriptHooks](#scriptHooks)
     - [sendDom](#sendDom)
   - [Close](#Close)
@@ -224,166 +223,217 @@ cy.eyesCheckWindow({ tag: 'Login screen', target: 'your target' })
 
 ##### Arguments to `cy.eyesCheckWindow`
 
-* ##### `tag` 
-  (optional): A logical name for this check.
+##### `tag`
 
-* ##### `target`
-  (optional): Possible values are:
-  <br/> 1. `window` 
-    This is the default value. If set then the captured image is of the entire page or the viewport, use [`fully`](#fully) for specifying what `window` mode to use.
-  <br/>2. `region` 
-    If set then the captured image is of the parts of the page, use this parameter with [`region`](#region) or [`selector`](#selector) for specifying the areas to captured.
+(optional): A logical name for this check.
 
-* ##### `fully`
-  (optional) In case [`target`](#target) is `window`, if `fully` is `true` (default) then the snapshot is of the entire page, if `fully` is `false` then snapshot is of the viewport.
+##### `target`
+
+(optional): Possible values are:
+<br/> 1. `window` 
+  This is the default value. If set then the captured image is of the entire page or the viewport, use [`fully`](#fully) for specifying what `window` mode to use.
+<br/>2. `region` 
+  If set then the captured image is of the parts of the page, use this parameter with [`region`](#region) or [`selector`](#selector) for specifying the areas to captured.
+
+##### `fully`
+
+(optional) In case [`target`](#target) is `window`, if `fully` is `true` (default) then the snapshot is of the entire page, if `fully` is `false` then snapshot is of the viewport.
+
+```js
+  // Capture viewport only
+  cy.eyesCheckWindow({
+    target: 'window',
+    fully: false,
+  });
+  ```
+
+##### `selector`
+
+(optional): In case [`target`](#target) is `region`, this should be the actual css or xpath selector to an element, and the screenshot would be the content of that element. For example:
 
   ```js
-    // Capture viewport only
-    cy.eyesCheckWindow({
-      target: 'window',
-      fully: false,
-    });
-    ```
+  // Using a css selector
+  cy.eyesCheckWindow({
+    target: 'region',
+    selector: {
+      type: 'css',
+      selector: '.my-element' // or '//button'
+    }
+  });
+  
+  // Using an xpath selector
+  cy.eyesCheckWindow({
+    target: 'region',
+    selector: {
+      type: 'xpath',
+      selector: '//button[1]'
+    }
+  });
+  
+  // The shorthand string version defaults to css selectors
+  cy.eyesCheckWindow({
+    target: 'region',
+    selector: '.my-element'
+  });
+  ```
 
-* ##### `selector`
-  (optional): In case [`target`](#target) is `region`, this should be the actual css or xpath selector to an element, and the screenshot would be the content of that element. For example:
+##### `region`
 
-    ```js
-    // Using a css selector
-    cy.eyesCheckWindow({
-      target: 'region',
-      selector: {
-        type: 'css',
-        selector: '.my-element' // or '//button'
-      }
-    });
-    
-    // Using an xpath selector
-    cy.eyesCheckWindow({
-      target: 'region',
-      selector: {
-        type: 'xpath',
-        selector: '//button[1]'
-      }
-    });
-    
-    // The shorthand string version defaults to css selectors
-    cy.eyesCheckWindow({
-      target: 'region',
-      selector: '.my-element'
-    });
-    ```
+(optional): In case [`target`](#target) is `region`, this should be an object describing the region's coordinates for capturing the image. For example:
 
-* ##### `region`
-  (optional): In case [`target`](#target) is `region`, this should be an object describing the region's coordinates for capturing the image. For example:
+  ```js
+  cy.eyesCheckWindow({
+    target: 'region',
+    region: {top: 100, left: 0, width: 1000, height: 200}
+  });
+  ```
 
-    ```js
-    cy.eyesCheckWindow({
-      target: 'region',
-      region: {top: 100, left: 0, width: 1000, height: 200}
-    });
-    ```
+##### `ignore`
 
-* ##### `ignore`
-  (optional): A single or an array of regions to ignore when checking for visual differences. For example:
+(optional): A single or an array of regions to ignore when checking for visual differences. For example:
 
-    ```js
-    cy.eyesCheckWindow({
-      ignore: [
-        {top: 100, left: 0, width: 1000, height: 100},
-        {selector: '.some-div-to-ignore'}
-      ]
-    });
-    ```
+  ```js
+  cy.eyesCheckWindow({
+    ignore: [
+      {top: 100, left: 0, width: 1000, height: 100},
+      {selector: '.some-div-to-ignore'}
+    ]
+  });
+  ```
 
-* ##### `floating`
-  (optional): A single or an array of floating regions to ignore when checking for visual differences. More information about floating regions can be found in Applitools docs [here](https://help.applitools.com/hc/en-us/articles/360006915292-Testing-of-floating-UI-elements). For example:
+##### `floating`
 
-    ```js
-    cy.eyesCheckWindow({
-      floating: [
-        {top: 100, left: 0, width: 1000, height: 100, maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20},
-        {selector: '.some-div-to-float', maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20}
-      ]
-    });
-    ```
+(optional): A single or an array of floating regions to ignore when checking for visual differences. More information about floating regions can be found in Applitools docs [here](https://help.applitools.com/hc/en-us/articles/360006915292-Testing-of-floating-UI-elements). For example:
 
-* ##### `layout`
-  (optional): A single or an array of regions to match as [layout level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
+```js
+cy.eyesCheckWindow({
+  floating: [
+    {top: 100, left: 0, width: 1000, height: 100, maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20},
+    {selector: '.some-div-to-float', maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20}
+  ]
+});
+```
 
-    ```js
-    cy.eyesCheckWindow({
-      layout: [
-        {top: 100, left: 0, width: 1000, height: 100},
-        {selector: '.some-div-to-test-as-layout'}
-      ]
-    });
-    ```
+##### `layout`
 
-* ##### `strict`
-  (optional): A single or an array of regions to match as [strict level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
+(optional): A single or an array of regions to match as [layout level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
 
-    ```js
-    cy.eyesCheckWindow({
-      strict: [
-        {top: 100, left: 0, width: 1000, height: 100},
-        {selector: '.some-div-to-test-as-strict'}
-      ]
-    });
-    ```
+  ```js
+  cy.eyesCheckWindow({
+    layout: [
+      {top: 100, left: 0, width: 1000, height: 100},
+      {selector: '.some-div-to-test-as-layout'}
+    ]
+  });
+  ```
 
-* ##### `content`
-  (optional): A single or an array of regions to match as [content level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
-    ```js
-    cy.eyesCheckWindow({
-      content: [
-        {top: 100, left: 0, width: 1000, height: 100},
-        {selector: '.some-div-to-test-as-content'}
-      ]
-    });
-    ```
+##### `strict`
 
-<!-- * ##### `accessibility`
-  (optional): A single or an array of regions to perform accessibility checks, For example:
+(optional): A single or an array of regions to match as [strict level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
 
-    ```js
-    cy.eyesCheckWindow({
-      accessibility: [
-        {accessibilityType: 'RegularText', selector: '.some-div'},
-        {accessibilityType: 'LargeText', selector: '//*[@id="main"]/h1', type: 'xpath'},
-        {accessibilityType: 'BoldText', top: 100, left: 0, width: 1000, height: 100},
-      ]
-    });
-    ```
+  ```js
+  cy.eyesCheckWindow({
+    strict: [
+      {top: 100, left: 0, width: 1000, height: 100},
+      {selector: '.some-div-to-test-as-strict'}
+    ]
+  });
+  ```
 
-    Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
+##### `content`
 
-* ##### `accessibilityLevel`
-  (optional): The accessibility level to use for the screenshot. Possible values are `None`, `AA` and `AAA`.
+(optional): A single or an array of regions to match as [content level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
 
-    ```js
-    cy.eyesCheckWindow({accessibilityLevel: 'AA'})
-    ``` -->
+  ```js
+  cy.eyesCheckWindow({
+    content: [
+      {top: 100, left: 0, width: 1000, height: 100},
+      {selector: '.some-div-to-test-as-content'}
+    ]
+  });
+  ```
 
-* ##### `scriptHooks`
-  (optional): A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering.
-  An object with the following properties:
-    * ##### `beforeCaptureScreenshot`: a script that runs after the page is loaded but before taking the screenshot. For example:
-        
-        ```js
-        cy.eyesCheckWindow({
-          scriptHooks: {
-            beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
-          }
-        })
-        ```
+##### `accessibility`
 
-* ##### `sendDom`
-  (optional): A flag to specify whether a capture of DOM and CSS should be taken when rendering the screenshot. The default value is true. This should only be modified to troubleshoot unexpected behavior, and not for normal production use.
+(optional): A single or an array of regions to perform accessibility checks, For example:
 
-    ```js
-    cy.eyesCheckWindow({sendDom: false})
-    ```
+  ```js
+  cy.eyesCheckWindow({
+    accessibility: [
+      {accessibilityType: 'RegularText', selector: '.some-div'},
+      {accessibilityType: 'LargeText', selector: '//*[@id="main"]/h1', type: 'xpath'},
+      {accessibilityType: 'BoldText', top: 100, left: 0, width: 1000, height: 100},
+    ]
+  });
+  ```
+
+  Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
+
+##### `scriptHooks`
+
+(optional): A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering.
+An object with the following properties:
+  * ##### `beforeCaptureScreenshot`: a script that runs after the page is loaded but before taking the screenshot. For example:
+      
+      ```js
+      cy.eyesCheckWindow({
+        scriptHooks: {
+          beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
+        }
+      })
+      ```
+
+##### `sendDom`
+
+(optional): A flag to specify whether a capture of DOM and CSS should be taken when rendering the screenshot. The default value is true. This should only be modified to troubleshoot unexpected behavior, and not for normal production use.
+
+```js
+cy.eyesCheckWindow({sendDom: false})
+```
+
+##### `useDom`
+
+<!-- TODO add explanation -->
+
+```js
+cy.eyesCheckWindow({useDom: true})
+```
+
+##### `enablePatterns`
+
+<!-- TODO add explanation -->
+
+```js
+cy.eyesCheckWindow({enablePatterns: true})
+```
+
+##### `matchLevel`
+
+<!-- TODO add explanation -->
+
+```js
+cy.eyesCheckWindow({matchLevel: 'Layout'})
+```
+
+The different matchLevels are specified here:  https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/MatchLevel.js
+
+<!-- TODO uncomment when polyfillAdoptedStyleSheets feature is released
+
+##### `visualGridOptions`
+
+An object that specifies options to configure renderings on the Ultrafast grid.
+Available options:
+
+* `polyfillAdoptedStyleSheets`: Creates a polyfill when the DOM contains `adoptedStyleSheets` ([reference](https://developers.google.com/web/updates/2019/02/constructable-stylesheets)) for browsers that don't support it (It is currently supported only in Chrome). When `true`, those browsers will successfully include the css as inline style tags. When `false`, the css will not be included. When `undefined`, an error will be thrown with a message stating that this feature is not supported in the desired browser. 
+
+```js
+cy.eyesCheckWindow({
+  visualGridOptions: {
+    polyfillAdoptedStyleSheets: true
+  }
+})
+```
+-->
 
 #### Close
 
@@ -432,11 +482,12 @@ The list above is also the order of precedence, which means that if you pass a p
 | `saveFailedTests`         | false                       | Set whether or not failed tests are saved by default. |
 | `saveNewTests`            | false                       | Set whether or not new tests are saved by default. |
 | `properties`              | undefined                   | Custom properties for the eyes test. The format is an array of objects with name/value properties. For example: `[{name: 'My prop', value:'My value'}]`. |
+| `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
 | `compareWithParentBranch` | false                       |  |
 | `ignoreBaseline`          | false                       |  |
 | `notifyOnCompletion`  | false | If `true` batch completion notifications are sent. |
-
-<!-- | `accessibilityLevel` | None | The accessibility level to use for the screenshots. Possible values are `None`, `AA` and `AAA`. | -->
+| `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`|
+| `visualGridOptions` | undefined | An object that specifies options to configure renderings on the Ultrafast grid. See more information [here](#visualgridoptions) |
 
 ### Global configuration properties:
 
@@ -453,6 +504,7 @@ The following configuration properties cannot be defined using the first method 
 | `tapDirPath`              | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the tap file name is created with the name [ISO-DATE](https://en.wikipedia.org/wiki/ISO_8601)\-eyes.tap and contains the Eyes test results (Note that because of a current Cypress [limitation](https://github.com/cypress-io/cypress-documentation/issues/818) the results are scoped per spec file, this means that the results file is created once for each spec file).|
 | `concurrency`             | 1                           | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
 |`dontCloseBatches`| false | If true, batches are not closed for  [notifyOnCompletion](#advanced-configuration).|
+|`disableBrowserFetching`| false | If true, page resources for rendering on the UFG will be fetched from outside of the browser.|
 
 
 ### Method 1: Arguments for `cy.eyesOpen`
@@ -496,7 +548,6 @@ APPLITOOLS_SERVER_URL
 APPLITOOLS_PROXY
 APPLITOOLS_NOTIFY_ON_COMPLETION
 ```
-<!-- APPLITOOLS_ACCESSIBILITY_LEVEL -->
 
 ### Method 3: The `applitools.config.js` file
 
@@ -520,7 +571,8 @@ Possible values are:
 
 - `chrome`
 - `firefox`
-- `edge`
+- `edgechromium`
+- `edgelegacy`
 - `ie10`
 - `ie11`
 - `safari`
@@ -530,6 +582,8 @@ Possible values are:
 - `firefox-two-versions-back`
 - `safari-one-version-back`
 - `safari-two-versions-back`
+- `edgechromium-one-version-back`
+- `edgechromium-two-versions-back`
 
 ### Previous browser versions
 
@@ -569,11 +623,7 @@ cy.eyesOpen({
 
 Possible values for screen orientation are `landscape` and `portrait`, and if no value is specified, the default is `portrait`.
 
-The list of device names is taken from [chrome devtools predefined devices](https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json), and can be obtained by running the following command in a unix-based shell (installing [`jq`](https://stedolan.github.io/jq/) might be needed):
-
-```sh
-curl -s https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json | jq '.extensions[].device.title'
-```
+The list of device names is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/DeviceName.js
 
 In addition, it's possible to use chrome's device emulation with custom viewport sizes, pixel density and mobile mode, by passing `deviceScaleFactor` and `mobile` in addition to `width` and `height`. For example:
 
@@ -589,6 +639,23 @@ cy.eyesOpen({
   }
 }
 ```
+
+### iOS device
+
+```js
+cy.eyesOpen({
+  // ...
+  browser: {
+    iosDeviceInfo: {
+      deviceName: 'iPhone XR',
+      screenOrientation: 'landscape', // optional, default: 'portrait'
+      iosVersion: 'latest' // optional, default: undefined (i.e. the default is determined by the Ultrafast grid)
+    },
+  }
+})
+```
+
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
 
 ## Setting a timeout
 

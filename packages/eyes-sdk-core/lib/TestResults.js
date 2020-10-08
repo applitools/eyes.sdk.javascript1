@@ -1,13 +1,18 @@
 'use strict'
+const GeneralUtils = require('./utils/GeneralUtils')
+const DateTimeUtils = require('./utils/DateTimeUtils')
+const RectangleSize = require('./geometry/RectangleSize')
+const TestResultsStatuses = require('./TestResultsStatus')
 
-const {GeneralUtils, RectangleSize, DateTimeUtils} = require('@applitools/eyes-common')
-
-const {TestResultsStatus} = require('./TestResultsStatus')
+/**
+ * @typedef {import('./TestResultsStatus').TestResultsStatus} TestResultsStatus
+ */
 
 class SessionUrls {
   /**
-   * @param {string} batch
-   * @param {string} session
+   * @param {Object} data
+   * @param {string} data.batch
+   * @param {string} data.session
    */
   constructor({batch, session} = {}) {
     this._batch = batch
@@ -52,11 +57,12 @@ class SessionUrls {
 
 class ApiUrls {
   /**
-   * @param {string} baselineImage
-   * @param {string} currentImage
-   * @param {string} checkpointImage
-   * @param {string} checkpointImageThumbnail
-   * @param {string} diffImage
+   * @param {Object} data
+   * @param {string} data.baselineImage
+   * @param {string} data.currentImage
+   * @param {string} data.checkpointImage
+   * @param {string} data.checkpointImageThumbnail
+   * @param {string} data.diffImage
    */
   constructor({
     baselineImage,
@@ -152,8 +158,9 @@ class ApiUrls {
 
 class AppUrls {
   /**
-   * @param {string} step
-   * @param {string} stepEditor
+   * @param {Object} data
+   * @param {string} data.step
+   * @param {string} data.stepEditor
    */
   constructor({step, stepEditor} = {}) {
     this._step = step
@@ -198,13 +205,14 @@ class AppUrls {
 
 class StepInfo {
   /**
-   * @param {string} name
-   * @param {boolean} isDifferent
-   * @param {boolean} hasBaselineImage
-   * @param {boolean} hasCurrentImage
-   * @param {AppUrls|object} appUrls
-   * @param {ApiUrls|object} apiUrls
-   * @param {string[]} [renderId]
+   * @param {Object} info
+   * @param {string} info.name
+   * @param {boolean} info.isDifferent
+   * @param {boolean} info.hasBaselineImage
+   * @param {boolean} info.hasCurrentImage
+   * @param {AppUrls|object} info.appUrls
+   * @param {ApiUrls|object} info.apiUrls
+   * @param {string[]} [info.renderId]
    */
   constructor({
     name,
@@ -338,87 +346,49 @@ class StepInfo {
   }
 }
 
-class TestAccessibilityStatus {
-  /**
-   * @param {AccessibilityStatus} status
-   * @param {AccessibilityLevel} level
-   */
-  constructor({status, level} = {}) {
-    this._status = status
-    this._level = level
-  }
-
-  /**
-   * @return {string}
-   */
-  getStatus() {
-    return this._status
-  }
-
-  /**
-   * @param {string} value
-   */
-  setStatus(value) {
-    this._status = value
-  }
-
-  /**
-   * @return {string}
-   */
-  getLevel() {
-    return this._level
-  }
-
-  /**
-   * @param {string} value
-   */
-  setLevel(value) {
-    this._level = value
-  }
-
-  /**
-   * @override
-   */
-  toJSON() {
-    return GeneralUtils.toPlain(this)
-  }
-}
+/**
+ * @typedef SessionAccessibilityStatus
+ * @prop {AccessibilityLevel} level - accessibility level.
+ * @prop {AccessibilityGuidelinesVersion} version - accessibility guidelines version.
+ * @prop {AccessibilityStatus} status - test accessibility status.
+ */
 
 /**
  * Eyes test results.
  */
 class TestResults {
   /**
-   * @param {string} [id]
-   * @param {string} [name]
-   * @param {string} [secretToken]
-   * @param {TestResultsStatus} [status]
-   * @param {string} [appName]
-   * @param {string} [batchName]
-   * @param {string} [batchId]
-   * @param {string} [branchName]
-   * @param {string} [hostOS]
-   * @param {string} [hostApp]
-   * @param {RectangleSize|object} [hostDisplaySize]
-   * @param {TestAccessibilityStatus|object} [accessibilityStatus]
-   * @param {Date|string} [startedAt]
-   * @param {number} [duration]
-   * @param {boolean} [isNew]
-   * @param {boolean} [isDifferent]
-   * @param {boolean} [isAborted]
-   * @param {SessionUrls|object} [appUrls]
-   * @param {SessionUrls|object} [apiUrls]
-   * @param {StepInfo[]|object[]} [stepsInfo]
-   * @param {number} [steps]
-   * @param {number} [matches]
-   * @param {number} [mismatches]
-   * @param {number} [missing]
-   * @param {number} [exactMatches]
-   * @param {number} [strictMatches]
-   * @param {number} [contentMatches]
-   * @param {number} [layoutMatches]
-   * @param {number} [noneMatches]
-   * @param {string} [url]
+   * @param {Object} results
+   * @param {string} [results.id]
+   * @param {string} [results.name]
+   * @param {string} [results.secretToken]
+   * @param {TestResultsStatus} [results.status]
+   * @param {string} [results.appName]
+   * @param {string} [results.batchName]
+   * @param {string} [results.batchId]
+   * @param {string} [results.branchName]
+   * @param {string} [results.hostOS]
+   * @param {string} [results.hostApp]
+   * @param {RectangleSize|object} [results.hostDisplaySize]
+   * @param {SessionAccessibilityStatus} [results.accessibilityStatus]
+   * @param {Date|string} [results.startedAt]
+   * @param {number} [results.duration]
+   * @param {boolean} [results.isNew]
+   * @param {boolean} [results.isDifferent]
+   * @param {boolean} [results.isAborted]
+   * @param {SessionUrls|object} [results.appUrls]
+   * @param {SessionUrls|object} [results.apiUrls]
+   * @param {StepInfo[]|object[]} [results.stepsInfo]
+   * @param {number} [results.steps]
+   * @param {number} [results.matches]
+   * @param {number} [results.mismatches]
+   * @param {number} [results.missing]
+   * @param {number} [results.exactMatches]
+   * @param {number} [results.strictMatches]
+   * @param {number} [results.contentMatches]
+   * @param {number} [results.layoutMatches]
+   * @param {number} [results.noneMatches]
+   * @param {string} [results.url]
    */
   constructor({
     id,
@@ -470,10 +440,6 @@ class TestResults {
 
     if (stepsInfo && stepsInfo.length > 0 && !(stepsInfo[0] instanceof StepInfo)) {
       stepsInfo = stepsInfo.map(step => new StepInfo(step))
-    }
-
-    if (accessibilityStatus && !(accessibilityStatus instanceof TestAccessibilityStatus)) {
-      accessibilityStatus = new TestAccessibilityStatus(accessibilityStatus)
     }
 
     this._id = id
@@ -668,14 +634,14 @@ class TestResults {
   }
 
   /**
-   * @return {TestAccessibilityStatus}
+   * @return {SessionAccessibilityStatus}
    */
   getAccessibilityStatus() {
     return this._accessibilityStatus
   }
 
   /**
-   * @param {TestAccessibilityStatus} value
+   * @param {SessionAccessibilityStatus} value
    */
   setAccessibilityStatus(value) {
     this._accessibilityStatus = value
@@ -938,7 +904,7 @@ class TestResults {
    * @return {boolean} - Whether or not this test passed.
    */
   isPassed() {
-    return this._status === TestResultsStatus.Passed
+    return this._status === TestResultsStatuses.Passed
   }
 
   /**
@@ -974,5 +940,4 @@ class TestResults {
   }
 }
 
-exports.TestResults = TestResults
-exports.TestAccessibilityStatus = TestAccessibilityStatus
+module.exports = TestResults

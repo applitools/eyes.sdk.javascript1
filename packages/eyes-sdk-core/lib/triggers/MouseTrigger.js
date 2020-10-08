@@ -1,8 +1,8 @@
 'use strict'
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
+const {ArgumentGuard} = require('../..')
 
-const {Trigger} = require('./Trigger')
+const Trigger = require('./Trigger')
 
 /**
  * Encapsulates a text input by the user.
@@ -76,4 +76,4 @@ MouseTrigger.MouseAction = {
 }
 
 Object.freeze(MouseTrigger.MouseAction)
-exports.MouseTrigger = MouseTrigger
+module.exports = MouseTrigger

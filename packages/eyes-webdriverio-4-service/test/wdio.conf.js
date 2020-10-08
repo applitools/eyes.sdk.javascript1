@@ -1,6 +1,8 @@
 const EyesService = require('../index')
 
 exports.config = {
+  path: '/',
+  port: 9515,
   runner: 'local',
 
   //
@@ -64,7 +66,7 @@ exports.config = {
   sync: true,
   //
   // Level of logging verbosity: silent | verbose | command | data | result | error
-  logLevel: 'verbose',
+  logLevel: 'error',
   //
   // Enables colors for log output.
   coloredLogs: true,
@@ -118,7 +120,7 @@ exports.config = {
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
   // services: ['selenium-standalone', 'eyes'], // @applitools/eyes.webdriverio.service
-  services: ['selenium-standalone', EyesService], // @applitools/eyes.webdriverio.service
+  services: ['chromedriver', EyesService], // @applitools/eyes.webdriverio.service
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

@@ -1,6 +1,5 @@
 'use strict'
-
-const {GeneralUtils} = require('@applitools/eyes-common')
+const GeneralUtils = require('../utils/GeneralUtils')
 
 /**
  * A container for a MatchWindowData along with the screenshot used for creating it. (We specifically avoid inheritance
@@ -51,4 +50,4 @@ class MatchWindowDataWithScreenshot {
   }
 }
 
-exports.MatchWindowDataWithScreenshot = MatchWindowDataWithScreenshot
+module.exports = MatchWindowDataWithScreenshot

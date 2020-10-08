@@ -70,8 +70,11 @@ defined in the `browser` property of the configuration.
 
 * `tag`: the name of the step, as seen in Applitools Eyes.
 * `url`: the URL appearing in the address bar of the browser. All relative URLs in the CDT will be relative to it.
-* `cdt`: the HTML and set and resources, in the `x-applitools-html/cdt` format (see below).
-  you can use `domNodesToCdt` to create a CDT from a `document`.
+* `snapshots`: either single dom snapshot or an array corresponding to the `browser` array sent in `openEyes`. The DOM snapshot can have these properties:
+  * `cdt`: the HTML and set and resources, in the `x-applitools-html/cdt` format (see below). you can use `domNodesToCdt` to create a CDT from a `document`.
+  * `resourceUrls`: By default, an empty array. Additional resource URLs not found in the CDT.
+  * `resourceContents`: a map of all resource values (buffers). The keys are URLs (relative to the `url` property).
+  * `frames`: same structure of `snapshot`, recursively.
 * `target`: the target of the rendering. Can be one of `window`, `region`
 * `fully`: set when `target` is `window`, if `fully` is `true` then snapshot is full page, if `fully` is `false` then snapshot is viewport.
 * `selector`: if the `target` is `region`, this is the selector we are targeting.
@@ -87,14 +90,12 @@ defined in the `browser` property of the configuration.
 * `scriptHooks`: a set of scripts to be run by the browser during the rendering.
    An object with the following properties:
   * `beforeCaptureScreenshot`: a script that runs after the page is loaded but before taking the screenshot.
-* `resourceUrls`: By default, an empty array. Additional resource URLs not found in the CDT.
-* `resourceContents`: a map of all resource values (buffers). The keys are URLs (relative to the `url` property).
   The value  is an object with the following properties:
   * `url`: yes, again.
   * `type`: the content type of the resource.
   * `value`: a `Buffer` of the resource content.
 * `matchLevel`: The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match.
-* `accessibilityLevel`: The accessibility to use for the screenshots. Possible values are 'None', 'AA' and 'AAA'.
+* `accessibilitySettings`: The accessibility to use for the screenshots. Possible values are 'AA' and 'AAA'. // TODO
 * `batchNotify`.
 
 ### close()
@@ -207,10 +208,12 @@ describe('visual-grid-client test', function() {
       target: 'region',
       fully: false,
       url,
-      cdt,
-      resourceUrls,
-      resourceContents,
-      frames
+      snapshots: {
+        cdt,
+        resourceUrls,
+        resourceContents,
+        frames,
+      }
     })
   })
 })
@@ -259,10 +262,12 @@ describe('visual-grid-client test', function() {
       target: 'region',
       fully: false,
       url,
-      cdt,
-      resourceUrls,
-      resourceContents,
-      frames
+      snapshots: {
+        cdt,
+        resourceUrls,
+        resourceContents,
+        frames,
+      }
     };
 
     const openParams = {

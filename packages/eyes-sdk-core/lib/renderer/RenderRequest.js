@@ -1,24 +1,25 @@
 'use strict'
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
+const {ArgumentGuard} = require('../..')
 
 /**
  * Encapsulates data required to start render using the RenderingGrid API.
  */
 class RenderRequest {
   /**
-   * @param {string} webhook
-   * @param {string} url
-   * @param {RGridDom} dom
-   * @param {RGridResource[]} resources
-   * @param {RenderInfo} [renderInfo]
-   * @param {string} [platform]
-   * @param {string} [browserName]
-   * @param {Object} [scriptHooks]
-   * @param {string[]} selectorsToFindRegionsFor
-   * @param {boolean} sendDom
-   * @param {string} renderId
-   * @param {string} agentId
+   * @param request
+   * @param {string} request.webhook
+   * @param {string} request.url
+   * @param {RGridDom} request.dom
+   * @param {RGridResource[]} request.resources
+   * @param {RenderInfo} [request.renderInfo]
+   * @param {string} [request.platform]
+   * @param {string} [request.browserName]
+   * @param {Object} [request.scriptHooks]
+   * @param {string[]} request.selectorsToFindRegionsFor
+   * @param {boolean} request.sendDom
+   * @param {string} request.renderId
+   * @param {Object} request.visualGridOptions
    */
   constructor({
     webhook,
@@ -34,6 +35,7 @@ class RenderRequest {
     sendDom,
     renderId,
     agentId,
+    visualGridOptions,
   } = {}) {
     ArgumentGuard.notNullOrEmpty(webhook, 'webhook')
     ArgumentGuard.notNull(url, 'url')
@@ -53,6 +55,7 @@ class RenderRequest {
     this._selectorsToFindRegionsFor = selectorsToFindRegionsFor
     this._sendDom = sendDom
     this._agentId = agentId
+    this._visualGridOptions = visualGridOptions
   }
 
   /**
@@ -181,6 +184,14 @@ class RenderRequest {
     this._sendDom = value
   }
 
+  getVisualGridOptions() {
+    return this._visualGridOptions
+  }
+
+  setVisualGridOptions(options) {
+    this._visualGridOptions = options
+  }
+
   /**
    * @override
    */
@@ -210,9 +221,11 @@ class RenderRequest {
       object.browser = {
         name: this._browserName,
       }
+    }
 
-      if (this._platform) {
-        object.browser.platform = this._platform
+    if (this._platform) {
+      object.platform = {
+        name: this._platform,
       }
     }
 
@@ -232,6 +245,10 @@ class RenderRequest {
       object.sendDom = this._sendDom
     }
 
+    if (this._visualGridOptions) {
+      object.options = this._visualGridOptions
+    }
+
     return object
   }
 
@@ -243,4 +260,4 @@ class RenderRequest {
   }
 }
 
-exports.RenderRequest = RenderRequest
+module.exports = RenderRequest

@@ -1,11 +1,9 @@
 'use strict'
-
 /* eslint-disable no-unused-vars */
 
 /**
  * Encapsulates cutting logic.
- *
- * @abstract
+ * @interface
  */
 class CutProvider {
   /**
@@ -27,4 +25,4 @@ class CutProvider {
   }
 }
 
-exports.CutProvider = CutProvider
+module.exports = CutProvider

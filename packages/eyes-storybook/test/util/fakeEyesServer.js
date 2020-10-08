@@ -52,7 +52,12 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
             status: 'rendered',
             imageLocation: `imageLoc_${renderId}`,
             domLocation: `domLoc_${renderId}`,
-            selectorRegions: regions.map(() => ({x: 1, y: 2, width: 3, height: 4})),
+            selectorRegions: regions.map(region => {
+              try {
+                return JSON.parse(region);
+              } catch (ex) {}
+              return {x: 1, y: 2, width: 3, height: 4};
+            }),
           };
         }
       }),
@@ -66,9 +71,9 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
 
   // matchSingleWindow
   app.post('/api/sessions', (req, res) => {
-    const {startInfo, appOutput} = req.body;
+    const {startInfo, appOutput, options} = req.body;
     const runningSession = createRunningSessionFromStartInfo(startInfo);
-    runningSession.steps = [{asExpected: true, appOutput}]; // TODO
+    runningSession.steps = [{asExpected: true, appOutput, options}]; // TODO
     runningSessions[runningSession.id] = runningSession;
     res.set(
       'location',
@@ -101,6 +106,22 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
     res.send({id, sessionId, batchId, baselineId, url});
   });
 
+  app.get('/api/sessions/batches/:batchId/:sessionId', (req, res) => {
+    const runningSession = Object.values(runningSessions).find(runningSession => {
+      if (
+        runningSession.batchId === decodeURIComponent(req.params.batchId) &&
+        runningSession.sessionId === decodeURIComponent(req.params.sessionId)
+      ) {
+        return runningSession;
+      }
+    });
+    if (runningSession) {
+      res.send(runningSession);
+    } else {
+      res.status(404).send();
+    }
+  });
+
   function createRunningSessionFromStartInfo(startInfo) {
     const {appIdOrName, scenarioIdOrName, batchInfo, environment} = startInfo;
     const {displaySize: _displaySize, inferred} = environment;
@@ -114,7 +135,7 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
 
     return {
       id: runningSessionId,
-      startInfo: startInfo,
+      startInfo,
       baselineId,
       sessionId,
       url,
@@ -179,8 +200,8 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
       status,
       appName: runningSession.startInfo.appIdOrName,
       baselineId: runningSession.baselineId,
-      batchName: runningSession.startInfo.batchName,
-      batchId: runningSession.startInfo.batchId,
+      batchName: runningSession.startInfo.batchInfo.name,
+      batchId: runningSession.startInfo.batchInfo.id,
       hostOS: runningSession.hostOS,
       hostApp: runningSession.hostApp,
       hostDisplaySize: runningSession.startInfo.environment.displaySize || {width: 7, height: 8},

@@ -3,6 +3,78 @@
 ## Unreleased
 
 
+## 1.6.11 - 2020/10/7
+
+- updated to @applitools/eyes-webdriverio@5.24.0 (from 5.23.1)
+
+## 1.6.10 - 2020/10/1
+
+- remove yarn workspaces
+- updated to @applitools/eyes-webdriverio@5.22.2 (from 5.21.0)
+- updated to @applitools/eyes-webdriverio@5.23.1 (from 5.22.2)
+
+## 1.6.9 - 2020/8/11
+
+- updated to @applitools/eyes-webdriverio@5.21.0 (from 5.19.2)
+
+## 1.6.8 - 2020/7/26
+
+- updated to @applitools/eyes-webdriverio@5.19.2 (from 5.19.1)
+
+## 1.6.7 - 2020/7/24
+
+- updated to @applitools/eyes-webdriverio@5.18.0 (from 5.17.0)
+- updated to @applitools/eyes-webdriverio@5.19.1 (from 5.18.0)
+
+## 1.6.6 - 2020/7/5
+
+- updated to @applitools/eyes-webdriverio@5.17.0 (from 5.16.0)
+
+## 1.6.5 - 2020/7/1
+
+- updated to @applitools/eyes-webdriverio@5.16.0 (from 5.15.1)
+
+## 1.6.4 - 2020/6/29
+
+- updated to @applitools/eyes-webdriverio@5.15.1 (from 5.14.0)
+
+## 1.6.3 - 2020/6/16
+
+- updated to @applitools/eyes-webdriverio@5.14.0 (from 5.13.2)
+
+## 1.6.2 - 2020/6/14
+
+- updated to @applitools/eyes-webdriverio@5.13.2 (from 5.13.1)
+
+## 1.6.1 - 2020/6/11
+
+- updated to @applitools/eyes-webdriverio@5.13.1 (from 5.13.0)
+
+## 1.6.0 - 2020/6/9
+
+- updated to @applitools/eyes-webdriverio@5.13.0 (from 5.12.0)
+
+## 1.5.0 - 2020/6/2
+
+- Unified core
+- updated to @applitools/eyes-webdriverio@5.12.0 (from v5.11.0)
+
+## 1.4.0 - 2020/5/19
+
+- updated to @applitools/eyes-webdriverio@5.11.0
+
+## 1.3.10 - 2020/4/27
+
+- updated to @applitools/eyes-webdriverio@5.10.1
+
+## 1.3.9 - 2020/4/16
+
+- updated to @applitools/eyes-webdriverio@5.9.23
+
+## 1.3.8 - 29/3/2020
+
+- update SDK version to 5.9.22
+
 ## 1.3.7
 
 - missed commit (no changes)

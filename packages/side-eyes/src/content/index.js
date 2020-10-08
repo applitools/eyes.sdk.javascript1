@@ -1,13 +1,7 @@
 import browser from 'webextension-polyfill'
 
 function getElementByXpath(path) {
-  return document.evaluate(
-    path,
-    document,
-    null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
-    null
-  ).singleNodeValue
+  return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 }
 
 function getElementRect(request, _sender, sendResponse) {
@@ -59,12 +53,7 @@ function execDomScript(id, scriptType) {
 window.execDomScript = execDomScript
 
 window.addEventListener('message', event => {
-  if (
-    event.source == window &&
-    event.data &&
-    event.data.direction == 'from-page' &&
-    event.data.id
-  ) {
+  if (event.source == window && event.data && event.data.direction == 'from-page' && event.data.id) {
     if (event.data.error) {
       window.__eyes.promises[event.data.id].rej(new Error(event.data.message))
     } else {

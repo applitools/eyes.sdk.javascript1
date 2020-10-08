@@ -1,6 +1,6 @@
 {
   "name": "eyes.selenium",
-  "version": "3.8.10",
+  "version": "3.9.1",
   "description": "Applitools Eyes SDK For Selenium JavaScript WebDriver",
   "keywords": [
     "eyes.selenium",
@@ -44,16 +44,22 @@
   "main": "./index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "eyes.sdk": "4.0.5",
-    "eyes.utils": "3.8.1"
+    "@applitools/eyes-common-legacy": "1.0.1",
+    "@applitools/eyes-sdk-core-legacy": "1.0.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
+    "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "chromedriver": "^80.0.1",
+    "chromedriver": "^83.0.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "mocha": "^6.2.2",
+    "prettier": "1.19.0",
     "protractor": "^5.4.2",
     "selenium-webdriver": "^3.6.0",
     "typescript": "^3.6.4"
@@ -62,9 +68,7 @@
     "selenium-webdriver": "< 4.0.0"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
+    "lint": "eslint . --ext .js",
     "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "npm run test:selenium",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.js\"",
@@ -73,9 +77,9 @@
     "test:protractor": "protractor test/e2e/protractor/protractor.conf.js",
     "test:coverage:custom": "mocha --no-timeouts \"test/coverage/custom/*.spec.js\"",
     "typings": "tsc --declaration",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion && yarn test",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

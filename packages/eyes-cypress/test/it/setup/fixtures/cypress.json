@@ -1,0 +1,4 @@
+{
+  "pluginsFile": "cypress/plugins/index-bla-plugin.js",
+  "supportFile": "cypress/support/index-bla-commands.js"
+}

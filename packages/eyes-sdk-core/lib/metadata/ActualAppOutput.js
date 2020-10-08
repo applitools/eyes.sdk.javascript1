@@ -1,23 +1,24 @@
 'use strict'
 
-const {GeneralUtils, DateTimeUtils} = require('@applitools/eyes-common')
+const {GeneralUtils, DateTimeUtils} = require('../..')
 
-const {ImageMatchSettings} = require('./ImageMatchSettings')
-const {Image} = require('./Image')
+const ImageMatchSettings = require('./ImageMatchSettings')
+const Image = require('./Image')
 
 class ActualAppOutput {
   /**
-   * @param {Image|object} image
-   * @param {Image|object} thumbprint
-   * @param {ImageMatchSettings|object} imageMatchSettings
-   * @param {boolean} ignoreExpectedOutputSettings
-   * @param {boolean} isMatching
-   * @param {boolean} areImagesMatching
-   * @param {Date|string} occurredAt
-   * @param {object[]} userInputs
-   * @param {string} windowTitle
-   * @param {string} tag
-   * @param {boolean} isPrimary
+   * @param output
+   * @param {Image|object} output.image
+   * @param {Image|object} output.thumbprint
+   * @param {ImageMatchSettings|object} output.imageMatchSettings
+   * @param {boolean} output.ignoreExpectedOutputSettings
+   * @param {boolean} output.isMatching
+   * @param {boolean} output.areImagesMatching
+   * @param {Date|string} output.occurredAt
+   * @param {object[]} output.userInputs
+   * @param {string} output.windowTitle
+   * @param {string} output.tag
+   * @param {boolean} output.isPrimary
    */
   constructor({
     image,
@@ -230,4 +231,4 @@ class ActualAppOutput {
   }
 }
 
-exports.ActualAppOutput = ActualAppOutput
+module.exports = ActualAppOutput

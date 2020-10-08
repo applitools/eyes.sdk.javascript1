@@ -18,26 +18,14 @@ const DEFAULT_WAIT_BEFORE_SCREENSHOTS = 100 // Milliseconds
 const DEFAULT_STITCHING_OVERLAP = 50 // pixels
 
 export function buildCheckWindowFullFunction(eyes, tabId, devicePixelRatio) {
-  const fullPageCapture = initFullPageCapture(
-    eyes._logger,
-    tabId,
-    devicePixelRatio
-  )
+  const fullPageCapture = initFullPageCapture(eyes._logger, tabId, devicePixelRatio)
   return buildCheckFunction(tabId, () =>
-    fullPageCapture.getStitchedRegion(
-      Region.EMPTY,
-      null,
-      new CSSTranslatePositionProvider(eyes._logger, tabId)
-    )
+    fullPageCapture.getStitchedRegion(Region.EMPTY, null, new CSSTranslatePositionProvider(eyes._logger, tabId))
   )
 }
 
 export function buildCheckRegionFunction(eyes, tabId, devicePixelRatio, rect) {
-  const fullPageCapture = initFullPageCapture(
-    eyes._logger,
-    tabId,
-    devicePixelRatio
-  )
+  const fullPageCapture = initFullPageCapture(eyes._logger, tabId, devicePixelRatio)
   return buildCheckFunction(tabId, () =>
     fullPageCapture.getStitchedRegion(
       Region.EMPTY,
@@ -78,10 +66,7 @@ function initFullPageCapture(logger, tabId, devicePixelRatio) {
     new ScrollPositionProvider(logger, tabId),
     new FixedScaleProviderFactory(
       1 / devicePixelRatio,
-      new ReadOnlyPropertyHandler(
-        logger,
-        new FixedScaleProvider(1 / devicePixelRatio)
-      )
+      new ReadOnlyPropertyHandler(logger, new FixedScaleProvider(1 / devicePixelRatio))
     ),
     new NullCutProvider(),
     DEFAULT_STITCHING_OVERLAP,

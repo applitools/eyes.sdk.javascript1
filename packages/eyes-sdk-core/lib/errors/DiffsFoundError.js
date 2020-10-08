@@ -1,7 +1,7 @@
 'use strict'
 
-const {TestFailedError} = require('./TestFailedError')
-const {SessionStartInfo} = require('../server/SessionStartInfo')
+const TestFailedError = require('./TestFailedError')
+const SessionStartInfo = require('../server/SessionStartInfo')
 
 /**
  * Indicates that an existing test ended, and that differences where found from the baseline.
@@ -23,4 +23,4 @@ class DiffsFoundError extends TestFailedError {
   }
 }
 
-exports.DiffsFoundError = DiffsFoundError
+module.exports = DiffsFoundError

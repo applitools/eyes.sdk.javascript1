@@ -1,6 +1,6 @@
 'use strict'
 
-const {EyesError} = require('@applitools/eyes-common')
+const EyesError = require('./EyesError')
 
 /**
  * Encapsulates an error converting between two coordinate types.
@@ -21,4 +21,4 @@ class CoordinatesTypeConversionError extends EyesError {
   }
 }
 
-exports.CoordinatesTypeConversionError = CoordinatesTypeConversionError
+module.exports = CoordinatesTypeConversionError

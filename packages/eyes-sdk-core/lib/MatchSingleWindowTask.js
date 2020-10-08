@@ -1,9 +1,8 @@
 'use strict'
-
-const {GeneralUtils} = require('@applitools/eyes-common')
-
-const {MatchWindowTask} = require('./MatchWindowTask')
-const {MatchSingleWindowData, Options} = require('./match/MatchSingleWindowData')
+const GeneralUtils = require('./utils/GeneralUtils')
+const MatchWindowTask = require('./MatchWindowTask')
+const MatchSingleWindowData = require('./match/MatchSingleWindowData')
+const Options = require('./match/ImageMatchOptions')
 
 /**
  * Handles matching of output with the expected output (including retry and 'ignore mismatch' when needed).
@@ -169,4 +168,4 @@ class MatchSingleWindowTask extends MatchWindowTask {
   }
 }
 
-exports.MatchSingleWindowTask = MatchSingleWindowTask
+module.exports = MatchSingleWindowTask

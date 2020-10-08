@@ -1,8 +1,7 @@
 {
   "name": "@applitools/eyes-storybook",
-  "version": "3.3.1",
+  "version": "3.8.11",
   "description": "",
-  "main": "src/eyes-storybook.js",
   "engines": {
     "node": ">=8.6.0"
   },
@@ -15,16 +14,11 @@
     "eyes-storybook": "./bin/eyes-storybook.js"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
-    "test": "yarn build && yarn test:mocha && yarn lint && yarn msg:success || yarn msg:failure",
+    "test": "yarn build && yarn test:mocha && yarn lint",
     "test:mocha": "mocha --no-timeouts --trace-warnings 'test/unit/*.test.js' 'test/it/*.test.js' 'test/e2e/*.test.js'",
     "test:unit": "mocha --no-timeouts --trace-warnings 'test/unit/*.test.js'",
     "test:it": "mocha --no-timeouts --trace-warnings 'test/it/*.test.js'",
     "test:e2e": "mocha --no-timeouts --trace-warnings 'test/e2e/*.test.js'",
-    "msg:success": "notify -t 'Storybook tests Passed !!' -m 'Yaaaaaa !!!'",
-    "msg:failure": "notify -t 'Storybook tests Failed !!' -m 'Daaaamm !!!'",
     "build": "rollup -c rollup.config.js",
     "build:heavy": "node scripts/bitmap.js",
     "lint": "eslint '**/*.js'",
@@ -37,9 +31,10 @@
     "changelog:init": "git config changelog.format \"* %s [[%h]($(echo $npm_package_repository_url|cut -d+ -f2|cut -d. -f1-2)/commit/%H)]\"",
     "changelog:install": "sudo apt-get install git-extras",
     "postinstall": "node src/postinstall",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion && yarn test",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification",
+    "deps": "bongo deps"
   },
   "keywords": [
     "applitools",
@@ -57,23 +52,23 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "3.4.0",
-    "@applitools/eyes-common": "3.20.1",
-    "@applitools/eyes-sdk-core": "9.0.2",
-    "@applitools/functional-commons": "1.5.4",
+    "@applitools/dom-snapshot": "4.1.1",
+    "@applitools/eyes-sdk-core": "12.2.9",
+    "@applitools/functional-commons": "1.6.0",
     "@applitools/monitoring-commons": "1.0.19",
-    "@applitools/visual-grid-client": "13.6.5",
-    "boxen": "^4.2.0",
-    "chalk": "^2.4.2",
-    "detect-port": "^1.3.0",
-    "lodash.flatten": "^4.4.0",
-    "lodash.pick": "^4.4.0",
-    "ora": "^3.4.0",
-    "puppeteer": "^1.20.0",
-    "yargs": "^12.0.5"
+    "@applitools/visual-grid-client": "15.0.8",
+    "boxen": "4.2.0",
+    "chalk": "3.0.0",
+    "detect-port": "1.3.0",
+    "lodash.flatten": "4.4.0",
+    "lodash.pick": "4.4.0",
+    "ora": "3.4.0",
+    "puppeteer": "1.20.0",
+    "yargs": "12.0.5"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "^0.3.1",
+    "@applitools/sdk-shared": "^0.1.0",
     "@storybook/addon-options": "^5.2.8",
     "@storybook/react": "^5.2.8",
     "@testing-library/dom": "^5.6.1",
@@ -90,9 +85,8 @@
     "eslint-plugin-prettier": "^3.1.1",
     "express": "^4.17.1",
     "filenamify": "^4.1.0",
-    "mocha": "^5.2.0",
+    "mocha": "^8.0.1",
     "node-fetch": "^2.6.0",
-    "node-notifier-cli": "^1.1.2",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

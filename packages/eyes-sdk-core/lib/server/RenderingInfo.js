@@ -1,12 +1,13 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
 class RenderingInfo {
   /**
-   * @param {string} serviceUrl
-   * @param {string} accessToken
-   * @param {string} resultsUrl
+   * @param info
+   * @param {string} info.serviceUrl
+   * @param {string} info.accessToken
+   * @param {string} info.resultsUrl
    */
   constructor({serviceUrl, accessToken, resultsUrl, stitchingServiceUrl} = {}) {
     this._serviceUrl = serviceUrl
@@ -89,4 +90,4 @@ class RenderingInfo {
   }
 }
 
-exports.RenderingInfo = RenderingInfo
+module.exports = RenderingInfo

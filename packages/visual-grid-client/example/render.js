@@ -3,7 +3,7 @@
 const puppeteer = require('puppeteer')
 const {makeVisualGridClient} = require('../src/visual-grid-client')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
-const {Logger, deserializeDomSnapshotResult} = require('@applitools/eyes-common')
+const {Logger, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const {delay: _delay} = require('@applitools/functional-commons')
 const debug = require('debug')('eyes:render')
 

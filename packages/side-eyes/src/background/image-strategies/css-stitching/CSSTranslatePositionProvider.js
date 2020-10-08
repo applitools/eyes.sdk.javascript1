@@ -25,9 +25,7 @@ export default class CSSTranslatePositionProvider extends PositionProvider {
   }
 
   async setPosition(location) {
-    this._logger.verbose(
-      `CssTranslatePositionProvider - Setting position to: ${location}`
-    )
+    this._logger.verbose(`CssTranslatePositionProvider - Setting position to: ${location}`)
     await this.setTransform(FORCE_TRANSFORM)
     const transform = `translate(-${location.getX()}px, -${location.getY()}px)`
     await this.setTransform(transform)
@@ -37,17 +35,12 @@ export default class CSSTranslatePositionProvider extends PositionProvider {
 
   async getEntireSize() {
     const entireSize = await getEntirePageSize(this._tabId)
-    this._logger.verbose(
-      `CssTranslatePositionProvider - Entire size: ${entireSize}`
-    )
+    this._logger.verbose(`CssTranslatePositionProvider - Entire size: ${entireSize}`)
     return entireSize
   }
 
   async getState() {
-    return new CSSTranslatePositionMemento(
-      await this.getTransform(),
-      this._lastSetPosition
-    )
+    return new CSSTranslatePositionMemento(await this.getTransform(), this._lastSetPosition)
   }
 
   async restoreState(state) {

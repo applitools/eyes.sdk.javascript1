@@ -1,5 +1,6 @@
-packages/eyes-storybook/test/fixtures/appWithStorybook
-packages/eyes-storybook/test/fixtures/heavyStorybook
-packages/eyes-storybook/test/fixtures/singleStorybook
-packages/eyes-storybook/dist
-packages/eyes-storybook/logs
+test/fixtures/appWithStorybook
+test/fixtures/heavyStorybook
+test/fixtures/singleStorybook
+test/fixtures/accessibilityStorybook
+dist
+logs

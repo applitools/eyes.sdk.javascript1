@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, Region, FloatingMatchSettings} = require('@applitools/eyes-common')
+const {GeneralUtils, Region, FloatingMatchSettings} = require('../..')
 
 class ImageMatchSettings {
   /**
@@ -232,4 +232,4 @@ class ImageMatchSettings {
   }
 }
 
-exports.ImageMatchSettings = ImageMatchSettings
+module.exports = ImageMatchSettings

@@ -1,7 +1,0 @@
-div {
-  background: url('data:text/css,div{display:none;}');
-}
-
-span {
-  background: url('javascript:void(0)');
-}

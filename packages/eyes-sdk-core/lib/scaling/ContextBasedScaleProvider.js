@@ -1,8 +1,8 @@
 'use strict'
 
-const {ArgumentGuard} = require('@applitools/eyes-common')
+const {ArgumentGuard} = require('../..')
 
-const {ScaleProvider} = require('./ScaleProvider')
+const ScaleProvider = require('./ScaleProvider')
 
 // Allowed deviations for viewport size and default content entire size.
 const ALLOWED_VS_DEVIATION = 1
@@ -100,4 +100,4 @@ class ContextBasedScaleProvider extends ScaleProvider {
   }
 }
 
-exports.ContextBasedScaleProvider = ContextBasedScaleProvider
+module.exports = ContextBasedScaleProvider

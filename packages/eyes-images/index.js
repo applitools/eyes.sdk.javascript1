@@ -11,6 +11,7 @@ exports.Eyes = require('./lib/Eyes').Eyes
 exports.AccessibilityLevel = core.AccessibilityLevel
 exports.AccessibilityMatchSettings = core.AccessibilityMatchSettings
 exports.AccessibilityRegionType = core.AccessibilityRegionType
+exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
 exports.BatchInfo = core.BatchInfo
 exports.BrowserType = core.BrowserType
 exports.Configuration = core.Configuration

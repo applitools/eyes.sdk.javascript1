@@ -33,8 +33,6 @@
 
   Eyes.prototype = new EyesBase()
   Eyes.prototype.constructor = Eyes
-
-  //noinspection JSUnusedGlobalSymbols
   Eyes.prototype._getBaseAgentId = function() {
     return 'eyes.images.javascript/' + VERSION
   }

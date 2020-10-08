@@ -1,7 +1,5 @@
 'use strict'
 
-// Region must come from sdk-core o.w when initailizing Region with
-// Region we fail on not being an instance of Region.
 const {Region} = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
 const saveData = require('../troubleshoot/saveData')
@@ -27,18 +25,15 @@ function makeCheckWindow({
   stepCounter,
   testName,
   openEyesPromises,
-  fetchHeaders,
+  userAgent,
   matchLevel: _matchLevel,
-  accessibilityLevel: _accessibilityLevel,
   isSingleWindow,
   getUserAgents,
+  visualGridOptions: _visualGridOptions,
 }) {
   return function checkWindow({
-    resourceUrls = [],
-    resourceContents = {},
-    frames = [],
+    snapshot,
     url,
-    cdt,
     tag,
     target = 'window',
     fully = true,
@@ -51,16 +46,16 @@ function makeCheckWindow({
     accessibility,
     sendDom = true,
     matchLevel = _matchLevel,
-    accessibilityLevel = _accessibilityLevel,
     layout,
     strict,
     content,
     useDom,
     enablePatterns,
     ignoreDisplacements,
-    source,
-    referrer,
+    visualGridOptions = _visualGridOptions,
   }) {
+    const snapshots = Array.isArray(snapshot) ? snapshot : Array(browsers.length).fill(snapshot)
+
     if (target === 'window' && !fully) {
       sizeMode = 'viewport'
     } else if (target === 'region' && selector) {
@@ -68,7 +63,6 @@ function makeCheckWindow({
     } else if (target === 'region' && region) {
       sizeMode = 'region'
     }
-    fetchHeaders['Referer'] = referrer
 
     const accErr = isInvalidAccessibility(accessibility)
     if (accErr) {
@@ -85,19 +79,28 @@ function makeCheckWindow({
 
     if (typeof window === 'undefined') {
       const handleBrowserDebugData = require('../troubleshoot/handleBrowserDebugData')
-      handleBrowserDebugData({
-        frame: {resourceUrls, resourceContents, frames, cdt, url},
-        metaData: {agentId: wrappers[0].getBaseAgentId()},
-        logger,
+      snapshots.forEach(snapshot => {
+        handleBrowserDebugData({
+          frame: snapshot,
+          metaData: {agentId: wrappers[0].getBaseAgentId()},
+          logger,
+        })
       })
     }
 
-    const getResourcesPromise = createRGridDOMAndGetResourceMapping({
-      resourceUrls,
-      resourceContents,
-      cdt,
-      frames,
-    })
+    const getResourcesPromise = Promise.all(
+      snapshots.map(snapshot =>
+        createRGridDOMAndGetResourceMapping({
+          resourceUrls: snapshot.resourceUrls,
+          resourceContents: snapshot.resourceContents,
+          cdt: snapshot.cdt,
+          frames: snapshot.frames,
+          userAgent,
+          referer: url,
+          proxySettings: wrappers[0].getProxy(),
+        }),
+      ),
+    )
 
     const noOffsetSelectors = {
       all: [ignore, layout, strict, content, accessibility],
@@ -243,7 +246,6 @@ function makeCheckWindow({
         ignoreDisplacements,
         renderId,
         matchLevel,
-        accessibilityLevel,
       })
 
       logger.verbose(
@@ -265,7 +267,7 @@ function makeCheckWindow({
         domUrl: domLocation,
         checkSettings,
         imageLocation,
-        source,
+        url,
       }
 
       return !isSingleWindow ? wrapper.checkWindow(checkArgs) : wrapper.testWindow(checkArgs)
@@ -277,7 +279,7 @@ function makeCheckWindow({
         return
       }
 
-      const {rGridDom: dom, allResources: resources} = await getResourcesPromise
+      const pages = await getResourcesPromise
 
       if (testController.shouldStopAllTests()) {
         logger.log(`aborting startRender because there was an error in getAllResources`)
@@ -286,8 +288,7 @@ function makeCheckWindow({
 
       const renderRequests = createRenderRequests({
         url,
-        dom,
-        resources: Object.values(resources),
+        pages,
         browsers,
         renderInfo,
         sizeMode,
@@ -297,6 +298,7 @@ function makeCheckWindow({
         noOffsetSelectors: noOffsetSelectors.all,
         offsetSelectors: offsetSelectors.all,
         sendDom,
+        visualGridOptions,
       })
 
       globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() + 1)
@@ -309,8 +311,8 @@ function makeCheckWindow({
       globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() - 1)
 
       if (saveDebugData) {
-        for (const renderId of renderIds) {
-          await saveData({renderId, cdt, resources, url, logger})
+        for (const [index, renderId] of renderIds.entries()) {
+          await saveData({renderId, cdt: snapshots[index].cdt, resources, url, logger})
         }
       }
 

@@ -76,14 +76,9 @@ export default class Record extends React.Component {
             padding: '0 3px',
           }}
         >
-          You can use the following Eyes commands in Selenium IDE or click them
-          while recording your test:
+          You can use the following Eyes commands in Selenium IDE or click them while recording your test:
         </p>
-        <ButtonList
-          items={Object.keys(this.commands)}
-          label="Add to test"
-          onClick={this.handleCommandClick}
-        />
+        <ButtonList items={Object.keys(this.commands)} label="Add to test" onClick={this.handleCommandClick} />
       </div>
     )
   }

@@ -1,12 +1,9 @@
 'use strict'
 const {RGridResource} = require('@applitools/eyes-sdk-core')
 
-function toRGridResource({url, type, value}) {
-  const resource = new RGridResource()
-  resource.setUrl(url)
-  resource.setContentType(type)
-  resource.setContent(value)
-  return resource
+// TODO remove and replace with `new RGridResource`
+function toRGridResource({url, type, value, errorStatusCode}) {
+  return new RGridResource({url, contentType: type, content: value, errorStatusCode})
 }
 
 module.exports = toRGridResource

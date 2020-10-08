@@ -1,6 +1,6 @@
-const tunnel = require('tunnel')
+const getTunnelAgentFromProxy = require('./getTunnelAgentFromProxy')
 
-const {GeneralUtils, DateTimeUtils, TypeUtils} = require('@applitools/eyes-common')
+const {GeneralUtils, DateTimeUtils, TypeUtils} = require('../..')
 
 const HTTP_STATUS_CODES = {
   CREATED: 201,
@@ -10,6 +10,7 @@ const HTTP_STATUS_CODES = {
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
+  SERVICE_UNAVAILABLE: 503,
   GATEWAY_TIMEOUT: 504,
 }
 
@@ -17,6 +18,7 @@ const HTTP_FAILED_CODES = [
   HTTP_STATUS_CODES.NOT_FOUND,
   HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
   HTTP_STATUS_CODES.BAD_GATEWAY,
+  HTTP_STATUS_CODES.SERVICE_UNAVAILABLE,
   HTTP_STATUS_CODES.GATEWAY_TIMEOUT,
 ]
 
@@ -24,42 +26,25 @@ const REQUEST_FAILED_CODES = ['ECONNRESET', 'ECONNABORTED', 'ETIMEDOUT', 'ENOTFO
 
 const CUSTOM_HEADER_NAMES = {
   REQUEST_ID: 'x-applitools-eyes-client-request-id',
+  AGENT_ID: 'x-applitools-eyes-client',
   EYES_EXPECT: 'Eyes-Expect',
   EYES_DATE: 'Eyes-Date',
 }
 
 function configAxiosProxy({axiosConfig, proxy, logger}) {
-  if (!proxy.getIsHttpOnly()) {
-    axiosConfig.proxy = proxy.toProxyObject()
-    logger.log('using proxy', axiosConfig.proxy.host, axiosConfig.proxy.port)
-    return axiosConfig
-  }
-
-  if (tunnel.httpsOverHttp === undefined) {
-    throw new Error('http only proxy is not supported in the browser')
-  }
-
   const proxyObject = proxy.toProxyObject()
-  const proxyAuth =
-    proxyObject.auth && proxyObject.auth.username
-      ? `${proxyObject.auth.username}:${proxyObject.auth.password}`
-      : undefined
-  const agent = tunnel.httpsOverHttp({
-    proxy: {
-      host: proxyObject.host,
-      port: proxyObject.port || 8080,
-      proxyAuth,
-    },
-  })
-  axiosConfig.httpsAgent = agent
-  axiosConfig.proxy = false // don't use the proxy, we use tunnel.
-
-  logger.log('proxy is set as http only, using tunnel', proxyObject.host, proxyObject.port)
-}
-function configAxiosFromConfiguration({axiosConfig, configuration, logger}) {
-  if (axiosConfig.params === undefined) {
-    axiosConfig.params = {}
+  if (proxy.getIsHttpOnly()) {
+    axiosConfig.httpsAgent = getTunnelAgentFromProxy(proxyObject)
+    axiosConfig.proxy = false // don't use the proxy, we use tunnel.
+    logger.log('proxy is set as http only, using tunnel', proxyObject.host, proxyObject.port)
+  } else {
+    axiosConfig.proxy = proxyObject
+    logger.log('using proxy', axiosConfig.proxy.host, axiosConfig.proxy.port)
   }
+}
+
+function configureAxios({axiosConfig, configuration, agentId, logger}) {
+  axiosConfig.params = axiosConfig.params || {}
   if (axiosConfig.withApiKey && !('apiKey' in axiosConfig.params)) {
     axiosConfig.params.apiKey = configuration.getApiKey()
   }
@@ -81,10 +66,10 @@ function configAxiosFromConfiguration({axiosConfig, configuration, logger}) {
       configAxiosProxy({axiosConfig, proxy, logger})
     }
   }
-}
-function configAxiosHeaders({axiosConfig}) {
-  if (axiosConfig.headers === undefined) {
-    axiosConfig.headers = {}
+
+  axiosConfig.headers = axiosConfig.headers || {}
+  if (!(CUSTOM_HEADER_NAMES.AGENT_ID in axiosConfig.headers)) {
+    axiosConfig.headers[CUSTOM_HEADER_NAMES.AGENT_ID] = agentId
   }
   if (!(CUSTOM_HEADER_NAMES.REQUEST_ID in axiosConfig.headers)) {
     axiosConfig.headers[CUSTOM_HEADER_NAMES.REQUEST_ID] = axiosConfig.requestId
@@ -167,6 +152,9 @@ async function startPollingRequest({url, config, axios}) {
   }
 }
 async function handleRequestError({err, axios, logger}) {
+  if (!err.config) {
+    throw err
+  }
   const {response, config} = err
   const reason = `${err.message}${response ? `(${response.statusText})` : ''}`
 
@@ -203,8 +191,7 @@ async function handleRequestError({err, axios, logger}) {
 }
 
 exports.configAxiosProxy = configAxiosProxy
-exports.configAxiosFromConfiguration = configAxiosFromConfiguration
-exports.configAxiosHeaders = configAxiosHeaders
+exports.configureAxios = configureAxios
 exports.delayRequest = delayRequest
 
 exports.handleRequestResponse = handleRequestResponse

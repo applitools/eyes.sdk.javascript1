@@ -1,8 +1,9 @@
 {
-  "name": "eyes.utils",
-  "version": "3.8.1",
+  "name": "@applitools/eyes-common-legacy",
+  "version": "1.0.1",
   "description": "General purpose Javascript utilities.",
   "keywords": [
+    "eyes-common-legacy",
     "eyes.utils",
     "applitools",
     "eyes",
@@ -45,21 +46,18 @@
     "png-async": "^0.9.4"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
     "mocha": "^6.2.2",
     "typescript": "^3.6.4"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
     "test": "npm run test:unit",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "typings": "tsc --declaration",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

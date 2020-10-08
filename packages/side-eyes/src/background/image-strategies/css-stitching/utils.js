@@ -27,10 +27,7 @@ export async function getEntirePageSize(tabId) {
       code: JS_RETURN_CONTENT_ENTIRE_SIZE,
     })
   )[0]
-  return new RectangleSize(
-    parseInt(result[0], 10) || 0,
-    parseInt(result[1], 10) || 0
-  )
+  return new RectangleSize(parseInt(result[0], 10) || 0, parseInt(result[1], 10) || 0)
 }
 
 export async function getCurrentScrollPosition(tabId) {

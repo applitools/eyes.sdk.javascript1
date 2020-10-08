@@ -7,24 +7,24 @@ const assert = require('assert')
 const {
   MatchWindowTask,
   CheckSettings,
-  EyesBase,
   Logger,
   GeneralUtils,
   AppOutput,
   AppOutputWithScreenshot,
 } = require('../../index')
+const {EyesBaseImpl} = require('../testUtils')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
 describe('MatchWindowTask', () => {
   describe('createImageMatchSettings', () => {
-    const eyes = new EyesBase()
+    const eyes = new EyesBaseImpl()
     const task = new MatchWindowTask(true, true, true, true, eyes, true)
     const checkSettings = new CheckSettings()
 
     it('should return correct default values', async () => {
       const ms = await task.createImageMatchSettings(checkSettings, null)
       const expectedSerialization =
-        '{"matchLevel":"Strict","accessibilityLevel":"None","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
+        '{"matchLevel":"Strict","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"exact":null,"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
       assert.strictEqual(
         JSON.stringify(ms),

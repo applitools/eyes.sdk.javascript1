@@ -1,6 +1,6 @@
 'use strict'
 
-const {GeneralUtils, RectangleSize, Region} = require('@applitools/eyes-common')
+const {GeneralUtils, RectangleSize, Region} = require('../..')
 
 /**
  * Encapsulates data for the render currently running in the client.
@@ -196,4 +196,4 @@ class RenderStatusResults {
   }
 }
 
-exports.RenderStatusResults = RenderStatusResults
+module.exports = RenderStatusResults

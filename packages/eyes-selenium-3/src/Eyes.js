@@ -11,14 +11,14 @@
     CoordinatesType,
     MutableImage,
     ScaleProviderIdentityFactory,
-  } = require('eyes.sdk')
+  } = require('@applitools/eyes-sdk-core-legacy')
   var {
     PromiseFactory,
     ArgumentGuard,
     SimplePropertyHandler,
     GeometryUtils,
     UserAgent,
-  } = require('eyes.utils')
+  } = require('@applitools/eyes-common-legacy')
   var EyesWebDriver = require('./EyesWebDriver').EyesWebDriver,
     ImageProviderFactory = require('./capture/ImageProviderFactory').ImageProviderFactory,
     EyesSeleniumUtils = require('./EyesSeleniumUtils').EyesSeleniumUtils,
@@ -79,11 +79,7 @@
 
   Eyes.prototype = new EyesBase()
   Eyes.prototype.constructor = Eyes
-
-  //noinspection JSUnusedGlobalSymbols
-  Eyes.prototype._getBaseAgentId = function() {
-    return 'eyes.selenium.javascript/' + VERSION
-  }
+  Eyes.prototype._getBaseAgentId = () => 'eyes.selenium.javascript/' + VERSION
 
   function _init(that, flow) {
     // Set PromiseFactory to work with the protractor control flow and promises
@@ -288,7 +284,7 @@
           .then(function() {
             var element = findElementByLocator(that, obj.element)
             if (!isElementObject(element)) {
-              throw new Error('Unsupported floating region type: ' + typeof element)
+              throw new Error('Unsupported floating region type: ' + element)
             }
 
             return getRegionFromWebElement(element)
@@ -299,6 +295,25 @@
             region.maxUpOffset = obj.maxUpOffset
             region.maxDownOffset = obj.maxDownOffset
             target.floating(region)
+          })
+      })
+    }
+
+    if (target.getAccessibilityObjects().length) {
+      target.getAccessibilityObjects().forEach(function(obj) {
+        promise = promise
+          .then(function() {
+            debugger
+            var element = findElementByLocator(that, obj.element)
+            if (!isElementObject(element)) {
+              throw new Error('Unsupported accessibility region type: ' + typeof element)
+            }
+
+            return getRegionFromWebElement(element)
+          })
+          .then(function(region) {
+            region.regionType = obj.regionType
+            target.accessibility(region)
           })
       })
     }
@@ -417,6 +432,13 @@
           ignoreDisplacements: target.getIgnoreDisplacements(),
           ignore: target.getIgnoreRegions(),
           floating: target.getFloatingRegions(),
+          accessibility: target.getAccessibilityRegions().map(x => ({
+            left: x.left,
+            top: x.top,
+            width: x.width,
+            height: x.height,
+            type: x.regionType,
+          })),
           exact: null,
         }
         return EyesBase.prototype.checkWindow.call(

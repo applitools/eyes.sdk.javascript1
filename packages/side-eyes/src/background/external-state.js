@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 import Modes from '../commons/modes'
-import { verifyStoredAPIKey } from '../commons/api'
+import { getAccountInfo, verifyStoredAPIKey } from '../commons/api'
 
 let state = {
   normalMode: Modes.NORMAL,
@@ -44,17 +44,14 @@ function calculateMode(newState) {
     // if only mode is defined take it
     // if none is defined use the previous one
     // else use NORMAL
-    return newState.mode
-      ? newState.mode
-      : state.mode
-      ? state.mode
-      : Modes.NORMAL
+    return newState.mode ? newState.mode : state.mode ? state.mode : Modes.NORMAL
   }
 }
 
 export function validateOptions() {
   return verifyStoredAPIKey()
     .then(() => (verificationMode = Modes.NORMAL))
+    .then(() => getAccountInfo())
     .catch(e => {
       if (e.message === "API key can't be empty") {
         return (verificationMode = Modes.SETUP)
@@ -66,10 +63,6 @@ export function validateOptions() {
 export function resetMode() {
   setExternalState({
     mode:
-      verificationMode !== Modes.NORMAL
-        ? verificationMode
-        : state.isConnected
-        ? state.normalMode
-        : Modes.DISCONNECTED,
+      verificationMode !== Modes.NORMAL ? verificationMode : state.isConnected ? state.normalMode : Modes.DISCONNECTED,
   })
 }

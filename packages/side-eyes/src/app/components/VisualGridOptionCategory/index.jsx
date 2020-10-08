@@ -25,10 +25,7 @@ export default class VisualGridOptionCategory extends React.Component {
       <React.Fragment>
         <div className="option-header">
           <div className="title">{this.props.name}</div>
-          <AddButton
-            onClick={this.props.modalOpen}
-            isSelected={this.props.modalIsOpen}
-          />
+          <AddButton onClick={this.props.modalOpen} isSelected={this.props.modalIsOpen} />
           <VisualGridOptionSelector
             modalIsOpen={this.props.modalIsOpen}
             modalClose={this.props.modalClose}
@@ -40,10 +37,7 @@ export default class VisualGridOptionCategory extends React.Component {
           />
         </div>
         {this.props.selectedOptions.length ? (
-          <VisualGridSelectedOptions
-            items={this.props.selectedOptions}
-            removeOption={this.props.removeOption}
-          />
+          <VisualGridSelectedOptions items={this.props.selectedOptions} removeOption={this.props.removeOption} />
         ) : this.props.errorMessage ? (
           <div className="error-message">{this.props.errorMessage}</div>
         ) : (

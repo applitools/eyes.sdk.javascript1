@@ -1,9 +1,20 @@
 'use strict'
-
-const {GetRegion} = require('./GetRegion')
+const GetRegion = require('./GetRegion')
 
 /**
- * @ignore
+ * @typedef {import('../geometry/Region')} Region
+ */
+
+/**
+ * @typedef IgnorePersistedRegion
+ * @prop {number} left
+ * @prop {number} top
+ * @prop {number} width
+ * @prop {number} height
+ */
+
+/**
+ * @internal
  */
 class IgnoreRegionByRectangle extends GetRegion {
   /**
@@ -13,17 +24,18 @@ class IgnoreRegionByRectangle extends GetRegion {
     super()
     this._region = region
   }
-
   /**
-   * @inheritDoc
+   * @return {Promise<Region[]>}
    */
-  async getRegion(_eyesBase, _screenshot) {
+  async getRegion() {
     return [this._region]
   }
-
-  async toPersistedRegions(_driver) {
+  /**
+   * @return {Promise<IgnorePersistedRegion[]>}
+   */
+  async toPersistedRegions() {
     return [this._region.toJSON()]
   }
 }
 
-exports.IgnoreRegionByRectangle = IgnoreRegionByRectangle
+module.exports = IgnoreRegionByRectangle

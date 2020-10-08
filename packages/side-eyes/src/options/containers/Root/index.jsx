@@ -117,10 +117,7 @@ class Options extends React.Component {
                   name="enable-checks"
                   label="Enable visual checkpoints"
                   checked={this.state.enableVisualCheckpoints}
-                  onChange={this.handleCheckboxChange.bind(
-                    this,
-                    'enableVisualCheckpoints'
-                  )}
+                  onChange={this.handleCheckboxChange.bind(this, 'enableVisualCheckpoints')}
                 />
                 <Checkbox
                   id="enable-dom-capture"
@@ -128,10 +125,7 @@ class Options extends React.Component {
                   name="enable-dom-capture"
                   label="Root cause analysis enabled"
                   checked={this.state.enableDomCapture}
-                  onChange={this.handleCheckboxChange.bind(
-                    this,
-                    'enableDomCapture'
-                  )}
+                  onChange={this.handleCheckboxChange.bind(this, 'enableDomCapture')}
                 />
                 <Checkbox
                   id="open-urls"
@@ -148,10 +142,7 @@ class Options extends React.Component {
                     name="enable-legacy-dom-snapshot"
                     label="Enable legacy DOM snapshot for the visual grid"
                     checked={this.state.enableLegacyDomSnapshot}
-                    onChange={this.handleCheckboxChange.bind(
-                      this,
-                      'enableLegacyDomSnapshot'
-                    )}
+                    onChange={this.handleCheckboxChange.bind(this, 'enableLegacyDomSnapshot')}
                     disclaimer="(not supported in the SIDE command-line-runner)"
                   />
                 ) : (
@@ -174,10 +165,7 @@ class Options extends React.Component {
                   value={this.state.eyesServer}
                   onChange={this.handleInputChange.bind(this, 'eyesServer')}
                 />
-                <Link
-                  className="secondary"
-                  href="https://applitools.com/docs/topics/overview/obtain-api-key.html"
-                >
+                <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">
                   How to obtain your API key
                 </Link>
               </React.Fragment>
@@ -185,10 +173,9 @@ class Options extends React.Component {
             {this.state.tab === Tabs.ADVANCED && (
               <React.Fragment>
                 <p>
-                  This extension connects with the Selenium IDE extension of the
-                  ID shown below. If you are using a Selenium IDE version with a
-                  different ID (as listed in the extensions page of your
-                  browser) please set it here.
+                  This extension connects with the Selenium IDE extension of the ID shown below. If you are using a
+                  Selenium IDE version with a different ID (as listed in the extensions page of your browser) please set
+                  it here.
                 </p>
                 <Input
                   name="seideId"
@@ -203,10 +190,7 @@ class Options extends React.Component {
                   name="experimental"
                   label="Enable experimental features"
                   checked={this.state.experimentalEnabled}
-                  onChange={this.handleCheckboxChange.bind(
-                    this,
-                    'experimentalEnabled'
-                  )}
+                  onChange={this.handleCheckboxChange.bind(this, 'experimentalEnabled')}
                 />
               </React.Fragment>
             )}

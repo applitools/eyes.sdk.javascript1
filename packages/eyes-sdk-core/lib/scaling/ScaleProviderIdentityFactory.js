@@ -1,6 +1,6 @@
 'use strict'
 
-const {ScaleProviderFactory} = require('./ScaleProviderFactory')
+const ScaleProviderFactory = require('./ScaleProviderFactory')
 
 /**
  * Factory implementation which simply returns the scale provider it is given as an argument.
@@ -29,4 +29,4 @@ class ScaleProviderIdentityFactory extends ScaleProviderFactory {
   }
 }
 
-exports.ScaleProviderIdentityFactory = ScaleProviderIdentityFactory
+module.exports = ScaleProviderIdentityFactory

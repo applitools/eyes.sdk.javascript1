@@ -1,6 +1,5 @@
 'use strict'
-
-const {SessionEventHandler} = require('./SessionEventHandler')
+const SessionEventHandler = require('./SessionEventHandler')
 
 class SessionEventHandlers extends SessionEventHandler {
   constructor() {
@@ -141,4 +140,4 @@ class SessionEventHandlers extends SessionEventHandler {
   }
 }
 
-exports.SessionEventHandlers = SessionEventHandlers
+module.exports = SessionEventHandlers

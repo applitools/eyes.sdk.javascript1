@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Applitools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="gloria.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.min.css"/>
+</head>
+<body>
+<div class="demo-page center">
+    <div class="section">
+        <div class="fancy title primary">
+            <span style="color:#ff0000;">H</span><span style="color:#ff4000;">e</span><span
+                style="color:#ff7f00;">l</span><span style="color:#ffbf00;">l</span><span
+                style="color:#ffff00;">o</span><span style="color:#00ff00;"> </span><span
+                style="color:#00ff80;">w</span><span style="color:#00ffff;">o</span><span
+                style="color:#0080ff;">r</span><span style="color:#0000ff;">l</span><span
+                style="color:#4600ff;">d</span><span style="color:#8b00ff;">!</span>
+        </div>
+        <div class="fancy title diff2">
+            <span style="color:#5100a2;">H</span><span style="color:#4600ff;">e</span><span
+                style="color:#0000ff;">l</span><span style="color:#0080ff;">l</span><span
+                style="color:#00ffff;">o</span><span style="color:#00ff80;"> </span><span
+                style="color:#00ff80;">w</span><span style="color:#ffff00;">o</span><span
+                style="color:#ffbf00;">r</span><span style="color:#ff7f00;">l</span><span
+                style="color:#ff4000;">d</span><span style="color:#8b00ff;">!</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <p>Welcome to your first Applitools Eyes test!!!</p>
+
+        <p style="margin-bottom: 0;">Add <a href="?diff1">?diff1</a> to the end of the url to make the number below
+            random.</p>
+        <p>Add <a href="?diff2">?diff2</a> to the end of the url to simulate additional differences.</p>
+
+        <p>
+            <span class="primary">123456</span>
+            <span class="diff1 diff2 random-number"></span>
+        </p>
+    </div>
+
+    <div class="section button-section">
+        <button>Click me!</button>
+    </div>
+
+    <div class="section hidden-section image-section">
+        <p>You successfully clicked the button!</p>
+
+        <img class="primary" src="image_1.jpg"/>
+        <img class="primary diff1" src="image_1.jpg"/>
+        <img class="diff2" src="image_2.jpg"/>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var hiddenEl = document.querySelector(".hidden-section");
+    var randomEl = document.querySelector(".random-number");
+
+    if (!~window.location.href.indexOf("number")) {
+        randomEl.innerHTML = (Math.random() * (999999 - 100000) + 100000) >> 0;
+    }
+    else {
+        var reg = new RegExp(/number=(\w+)/, "gi");
+        var res = reg.exec(window.location.search);
+
+        if (res && res.length && res[1]) {
+            randomEl.innerHTML = res[1];
+        }
+    }
+
+    if (~window.location.href.indexOf("diff1")) {
+        document.querySelector(".demo-page").classList.add("diff1");
+    }
+    else if (~window.location.href.indexOf("diff2")) {
+        document.querySelector(".demo-page").classList.add("diff2");
+    }
+
+    document.querySelector("button").addEventListener("click", function (e) {
+        if (hiddenEl.classList.contains("hidden-section")) {
+            hiddenEl.classList.remove("hidden-section");
+        }
+        else {
+            hiddenEl.classList.add("hidden-section");
+        }
+    });
+</script>
+</body>
+</html>

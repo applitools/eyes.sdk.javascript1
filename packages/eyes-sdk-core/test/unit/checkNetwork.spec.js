@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const {URL} = require('url')
 const {makeCheckNetwork} = require('../../lib/troubleshoot/checkNetwork')
 
 describe('checkNetwork', () => {
@@ -32,6 +33,8 @@ describe('checkNetwork', () => {
         throw new Error('eyes:Https')
       }
     },
+    url: new URL('https://eyes.com'),
+    getCurlCmd: () => 'curl eyes.com',
   }
   const vg = {
     testServer: async () => {
@@ -59,6 +62,8 @@ describe('checkNetwork', () => {
         throw new Error('vg:Https')
       }
     },
+    url: new URL('https://vg.com'),
+    getCurlCmd: () => 'curl vg.com',
   }
 
   const stream = {
@@ -86,8 +91,10 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes check netwrok running with {"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n\n',
-      '[1] Checking eyes servers api  \n',
+      'Eyes Check Network. Running with:\n' +
+        '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' +
+        '\n',
+      '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ OK ]  +0 \n',
       '[eyes] https                   [ ?  ]',
@@ -98,7 +105,7 @@ describe('checkNetwork', () => {
       '[eyes] node-fetch              [ OK ]  +0 \n',
       '[eyes] server connector        [ ?  ]',
       '[eyes] server connector        [ OK ]  +0 \n',
-      '[2] Checking visual grid servers api  \n',
+      '[2] Checking visual grid API https://vg.com \n',
       '[VG] cURL                      [ ?  ]',
       '[VG] cURL                      [ OK ]  +0 \n',
       '[VG] https                     [ ?  ]',
@@ -109,7 +116,7 @@ describe('checkNetwork', () => {
       '[VG] node-fetch                [ OK ]  +0 \n',
       '[VG] server connector          [ ?  ]',
       '[VG] server connector          [ OK ]  +0 \n',
-      '\nSUCCESS!\n',
+      '\nSuccess!\n',
     ])
   })
 
@@ -118,8 +125,10 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes check netwrok running with {"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n\n',
-      '[1] Checking eyes servers api  \n',
+      'Eyes Check Network. Running with:\n' +
+        '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' +
+        '\n',
+      '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ X  ]  +0 eyes:Curl \n',
       '[eyes] https                   [ ?  ]',
@@ -130,7 +139,7 @@ describe('checkNetwork', () => {
       '[eyes] node-fetch              [ OK ]  +0 \n',
       '[eyes] server connector        [ ?  ]',
       '[eyes] server connector        [ X  ]  +0 eyes:Server \n',
-      '[2] Checking visual grid servers api  \n',
+      '[2] Checking visual grid API https://vg.com \n',
       '[VG] cURL                      [ ?  ]',
       '[VG] cURL                      [ OK ]  +0 \n',
       '[VG] https                     [ ?  ]',
@@ -141,8 +150,9 @@ describe('checkNetwork', () => {
       '[VG] node-fetch                [ X  ]  +0 vg:Fetch \n',
       '[VG] server connector          [ ?  ]',
       '[VG] server connector          [ OK ]  +0 \n',
-      '\nFAILED!\n',
-      '\nYOUR PROXY SEEMS TO BE BLOCKING APPLITOOLS REQUESTS, PLEASE MAKE SURE THE FOLLOWING COMMAND SUCCEED:\ncurl undefined\n',
+      '\n' +
+        'Your proxy seems to be blocking requests to Applitools, please make sure the following command succeed: \n' +
+        ' curl eyes.com \n',
     ])
   })
 })

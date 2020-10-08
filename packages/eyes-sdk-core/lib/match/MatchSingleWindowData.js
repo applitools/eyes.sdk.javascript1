@@ -1,8 +1,7 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
-
-const {MatchWindowData, Options} = require('./MatchWindowData')
+const GeneralUtils = require('../utils/GeneralUtils')
+const MatchWindowData = require('./MatchWindowData')
 
 /**
  * Encapsulates the data to be sent to the agent on a "matchWindow" command.
@@ -155,5 +154,4 @@ class MatchSingleWindowData extends MatchWindowData {
   }
 }
 
-exports.Options = Options
-exports.MatchSingleWindowData = MatchSingleWindowData
+module.exports = MatchSingleWindowData

@@ -1,7 +1,7 @@
 ;(function() {
   'use strict'
 
-  var EyesUtils = require('eyes.utils')
+  var EyesUtils = require('@applitools/eyes-common-legacy')
   var GeometryUtils = EyesUtils.GeometryUtils
 
   /**

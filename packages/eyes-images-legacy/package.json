@@ -44,7 +44,7 @@
     "eyes.utils": "^3.8.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
+    "@applitools/sdk-release-kit": "0.2.2",
     "@types/node": "*",
     "browserify": "^16.5.0",
     "browserify-fs": "^1.0.0",
@@ -55,18 +55,15 @@
     "uglify-js": "^3.6.5"
   },
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
     "test": "npm run test:e2e",
     "test:e2e": "node test/simplerun.js",
     "build": "npm run browserify && npm run uglify",
     "browserify": "browserify eyes-browser-loader.js > dist/eyes-browser.js",
     "uglify": "uglifyjs dist/eyes-browser.js > dist/eyes-browser.min.js",
     "typings": "tsc --declaration",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

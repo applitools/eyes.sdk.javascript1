@@ -4,7 +4,7 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
-const testServer = require('../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {presult} = require('@applitools/functional-commons')
 const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
@@ -29,7 +29,7 @@ describe('openEyes', () => {
     if (!apiKey) {
       throw new Error('APPLITOOLS_API_KEY env variable is not defined')
     }
-    const server = await testServer({port: 3456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServer({port: 3458}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 
@@ -95,15 +95,16 @@ describe('openEyes', () => {
     }
 
     checkWindow({
-      resourceUrls,
-      resourceContents,
-      cdt,
+      snapshot: {resourceUrls, resourceContents, cdt},
       tag: 'first',
       url,
       scriptHooks,
     })
 
-    const results = await close()
+    const [errArr, results] = await presult(close())
+    errArr && console.log(errArr)
+    expect(errArr).to.be.undefined
+
     expect(results.length).to.eq(3)
     expect(results.map(r => r.getStatus())).to.eql(['Passed', 'Passed', 'Passed'])
   })
@@ -132,9 +133,7 @@ describe('openEyes', () => {
     cdt.find(node => node.nodeValue === "hi, I'm red").nodeValue = 'WRONG TEXT'
 
     checkWindow({
-      resourceUrls,
-      resourceContents,
-      cdt,
+      snapshot: {resourceUrls, resourceContents, cdt},
       tag: 'first',
       url,
       scriptHooks,

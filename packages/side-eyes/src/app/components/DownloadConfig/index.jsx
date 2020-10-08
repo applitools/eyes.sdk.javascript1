@@ -23,11 +23,7 @@ export default class DownloadConfig extends React.Component {
   }
   render() {
     return (
-      <div
-        className="download-config"
-        data-tip="<p>Download Ultrafast Grid configuration</p>"
-        data-place="left"
-      >
+      <div className="download-config" data-tip="<p>Download Ultrafast Grid configuration</p>" data-place="left">
         <DownloadButton
           onClick={() => {
             downloadFile(this.generateYaml())

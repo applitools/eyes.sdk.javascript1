@@ -4,15 +4,7 @@ import './style.css'
 
 export default class Tooltip extends React.Component {
   render() {
-    return (
-      <ReactTooltip
-        className="eyes-tooltip"
-        place="bottom"
-        effect="solid"
-        html={true}
-        {...this.props}
-      />
-    )
+    return <ReactTooltip className="eyes-tooltip" place="bottom" effect="solid" html={true} {...this.props} />
   }
 }
 

@@ -2,7 +2,6 @@
 
 const chromedriver = require('chromedriver')
 const {remote} = require('webdriverio')
-const {Region} = require('@applitools/eyes-sdk-core')
 const {By, Eyes, Target, VisualGridRunner, BrowserType, Configuration} = require('../index')
 const Common = require('./Common')
 

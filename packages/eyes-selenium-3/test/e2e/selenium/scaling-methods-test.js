@@ -14,7 +14,10 @@ describe('Eyes.Selenium.JavaScript - Selenium', function() {
   this.timeout(5 * 60 * 1000)
 
   before(function() {
-    var options = new chrome.Options().addArguments('--force-device-scale-factor=1.25')
+    var options = new chrome.Options().addArguments(
+      '--force-device-scale-factor=1.25',
+      '--headless',
+    )
     driver = new Builder()
       .forBrowser('chrome')
       .setChromeOptions(options)

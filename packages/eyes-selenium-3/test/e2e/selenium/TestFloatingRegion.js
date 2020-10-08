@@ -1,6 +1,7 @@
 require('chromedriver')
 var {By, Builder} = require('selenium-webdriver')
 var {ConsoleLogHandler, Target, Eyes} = require('../../../index')
+var chrome = require('selenium-webdriver/chrome')
 
 var driver = null,
   eyes = null
@@ -8,7 +9,11 @@ describe('TestFloatingRegion', function() {
   this.timeout(5 * 60 * 1000)
 
   before(function() {
-    driver = new Builder().forBrowser('chrome').build()
+    var options = new chrome.Options().addArguments('--headless')
+    driver = new Builder()
+      .forBrowser('chrome')
+      .setChromeOptions(options)
+      .build()
 
     eyes = new Eyes()
     eyes.setStitchMode('CSS')
@@ -36,7 +41,7 @@ describe('TestFloatingRegion', function() {
     driver.findElement(By.xpath('/html/body/div/div/main/div[13]/button')).click()
 
     // wait some time to finish animation
-    driver.sleep(300)
+    driver.sleep(3000)
 
     // Capture modal window region
     eyes.check(

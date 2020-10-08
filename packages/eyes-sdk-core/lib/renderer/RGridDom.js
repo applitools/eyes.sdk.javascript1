@@ -2,14 +2,15 @@
 
 const crypto = require('crypto')
 
-const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
+const {GeneralUtils, ArgumentGuard} = require('../..')
 
-const {RGridResource} = require('./RGridResource')
+const RGridResource = require('./RGridResource')
 
 class RGridDom {
   /**
-   * @param {object} [domNodes]
-   * @param {RGridResource[]} [resources]
+   * @param data
+   * @param {object} [data.domNodes]
+   * @param {RGridResource[]} [data.resources]
    */
   constructor({domNodes, resources} = {}) {
     this._domNodes = domNodes
@@ -108,4 +109,4 @@ class RGridDom {
   }
 }
 
-exports.RGridDom = RGridDom
+module.exports = RGridDom

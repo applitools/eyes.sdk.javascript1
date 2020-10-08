@@ -26,7 +26,7 @@
 ;(function() {
   'use strict'
 
-  var EyesUtils = require('eyes.utils'),
+  var EyesUtils = require('@applitools/eyes-common-legacy'),
     MatchSettings = require('./MatchSettings'),
     ServerConnector = require('./ServerConnector').ServerConnector,
     MatchWindowTask = require('./MatchWindowTask').MatchWindowTask,
@@ -196,7 +196,12 @@
     this._userInputs = []
     this._saveNewTests = true
     this._saveFailedTests = false
-    this._serverConnector = new ServerConnector(promiseFactory, this._serverUrl, this._logger)
+    this._serverConnector = new ServerConnector({
+      promiseFactory,
+      serverUrl: this._serverUrl,
+      logger: this._logger,
+      getAgentId: this._getFullAgentId.bind(this),
+    })
     this._positionProvider = null
     this._scaleProviderHandler = new SimplePropertyHandler(new NullScaleProvider())
     this._cutProviderHandler = new SimplePropertyHandler(new NullCutProvider())
@@ -692,6 +697,22 @@
    */
   EyesBase.prototype.setIgnoreDisplacements = function(value) {
     this._defaultMatchSettings.setIgnoreDisplacements(value)
+  }
+
+  /**
+   * @return {AccessibilitySettings} - The test-wide accesibilityValidation to use in open requests.
+   */
+  EyesBase.prototype.getAccessibilityValidation = function() {
+    return this._defaultMatchSettings.getAccessibilitySettings()
+  }
+
+  /**
+   * The test-wide accesibilityValidation to use.
+   *
+   * @param {AccessibilitySettings} value - The test-wide accesibilityValidation to use in open requests.
+   */
+  EyesBase.prototype.setAccessibilityValidation = function(value) {
+    this._defaultMatchSettings.setAccessibilitySettings(value)
   }
 
   //noinspection JSUnusedGlobalSymbols
@@ -1514,6 +1535,13 @@
                 matchThreshold: exactObj.getMatchThreshold(),
               }
             }
+            if (this._defaultMatchSettings.getAccessibilitySettings()) {
+              const accessibilitySettings = this._defaultMatchSettings.getAccessibilitySettings()
+              imageMatchSettings.accessibilitySettings = {
+                level: accessibilitySettings.level,
+                version: accessibilitySettings.guidelinesVersion,
+              }
+            }
             return _notifyEvent(
               this._logger,
               this._promiseFactory,
@@ -1804,6 +1832,7 @@
                 matchLevel: this._defaultMatchSettings.getMatchLevel(),
                 ignoreCaret: this._defaultMatchSettings.isIgnoreCaret(),
                 ignoreDisplacements: this._defaultMatchSettings.getIgnoreDisplacements(),
+                accessibilitySettings: this._defaultMatchSettings.getAccessibilitySettings(),
                 exact: exact,
               }
               this._sessionStartInfo = {

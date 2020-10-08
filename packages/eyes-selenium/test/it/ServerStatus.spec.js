@@ -3,9 +3,9 @@
 require('chromedriver')
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
-const {Builder, By, Capabilities} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {By} = require('selenium-webdriver')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
+const {GeneralUtils} = require('@applitools/eyes-sdk-core')
 
 const {
   Eyes,
@@ -22,10 +22,7 @@ let /** @type {string} */ appName,
   /** @type {RectangleSize} */ viewportSize
 describe('Server Status', () => {
   before(async function() {
-    driver = await new Builder()
-      .withCapabilities(Capabilities.chrome())
-      .setChromeOptions(new ChromeOptions().headless().addArguments('disable-infobars'))
-      .build()
+    driver = await getDriver('CHROME')
 
     eyes = new Eyes()
     appName = this.test.parent.title

@@ -2,7 +2,7 @@
 
 const {
   GeneralUtils: {pexec, cachify, presult},
-} = require('@applitools/eyes-common')
+} = require('..')
 
 async function doGetScmInfo(branchName, parentBranchName, _opts) {
   const commitTimeCmd = `HASH=$(git merge-base ${branchName} ${parentBranchName}) && git show -q --format=%cI $HASH`

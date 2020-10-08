@@ -3,7 +3,6 @@ const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
 const { Eyes, Target } = require('@applitools/eyes-selenium')
-const { Configuration, VisualGridRunner, BrowserType, DeviceName, ScreenOrientation } = require('@applitools/eyes-selenium')
 describe('hello world', function() {
   this.timeout(30000)
   let driver
@@ -13,29 +12,24 @@ describe('hello world', function() {
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').usingServer('http://selenium:4444/wd/hub').build()
     vars = {}
-    eyes = new Eyes(new VisualGridRunner())
-    const config = new Configuration()
-    config.setConcurrentSessions(10)
-    config.addBrowser(1280, 800, BrowserType.CHROME)
-    config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT)
-    eyes.setConfiguration(config)
+    eyes = new Eyes()
     eyes.setApiKey(process.env["APPLITOOLS_API_KEY"])
     await eyes.open(driver, "applitools-ext", "hello world")
   })
   afterEach(async function() {
     await driver.quit();
-    const results = await eyes.getRunner().getAllTestResults()
-    console.log(results)
     eyes.abortIfNotClosed()
   })
   it('check window full', async function() {
     await driver.get("https://applitools.com/helloworld")
     await eyes.setViewportSize({ width: 1280, height: 800 })
-    await eyes.check("check full page", Target.window().webHook(preRenderHook).accessibilityValidation("None").fully(true))
+    await eyes.check("check full page", Target.window().webHook(preRenderHook).fully(true))
+    await eyes.close()
   })
   it('check element', async function() {
     await driver.get("https://applitools.com/helloworld")
     await eyes.setViewportSize({ width: 1280, height: 800 })
-    await eyes.check("a button", Target.region(By.css("button")).webHook(preRenderHook).accessibilityValidation("None"))
+    await eyes.check("a button", Target.region(By.css("button")).webHook(preRenderHook))
+    await eyes.close()
   })
 })

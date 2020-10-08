@@ -1,6 +1,7 @@
 'use strict'
 
-const {toUriEncoding, toUnAnchoredUri} = require('@applitools/dom-snapshot')
+const toUriEncoding = require('./toUriEncoding')
+const toUnAnchoredUri = require('./toUnAnchoredUri')
 const valueParser = require('postcss-value-parser')
 
 function extractCssResources(cssText) {

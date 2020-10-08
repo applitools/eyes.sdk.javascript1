@@ -1,10 +1,10 @@
 'use strict'
 
-var assert = require('assert')
-var EyesSDK = require('../../index')
-var PromiseFactory = require('eyes.utils').PromiseFactory
+const assert = require('assert')
+const EyesSDK = require('../../index')
+const PromiseFactory = require('@applitools/eyes-common-legacy').PromiseFactory
 
-var EyesBase = EyesSDK.EyesBase
+const EyesBase = EyesSDK.EyesBase
 
 describe('EyesBase', function() {
   /** @type {EyesBase} */ var eyes

@@ -1,5 +1,5 @@
 'use strict'
-const {AccessibilityRegionType, TypeUtils} = require('@applitools/eyes-common')
+const {AccessibilityRegionType, TypeUtils} = require('@applitools/eyes-sdk-core')
 
 function isInvalidAccessibility(accessibility = []) {
   const accObjects = [].concat(accessibility)

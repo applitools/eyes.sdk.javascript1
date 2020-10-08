@@ -1,26 +1,13 @@
 'use strict'
-
-const {GetSelector} = require('./GetSelector')
-
 /* eslint-disable no-unused-vars */
 
 /**
- * @ignore
- * @abstract
+ * @internal
  */
-class GetRegion extends GetSelector {
-  constructor() {
-    super(undefined)
-  }
-
-  /**
-   * @param {EyesBase} eyesBase
-   * @param {EyesScreenshot} screenshot
-   * @return {Promise<Region[]>}
-   */
-  async getRegion(eyesBase, screenshot) {
+class GetRegion {
+  async getRegion(eyes, screenshot) {
     throw new TypeError('The method is not implemented!')
   }
 }
 
-exports.GetRegion = GetRegion
+module.exports = GetRegion

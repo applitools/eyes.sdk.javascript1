@@ -15,7 +15,7 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
     hasClearLine && printSuccess(name, delimiter, '[ ?  ]')
 
     const start = new Date()
-    const funcWithTimeout = ptimeoutWithError(func(), TIMEOUT, new Error('request timeout out!'))
+    const funcWithTimeout = ptimeoutWithError(func(), TIMEOUT, new Error('request timeout!'))
     const [err] = await presult(funcWithTimeout)
     const end = parseInt((Date.now() - start) / 1000)
 
@@ -56,19 +56,21 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
   return async function checkNetwork() {
     if (!userConfig.apiKey) {
       printErr(
-        'missing "apiKey" add APPLITOOLS_API_KEY as an env variable or add "apiKey" in applitools.config.js\n',
+        'Missing "apiKey". Add APPLITOOLS_API_KEY as an env variable or add "apiKey" in applitools.config.js\n',
       )
       return
     }
     const proxyEnvMsg = `HTTP_PROXY="${process.env.HTTP_PROXY || ''}" HTTPS_PROXY="${process.env
       .HTTPS_PROXY || ''}".`
-    print('Eyes check netwrok running with', JSON.stringify(userConfig), proxyEnvMsg, '\n\n')
+    print(`Eyes Check Network. Running with:\n${JSON.stringify(userConfig)} ${proxyEnvMsg} \n\n`)
 
     let hasErr = false
     let curlRenderErr = true
     let curlVgErr = true
 
-    print('[1] Checking eyes servers api', eyes.url, '\n')
+    // TODO - http and fetch need to account for proxy.
+
+    print('[1] Checking eyes API', eyes.url.origin, '\n')
     curlRenderErr = await doTest(eyes.testCurl, '[eyes] cURL')
     hasErr = curlRenderErr
     hasErr = (await doTest(eyes.testHttps, '[eyes] https')) || hasErr
@@ -76,7 +78,7 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
     hasErr = (await doTest(eyes.testFetch, '[eyes] node-fetch')) || hasErr
     hasErr = await doTest(eyes.testServer, '[eyes] server connector')
 
-    print('[2] Checking visual grid servers api', vg.url, '\n')
+    print('[2] Checking visual grid API', vg.url.origin, '\n')
     curlVgErr = await doTest(vg.testCurl, '[VG] cURL')
     hasErr = curlVgErr || hasErr
     hasErr = (await doTest(vg.testHttps, '[VG] https')) || hasErr
@@ -84,19 +86,17 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
     hasErr = (await doTest(vg.testFetch, '[VG] node-fetch')) || hasErr
     hasErr = (await doTest(vg.testServer, '[VG] server connector')) || hasErr
 
-    if (hasErr) {
-      printErr('\nFAILED!\n')
-    } else {
-      printSuccess('\nSUCCESS!\n')
+    if (!hasErr) {
+      printSuccess('\nSuccess!\n')
     }
 
     const proxyMsg =
-      '\nYOUR PROXY SEEMS TO BE BLOCKING APPLITOOLS REQUESTS, PLEASE MAKE SURE THE FOLLOWING COMMAND SUCCEED'
+      '\nYour proxy seems to be blocking requests to Applitools, please make sure the following command succeed:'
     if (curlRenderErr) {
-      printErr(`${proxyMsg}:\ncurl ${eyes.url}\n`)
+      printErr(proxyMsg, '\n', eyes.getCurlCmd(), '\n')
     }
     if (curlVgErr) {
-      printErr(`${proxyMsg}:\n${await vg.getCurlCmd()}\n`)
+      printErr(proxyMsg, '\n', await vg.getCurlCmd())
     }
   }
 }

@@ -2,10 +2,19 @@
 
 'use strict'
 
+const {URL} = require('url')
 const https = require('https')
 const axios = require('axios')
 const {ProxySettings, TypeUtils, GeneralUtils} = require('../../index')
-const {presult, userConfig, curlGet, getServer, configuration, apiKey} = require('./utils')
+const {
+  presult,
+  userConfig,
+  pexec,
+  getProxyStr,
+  getServer,
+  configuration,
+  apiKey,
+} = require('./utils')
 const {configAxiosProxy} = require('../server/requestHelpers')
 require('@applitools/isomorphic-fetch')
 
@@ -27,8 +36,13 @@ const Eyes = {
       .fetch(RENDER_INFO_URL)
       .then(r => r.json())
       .then(res => validateRednerInfoResult(res)),
+  getCurlCmd: () => {
+    const proxyParam = getProxyStr(userConfig.proxy) ? `-x ${getProxyStr(userConfig.proxy)}` : ''
+    return `curl -s ${RENDER_INFO_URL} ${proxyParam}`
+  },
   testCurl: async () => {
-    const stdout = await curlGet(RENDER_INFO_URL)
+    const cmd = await Eyes.getCurlCmd()
+    const {stdout} = await pexec(cmd, {maxBuffer: 10000000})
     const result = JSON.parse(stdout)
     validateRednerInfoResult(result)
   },
@@ -58,7 +72,7 @@ const Eyes = {
           proxy.isHttpOnly,
         )
       }
-      configAxiosProxy({axiosConfig: config, proxy: proxySettings})
+      configAxiosProxy({axiosConfig: config, proxy: proxySettings, logger: {log: () => {}}})
     }
 
     const [err, res] = await presult(axios(config))
@@ -93,7 +107,7 @@ const Eyes = {
       .on('error', rej)
     return p
   },
-  url: RENDER_INFO_URL,
+  url: new URL(RENDER_INFO_URL),
 }
 
 module.exports = Eyes

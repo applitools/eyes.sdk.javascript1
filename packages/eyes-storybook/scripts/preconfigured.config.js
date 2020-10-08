@@ -1,11 +1,11 @@
 module.exports = {
   concurrency: 20,
-  showLogs: process.env.APPLITOOLS_SHOW_LOGS === 'true',
+  showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
   appName: process.env.APPLITOOLS_APP_NAME || 'Test storybook',
   batchName: process.env.APPLITOOLS_BATCH_NAME || 'Test storybook',
   storybookUrl: process.env.APPLITOOLS_STORYBOOK_URL,
   readStoriesTimeout: 300000,
-  waitBeforeScreenshots: process.env.APPLITOOLS_WAIT_BEFORE_SCREENSHOTS || 200,
+  waitBeforeScreenshot: process.env.APPLITOOLS_WAIT_BEFORE_SCREENSHOT || 200,
   disableBrowserFetching: true,
   browser: [
     //{width: 1200, height: 800, name: 'chrome'},

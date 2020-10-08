@@ -1,8 +1,8 @@
 'use strict'
 
 /* eslint-disable no-unused-vars */
-
-const {ArgumentGuard, Region} = require('@applitools/eyes-common')
+const ArgumentGuard = require('../utils/ArgumentGuard')
+const Region = require('../geometry/Region')
 
 /**
  * Base class for handling screenshots.
@@ -98,4 +98,4 @@ class EyesScreenshot {
   }
 }
 
-exports.EyesScreenshot = EyesScreenshot
+module.exports = EyesScreenshot

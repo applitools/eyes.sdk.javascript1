@@ -37,19 +37,14 @@ export default class TabBar extends React.Component {
     }
   }
   recalculatePadding(node) {
-    const tabPadding = Math.round(
-      node.getBoundingClientRect().width / this.props.tabs.length -
-        this.props.tabWidth
-    )
+    const tabPadding = Math.round(node.getBoundingClientRect().width / this.props.tabs.length - this.props.tabWidth)
     if (tabPadding !== this.state.tabPadding) {
       this.setState({ tabPadding })
     }
   }
   render() {
     const underlineX =
-      this.state.activeTab.index *
-        (this.props.tabWidth + this.state.tabPadding) +
-      this.state.tabPadding / 2
+      this.state.activeTab.index * (this.props.tabWidth + this.state.tabPadding) + this.state.tabPadding / 2
     return (
       <div className="tabbar">
         <ul

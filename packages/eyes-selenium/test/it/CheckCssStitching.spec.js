@@ -1,20 +1,18 @@
 'use strict'
 
 require('chromedriver')
-const {Builder} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {Eyes, Target, ConsoleLogHandler, StitchMode} = require('../../index')
 
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes
 describe('Check CSS Stitching', () => {
   before(async () => {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new ChromeOptions().headless())
-      .build()
+    driver = await getDriver('CHROME')
 
     eyes = new Eyes()
-    eyes.setLogHandler(new ConsoleLogHandler(false))
+    if (process.env.APPLITOOLS_SHOW_LOGS) {
+      eyes.setLogHandler(new ConsoleLogHandler(true))
+    }
     eyes.setStitchMode(StitchMode.CSS)
   })
 
@@ -23,12 +21,6 @@ describe('Check CSS Stitching', () => {
       width: 600,
       height: 500,
     })
-  })
-
-  it('with check window', async () => {
-    await driver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-    await eyes.check('Window', Target.window().fully())
-    return eyes.close()
   })
 
   it('works for pages with bottom popup', async () => {

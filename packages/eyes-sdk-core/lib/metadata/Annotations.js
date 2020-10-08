@@ -1,14 +1,15 @@
 'use strict'
 
-const {GeneralUtils, Region, FloatingMatchSettings} = require('@applitools/eyes-common')
+const {GeneralUtils, Region, FloatingMatchSettings} = require('../..')
 
 class Annotations {
   /**
-   * @param {FloatingMatchSettings[]|object[]} floating
-   * @param {Region[]|object[]} ignore
-   * @param {Region[]|object[]} strict
-   * @param {Region[]|object[]} content
-   * @param {Region[]|object[]} layout
+   * @param regions
+   * @param {FloatingMatchSettings[]|object[]} regions.floating
+   * @param {Region[]|object[]} regions.ignore
+   * @param {Region[]|object[]} regions.strict
+   * @param {Region[]|object[]} regions.content
+   * @param {Region[]|object[]} regions.layout
    */
   constructor({floating, ignore, strict, content, layout} = {}) {
     if (ignore && ignore.length > 0 && !(ignore[0] instanceof Region)) {
@@ -123,4 +124,4 @@ class Annotations {
   }
 }
 
-exports.Annotations = Annotations
+module.exports = Annotations

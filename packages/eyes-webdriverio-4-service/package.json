@@ -1,36 +1,34 @@
 {
   "name": "@applitools/eyes-webdriverio4-service",
-  "version": "1.0.3",
+  "version": "1.4.3",
   "description": "",
   "keywords": [
     "wdio-service"
   ],
   "main": "index.js",
   "scripts": {
-    "vv": "bongo --verify-versions",
-    "vc": "bongo --verify-changelog",
-    "uc": "bongo --update-changelog",
+    "lint": "eslint . --ext .js",
     "test": "wdio test/wdio.conf.js",
-    "postpublish": "git push; git push --tags",
-    "preversion": "yarn vv && yarn vc",
-    "version": "yarn uc && git add CHANGELOG.md"
+    "preversion": "bongo preversion && yarn test",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@applitools/eyes.webdriverio": "2.11.6"
+    "@applitools/eyes.webdriverio": "2.20.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.1.0",
-    "chromedriver": "^80.0.0",
+    "@applitools/sdk-release-kit": "0.2.2",
+    "chromedriver": "^83.0.0",
     "mocha": "^6.2.2",
+    "wdio-chromedriver-service": "^0.1.5",
     "wdio-dot-reporter": "0.0.10",
     "wdio-mocha-framework": "^0.6.4",
-    "wdio-selenium-standalone-service": "0.0.12",
     "wdio-sync": "^0.7.3",
     "webdriverio": "^4.14.4"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=8.9.0 <12"
   }
 }

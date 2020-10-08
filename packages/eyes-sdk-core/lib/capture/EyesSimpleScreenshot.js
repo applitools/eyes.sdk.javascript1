@@ -1,16 +1,14 @@
 'use strict'
 
-const {
-  ArgumentGuard,
-  CoordinatesType,
-  Location,
-  RectangleSize,
-  Region,
-} = require('@applitools/eyes-common')
+const ArgumentGuard = require('../utils/ArgumentGuard')
+const CoordinatesType = require('../geometry/CoordinatesType')
+const Location = require('../geometry/Location')
+const RectangleSize = require('../geometry/RectangleSize')
+const Region = require('../geometry/Region')
 
-const {OutOfBoundsError} = require('../errors/OutOfBoundsError')
-const {CoordinatesTypeConversionError} = require('../errors/CoordinatesTypeConversionError')
-const {EyesScreenshot} = require('./EyesScreenshot')
+const OutOfBoundsError = require('../errors/OutOfBoundsError')
+const CoordinatesTypeConversionError = require('../errors/CoordinatesTypeConversionError')
+const EyesScreenshot = require('./EyesScreenshot')
 
 /**
  * Encapsulates a screenshot taken by the images SDK.
@@ -179,4 +177,4 @@ class EyesSimpleScreenshot extends EyesScreenshot {
   }
 }
 
-exports.EyesSimpleScreenshot = EyesSimpleScreenshot
+module.exports = EyesSimpleScreenshot

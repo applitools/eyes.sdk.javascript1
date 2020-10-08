@@ -1,7 +1,30 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.3.4)
+- updated to @applitools/eyes-sdk-core@12.2.5 (from 11.5.0)
+- remove yarn workspaces
+- updated to @applitools/eyes-sdk-core@12.2.6 (from 12.2.5)
 
+
+## 4.14.2 - 2020/7/8
+
+- updated to @applitools/eyes-sdk-core@11.3.4 (from 11.3.0)
+
+## 4.14.1 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.0 (from 11.0.5)
+
+## 4.14.0 - 2020/6/9
+
+- updated to @applitools/eyes-sdk-core@11.0.2 (from v10.2.0)
+- updated to @applitools/eyes-sdk-core@11.0.4 (from v11.0.2)
+- updated to @applitools/eyes-sdk-core@11.0.5 (from 11.0.4)
+
+## 4.13.0 - 2020/5/19
+
+- Support for AccessibilityGuidelinesVersion
+- updated to @applitools/eyes-sdk-core@10.2.0 from 9.0.2
 
 ## 4.12.38
 

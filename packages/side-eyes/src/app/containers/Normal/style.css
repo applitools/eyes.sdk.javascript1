@@ -46,3 +46,11 @@
 .ReactModal__Overlay--after-open {
   background-color: transparent !important;
 }
+
+.accessibility-option {
+  padding: 3px 50px 5px 27px;
+}
+
+#accessibility-options {
+  padding-top: 5px;
+}

@@ -43,12 +43,7 @@ describe('renderStories', () => {
     await Promise.resolve();
     const getStoryData = async ({story, storyUrl, page}) => {
       await delay(10);
-      return {
-        cdt: `cdt_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`,
-        resourceUrls: `resourceUrls_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`, // eslint-disable-line prettier/prettier
-        resourceContents: `resourceContents_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`, // eslint-disable-line prettier/prettier
-        frames: `frames_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`,
-      };
+      return `snapshot_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`;
     };
 
     const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
@@ -83,19 +78,20 @@ describe('renderStories', () => {
         const storyUrl = `http://something/iframe.html?eyes-storybook=true&selectedKind=${story.kind}&selectedStory=${story.name}`;
         const page = i % 3 === 0 ? 1 : i % 3 === 1 ? 2 : 3;
         return {
-          cdt: `cdt_${story.name}_${story.kind}_${storyUrl}_${page}`,
-          resourceUrls: `resourceUrls_${story.name}_${story.kind}_${storyUrl}_${page}`,
-          resourceContents: `resourceContents_${story.name}_${story.kind}_${storyUrl}_${page}`, // eslint-disable-line prettier/prettier
-          frames: `frames_${story.name}_${story.kind}_${storyUrl}_${page}`,
+          snapshot: `snapshot_${story.name}_${story.kind}_${storyUrl}_${page}`,
           story,
           url: storyUrl,
         };
       }),
     );
+    const expectedTitles = ['k1: s1', 'k2: s2', 'k3: s3', 'k4: s4', 'k5: s5', 'k6: s6', 'k7: s7'];
 
-    expect(results.map(result => result[0].arg).sort((a, b) => a.cdt.localeCompare(b.cdt))).to.eql(
-      expectedResults,
-    );
+    expect(results.map(r => r.title).sort()).to.eql(expectedTitles.sort());
+    expect(
+      results
+        .map(({resultsOrErr}) => resultsOrErr[0].arg)
+        .sort((a, b) => a.snapshot.localeCompare(b.snapshot)),
+    ).to.eql(expectedResults);
 
     expect(getEvents()).to.eql(['- Done 0 stories out of 7\n', '✔ Done 7 stories out of 7\n']);
   });
@@ -133,7 +129,8 @@ describe('renderStories', () => {
     ]);
 
     expect(_waitBeforeScreenshot).to.eql('wait_some_value');
-    expect(JSON.stringify(results[0][0].arg.story)).to.eql(
+    expect(results[0].title).to.eql('k1: s1');
+    expect(JSON.stringify(results[0].resultsOrErr[0].arg.story)).to.eql(
       JSON.stringify({
         name: 's1',
         kind: 'k1',
@@ -170,8 +167,9 @@ describe('renderStories', () => {
     const story = {name: 's1', kind: 'k1'};
     const results = await renderStories([story]);
 
-    expect(results[0]).to.be.an.instanceOf(Error);
-    expect(results[0].message).to.equal(
+    expect(results[0].title).to.eql('k1: s1');
+    expect(results[0].resultsOrErr).to.be.an.instanceOf(Error);
+    expect(results[0].resultsOrErr.message).to.equal(
       `[page 0] Failed to get story data for "${getStoryTitle(story)}". Error: bla`,
     );
 
@@ -205,9 +203,9 @@ describe('renderStories', () => {
 
     const story = {name: 's1', kind: 'k1'};
     const results = await renderStories([story]);
-
-    expect(results[0]).to.be.an.instanceOf(Error);
-    expect(results[0].message).to.equal('bla');
+    expect(results[0].title).to.eql('k1: s1');
+    expect(results[0].resultsOrErr).to.be.an.instanceOf(Error);
+    expect(results[0].resultsOrErr.message).to.equal('bla');
 
     expect(getEvents()).to.eql(['- Done 0 stories out of 1\n', '✖ Done 1 stories out of 1\n']);
   });
@@ -229,12 +227,7 @@ describe('renderStories', () => {
         const getStoryData = async ({story, storyUrl, page}) => {
           await delay(10);
           const location = await page.evaluate(() => window.location.href); // eslint-disable-line no-undef
-          return {
-            cdt: `cdt_${story.name}_${story.kind}_${storyUrl}_${location}`,
-            resourceUrls: `resourceUrls`,
-            resourceContents: `resourceContents`,
-            frames: `frames`,
-          };
+          return `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`;
         };
 
         const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
@@ -257,16 +250,13 @@ describe('renderStories', () => {
         const results = await renderStories([story]);
 
         const storyUrl = `http://something/iframe.html?eyes-storybook=true&selectedKind=${story.kind}&selectedStory=${story.name}`;
-
-        expect(results.map(result => result[0].arg)).to.eql([
+        expect(results[0].title).to.eql('k1: s1');
+        expect(results.map(({resultsOrErr}) => resultsOrErr[0].arg)).to.eql([
           {
             story,
             url: storyUrl,
-            cdt:
-              'cdt_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
-            resourceUrls: 'resourceUrls',
-            resourceContents: 'resourceContents',
-            frames: 'frames',
+            snapshot:
+              'snapshot_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
           },
         ]);
 
@@ -284,7 +274,8 @@ describe('renderStories', () => {
           initPage: async ({pageId}) => {
             const page = await browser.newPage();
             if (pageId === 1) {
-              await page.evaluate(() => (window.__failTest = true)); // eslint-disable-line no-undef
+              // eslint-disable-next-line no-undef
+              await page.evaluate(() => (window.__failTest = true));
             }
             return page;
           },
@@ -307,12 +298,7 @@ describe('renderStories', () => {
           } else {
             await delay(100);
             const location = await page.evaluate(() => window.location.href); // eslint-disable-line no-undef
-            return {
-              cdt: `cdt_${story.name}_${story.kind}_${storyUrl}_${location}`,
-              resourceUrls: `resourceUrls`,
-              resourceContents: `resourceContents`,
-              frames: `frames`,
-            };
+            return `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`;
           }
         };
 
@@ -340,17 +326,18 @@ describe('renderStories', () => {
         const expectedStory = {
           story,
           url: storyUrl,
-          cdt:
-            'cdt_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
-          resourceUrls: 'resourceUrls',
-          resourceContents: 'resourceContents',
-          frames: 'frames',
+          snapshot:
+            'snapshot_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
         };
 
-        expect(results[0][0]).not.to.be.an.instanceOf(Error);
-        expect(results[0][0].arg).to.eql(expectedStory);
-        expect(results[1]).not.to.be.an.instanceOf(Error);
-        expect(results[1][0].arg).to.eql(expectedStory);
+        const resultsOrErr0 = results[0].resultsOrErr;
+        const resultsOrErr1 = results[1].resultsOrErr;
+        expect(results[0].title).to.eql('k1: s1');
+        expect(results[1].title).to.eql('k1: s1');
+        expect(resultsOrErr0[0]).not.to.be.an.instanceOf(Error);
+        expect(resultsOrErr0[0].arg).to.eql(expectedStory);
+        expect(resultsOrErr1).not.to.be.an.instanceOf(Error);
+        expect(resultsOrErr1[0].arg).to.eql(expectedStory);
 
         expect(getEvents()).to.eql(['- Done 0 stories out of 2\n', '✔ Done 2 stories out of 2\n']);
       } finally {
@@ -375,11 +362,11 @@ describe('renderStories', () => {
     const heavySnapshot = allocObjectBuffer(1024 * 1024 * 1); // 1 MB
     const getStoryData = async () => JSON.parse(heavySnapshot);
 
-    const renderStory = async ({cdt}) => {
+    const renderStory = async ({snapshot}) => {
       await new Promise(r => setTimeout(r, 0));
       return [
         {
-          arg: JSON.stringify(cdt).length,
+          arg: JSON.stringify(snapshot).length,
           getStatus: () => 'Passed',
         },
       ];

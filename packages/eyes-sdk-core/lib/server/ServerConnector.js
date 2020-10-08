@@ -1,24 +1,25 @@
 'use strict'
-
 const Axios = require('axios')
 const zlib = require('zlib')
-
-const {GeneralUtils, ArgumentGuard} = require('@applitools/eyes-common')
-
-const {RenderingInfo} = require('./RenderingInfo')
-const {RunningSession} = require('./RunningSession')
+const GeneralUtils = require('../utils/GeneralUtils')
+const ArgumentGuard = require('../utils/ArgumentGuard')
+const RenderingInfo = require('./RenderingInfo')
+const RunningSession = require('./RunningSession')
 const {
-  configAxiosHeaders,
-  configAxiosFromConfiguration,
+  configureAxios,
   delayRequest,
   handleRequestResponse,
   handleRequestError,
 } = require('./requestHelpers')
-const {TestResults} = require('../TestResults')
-const {MatchResult} = require('../match/MatchResult')
+const TestResults = require('../TestResults')
+const MatchResult = require('../match/MatchResult')
 
-const {RunningRender} = require('../renderer/RunningRender')
-const {RenderStatusResults} = require('../renderer/RenderStatusResults')
+const RunningRender = require('../renderer/RunningRender')
+const RenderStatusResults = require('../renderer/RenderStatusResults')
+
+/**
+ * @typedef {import('../geometry/Region').RegionObject} RegionObject
+ */
 
 // Constants
 const EYES_API_PATH = '/api/sessions'
@@ -46,6 +47,11 @@ const HTTP_STATUS_CODES = {
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
   GATEWAY_TIMEOUT: 504,
+}
+
+const AZURE_RETRY_CONFIG = {
+  delayBeforeRetry: 500,
+  retry: 5,
 }
 
 const REQUEST_GUID = GeneralUtils.guid()
@@ -80,7 +86,7 @@ class ServerConnector {
    * @param {Logger} logger
    * @param {Configuration} configuration
    */
-  constructor(logger, configuration) {
+  constructor({logger, configuration, getAgentId}) {
     this._logger = logger
     this._configuration = configuration
 
@@ -89,31 +95,37 @@ class ServerConnector {
 
     this._axios = Axios.create({
       withApiKey: true,
-      retry: 1,
+      retry: 5,
       repeat: 0,
+      delayBeforeRetry: 200,
       delayBeforePolling: DELAY_BEFORE_POLLING,
       createRequestId,
       proxy: undefined,
       headers: DEFAULT_HEADERS,
       timeout: DEFAULT_TIMEOUT_MS,
       responseType: 'json',
-      maxContentLength: 20 * 1024 * 1024, // 20 MB
+      maxContentLength: 200 * 1024 * 1024, // 200 MB
     })
 
     this._axios.interceptors.request.use(async config => {
       const axiosConfig = Object.assign({}, this._axios.defaults, config)
       axiosConfig.requestId = axiosConfig.createRequestId()
-      configAxiosHeaders({axiosConfig})
-      configAxiosFromConfiguration({
+      configureAxios({
         axiosConfig,
         configuration: this._configuration,
         logger: this._logger,
+        agentId: getAgentId(),
       })
+
+      const dataLength = axiosConfig.data && axiosConfig.data.length
+      const dataLengthStr = dataLength ? ` and body length ${axiosConfig.data.length}` : ''
 
       this._logger.verbose(
         `axios request interceptor - ${axiosConfig.name} [${axiosConfig.requestId}${
           axiosConfig.originalRequestId ? ` retry of ${axiosConfig.originalRequestId}` : ''
-        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(axiosConfig.params)}`,
+        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(
+          axiosConfig.params,
+        )}${dataLengthStr}`,
       )
 
       await delayRequest({axiosConfig, logger})
@@ -292,7 +304,6 @@ class ServerConnector {
     const url = this._renderingInfo.getResultsUrl().replace('__random__', id)
     const config = {
       name: 'uploadScreenshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: screenshot,
@@ -301,6 +312,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'content-type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)
@@ -511,7 +523,7 @@ class ServerConnector {
     const isBatch = Array.isArray(renderRequest)
     const config = {
       name: 'render',
-      widthApiKey: false,
+      withApiKey: false,
       method: 'POST',
       url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/render'),
       headers: {
@@ -554,7 +566,7 @@ class ServerConnector {
 
     const config = {
       name: 'renderCheckResource',
-      widthApiKey: false,
+      withApiKey: false,
       method: 'HEAD',
       url: GeneralUtils.urlConcat(
         this._renderingInfo.getServiceUrl(),
@@ -592,7 +604,6 @@ class ServerConnector {
     ArgumentGuard.notNull(runningRender, 'runningRender')
     ArgumentGuard.notNull(resource, 'resource')
     ArgumentGuard.notNull(resource.getContent(), 'resource.getContent()')
-    // eslint-disable-next-line max-len
     this._logger.verbose(
       `ServerConnector.putResource called with resource#${resource.getSha256Hash()} for render: ${runningRender}`,
     )
@@ -627,7 +638,11 @@ class ServerConnector {
       return true
     }
 
-    throw new Error(`ServerConnector.putResource - unexpected status (${response.statusText})`)
+    throw new Error(
+      `ServerConnector.putResource - unexpected status (${
+        response.statusText
+      }) for resource ${resource.getUrl() || ''} ${resource.getContentType()}`,
+    )
   }
 
   /**
@@ -699,7 +714,6 @@ class ServerConnector {
 
     const config = {
       name: 'postDomSnapshot',
-      retry: 3,
       method: 'PUT',
       url,
       data: zlib.gzipSync(Buffer.from(domJson)),
@@ -708,6 +722,7 @@ class ServerConnector {
         'x-ms-blob-type': 'BlockBlob',
         'Content-Type': 'application/octet-stream',
       },
+      ...AZURE_RETRY_CONFIG,
     }
 
     const response = await this._axios.request(config)
@@ -738,6 +753,78 @@ class ServerConnector {
       throw new Error(`ServerConnector.getUserAgents - unexpected status (${response.statusText})`)
     }
   }
+
+  /**
+   * Visual locators
+   * @template {string} TLocatorName
+   * @param {Object} visualLocatorData
+   * @param {string} visualLocatorData.appName
+   * @param {string} visualLocatorData.imageUrl
+   * @param {Readonly<TLocatorName[]>} visualLocatorData.locatorNames
+   * @param {string} visualLocatorData.firstOnly
+   * @return {Promise<{[TKey in TLocatorName]: RegionObject[]}>}
+   */
+  async postLocators(visualLocatorData) {
+    ArgumentGuard.notNull(visualLocatorData, 'visualLocatorData')
+    this._logger.verbose(
+      `ServerConnector.postLocators called with ${JSON.stringify(visualLocatorData)}`,
+    )
+
+    const config = {
+      name: 'postLocators',
+      method: 'POST',
+      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), 'api/locators/locate'),
+      data: visualLocatorData,
+    }
+
+    const response = await this._axios.request(config)
+    const validStatusCodes = [HTTP_STATUS_CODES.OK]
+    if (validStatusCodes.includes(response.status)) {
+      this._logger.verbose('ServerConnector.postLocators - post succeeded', response.data)
+      return response.data
+    }
+
+    throw new Error(`ServerConnector.postLocators - unexpected status (${response.statusText})`)
+  }
+
+  async getEmulatedDevicesSizes() {
+    this._logger.verbose(`ServerConnector.getEmulatedDevicesSizes`)
+
+    const config = {
+      name: 'getEmulatedDevicesSizes',
+      method: 'GET',
+      withApiKey: false,
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/emulated-devices-sizes'),
+    }
+
+    const response = await this._axios.request(config)
+    if (response.status === HTTP_STATUS_CODES.OK) {
+      return response.data
+    } else {
+      throw new Error(
+        `ServerConnector.getEmulatedDevicesSizes - unexpected status (${response.statusText})`,
+      )
+    }
+  }
+
+  async getIosDevicesSizes() {
+    this._logger.verbose(`ServerConnector.getIosDevicesSizes`)
+
+    const config = {
+      name: 'getIosDevicesSizes',
+      method: 'GET',
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/ios-devices-sizes'),
+    }
+
+    const response = await this._axios.request(config)
+    if (response.status === HTTP_STATUS_CODES.OK) {
+      return response.data
+    } else {
+      throw new Error(
+        `ServerConnector.getIosDevicesSizes - unexpected status (${response.statusText})`,
+      )
+    }
+  }
 }
 
-exports.ServerConnector = ServerConnector
+module.exports = ServerConnector

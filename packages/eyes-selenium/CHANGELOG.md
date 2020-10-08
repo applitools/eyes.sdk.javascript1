@@ -3,6 +3,147 @@
 ## Unreleased
 
 
+## 4.46.0 - 2020/10/6
+
+- remove yarn workspaces
+- updated to @applitools/eyes-sdk-core@12.2.6 (from 12.2.4)
+- updated to @applitools/visual-grid-client@15.0.6 (from 15.0.4)
+- updated to @applitools/eyes-sdk-core@12.2.8 (from 12.2.6)
+- updated to @applitools/visual-grid-client@15.0.7 (from 15.0.6)
+- updated to @applitools/eyes-sdk-core@12.3.0 (from 12.2.8)
+- updated to @applitools/visual-grid-client@15.0.9 (from 15.0.7)
+
+## 4.45.3 - 2020/9/4
+
+- Fix a bug for Selenium 3 in the fallback for `getWindowRect` which was calling the wrong function [Trello 502](https://trello.com/c/3Dgvye5M)
+- updated to @applitools/eyes-sdk-core@12.2.3 (from 12.2.2)
+- updated to @applitools/visual-grid-client@15.0.3 (from 15.0.2)
+
+## 4.45.2 - 2020/9/1
+
+- updated to @applitools/eyes-sdk-core@12.2.2 (from 12.2.1)
+- updated to @applitools/visual-grid-client@15.0.2 (from 15.0.1)
+
+## 4.45.1 - 2020/9/1
+
+- updated to @applitools/eyes-sdk-core@12.2.1 (from 12.2.0)
+- updated to @applitools/visual-grid-client@15.0.1 (from 15.0.0)
+
+## 4.45.0 - 2020/8/30
+
+- added spec for extracting device name ([Trello](https://trello.com/c/qyf1baqT/464-wdio5-mobile-web-device-name-not-reported-on-dashboard))
+- updated to @applitools/eyes-sdk-core@12.2.0 (from 12.1.1)
+- updated to @applitools/visual-grid-client@15.0.0 (from 14.7.2)
+
+## 4.44.0 - 2020/8/6
+
+- updated to @applitools/eyes-sdk-core@12.1.0 (from 12.0.1)
+- updated to @applitools/visual-grid-client@14.7.1 (from 14.6.0)
+- updated to @applitools/eyes-sdk-core@12.1.1 (from 12.1.0)
+- updated to @applitools/visual-grid-client@14.7.2 (from 14.7.1)
+
+## 4.43.1 - 2020/7/26
+
+- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.4.1)
+- updated to @applitools/visual-grid-client@14.6.0 (from 14.5.15)
+
+## 4.43.0 - 2020/7/24
+
+- remove type definitions
+- updated to @applitools/eyes-sdk-core@11.4.1 (from 11.3.4)
+- updated to @applitools/visual-grid-client@14.5.15 (from 14.5.7)
+
+## 4.42.0 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.3 (from 11.2.2)
+- updated to @applitools/visual-grid-client@14.5.6 (from 14.5.2)
+- updated to @applitools/eyes-sdk-core@11.3.4 (from 11.3.3)
+- updated to @applitools/visual-grid-client@14.5.7 (from 14.5.6)
+
+## 4.41.0 - 2020/7/5
+
+- updated to @applitools/eyes-sdk-core@11.2.2 (from 11.2.1)
+- updated to @applitools/visual-grid-client@14.5.2 (from 14.5.1)
+
+## 4.40.0 - 2020/6/30
+
+- remove IosScreenOrientation ([Trello](https://trello.com/c/abSJ68Rl/409-ufg-safari-on-ios-orientations-changes))
+- updated to @applitools/eyes-sdk-core@11.1.0 (from 11.0.10)
+- updated to @applitools/visual-grid-client@14.5.0 (from 14.4.9)
+- updated to @applitools/eyes-sdk-core@11.2.1 (from 11.1.0)
+- updated to @applitools/visual-grid-client@14.5.1 (from 14.5.0)
+
+## 4.39.2 - 2020/6/17
+
+- updated to @applitools/eyes-sdk-core@11.0.10 (from 11.0.7)
+- updated to @applitools/visual-grid-client@14.4.9 (from 14.4.6)
+
+## 4.39.1 - 2020/6/13
+
+- updated to @applitools/eyes-sdk-core@11.0.7 (from 11.0.5)
+- updated to @applitools/visual-grid-client@14.4.6 (from 14.4.4)
+
+## 4.39.0 - 2020/6/9
+
+- added mobile web API support for VG
+- updated to @applitools/eyes-sdk-core@11.0.4
+- updated to @applitools/visual-grid-client@14.4.3
+- updated to @applitools/eyes-sdk-core@11.0.5 (from 11.0.4)
+- updated to @applitools/visual-grid-client@14.4.4 (from 14.4.3)
+
+## 4.38.0 - 2020/6/2
+
+- Unified core
+- updated to @applitools/eyes-sdk-core@11.0.2 (from v10.3.0)
+- updated to @applitools/visual-grid-client@14.4.1 (from v14.2.0)
+
+## 4.37.0 - 2020/5/19
+
+- Support for AccessibilityGuidelinesVersion
+- removed "source" attribute from VG checkWindow
+- updated to @applitools/eyes-sdk-core@10.2.0
+- updated to @applitools/visual-grid-client@14.1.0
+- updated to @applitools/dom-utils@4.7.17
+
+## 4.36.1 - 2020/5/17
+
+- fetching resources with "referer" header.
+- updated to @applitools/eyes-sdk-core@10.1.2
+- updated to @applitools/visual-grid-client@14.0.0
+
+## 4.36.0 - 2020/5/12
+
+- added devices to device emulation
+- updated to @applitools/eyes-sdk-core@10.1.1
+- updated to @applitools/dom-utils@4.7.16
+- updated to @applitools/visual-grid-client@13.8.0
+
+## 4.35.0 - 2020/4/27
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- updated to @applitools/eyes-sdk-core@9.2.1
+- updated to @applitools/visual-grid-client@13.7.2
+- updated to @applitools/dom-utils@4.7.14
+
+## 4.34.0 - 2020/4/26
+
+- added emulation devices
+- support typed selectors
+- support ignore, floating, strict, layout, content, accessibility regions for VG
+- fix returned value from `close` method ([Trello](https://trello.com/c/m6K2Ftd5/277-wdio5-difficulty-getting-test-results-object))
+- updated to @applitools/eyes-sdk-core@9.1.1
+- updated to @applitools/dom-utils@4.7.12
+- updated to @applitools/eyes-sdk-core@9.1.2
+- updated to @applitools/visual-grid-client@13.6.15
+
+## 4.33.31 - 2020/3/31
+
+- removed eyes-common dependency
+
+## 4.33.30 - 29/3/2020
+
+- update @applitools/dom-utils@4.7.10, @applitools/eyes-common@3.20.2, @applitools/visual-grid-client@13.6.11, @applitools/eyes-sdk-core@9.0.3
+
 ## 4.33.29
 
 - update @applitools/dom-snapshot@3.4.0 to get correct css in DOM snapshots ([Trello](https://trello.com/c/3BFtM4hx/188-hidden-spinners-in-text-field-are-visible-in-firefox), [Trello](https://trello.com/c/S4XT7ONp/192-vg-dom-snapshot-deletes-duplicate-keys-from-css-rules), [Trello](https://trello.com/c/mz8CKKB7/173-selector-not-seen-as-it-should-be-issue-with-css-variable), [Trello](https://trello.com/c/KZ25vktg/245-edge-screenshot-different-from-chrome-and-ff))

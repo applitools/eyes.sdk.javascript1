@@ -2,7 +2,49 @@
 
 ## Unreleased
 
-- upload domsnapshot directly to Azure [Trello](https://trello.com/c/ZCLJo8Fy/241-upload-dom-directly-to-azure)
+- remove yarn workspaces
+
+## 1.4.3 - 2020/7/24
+
+- updated to @applitools/eyes.webdriverio@2.20.0 (from 2.18.0)
+
+## 1.4.2 - 2020/6/29
+
+- updated to @applitools/eyes.webdriverio@2.18.0 (from 2.17.1)
+
+## 1.4.1 - 2020/6/18
+
+- added detailed docs in readme
+- updated to @applitools/eyes.webdriverio@2.17.1 (from 2.17.0)
+
+## 1.4.0 - 2020/6/9
+
+- updated to @applitools/eyes.webdriverio@2.17.0 (from 2.16.0)
+
+## 1.3.0 - 2020/6/2
+
+- Unified core
+- updated to @applitools/eyes.webdriverio@2.16.0 (from v2.15.0)
+
+## 1.2.0 - 2020/5/19
+
+- updated to @applitools/eyes.webdriverio@2.15.0
+
+## 1.1.0 - 2020/4/30
+
+- updated to @applitools/eyes.webdriverio@2.14.0
+
+## 1.0.6 - 2020/4/27
+
+- updated to @applitools/eyes.webdriverio@2.13.1
+
+## 1.0.5
+
+- update `@applitools/eyes.webdriverio` version to 2.12.6
+
+## 1.0.4
+
+- update `@applitools/eyes.webdriverio` version to 2.12.5
 
 ## [1.0.2] - 2019-11-09 
 ### Fixed

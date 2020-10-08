@@ -6,8 +6,7 @@ const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRe
 
 function createRenderRequests({
   url,
-  resources,
-  dom,
+  pages,
   browsers,
   renderInfo,
   sizeMode,
@@ -17,6 +16,7 @@ function createRenderRequests({
   noOffsetSelectors = [],
   offsetSelectors = [],
   sendDom,
+  visualGridOptions,
 }) {
   const selectorsToFindRegionsFor = calculateSelectorsToFindRegionsFor({
     sizeMode,
@@ -25,39 +25,52 @@ function createRenderRequests({
     offsetSelectors,
   })
 
-  return browsers.map(
-    ({width, height, name, deviceName, screenOrientation, deviceScaleFactor, mobile}) => {
-      const emulationInfo = createEmulationInfo({
-        deviceName,
-        screenOrientation,
-        deviceScaleFactor,
-        mobile,
+  return browsers.map((browser, index) => {
+    const {
+      width,
+      height,
+      name,
+      deviceName,
+      screenOrientation,
+      deviceScaleFactor,
+      mobile,
+      platform,
+      iosDeviceInfo,
+    } = browser
+    const emulationInfo = createEmulationInfo({
+      deviceName,
+      screenOrientation,
+      deviceScaleFactor,
+      mobile,
+      width,
+      height,
+    })
+    const filledBrowserName = iosDeviceInfo && !name ? 'safari' : name
+    const filledPlatform = iosDeviceInfo && !platform ? 'ios' : platform
+
+    return new RenderRequest({
+      webhook: renderInfo.getResultsUrl(),
+      stitchingService: renderInfo.getStitchingServiceUrl(),
+      url,
+      resources: Object.values(pages[index].allResources),
+      dom: pages[index].rGridDom,
+      renderInfo: new RenderInfo({
         width,
         height,
-      })
-
-      return new RenderRequest({
-        webhook: renderInfo.getResultsUrl(),
-        stitchingService: renderInfo.getStitchingServiceUrl(),
-        url,
-        resources,
-        dom,
-        renderInfo: new RenderInfo({
-          width,
-          height,
-          sizeMode,
-          selector,
-          region,
-          emulationInfo,
-        }),
-        platform: 'Linux',
-        browserName: name,
-        scriptHooks,
-        selectorsToFindRegionsFor,
-        sendDom,
-      })
-    },
-  )
+        sizeMode,
+        selector,
+        region,
+        emulationInfo,
+        iosDeviceInfo,
+      }),
+      browserName: filledBrowserName,
+      scriptHooks,
+      selectorsToFindRegionsFor,
+      sendDom,
+      platform: filledPlatform,
+      visualGridOptions,
+    })
+  })
 }
 
 module.exports = createRenderRequests

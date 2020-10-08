@@ -29,10 +29,7 @@ export default class VisualGridViewports extends React.Component {
       <React.Fragment>
         <div className="option-header">
           <div className="title">{this.props.name}</div>
-          <AddButton
-            onClick={this.props.modalOpen}
-            isSelected={this.props.modalIsOpen}
-          />
+          <AddButton onClick={this.props.modalOpen} isSelected={this.props.modalIsOpen} />
           <ViewportSelectionModal
             modalIsOpen={this.props.modalIsOpen}
             modalClose={this.props.modalClose}
@@ -44,10 +41,7 @@ export default class VisualGridViewports extends React.Component {
           />
         </div>
         {this.props.selectedOptions.length ? (
-          <VisualGridSelectedOptions
-            items={this.props.selectedOptions}
-            removeOption={this.props.removeOption}
-          />
+          <VisualGridSelectedOptions items={this.props.selectedOptions} removeOption={this.props.removeOption} />
         ) : (
           <div className="error-message">{this.props.errorMessage}</div>
         )}
@@ -110,16 +104,9 @@ class ViewportSelectionModal extends React.Component {
 
   deleteCustomViewport(id) {
     this.setState({
-      ['customViewportSizes']: this.state.customViewportSizes.filter(
-        viewport => viewport.id !== id
-      ),
+      ['customViewportSizes']: this.state.customViewportSizes.filter(viewport => viewport.id !== id),
     })
-    this.handleOptionChange(
-      this.generateDimensions(
-        this.state.customViewportSizes.find(size => size.id === id)
-      ),
-      false
-    )
+    this.handleOptionChange(this.generateDimensions(this.state.customViewportSizes.find(size => size.id === id)), false)
   }
 
   findNumber(input) {
@@ -137,25 +124,18 @@ class ViewportSelectionModal extends React.Component {
     if (isEnabled) {
       if (!this.isOptionSelected(dimensions)) {
         this.setState({
-          ['selectedViewportSizes']: [
-            ...this.state.selectedViewportSizes,
-            dimensions,
-          ],
+          ['selectedViewportSizes']: [...this.state.selectedViewportSizes, dimensions],
         })
       }
     } else {
       this.setState({
-        ['selectedViewportSizes']: this.state.selectedViewportSizes.filter(
-          option => option !== dimensions
-        ),
+        ['selectedViewportSizes']: this.state.selectedViewportSizes.filter(option => option !== dimensions),
       })
     }
   }
 
   isOptionSelected(dimensions) {
-    return !!this.state.selectedViewportSizes.filter(
-      option => option === dimensions
-    )[0]
+    return !!this.state.selectedViewportSizes.filter(option => option === dimensions)[0]
   }
 
   onViewportChange(id, width = '', height = '', selected = false) {
@@ -173,11 +153,7 @@ class ViewportSelectionModal extends React.Component {
     this.state.customViewportSizes.forEach(viewportSize => {
       if (viewportSize.width.length && viewportSize.height.length) {
         this.handleOptionChange(
-          this.generateDimensions(
-            undefined,
-            viewportSize.width,
-            viewportSize.height
-          ),
+          this.generateDimensions(undefined, viewportSize.width, viewportSize.height),
           viewportSize.selected
         )
       }
@@ -186,10 +162,7 @@ class ViewportSelectionModal extends React.Component {
 
   onViewportSubmit() {
     this.syncSelectedViewportSizes().then(() => {
-      this.props.onSubmit(
-        this.state.selectedViewportSizes,
-        this.state.customViewportSizes
-      )
+      this.props.onSubmit(this.state.selectedViewportSizes, this.state.customViewportSizes)
       this.props.modalClose()
     })
   }
@@ -222,9 +195,7 @@ class ViewportSelectionModal extends React.Component {
                   id={viewport.id}
                   width={viewport.width}
                   height={viewport.height}
-                  selected={this.isOptionSelected(
-                    this.generateDimensions(viewport)
-                  )}
+                  selected={this.isOptionSelected(this.generateDimensions(viewport))}
                   onViewportChange={this.onViewportChange.bind(this)}
                   deleteOption={this.deleteCustomViewport.bind(this)}
                 />
@@ -232,11 +203,7 @@ class ViewportSelectionModal extends React.Component {
             }, this)}
           </div>
         </div>
-        <FlatButton
-          className="confirm"
-          type="submit"
-          onClick={this.onViewportSubmit.bind(this)}
-        >
+        <FlatButton className="confirm" type="submit" onClick={this.onViewportSubmit.bind(this)}>
           Confirm
         </FlatButton>
       </Modal>

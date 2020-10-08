@@ -12,21 +12,15 @@ async function takeScreenshot({
   serverUrl,
   proxy,
   renderInfo,
-  cdt,
+  snapshot,
   url,
-  resourceUrls,
-  blobs,
-  frames,
   browsers = [{width: 1024, height: 768}],
   sizeMode = 'full-page',
-  // selector,
-  // region,
-  // scriptHooks,
+  selector,
+  region,
+  scriptHooks,
 }) {
-  const {resourceContents, frames: framesWithResources} = deserializeDomSnapshotResult({
-    blobs,
-    frames,
-  })
+  const snapshots = Array.isArray(snapshot) ? snapshot : Array(browsers.length).fill(snapshot)
 
   const renderingInfo = new RenderingInfo({
     serviceUrl: renderInfo.serviceUrl,
@@ -42,23 +36,22 @@ async function takeScreenshot({
     renderingInfo,
   })
 
-  const {rGridDom: dom, allResources: resources} = await createRGridDOMAndGetResourceMapping({
-    resourceUrls,
-    resourceContents,
-    cdt,
-    frames: framesWithResources,
-  })
+  const pages = await Promise.all(
+    snapshots.map(snapshot => {
+      const {resourceUrls, resourceContents, frames, cdt} = deserializeDomSnapshotResult(snapshot)
+      return createRGridDOMAndGetResourceMapping({resourceUrls, resourceContents, frames, cdt})
+    }),
+  )
 
   const renderRequests = createRenderRequests({
     url,
-    dom,
-    resources: Object.values(resources),
+    pages,
     browsers,
     renderInfo: renderingInfo,
     sizeMode,
-    // selector,
-    // region,
-    // scriptHooks,
+    selector,
+    region,
+    scriptHooks,
     sendDom: true,
   })
 

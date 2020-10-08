@@ -1,8 +1,8 @@
 'use strict'
 
 require('chromedriver')
-const {Builder, By} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {By} = require('selenium-webdriver')
+const {getDriver} = require('../coverage/custom/util/TestSetup')
 const {
   Eyes,
   Target,
@@ -15,10 +15,7 @@ const {
 let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes, batch
 describe('CheckFluent', () => {
   before(async function() {
-    driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(new ChromeOptions().headless())
-      .build()
+    driver = await getDriver('CHROME')
 
     batch = new BatchInfo()
     await driver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/')
@@ -31,7 +28,9 @@ describe('CheckFluent', () => {
       eyes = new Eyes()
     }
     eyes.setBatch(batch)
-    eyes.setLogHandler(new ConsoleLogHandler(false))
+    if (process.env.APPLITOOLS_SHOW_LOGS) {
+      eyes.setLogHandler(new ConsoleLogHandler(true))
+    }
     driver = await eyes.open(driver, this.test.parent.title, this.currentTest.title, {
       width: 700,
       height: 460,

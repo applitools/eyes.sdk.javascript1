@@ -15,6 +15,7 @@ function makePluginExport({startServer, config}) {
         eyesFailCypressOnDiff:
           config.failCypressOnDiff === undefined ? true : !!config.failCypressOnDiff,
         eyesTimeout: config.eyesTimeout,
+        eyesDisableBrowserFetching: !!config.disableBrowserFetching,
       };
       return Object.assign(eyesConfig, {eyesPort}, moduleExportsResult);
     };

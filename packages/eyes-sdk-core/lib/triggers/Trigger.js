@@ -26,4 +26,4 @@ Trigger.TriggerType = {
 }
 
 Object.freeze(Trigger.TriggerType)
-exports.Trigger = Trigger
+module.exports = Trigger

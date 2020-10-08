@@ -2,6 +2,43 @@
 
 Applitools Eyes SDK for [Storybook](http://storybook.js.org).
 
+### Table of contents
+
+- [Installation](#installation)
+  * [Install npm package](#install-npm-package)
+  * [Applitools API key](#applitools-api-key)
+- [Usage](#usage)
+  * [Configuring local storybook server](#configuring-local-storybook-server)
+  * [Standalone server](#standalone-server)
+  * [Command line arguments](#command-line-arguments)
+- [Concurrency](#concurrency)
+- [Advanced configuration](#advanced-configuration)
+  * [Method 1: Environment variables](#method-1--environment-variables)
+  * [Method 2: The `applitools.config.js` file](#method-2--the--applitoolsconfigjs--file)
+- [Configuring the browser](#configuring-the-browser)
+  * [Previous browser versions](#previous-browser-versions)
+  * [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
+  * [Device emulation](#device-emulation)
+- [Per component configuration](#per-component-configuration)
+  * [`include`](#include)
+  * [`variations`](#variations)
+  * [`waitBeforeScreenshot`](#waitbeforescreenshot)
+  * [`properties`](#properties)
+  * [`ignoreRegions`](#ignoreregions)
+  * [`floatingRegions`](#floatingregions)
+  * [`layoutRegions`](#layoutregions)
+  * [`contentRegions`](#contentregions)
+  * [`strictRegions`](#strictregions)
+  * [`accessibilityRegions`](#accessibilityregions)
+  * [`accessibilityValidation`](#accessibilityvalidation)
+  * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an--advanced-configuration---advanced-configuration)
+  * [`runBefore`](#runbefore)
+  * [`scriptHooks`](#scripthooks)
+    + [beforeCaptureScreenshot](#beforecapturescreenshot)
+- [Running Eyes-Storybook in Docker](#running-eyes-storybook-in-docker)
+- [Dealing with dynamic data](#dealing-with-dynamic-data)
+- [Troubleshooting](#troubleshooting)
+
 ## Installation
 
 ### Install npm package
@@ -16,7 +53,7 @@ npm install --save-dev @applitools/eyes-storybook
 
 In order to authenticate via the Applitools server, you need to supply the Eyes-Storybook SDK with the API key you got from Applitools. Read more about how to obtain the API key [here](https://applitools.com/docs/topics/overview/obtain-api-key.html).
 
-To to this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
+To do this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
 For example, on Linux/Mac:
 
 ```bash
@@ -38,38 +75,6 @@ If your project is using the default storybook config folder (i.e. `<project_fol
 ```bash
 npx eyes-storybook
 ```
-
-<br/><br/>
-
-### Index
-
-- [Configuring a local storybook server](#Configuring-local-storybook-server)
-- [Standalone server](#Standalone-server)
-- [Command line arguments](#Command-line-arguments)
-- [Concurrency](#Concurrency)
-- [Advanced configuration](#Advanced-configuration)
-- [Concurrency](#Concurrency)
-- [Advanced configuration](#Advanced-configuration)
-  - [Arguments](#Advanced-configuration)
-  - [Examples](#Method-1-Environment-variables)
-    - [Environment variables](#Method-1-Environment-variables)
-    - [The `applitools.config.js` file](#Method-2-The-applitoolsconfigjs-file)
-- [Configuring the browser](#Configuring-the-browser)
-  - [Device emulation](#Device-emulation)
-- [Per component configuration](#Per-component-configuration)
-  - [Global params set as per component params](#The-following-properties-are-supported)
-    - [include](#include)
-    - [variations](#variations)
-    - [waitBeforeScreenshot](#waitBeforeScreenshot)
-  - [Per component params](#ignore)
-    - [ignore](#ignore)
-    <!-- - [accessibility](#accessibility) -->
-    - [runBefore](#runBefore)
-- [Running Eyes-Storybook in Docker](#Running-Eyes-Storybook-in-Docker)
-- [Dealing with dynamic data](#Dealing-with-dynamic-data)
-- [Troubleshooting](#Troubleshooting)
-
-<br/><hr/><br/>
 
 ### Configuring local storybook server
 
@@ -126,7 +131,7 @@ If you are interested in speeding up your visual tests, contact sdr@applitools.c
 
 ## Advanced configuration
 
-In addition to command-line arguments, it's possible to define the following configuration for tests:
+In addition to command-line arguments, it's possible to define the following configuration parameteres for tests by using environment variables or the applitools.config.js file:
 
 | Property name             | Default value               | Description   |
 | -------------             |:-------------               |:-----------   |
@@ -159,7 +164,9 @@ In addition to command-line arguments, it's possible to define the following con
 | `ignoreBaseline`          | false                       |  |
 | `runInDocker`             | false                       | If you are having issues running the SDK in docker, set this flag to `true`. See more info [below](#running-eyes-storybook-in-docker) |
 | `puppeteerOptions`        | undefined                | Options to send to `puppeteer.launch`. This is a low-level configuration and should be used with great care. Example use `{ args: ['--no-sandbox'], headless: false, devtools: true}` |
+| `jsonFilePath`            | undefined                   | Directory path of a results file. If set, then a [JSON](https://www.json.org/json-en.html) file is created in this directory, the file is created with the name eyes.json and contains the Eyes test results. |
 | `tapFilePath`             | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the file is created with the name eyes.tap and contains the Eyes test results. |
+| `xmlFilePath`             | undefined                   | Directory path of a results file. If set, then a [XUnit XML](https://google.github.io/rich-test-results/xunitxml) file is created in this directory, the file is created with the name eyes.xml and contains the Eyes test results. |
 | `waitBeforeScreenshot`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeScreenshot.](#waitBeforeScreenshot)<br/>Note that we use Puppeteer's [page.waitFor()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagewaitforselectororfunctionortimeout-options-args), checkout it's API for more details. |
 | `include`                 | true                        | A predicate function specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind``` and ```parameters``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, parameters}) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration - include](#include). |
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component  configuration - variations](#variations).|
@@ -167,8 +174,16 @@ In addition to command-line arguments, it's possible to define the following con
 | `dontCloseBatches`        | false                       | If true, batches are not closed for notifyOnCompletion.|
 | `concurrency`             | 10                          | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
 | `readStoriesTimeout`      | 60000                       | The amount of time (in milliseconds) Eyes-Storybook waits for storybook to load. For old storybook versions 2 and 3, this is also the time it takes for Eyes-Storybook to acknowledge it is working on those versions. So it is recommended to make this value small (e.g. 3000) when working with Storybook version 2 or 3. |
+| `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
+| `properties`              | undefined                   | Adds custom properties for each test. These show up in Test Manager, and tests can be grouped by custom properties. By default, Eyes-Storybook adds 2 custom properties for each test: the **Component name** and **State** of each component. Adding more properties via this config param will **not** override these two properties.|
+| `ignoreRegions`           | undefined                   | An array of regions to ignore when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - ignoreRegions](#ignoreRegions)|
+| `floatingRegions`         | undefined                   | An array of regions to consider as floating when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - floatingRegions](#floatingRegions)|
+| `layoutRegions`           | undefined                   | An array of regions to consider as match level **Layout** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - layoutRegions](#layoutRegions)|
+| `strictRegions`           | undefined                   | An array of regions to consider as match level **Strict** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - strictRegions](#strictRegions)|
+| `contentRegions`          | undefined                   | An array of regions to consider as match level **Content** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - contentRegions](#contentRegions)|
+| `accessibilityRegions`    | undefined                   | An array of regions to validate accessibility when comparing the checkpoint screenshot with the baseline screenshot. Validation is according to the configured `accessibilityValidation`. For more information, see [per component  configuration - contentRegions](#contentRegions)|
+| `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`. For more information, see [per component  configuration - accessibilityValidation](#accessibilityValidation)|
 
-<!-- | `accessibilityLevel`      | None                        | The accessibility level to use for the screenshots. Possible values are `None`, `AA` and `AAA`. | -->
 There are 2 ways to specify test configuration:
 
 1) Environment variables
@@ -191,7 +206,6 @@ APPLITOOLS_NOTIFY_ON_COMPLETION
 ...
 // all other configuration variables apply as well..
 ```
-<!-- APPLITOOLS_ACCESSIBILITY_LEVEL -->
 
 ### Method 2: The `applitools.config.js` file
 
@@ -215,7 +229,8 @@ Possible values are:
 
 - `chrome`
 - `firefox`
-- `edge`
+- `edgechromium`
+- `edgelegacy`
 - `ie10`
 - `ie11`
 - `safari`
@@ -225,6 +240,8 @@ Possible values are:
 - `firefox-two-versions-back`
 - `safari-one-version-back`
 - `safari-two-versions-back`
+- `edgechromium-one-version-back`
+- `edgechromium-two-versions-back`
 
 ### Previous browser versions
 
@@ -260,11 +277,7 @@ module.exports = {
 
 Possible values for screen orientation are `landscape` and `portrait`, and if no value is specified, the default is `portrait`.
 
-The list of device names is taken from [chrome devtools predefined devices](https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json), and can be obtained by running the following command in a unix-based shell (installing [`jq`](https://stedolan.github.io/jq/) might be needed):
-
-```sh
-curl -s https://raw.githubusercontent.com/chromium/chromium/0aee4434a4dba42a42abaea9bfbc0cd196a63bc1/third_party/blink/renderer/devtools/front_end/emulated_devices/module.json | jq '.extensions[].device.title'
-```
+The list of device names is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/DeviceName.js
 
 In addition, it's possible to use chrome's device emulation with custom viewport sizes, pixel density and mobile mode, by passing `deviceScaleFactor` and `mobile` in addition to `width` and `height`. For example:
 
@@ -280,9 +293,25 @@ module.exports = {
 }
 ```
 
+### iOS device
+
+```js
+module.exports = {
+  browser: {
+    iosDeviceInfo: {
+      deviceName: 'iPhone XR',
+      screenOrientation: 'landscape', // optional, default: 'portrait'
+      iosVersion: 'latest' // optional, default: undefined (i.e. the default is determined by the Ultrafast grid)
+    },
+  }
+}
+```
+
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
+
 ## Per component configuration
 
-### _Only supported in Storybook version >= 4_
+**_Only supported in Storybook version >= 4_**
 
 There are two ways to provide configuration for a specific story, or a group of stories.
 
@@ -292,7 +321,7 @@ There are two ways to provide configuration for a specific story, or a group of 
 
 _Specifying a value locally in the story takes precedence over the global config value._
 
-#### The following properties are supported:
+**The following properties are supported:**
 
 ### `include`
 
@@ -349,31 +378,25 @@ storiesOf('Components with a waitBeforeScreenshot', module)
 
 _Note that the predicate option for `waitBeforeScreenshot` is currently not available in the per component configuration._
 
-### _The following parameters cannot be set as an [Advanced configuration](#advanced-configuration) :_
+### `properties`
 
-<!-- ### `accessibility`
+Adds custom properties for each test. These show up in Test Manager, and tests can be grouped by custom properties. By default, Eyes-Storybook adds 2 custom properties for each test: the **Component name** and **State** of each component. Adding more properties via this config param will **not** override these two properties.
 
-A single or an array of regions for accessibility checking. For example:
+For example:
 
 ```js
-storiesOf('Components with accessibility regions', module)
+storiesOf('Components with custom properties', module)
   .add(
     'Some story',
-    () => <div>
-      <span>I am visually perfect!<span>
-      <span className="check-me">this should be tested for accessibility</span>
-    {eyes: {
-      accessibility: [
-        {accessibilityType: 'RegularText', selector: '.check-me'},
-      ]
-    }}
-  )
-});
+    () => <span id="container" class="loading"></span>,
+    {eyes: { properties: [
+      {name: 'some prop #1', value: 'some value #1'},
+      {name: 'some prop #2', value: 'some value #2'},
+    ] }}
+  );
 ```
 
-Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`. -->
-
-### `ignore`
+### `ignoreRegions`
 
 A single or an array of regions to ignore when checking for visual differences. For example:
 
@@ -386,9 +409,168 @@ storiesOf('Components with ignored region', module)
         <span>I am visually perfect!</span>
         <span className="ignore-this">this should be ignored</span>
       </div>,
-    {eyes: { ignore: [{selector: '.ignore-this'}] }}
+    {eyes: {
+      ignoreRegions: [
+        {selector: '.ignore-this'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
   )
 ```
+
+### `floatingRegions`
+
+An array of regions to consider as floating when comparing the checkpoint screenshot with the baseline screenshot. For example:
+
+```js
+storiesOf('Components with floating region', module)
+  .add(
+    'Some story',
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="floating-region">this should be floating</span>
+      </div>,
+    {eyes: {
+      floatingRegions: [
+        { // by selector
+          selector: '.floating-region',
+          maxUpOffset: 10,
+          maxDownOffset: 20,
+          maxLeftOffset: 30,
+          maxRightOffset: 40,
+        },
+        { // by absolute coordinates
+          left: 10,
+          top: 20,
+          width: 200,
+          height: 80,
+          maxUpOffset: 10,
+          maxDownOffset: 20,
+          maxLeftOffset: 30,
+          maxRightOffset: 40,
+        }
+      ]}
+    }
+  )
+```
+
+### `layoutRegions`
+
+An array of regions to consider as match level **Layout** when comparing the checkpoint screenshot with the baseline screenshot. For example:
+
+```js
+storiesOf('Components with layout region', module)
+  .add(
+    'Some story',
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="layout-region">this should be compared with layout match level</span>
+      </div>,
+    {eyes: {
+      layoutRegions: [
+        {selector: '.layout-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
+  )
+```
+
+### `contentRegions`
+
+An array of regions to consider as match level **Content** when comparing the checkpoint screenshot with the baseline screenshot. For example:
+
+```js
+storiesOf('Components with content region', module)
+  .add(
+    'Some story',
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="content-region">this should be compared with content match level</span>
+      </div>,
+    {eyes: {
+      contentRegions: [
+        {selector: '.content-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
+  )
+```
+
+### `strictRegions`
+
+An array of regions to consider as match level **Strict** when comparing the checkpoint screenshot with the baseline screenshot. For example:
+
+```js
+storiesOf('Components with strict region', module)
+  .add(
+    'Some story',
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="strict-region">this should be compared with strict match level</span>
+      </div>,
+    {eyes: {
+      strictRegions: [
+        {selector: '.strict-region'}, // by css selector
+        {left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]}
+    }
+  )
+```
+
+### `accessibilityRegions`
+
+A single or an array of regions for accessibility checking. For example:
+
+```js
+storiesOf('Components with accessibility regions', module)
+  .add(
+    'Some story',
+    () =>
+      <div>
+        <span>I am visually perfect!</span>
+        <span className="check-me">this should be tested for accessibility</span>
+      </div>,
+    {eyes: {
+      accessibilityRegions: [
+        {accessibilityType: 'RegularText', selector: '.check-me'}, // by css selector
+        {accessibilityType: 'RegularText', left: 10, top: 20, width: 200, height: 80} // by absolute coordinates
+      ]
+    }}
+  )
+});
+```
+
+Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
+
+### `accessibilityValidation`
+
+The level and guidelines version that should be used when validation accesibility regions. For example:
+
+```js
+storiesOf('Components with accessibility regions', module)
+  .add(
+    'Some story',
+    () => <div>
+      <span>I am visually perfect!<span>
+      <span className="check-me">this should be tested for accessibility</span>
+    {eyes: {
+      accessibilityValidation: {
+        level: 'AA',
+        guidelinesVersion: 'WCAG_2_0'
+      }
+    }}
+  )
+});
+```
+
+Possible values for `level` are: `AA` and `AAA`.
+Possible values for `guidelinesVersion` are: `WCAG_2_0` and `WCAG_2_1`.
+
+### Parameters that cannot be set as an [Advanced configuration](#advanced-configuration)
 
 ### `runBefore`
 
@@ -415,6 +597,29 @@ storiesOf('UI components', module)
     },
   })
 ```
+
+### `scriptHooks`
+
+A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering. 
+An object with the following properties:
+
+  #### beforeCaptureScreenshot 
+  A script that runs after the page is loaded but before taking the screenshot. For example:
+
+
+  ```js
+  storiesOf('Components', module)
+    .add(
+      'Some story',
+      () =>
+        <div>Some Story</div>, { 
+          eyes: { 
+            scriptHooks: {
+              beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
+            }
+          }
+        })
+  ```
 
 ## Running Eyes-Storybook in Docker
 

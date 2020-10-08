@@ -45,12 +45,7 @@ export default {
           // Process JS with Babel.
           {
             test: /\.js$/,
-            include: [
-              path.resolve(__dirname, 'src'),
-              /\/node_modules\/@applitools\/visual-grid-client/,
-              path.resolve(__dirname, '..'),
-              /\/visual-grid-client/,
-            ],
+            include: [path.resolve(__dirname, 'src')],
             use: [
               {
                 loader: 'babel-loader',
@@ -131,6 +126,7 @@ export default {
     fs: 'empty',
     url: true,
     child_process: 'empty',
+    module: 'empty',
   },
   plugins: [
     new webpack.NamedModulesPlugin(),

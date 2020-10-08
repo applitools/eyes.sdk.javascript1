@@ -1,44 +1,45 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const {GeneralUtils} = require('../..')
 
-const {ActualAppOutput} = require('./ActualAppOutput')
-const {ExpectedAppOutput} = require('./ExpectedAppOutput')
-const {Branch} = require('./Branch')
-const {StartInfo} = require('./StartInfo')
-const {AppEnvironment} = require('../AppEnvironment')
+const ActualAppOutput = require('./ActualAppOutput')
+const ExpectedAppOutput = require('./ExpectedAppOutput')
+const Branch = require('./Branch')
+const StartInfo = require('./StartInfo')
+const AppEnvironment = require('../AppEnvironment')
 
 class SessionResults {
   /**
-   * @param {string} id
-   * @param {number} revision
-   * @param {string} runningSessionId
-   * @param {boolean} isAborted
-   * @param {boolean} isStarred
-   * @param {StartInfo|object} startInfo
-   * @param {string} batchId
-   * @param {string} secretToken
-   * @param {string} state
-   * @param {string} status
-   * @param {string} isDefaultStatus
-   * @param {string} startedAt
-   * @param {number} duration
-   * @param {boolean} isDifferent
-   * @param {AppEnvironment|object} env
-   * @param {Branch|object} branch
-   * @param {ExpectedAppOutput[]|object[]} expectedAppOutput
-   * @param {ActualAppOutput[]|object[]} actualAppOutput
-   * @param {string} baselineId
-   * @param {string} baselineRevId
-   * @param {string} scenarioId
-   * @param {string} scenarioName
-   * @param {string} appId
-   * @param {string} baselineModelId
-   * @param {string} baselineEnvId
-   * @param {AppEnvironment|object} baselineEnv
-   * @param {string} appName
-   * @param {string} baselineBranchName
-   * @param {boolean} isNew
+   * @param data
+   * @param {string} data.id
+   * @param {number} data.revision
+   * @param {string} data.runningSessionId
+   * @param {boolean} data.isAborted
+   * @param {boolean} data.isStarred
+   * @param {StartInfo|object} data.startInfo
+   * @param {string} data.batchId
+   * @param {string} data.secretToken
+   * @param {string} data.state
+   * @param {string} data.status
+   * @param {string} data.isDefaultStatus
+   * @param {string} data.startedAt
+   * @param {number} data.duration
+   * @param {boolean} data.isDifferent
+   * @param {AppEnvironment|object} data.env
+   * @param {Branch|object} data.branch
+   * @param {ExpectedAppOutput[]|object[]} data.expectedAppOutput
+   * @param {ActualAppOutput[]|object[]} data.actualAppOutput
+   * @param {string} data.baselineId
+   * @param {string} data.baselineRevId
+   * @param {string} data.scenarioId
+   * @param {string} data.scenarioName
+   * @param {string} data.appId
+   * @param {string} data.baselineModelId
+   * @param {string} data.baselineEnvId
+   * @param {AppEnvironment|object} data.baselineEnv
+   * @param {string} data.appName
+   * @param {string} data.baselineBranchName
+   * @param {boolean} data.isNew
    */
   constructor({
     id,
@@ -556,4 +557,4 @@ class SessionResults {
   }
 }
 
-exports.SessionResults = SessionResults
+module.exports = SessionResults

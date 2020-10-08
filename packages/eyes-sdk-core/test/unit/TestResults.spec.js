@@ -4,8 +4,8 @@ const assert = require('assert')
 
 const {
   TestResults,
-  TestAccessibilityStatus,
   AccessibilityLevel,
+  AccessibilityGuidelinesVersion,
   AccessibilityStatus,
   TestResultsStatus,
 } = require('../../index')
@@ -58,10 +58,11 @@ describe('TestResults', () => {
     tr.setStrictMatches(9)
     // tr.New = 10;
     tr.setStatus(TestResultsStatus.Failed)
-    const tas = new TestAccessibilityStatus()
-    tas.setLevel(AccessibilityLevel.AAA)
-    tas.setStatus(AccessibilityStatus.Passed)
-    tr.setAccessibilityStatus(tas)
+    tr.setAccessibilityStatus({
+      level: AccessibilityLevel.AAA,
+      version: AccessibilityGuidelinesVersion.WCAG_2_1,
+      status: AccessibilityStatus.Passed,
+    })
 
     assert.strictEqual(1, tr.getContentMatches())
     assert.strictEqual(2, tr.getExactMatches())
@@ -76,8 +77,8 @@ describe('TestResults', () => {
     assert.strictEqual(TestResultsStatus.Failed, tr.getStatus())
 
     assert.ok(tr.getAccessibilityStatus())
-    assert.strictEqual(AccessibilityLevel.AAA, tr.getAccessibilityStatus().getLevel())
-    assert.strictEqual(AccessibilityStatus.Passed, tr.getAccessibilityStatus().getStatus())
+    assert.strictEqual(AccessibilityLevel.AAA, tr.getAccessibilityStatus().level)
+    assert.strictEqual(AccessibilityStatus.Passed, tr.getAccessibilityStatus().status)
   })
 
   it('constructor with object', () => {
@@ -95,6 +96,7 @@ describe('TestResults', () => {
       hostApp: 'Chrome',
       accessibilityStatus: {
         status: 'Failed',
+        version: 'WCAG_2_1',
         level: 'AA',
       },
       hostDisplaySize: {
@@ -108,7 +110,10 @@ describe('TestResults', () => {
       isAborted: false,
       defaultMatchSettings: {
         matchLevel: 'Strict',
-        accessibilityLevel: 'None',
+        accessibilitySettings: {
+          level: AccessibilityLevel.AA,
+          version: AccessibilityGuidelinesVersion.WCAG_2_0,
+        },
         ignore: [],
         strict: [],
         content: [],
@@ -217,7 +222,7 @@ describe('TestResults', () => {
         '"https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/...","diffImage":' +
         '"https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/diff"}}],"steps":2,"matches":2,' +
         '"mismatches":0,"missing":0,"exactMatches":0,"strictMatches":0,"contentMatches":0,"layoutMatches":0,' +
-        '"noneMatches":0,"url":null,"accessibilityStatus":{"status":"Failed","level":"AA"}}',
+        '"noneMatches":0,"url":null,"accessibilityStatus":{"status":"Failed","version":"WCAG_2_1","level":"AA"}}',
     )
   })
 })

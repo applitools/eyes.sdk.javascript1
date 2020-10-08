@@ -8,12 +8,16 @@ function makeCreateRGridDOMAndGetResourceMapping({getAllResources}) {
     resourceUrls,
     resourceContents,
     frames = [],
-    fetchOptions,
+    userAgent,
+    referer,
+    proxySettings,
   }) {
     const resources = await getAllResources({
       resourceUrls,
       preResources: resourceContents,
-      fetchOptions,
+      userAgent,
+      referer,
+      proxySettings,
     })
     const allResources = Object.assign({}, resources)
 

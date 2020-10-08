@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" time="35.676">
+  <testsuite name="Coverage Tests" errors="0" failures="0" skipped="0" timestamp="2020-04-22T18:52:57" time="35.55" tests="1">
+    <testcase classname="Coverage Tests TestCheckRegionWithIgnoreRegion_Fluent_Scroll" name="Coverage Tests TestCheckRegionWithIgnoreRegion_Fluent_Scroll" time="31.218">
+    </testcase>
+  </testsuite>
+</testsuites>

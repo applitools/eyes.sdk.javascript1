@@ -12,4 +12,4 @@ class ScaleProvider {
   getScaleRatio() {}
 }
 
-exports.ScaleProvider = ScaleProvider
+module.exports = ScaleProvider

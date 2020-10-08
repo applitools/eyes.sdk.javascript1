@@ -36,11 +36,9 @@ export default class Panel extends React.Component {
       .then(({ state }) => {
         this.setState(state)
       })
-    browser.runtime
-      .sendMessage({ requestProject: true })
-      .then(({ project }) => {
-        this.setState({ projectId: project.id })
-      })
+    browser.runtime.sendMessage({ requestProject: true }).then(({ project }) => {
+      this.setState({ projectId: project.id })
+    })
     this.setExternalState = this.setExternalState.bind(this)
     this.visualCheckpointsChanged = this.visualCheckpointsChanged.bind(this)
     this.setSubmitting = this.setSubmitting.bind(this)
@@ -104,9 +102,7 @@ export default class Panel extends React.Component {
               Applitools account details are not set!
             </SpinnerBanner>
           ) : (
-            <SpinnerBanner state={SpinnerStates.ERROR}>
-              Verifying account details...
-            </SpinnerBanner>
+            <SpinnerBanner state={SpinnerStates.ERROR}>Verifying account details...</SpinnerBanner>
           ))}
         {this.state.mode === Modes.INVALID && (
           <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
@@ -114,14 +110,10 @@ export default class Panel extends React.Component {
           </SpinnerBanner>
         )}
         {this.state.mode === Modes.RECORD && (
-          <SpinnerBanner
-            state={SpinnerStates.SUCCESS}
-          >{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>
+          <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>
         )}
         {this.state.mode === Modes.PLAYBACK && (
-          <SpinnerBanner
-            state={SpinnerStates.SUCCESS}
-          >{`Running test: ${this.state.playback.testName}`}</SpinnerBanner>
+          <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Running test: ${this.state.playback.testName}`}</SpinnerBanner>
         )}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
@@ -135,12 +127,8 @@ export default class Panel extends React.Component {
             ) : (
               undefined
             ))}
-          {(this.state.mode === Modes.SETUP ||
-            this.state.mode === Modes.INVALID) && (
-            <Setup
-              isInvalid={this.state.mode === Modes.INVALID}
-              setSubmitMode={this.setSubmitting}
-            />
+          {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && (
+            <Setup isInvalid={this.state.mode === Modes.INVALID} setSubmitMode={this.setSubmitting} />
           )}
           {this.state.mode === Modes.RECORD && <Record />}
           {this.state.mode === Modes.PLAYBACK && (

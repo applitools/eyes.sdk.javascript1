@@ -57,6 +57,7 @@ function makeGetStoryData({
       .then(deserializeDomSnapshotResult);
 
     logger.log(`done getting data from story`, title);
+    logger.log('dom result: cdt', JSON.stringify(cdt));
     return {resourceUrls, resourceContents, cdt, frames};
 
     async function renderStoryLegacy() {

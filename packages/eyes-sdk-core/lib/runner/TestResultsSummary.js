@@ -1,9 +1,9 @@
 'use strict'
 
-const {ArgumentGuard, TypeUtils, GeneralUtils} = require('@applitools/eyes-common')
-const {TestFailedError} = require('../errors/TestFailedError')
-const {TestResultsStatus} = require('../TestResultsStatus')
-const {TestResultContainer} = require('./TestResultContainer')
+const {ArgumentGuard, TypeUtils, GeneralUtils} = require('../..')
+const TestFailedError = require('../errors/TestFailedError')
+const TestResultsStatus = require('../TestResultsStatus')
+const TestResultContainer = require('./TestResultContainer')
 
 /**
  * @implements {Iterable<TestResultContainer>}
@@ -109,4 +109,4 @@ class TestResultsSummary {
   }
 }
 
-exports.TestResultsSummary = TestResultsSummary
+module.exports = TestResultsSummary

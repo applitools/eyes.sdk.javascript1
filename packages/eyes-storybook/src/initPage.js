@@ -7,6 +7,8 @@ function makeInitPage({iframeUrl, config, browser, logger}) {
     const page = await browser.newPage();
     if (config.viewportSize) {
       await page.setViewport(config.viewportSize);
+      const viewportSize = await getViewportSize(page);
+      logger.log(`set viewportSize for page ${pageId}: ${viewportSize}`); // TODO remove
     }
     if (config.showLogs) {
       browserLog({
@@ -43,6 +45,16 @@ function makeInitPage({iframeUrl, config, browser, logger}) {
     }
     return page;
   };
+}
+
+// TODO remove
+async function getViewportSize(page) {
+  return JSON.stringify(
+    await page.evaluate(() => ({
+      width: window.innerWidth, // eslint-disable-line
+      height: window.innerHeight, // eslint-disable-line
+    })),
+  );
 }
 
 module.exports = makeInitPage;

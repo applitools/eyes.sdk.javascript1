@@ -1,14 +1,15 @@
 'use strict'
 
-const {GeneralUtils} = require('@applitools/eyes-common')
+const GeneralUtils = require('../utils/GeneralUtils')
 
 /**
  * The result of a window match by the agent.
  */
 class MatchResult {
   /**
-   * @param {boolean} [asExpected]
-   * @param {number} [windowId]
+   * @param {object} result
+   * @param {boolean} [result.asExpected]
+   * @param {number} [result.windowId]
    */
   constructor({asExpected, windowId} = {}) {
     this._asExpected = asExpected
@@ -58,4 +59,4 @@ class MatchResult {
   }
 }
 
-exports.MatchResult = MatchResult
+module.exports = MatchResult

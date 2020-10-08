@@ -1,7 +1,6 @@
 {
   "name": "@applitools/sdk-release-kit",
-  "private": true,
-  "version": "0.1.0",
+  "version": "0.4.1",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -13,7 +12,7 @@
     "bongo": "./src/cli/index.js"
   },
   "description": "Release Kit for Applitools SDKs",
-  "author": "David Haeffner <dhaeffner@gmail.com>",
+  "author": "Applitools team <team@applitools.com>",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -21,16 +20,28 @@
     "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.js"
+    "test": "mocha test/**/*.spec.js",
+    "lint": "eslint . --ext .js",
+    "deps": "bongo deps"
   },
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
-    "yargs": "^15.0.2",
-    "node-fetch": "^2.6.0"
+    "@applitools/sdk-shared": "0.1.3",
+    "chalk": "3.0.0",
+    "lodash.pickby": "4.6.0",
+    "micromatch": "4.0.2",
+    "node-fetch": "2.6.0",
+    "yargs": "15.0.2"
   },
   "devDependencies": {
-    "mocha": "^6.2.2"
+    "chai": "^4.2.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mocha": "^6.2.2",
+    "prettier": "^2.1.2"
   }
 }

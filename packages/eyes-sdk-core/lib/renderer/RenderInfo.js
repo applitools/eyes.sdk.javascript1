@@ -1,19 +1,25 @@
 'use strict'
 
-const {GeneralUtils, Region} = require('@applitools/eyes-common')
+const {GeneralUtils, Region} = require('../..')
 
-const {EmulationInfo} = require('./EmulationInfo')
+const EmulationInfo = require('./EmulationInfo')
+
+/**
+ * @typedef {{iosDeviceInfo: {deviceName: IosDevieName, screenOrientation: (ScreenOrientation|undefined)})}} IosDeviceInfo
+ */
 
 class RenderInfo {
   /**
-   * @param {number} width
-   * @param {number} height
-   * @param {string} sizeMode
-   * @param {string} selector
-   * @param {Region|object} region
-   * @param {EmulationInfo|object} emulationInfo
+   * @param info
+   * @param {number} info.width
+   * @param {number} info.height
+   * @param {string} info.sizeMode
+   * @param {string} info.selector
+   * @param {Region|object} info.region
+   * @param {EmulationInfo|object} info.emulationInfo
+   * @param {IosDeviceInfo} info.iosDeviceInfo
    */
-  constructor({width, height, sizeMode, selector, region, emulationInfo} = {}) {
+  constructor({width, height, sizeMode, selector, region, emulationInfo, iosDeviceInfo} = {}) {
     if (region && !(region instanceof Region)) {
       region = new Region(region)
     }
@@ -28,6 +34,7 @@ class RenderInfo {
     this._selector = selector
     this._region = region
     this._emulationInfo = emulationInfo
+    this._iosDeviceInfo = iosDeviceInfo
   }
 
   /**
@@ -127,14 +134,25 @@ class RenderInfo {
     this._emulationInfo = value
   }
 
+  getIosDeviceInfo() {
+    return this._iosDeviceInfo
+  }
+
   /**
    * @override
    */
   toJSON() {
-    const obj = GeneralUtils.toPlain(this, ['_emulationInfo'])
+    const obj = GeneralUtils.toPlain(this, ['_emulationInfo', '_iosDeviceInfo'])
 
     if (this._emulationInfo) {
       obj.emulationInfo = this._emulationInfo.toJSON()
+    }
+
+    if (this._iosDeviceInfo) {
+      obj.iosDeviceInfo = GeneralUtils.toPlain(this._iosDeviceInfo, undefined, {
+        deviceName: 'name',
+        iosVersion: 'version',
+      })
     }
 
     // TODO remove this when rendering-grid changes x/y to left/top
@@ -155,4 +173,4 @@ class RenderInfo {
   }
 }
 
-exports.RenderInfo = RenderInfo
+module.exports = RenderInfo

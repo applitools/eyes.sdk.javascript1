@@ -1,6 +1,6 @@
 'use strict'
 
-const {FixedScaleProvider} = require('./FixedScaleProvider')
+const FixedScaleProvider = require('./FixedScaleProvider')
 
 /**
  * A scale provider which does nothing.
@@ -11,4 +11,4 @@ class NullScaleProvider extends FixedScaleProvider {
   }
 }
 
-exports.NullScaleProvider = NullScaleProvider
+module.exports = NullScaleProvider

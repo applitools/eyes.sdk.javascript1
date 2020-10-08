@@ -1,4 +1,7 @@
 @import 'imported-nested.css';
+@import '/predefined-status/404'; /* also referenced from test.html */
+@import '/predefined-status/403';
+@import '/predefined-status/hangup';
 
 @font-face {
   font-family: 'Shadows Into Light';

@@ -1,8 +1,6 @@
 'use strict'
-
-const {Region} = require('@applitools/eyes-common')
-
-const {CutProvider} = require('./CutProvider')
+const Region = require('../geometry/Region')
+const CutProvider = require('./CutProvider')
 
 class UnscaledFixedCutProvider extends CutProvider {
   /**
@@ -56,4 +54,4 @@ class UnscaledFixedCutProvider extends CutProvider {
   }
 }
 
-exports.UnscaledFixedCutProvider = UnscaledFixedCutProvider
+module.exports = UnscaledFixedCutProvider

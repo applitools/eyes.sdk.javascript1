@@ -1,13 +1,13 @@
-import {
-  deviceIds,
-  experimentalBrowsers,
-  browserIds,
-} from '../../app/components/VisualGridOptionSelector/options'
+import { experimentalBrowsers, browserIds, DeviceName } from '../../app/components/VisualGrid/options'
 import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
 export const maxExperimentalResolution = '1280x1024'
 const parsedMax = parseViewport(maxExperimentalResolution)
+
+function getDeviceId(deviceName) {
+  return Object.keys(DeviceName).find(key => DeviceName[key] === deviceName)
+}
 
 export function parseBrowsers(
   browsers = ['Chrome'],
@@ -18,15 +18,10 @@ export function parseBrowsers(
   const matrix = []
   let didRemoveResolution = false
   browsers.forEach(browser => {
-    const name = browser.toLowerCase()
+    const name = browser.replace(/ /, '').toLowerCase()
     viewports.forEach(viewport => {
       const { width, height } = parseViewport(viewport)
-      if (
-        !(
-          isExperimentalBrowser(name) &&
-          isBiggerResolution(parseViewport(viewport), parsedMax)
-        )
-      ) {
+      if (!(isExperimentalBrowser(name) && isBiggerResolution(parseViewport(viewport), parsedMax))) {
         const result = {
           width,
           height,
@@ -45,7 +40,7 @@ export function parseBrowsers(
       matrix.push({
         screenOrientation: orientation.toLowerCase(),
         deviceName: device,
-        deviceId: deviceIds[device],
+        deviceId: getDeviceId(device),
       })
     })
   })
@@ -79,9 +74,7 @@ export function parseRegion(region) {
 
 export function parseEnvironment(userAgent, viewport) {
   parser.setUA(userAgent)
-  return `${parser.getBrowser().name} ${parser.getOS().name} ${
-    viewport.width
-  }x${viewport.height}`
+  return `${parser.getBrowser().name} ${parser.getOS().name} ${viewport.width}x${viewport.height}`
 }
 
 export function parseApiServer(server) {

@@ -3,7 +3,7 @@
 
   var request = require('request'),
     SessionEventHandler = require('./SessionEventHandler'),
-    GeneralUtils = require('eyes.utils').GeneralUtils
+    GeneralUtils = require('@applitools/eyes-common-legacy').GeneralUtils
 
   // Constants
   var DEFAULT_CONNECTION_TIMEOUT_MS = 30 * 1000,

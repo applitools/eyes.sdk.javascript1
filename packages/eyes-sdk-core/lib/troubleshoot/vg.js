@@ -6,7 +6,7 @@ const {URL} = require('url')
 const https = require('https')
 const axios = require('axios')
 const {RGridResource, RunningRender} = require('../../index')
-const {curlGet, pexec, presult, getServer} = require('./utils')
+const {pexec, presult, getServer, getProxyStr, userConfig} = require('./utils')
 const {url: renderInfoUrl} = require('./eyes')
 require('@applitools/isomorphic-fetch')
 
@@ -19,49 +19,44 @@ const validateVgResult = (res, sha) => {
 }
 
 const getAuthToken = (() => {
-  let accessToken
+  let accessToken, didRun
   return async () => {
+    if (didRun) {
+      return accessToken
+    }
+
+    didRun = true
     try {
-      const stdout = await curlGet(renderInfoUrl)
+      const proxyParam = getProxyStr(userConfig.proxy) ? `-x ${getProxyStr(userConfig.proxy)}` : ''
+      const {stdout} = await pexec(`curl -s ${renderInfoUrl.href} ${proxyParam}`, {
+        maxBuffer: 10000000,
+      })
       accessToken = JSON.parse(stdout).accessToken
-      // eslint-disable-next-line no-empty
-    } catch (e) {}
+    } catch (_e) {}
     return accessToken
   }
 })()
 
-const getResource = (() => {
+const getResource = () => {
   const content = Buffer.from(
     JSON.stringify({
       resources: {},
       domNodes: [],
     }),
   )
-  let resource
-  return () => {
-    if (!resource) {
-      resource = new RGridResource({content, contentType: 'x-applitools-html/cdt'})
-    }
-    return resource
-  }
-})()
+  return new RGridResource({content, contentType: 'x-applitools-html/cdt'})
+}
 
-const getPutUrl = async () => {
-  const resource = await getResource()
+const getPutUrl = () => {
+  const resource = getResource()
   return `${VG_URL}/sha256/${resource.getSha256Hash()}?render-id=fake`
 }
 
 const VG = {
-  getCurlCmd: async () => {
-    const resource = getResource()
-    const data = resource.getContent()
-    const url = await getPutUrl()
-    return `curl -X PUT -H "Content-Type: application/json" -H "X-Auth-Token: ${await getAuthToken()}" -d '${data}' ${url}`
-  },
   testFetch: async () => {
-    const resource = await getResource()
+    const resource = getResource()
     const authToken = await getAuthToken()
-    const url = await getPutUrl()
+    const url = getPutUrl()
     const response = await global.fetch(url, {
       method: 'PUT',
       headers: {
@@ -73,6 +68,14 @@ const VG = {
     const res = await response.json()
     validateVgResult(res, resource.getSha256Hash())
   },
+  getCurlCmd: async () => {
+    const resource = getResource()
+    const data = resource.getContent()
+    const url = getPutUrl()
+    const authToken = await getAuthToken()
+    const proxyParam = getProxyStr(userConfig.proxy) ? `-x ${getProxyStr(userConfig.proxy)}` : ''
+    return `curl -X PUT -H "Content-Type: application/json" -H "X-Auth-Token: ${authToken}" -d '${data}' ${url} ${proxyParam}`
+  },
   testCurl: async () => {
     const resource = getResource()
     const cmd = await VG.getCurlCmd()
@@ -82,7 +85,7 @@ const VG = {
   testAxios: async () => {
     const resource = getResource()
     const authToken = await getAuthToken()
-    const url = await getPutUrl()
+    const url = getPutUrl()
     const options = {
       method: 'PUT',
       url,
@@ -102,12 +105,12 @@ const VG = {
     validateVgResult(res.data, resource.getSha256Hash())
   },
   testServer: async () => {
-    const resource = await getResource()
+    const resource = getResource()
     const rr = new RunningRender({renderId: 'fake'})
     const server = getServer() // Note: the vg url here comes from the server
     const [err, res] = await presult(server.renderPutResource(rr, resource))
     if (err || !res) {
-      throw new Error('bad VG result', err)
+      throw new Error(`bad VG result ${err}`)
     }
   },
   testHttps: async () => {
@@ -115,8 +118,8 @@ const VG = {
     const p = new Promise((_res, _rej) => ((res = _res), (rej = _rej)))
 
     const authToken = await getAuthToken()
-    const url = new URL(await getPutUrl())
-    const resource = await getResource()
+    const url = new URL(getPutUrl())
+    const resource = getResource()
     const options = {
       host: url.host,
       path: `${url.pathname}${url.search}`,
@@ -147,7 +150,7 @@ const VG = {
     req.end()
     return p
   },
-  url: VG_URL,
+  url: new URL(VG_URL),
 }
 
 module.exports = VG

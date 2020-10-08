@@ -38,4 +38,4 @@ class ScaleProviderFactory {
   }
 }
 
-exports.ScaleProviderFactory = ScaleProviderFactory
+module.exports = ScaleProviderFactory

@@ -2,8 +2,8 @@
 
 require('chromedriver')
 const {expect} = require('chai')
-const {Builder, By} = require('selenium-webdriver')
-const {Options: ChromeOptions} = require('selenium-webdriver/chrome')
+const {By} = require('selenium-webdriver')
+const spec = require('../../src/spec-driver')
 const {
   Eyes,
   VisualGridRunner,
@@ -14,19 +14,14 @@ const {
   Region,
 } = require('../../index')
 
-function buildDriver() {
-  return new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(new ChromeOptions().headless())
-    .build()
-}
-
-let /** @type {WebDriver} */ driver, /** @type {Eyes} */ eyes
+let driver, destroyDriver, eyes
 describe('VisualGridCheckFluent', () => {
   before(async () => {
-    driver = await buildDriver()
+    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
     eyes = new Eyes(new VisualGridRunner())
-    eyes.setLogHandler(new ConsoleLogHandler(false))
+    if (process.env.APPLITOOLS_SHOW_LOGS) {
+      eyes.setLogHandler(new ConsoleLogHandler(true))
+    }
     await driver.get('http://applitools.github.io/demo/TestPages/FramesTestPage/')
   })
 
@@ -82,17 +77,21 @@ describe('VisualGridCheckFluent', () => {
 
   afterEach(async () => eyes.abort())
 
-  after(() => driver.quit())
+  after(() => destroyDriver())
 })
 
 describe('Multi version browsers in Visual Grid', () => {
   before(async () => {
-    driver = await buildDriver()
+    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
   })
+
+  after(() => destroyDriver())
 
   beforeEach(async function() {
     eyes = new Eyes(new VisualGridRunner())
-    eyes.setLogHandler(new ConsoleLogHandler(false))
+    if (process.env.APPLITOOLS_SHOW_LOGS) {
+      eyes.setLogHandler(new ConsoleLogHandler(true))
+    }
     const configuration = eyes.getConfiguration()
     configuration.setAppName(this.test.parent.title)
     configuration.setTestName(this.currentTest.title)
@@ -106,6 +105,7 @@ describe('Multi version browsers in Visual Grid', () => {
       {width: 640, height: 480, name: BrowserType.CHROME_TWO_VERSIONS_BACK},
       {width: 640, height: 480, name: BrowserType.FIREFOX_TWO_VERSIONS_BACK},
       {width: 640, height: 480, name: BrowserType.SAFARI_TWO_VERSIONS_BACK},
+      {width: 640, height: 480, name: BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK},
     ]
     configuration.addBrowsers.apply(configuration, browsers)
     eyes.setConfiguration(configuration)

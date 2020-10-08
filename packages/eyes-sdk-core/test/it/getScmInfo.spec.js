@@ -4,7 +4,7 @@ const assert = require('assert')
 const getScmInfo = require('../../lib/getScmInfo')
 const {
   GeneralUtils: {pexec, presult},
-} = require('@applitools/eyes-common')
+} = require('../..')
 const {resolve} = require('path')
 
 describe('getScmInfo', () => {

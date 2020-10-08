@@ -31,4 +31,4 @@ class AppOutputWithScreenshot {
   }
 }
 
-exports.AppOutputWithScreenshot = AppOutputWithScreenshot
+module.exports = AppOutputWithScreenshot

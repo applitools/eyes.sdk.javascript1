@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
-const testServer = require('../util/testServer');
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const testStorybook = require('../util/testStorybook');
 const getStories = require('../../dist/getStories');
 const {delay: psetTimeout} = require('@applitools/functional-commons');
@@ -35,7 +35,7 @@ describe('getStories', () => {
             kind: 'Button',
             parameters: {
               someParam: 'i was here, goodbye',
-              eyes: {ignore: [{selector: '.ignore-this'}]},
+              eyes: {ignoreRegions: [{selector: '.ignore-this'}]},
             },
           },
           {

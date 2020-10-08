@@ -1,8 +1,9 @@
 'use strict'
 
 const {JSDOM} = require('@applitools/jsdom')
-const {makeExtractResourcesFromSvg, toUnAnchoredUri} = require('@applitools/dom-snapshot')
 const extractCssResources = require('./extractCssResources')
+const makeExtractResourcesFromSvg = require('./makeExtractResourcesFromSvg')
+const toUnAnchoredUri = require('./toUnAnchoredUri')
 const flat = require('./flat')
 
 let parser

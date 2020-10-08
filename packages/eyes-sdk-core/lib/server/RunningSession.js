@@ -1,20 +1,19 @@
 'use strict'
-
-const {GeneralUtils} = require('@applitools/eyes-common')
-
-const {RenderingInfo} = require('./RenderingInfo')
+const {GeneralUtils} = require('../..')
+const RenderingInfo = require('./RenderingInfo')
 
 /**
  * Encapsulates data for the session currently running in the agent.
  */
 class RunningSession {
   /**
-   * @param {string} id
-   * @param {string} sessionId
-   * @param {string} batchId
-   * @param {string} baselineId
-   * @param {string} url
-   * @param {RenderingInfo|object} renderingInfo
+   * @param session
+   * @param {string} session.id
+   * @param {string} session.sessionId
+   * @param {string} session.batchId
+   * @param {string} session.baselineId
+   * @param {string} session.url
+   * @param {RenderingInfo|object} session.renderingInfo
    */
   constructor({id, sessionId, batchId, baselineId, url, renderingInfo, isNew} = {}) {
     if (renderingInfo && !(renderingInfo instanceof RenderingInfo)) {
@@ -143,4 +142,4 @@ class RunningSession {
   }
 }
 
-exports.RunningSession = RunningSession
+module.exports = RunningSession

@@ -7,13 +7,13 @@ const takeScreenshot = require('../../src/sdk/takeScreenshot')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const fetch = require('node-fetch')
 const {presult} = require('@applitools/functional-commons')
-const testServer = require('../util/testServer')
+const testServer = require('@applitools/sdk-shared/src/run-test-server')
 
 describe('takeScreenshot e2e', () => {
   let server, browser, page
 
   before(async () => {
-    server = await testServer({port: 3456})
+    server = await testServer({port: 3459})
     browser = await puppeteer.launch()
     page = await browser.newPage()
   })
@@ -34,22 +34,21 @@ describe('takeScreenshot e2e', () => {
     const processPageAndSerialize = `(${await getProcessPageAndSerialize()})()`
     await page.goto(website)
     const {cdt, url, resourceUrls, blobs, frames} = await page.evaluate(processPageAndSerialize)
-    const [err, [{imageLocation, renderId}]] = await presult(
+    const [err, result] = await presult(
       takeScreenshot({
         apiKey,
         showLogs: process.env.APPLITOOLS_SHOW_LOGS,
         renderInfo,
-        cdt,
+        snapshot: {cdt, resourceUrls, blobs, frames},
         url,
-        resourceUrls,
-        blobs,
-        frames,
         browsers: [{width: 1920, height: 1440}],
       }),
     )
 
     err && console.log(err)
     expect(err).to.be.undefined
+
+    const [{imageLocation, renderId}] = result
     expect(renderId).to.not.be.undefined
 
     console.log(imageLocation)

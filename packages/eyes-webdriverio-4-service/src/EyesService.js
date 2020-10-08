@@ -1,7 +1,8 @@
-/* eslint-disable no-undef */
+/* global browser */
 'use strict'
 
 const {Eyes, Target} = require('@applitools/eyes.webdriverio')
+const VERSION = require('../package.json').version
 
 const DEFAULT_VIEWPORT = {
   width: 800,
@@ -13,15 +14,14 @@ class EyesService {
    *
    * @param {Configuration} [config]
    */
-  // eslint-disable-next-line
-  constructor(config) {
+  constructor(_config) {
     this._eyes = new Eyes()
+    this._eyes.getBaseAgentId = () => `eyes.webdriverio-service/${VERSION}`
 
     this._appName = null
   }
 
-  // eslint-disable-next-line
-  beforeSession(config, caps) {
+  beforeSession(config, _caps) {
     const eyesConfig = config.eyes
     if (eyesConfig) {
       this._eyes.setConfiguration(eyesConfig)
@@ -34,8 +34,7 @@ class EyesService {
     this._eyes.setHideScrollbars(true)
   }
 
-  // eslint-disable-next-line
-  before(caps) {
+  before(_caps) {
     browser.addCommand('eyesCheck', (title, checkSettings = Target.window().fully()) => {
       return this._eyes.check(title, checkSettings)
     })
@@ -47,27 +46,33 @@ class EyesService {
     browser.addCommand('eyesGetConfiguration', () => {
       return this._eyes.getConfiguration()
     })
+
+    browser.addCommand('eyesSetConfiguration', configuration => {
+      return this._eyes.setConfiguration(configuration)
+    })
   }
 
   async beforeTest(test) {
+    const configuration = this._eyes.getConfiguration()
     if (!this._appName) {
-      this._eyes.getConfiguration().setAppName(test.parent)
+      configuration.setAppName(test.parent)
     }
 
-    this._eyes.getConfiguration().setTestName(test.title)
+    configuration.setTestName(test.title)
 
-    if (!this._eyes.getConfiguration().getViewportSize()) {
-      this._eyes.getConfiguration().setViewportSize(DEFAULT_VIEWPORT)
+    if (!configuration.getViewportSize()) {
+      configuration.setViewportSize(DEFAULT_VIEWPORT)
     }
+
+    this._eyes.setConfiguration(configuration)
 
     await global.browser.call(() => this._eyes.open(global.browser))
   }
 
-  // eslint-disable-next-line
-  async afterTest(exitCode, config, capabilities) {
+  // -disable-next-line
+  async afterTest(_exitCode, _config, _capabilities) {
     try {
-      // eslint-disable-next-line
-      const result = await browser.call(() => this._eyes.close(false))
+      await browser.call(() => this._eyes.close(false))
     } catch (e) {
       await browser.call(() => this._eyes.abortIfNotClosed())
     }
@@ -75,6 +80,10 @@ class EyesService {
 
   after() {
     // browser.call(() => this.eyes.abortIfNotClosed());
+  }
+
+  toJSON() {
+    return {}
   }
 }
 

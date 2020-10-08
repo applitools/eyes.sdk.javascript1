@@ -1,14 +1,17 @@
 'use strict'
 
-require('chromedriver') // eslint-disable-line node/no-unpublished-require
-const {Builder, Capabilities, By} = require('selenium-webdriver')
+const {Builder, By} = require('selenium-webdriver')
 const {Eyes, Target, ConsoleLogHandler} = require('../index') // should be replaced to '@applitools/eyes-selenium'
 
 ;(async () => {
   // Open a Chrome browser.
   const driver = new Builder()
-    // .usingServer('http://localhost:4444/wd/hub')
-    .withCapabilities(Capabilities.chrome())
+    .withCapabilities({
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: ['headless'],
+      },
+    })
     .build()
 
   // Initialize the eyes SDK and set your private API key.
@@ -17,22 +20,30 @@ const {Eyes, Target, ConsoleLogHandler} = require('../index') // should be repla
 
   try {
     // Start the test and set the browser's viewport size to 800x600.
-    await eyes.open(driver, 'Eyes Examples', 'My first Javascript test!', {width: 800, height: 600})
+    await eyes.open(driver, 'Eyes Examples', 'My first Javascript test!', {
+      width: 1200,
+      height: 800,
+    })
 
     // Navigate the browser to the "hello world!" web-site.
-    await driver.get('https://applitools.com/helloworld')
+    await driver.get('https://applitools.github.io/demo/TestPages/FramesTestPage/index.html')
 
-    // Visual checkpoint #1.
-    await eyes.check('Main Page', Target.window())
+    // find frame for future check
+    const frame1 = await driver.findElement(By.name('frame1'))
 
-    // Click the "Click me!" button.
-    await driver.findElement(By.css('button')).click()
-
-    // Visual checkpoint #2.
-    await eyes.check('Click!', Target.window())
+    // Visual checkpoints
+    await eyes.check('Viewport', Target.window())
+    await eyes.check('Full page', Target.window().fully())
+    await eyes.check('element', Target.region('#overflowing-div'))
+    await eyes.check('element fully', Target.region('#overflowing-div').fully())
+    await eyes.check('frame', Target.frame(frame1))
+    await driver.switchTo().defaultContent()
+    await eyes.check('frame fully', Target.frame('frame1').fully())
 
     // End the test.
     await eyes.close()
+  } catch (ex) {
+    console.log('Error in example script', ex)
   } finally {
     // Close the browser.
     await driver.quit()

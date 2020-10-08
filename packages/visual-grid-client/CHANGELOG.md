@@ -1,7 +1,338 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/eyes-sdk-core@12.3.1 (from 12.3.0)
 
+
+## 15.0.9 - 2020/10/6
+
+- updated to @applitools/eyes-sdk-core@12.3.0 (from 12.2.9)
+- support multiple versions of ios
+
+## 15.0.8 - 2020/9/28
+
+- updated to @applitools/eyes-sdk-core@12.2.9 (from 12.2.8)
+
+## 15.0.7 - 2020/9/24
+
+- remove yarn workspaces
+- updated to @applitools/eyes-sdk-core@12.2.8 (from 12.2.6)
+
+## 15.0.6 - 2020/9/23
+
+- updated to @applitools/eyes-sdk-core@12.2.6 (from 12.2.5)
+
+## 15.0.5 - 2020/9/17
+
+- updated to @applitools/eyes-sdk-core@12.2.5 (from 12.2.4)
+
+## 15.0.4 - 2020/9/15
+
+- updated to @applitools/eyes-sdk-core@12.2.4 (from 12.2.3)
+
+## 15.0.3 - 2020/9/2
+
+- updated to @applitools/eyes-sdk-core@12.2.3 (from 12.2.2)
+
+## 15.0.2 - 2020/9/1
+
+- updated to @applitools/eyes-sdk-core@12.2.2 (from 12.2.1)
+
+## 15.0.1 - 2020/9/1
+
+- updated to @applitools/eyes-sdk-core@12.2.1 (from 12.2.0)
+
+## 15.0.0 - 2020/8/30
+
+- Breaking change: added support for multiple dom snapshots for `checkWindow`, `testWindow` and `takeScreenshot`
+- removed @applitools/dom-snapshot from dependencies
+- move `takeDomSnapshot` to `eyes-sdk-core`
+- updated to @applitools/eyes-sdk-core@12.2.0 (from 12.1.4)
+
+## 14.7.5 - 2020/8/13
+
+- updated to @applitools/eyes-sdk-core@12.1.4 (from 12.1.3)
+
+## 14.7.4 - 2020/8/12
+
+- updated to @applitools/eyes-sdk-core@12.1.3 (from 12.1.2)
+
+## 14.7.3 - 2020/8/10
+
+- updated to @applitools/eyes-sdk-core@12.1.2 (from 12.1.1)
+
+## 14.7.2 - 2020/8/6
+
+- updated to @applitools/eyes-sdk-core@12.1.1 (from 12.1.0)
+
+## 14.7.1 - 2020/8/6
+
+- updated to @applitools/dom-snapshot@4.0.3 (from 4.0.2)
+
+## 14.7.0 - 2020/8/6
+
+- support adoptedStyleSheets ([Trello](https://trello.com/c/cX4q0DzH) [Trello](https://trello.com/c/a22B3tUB))
+- add support for `visualGridOptions` in render requests
+- updated to @applitools/dom-snapshot@4.0.2 (from 4.0.1)
+- updated to @applitools/eyes-sdk-core@12.1.0 (from 12.0.1)
+
+## 14.6.4 - 2020/8/5
+
+- updated to @applitools/eyes-sdk-core@12.0.1 (from 12.0.0)
+
+## 14.6.3 - 2020/8/5
+
+- updated to @applitools/eyes-sdk-core@12.0.0 (from 11.5.1)
+
+## 14.6.2 - 2020/7/30
+
+- remove feature-flags package dependency
+- updated to @applitools/dom-snapshot@4.0.1 (from 4.0.0)
+
+## 14.6.1 - 2020/7/28
+
+- updated to @applitools/eyes-sdk-core@11.5.1 (from 11.5.0)
+
+## 14.6.0 - 2020/7/26
+
+- support non-200 resources ([Trello](https://trello.com/c/J5lBWutP))
+- updated to @applitools/dom-snapshot@4.0.0 (from 3.7.3)
+- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.4.1)
+
+## 14.5.15 - 2020/7/24
+
+- updated to @applitools/eyes-sdk-core@11.4.1 (from 11.4.0)
+
+## 14.5.14 - 2020/7/24
+
+- updated to @applitools/dom-snapshot@3.7.3 (from 3.7.2)
+- updated to @applitools/eyes-sdk-core@11.4.0 (from 11.3.9)
+
+## 14.5.13 - 2020/7/22
+
+- updated to @applitools/dom-snapshot@3.7.2 (from 3.7.1)
+- updated to @applitools/eyes-sdk-core@11.3.9 (from 11.3.8)
+
+## 14.5.12 - 2020/7/19
+
+- updated to @applitools/eyes-sdk-core@11.3.8 (from 11.3.7)
+
+## 14.5.11 - 2020/7/16
+
+- updated to @applitools/dom-snapshot@3.7.1 (from 3.7.0)
+
+## 14.5.10 - 2020/7/15
+
+- updated to @applitools/eyes-sdk-core@11.3.7 (from 11.3.6)
+
+## 14.5.9 - 2020/7/14
+
+- updated to @applitools/eyes-sdk-core@11.3.6 (from 11.3.5)
+
+## 14.5.8 - 2020/7/14
+
+- updated to @applitools/dom-snapshot@3.7.0 (from 3.6.2)
+- updated to @applitools/eyes-sdk-core@11.3.5 (from 11.3.4)
+
+## 14.5.7 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.4 (from 11.3.3)
+
+## 14.5.6 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.3 (from 11.3.2)
+
+## 14.5.5 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.2 (from 11.3.1)
+
+## 14.5.4 - 2020/7/7
+
+- updated to @applitools/dom-snapshot@3.6.2 (from 3.6.1)
+- updated to @applitools/eyes-sdk-core@11.3.1 (from 11.3.0)
+
+## 14.5.3 - 2020/7/7
+
+- updated to @applitools/eyes-sdk-core@11.3.0 (from 11.2.2)
+
+## 14.5.2 - 2020/7/5
+
+- fetch resources with tunneling agent if necessary  ([Trello](https://trello.com/c/a22B3tUB))
+- updated to @applitools/dom-snapshot@3.6.1 (from 3.6.0)
+- updated to @applitools/eyes-sdk-core@11.2.2 (from 11.2.1)
+
+## 14.5.1 - 2020/6/30
+
+- updated to @applitools/eyes-sdk-core@11.2.0 (from 11.1.0)
+- updated to @applitools/eyes-sdk-core@11.2.1 (from 11.2.0)
+
+## 14.5.0 - 2020/6/29
+
+- don't send user-agent header for google fonts
+- updated to @applitools/dom-snapshot@3.6.0 (from 3.5.4)
+
+## 14.4.10 - 2020/6/29
+
+- updated to @applitools/dom-snapshot@3.5.4 (from 3.5.3)
+- updated to @applitools/eyes-sdk-core@11.1.0 (from 11.0.10)
+
+## 14.4.9 - 2020/6/17
+
+- updated to @applitools/eyes-sdk-core@11.0.10 (from 11.0.9)
+
+## 14.4.8 - 2020/6/15
+
+- updated to @applitools/eyes-sdk-core@11.0.9 (from 11.0.8)
+
+## 14.4.7 - 2020/6/14
+
+- updated to @applitools/eyes-sdk-core@11.0.8 (from 11.0.7)
+
+## 14.4.6 - 2020/6/12
+
+- updated to @applitools/eyes-sdk-core@11.0.7 (from 11.0.6)
+
+## 14.4.5 - 2020/6/11
+
+- updated to @applitools/eyes-sdk-core@11.0.6 (from 11.0.5)
+
+ ## 14.4.4 - 2020/6/9
+
+- added chromeEmulationInfo and TS defs for iosDeviceInfo 
+- updated to @applitools/dom-snapshot@3.5.3 (from 3.5.2)
+- updated to @applitools/eyes-sdk-core@11.0.5 (from 11.0.4)
+
+## 14.4.3 - 2020/6/4
+
+- updated to @applitools/eyes-sdk-core@11.0.4 (from v11.0.3)
+
+## 14.4.2 - 2020/6/3
+
+- fixed 409 (Conflict) errors
+- updated to @applitools/eyes-sdk-core@11.0.3 (from v11.0.2)
+
+## 14.4.1 - 2020/6/2
+
+- updated to @applitools/eyes-sdk-core@11.0.2 (from v11.0.1)
+
+## 14.4.0 - 2020/6/2
+
+- Unified core
+- updated to @applitools/eyes-sdk-core@11.0.1 (from v10.3.1)
+
+## 14.3.1 - 2020/5/27
+
+- added edgechromium-two-versions-back to typescript configurations.
+
+## 14.3.0 - 2020/5/27
+
+- added edgechromium-two-versions-back to supported browsers.
+
+## 14.2.1 - 2020/5/26
+
+- updated to @applitools/eyes-sdk-core@10.3.1 (from v10.3.0)
+
+## 14.2.0 - 2020/5/24
+
+- updated to @applitools/eyes-sdk-core@10.3.0
+
+## 14.1.0 - 2020/5/19
+
+- support accessibilitySettings
+- updated to @applitools/eyes-sdk-core@10.2.0
+
+## 14.0.2 - 2020/5/18
+
+- fixed typescript definitions for open browser name parameter.
+
+## 14.0.1 - 2020/5/17
+
+- using "url" instead of "source" ad referer header and eyes test source.
+
+ ## 14.0.0 - 2020/5/17
+
+- BREAKING CHANGE - removed "referer" parameter from checkWindow, now using "source" 
+
+## 13.8.1 - 2020/5/13
+
+- updated to @applitools/eyes-sdk-core@10.1.2
+
+## 13.8.0 - 2020/5/11
+
+- updated to @applitools/eyes-sdk-core@10.1.1
+- add iosDeviceInfo support
+
+## 13.7.7 - 2020/5/7
+
+- updated to @applitools/dom-snapshot@3.5.2
+
+## 13.7.6 - 2020/5/4
+
+- updated to @applitools/eyes-sdk-core@10.0.1
+
+## 13.7.5 - 2020/4/30
+
+- updated to @applitools/eyes-sdk-core@10.0.0
+
+## 13.7.4 - 2020/4/30
+
+- updated to @applitools/eyes-sdk-core@9.3.0
+
+## 13.7.3 - 2020/4/30
+
+- updated to @applitools/dom-snapshot@3.5.0
+
+## 13.7.2 - 2020/4/27
+
+- add edgechromium to types
+
+## 13.7.1 - 2020/4/26
+
+- updated to @applitools/eyes-sdk-core@9.2.1
+
+## 13.7.0 - 2020/4/26
+
+- support edgelegacy, edgechromium, and edgechromium-one-version-back
+- updated to @applitools/eyes-sdk-core@9.2.0
+
+## 13.6.15 - 2020/4/23
+
+- updated to @applitools/eyes-sdk-core@9.1.2
+
+## 13.6.14 - 2020/4/19
+
+- updated to @applitools/dom-snapshot@3.4.5
+- updated to @applitools/eyes-sdk-core@9.1.1
+
+## 13.6.13 - 2020/4/7
+
+- add edgelegacy and edgechromium under flag
+- updated to @applitools/dom-snapshot@3.4.3
+- updated to @applitools/eyes-sdk-core@9.1.0
+
+## 13.6.12 - 2020/3/31
+
+- removed eyes-common dependency
+
+## 13.6.11
+
+- update @applitools/dom-snapshot@3.4.2
+
+## 13.6.10
+
+- avoid unnecessary requests to get batchInfo (due to wrong `isGeneratedId` value on batchInfo)
+
+## 13.6.9
+
+- revert compatibility with untyped selectors in selectorsToFindRegionsFor
+
+## 13.6.8
+
+- updated eyes-common and eyes-sdk-core
+
+## 13.6.7
+
+- support typed selectors in selectorsToFindRegionsFor
 
 ## 13.6.6
 

@@ -1,15 +1,12 @@
 'use strict'
-
-const {
-  ArgumentGuard,
-  GeneralUtils,
-  TypeUtils,
-  Region,
-  PerformanceUtils,
-  ImageMatchSettings,
-} = require('@applitools/eyes-common')
-
-const {MatchWindowData, Options} = require('./match/MatchWindowData')
+const ArgumentGuard = require('./utils/ArgumentGuard')
+const GeneralUtils = require('./utils/GeneralUtils')
+const TypeUtils = require('./utils/TypeUtils')
+const Region = require('./geometry/Region')
+const PerformanceUtils = require('./utils/PerformanceUtils')
+const ImageMatchSettings = require('./config/ImageMatchSettings')
+const MatchWindowData = require('./match/MatchWindowData')
+const Options = require('./match/ImageMatchOptions')
 
 const MATCH_INTERVAL = 500 // Milliseconds
 
@@ -114,7 +111,7 @@ class MatchWindowTask {
     const totalRegions = []
     for (let i = 0; i < regionProviders.length; i += 1) {
       try {
-        const regions = await regionProviders[i].getRegion(eyes, screenshot)
+        const regions = await regionProviders[i].getRegion(eyes._context, screenshot)
         totalRegions.push(...regions)
       } catch (e) {
         eyes.log('WARNING - region was out of bounds.', e)
@@ -172,11 +169,6 @@ class MatchWindowTask {
         matchLevel = this._eyes.getDefaultMatchSettings().getMatchLevel()
       }
 
-      let accessibilityLevel = checkSettings.getAccessibilityValidation()
-      if (TypeUtils.isNull(accessibilityLevel)) {
-        accessibilityLevel = this._eyes.getDefaultMatchSettings().getAccessibilityValidation()
-      }
-
       let ignoreCaret = checkSettings.getIgnoreCaret()
       if (TypeUtils.isNull(ignoreCaret)) {
         ignoreCaret = this._eyes.getDefaultMatchSettings().getIgnoreCaret()
@@ -197,14 +189,16 @@ class MatchWindowTask {
         ignoreDisplacements = this._eyes.getDefaultMatchSettings().getIgnoreDisplacements()
       }
 
+      const accessibilitySettings = this._eyes.getDefaultMatchSettings().getAccessibilitySettings()
+
       imageMatchSettings = new ImageMatchSettings({
         matchLevel,
-        accessibilityLevel,
         exact: null,
         ignoreCaret,
         useDom,
         enablePatterns,
         ignoreDisplacements,
+        accessibilitySettings,
       })
 
       await this._collectRegions(checkSettings, imageMatchSettings, screenshot)
@@ -503,4 +497,4 @@ class MatchWindowTask {
 }
 
 MatchWindowTask.MATCH_INTERVAL = MATCH_INTERVAL
-exports.MatchWindowTask = MatchWindowTask
+module.exports = MatchWindowTask
