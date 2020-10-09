@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- improve screenshots on native mobile apps (with Appium) so just the application viewport is captured ([PR 135](https://github.com/applitools/eyes.sdk.javascript1/pull/135))
 
 ## 12.3.1 - 2020/10/7
 
