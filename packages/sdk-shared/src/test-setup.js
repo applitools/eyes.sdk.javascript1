@@ -18,6 +18,36 @@ const SAUCE_CREDENTIALS = {
 }
 
 const DEVICES = {
+  'app-ios': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      appiumVersion: '1.17.1',
+      automationName: 'XCUITest',
+      platformName: 'iOS',
+      platformVersion: '13.2',
+      deviceName: 'iPhone 11 Simulator',
+      app: 'https://applitools.bintray.com/Examples/HelloWorldiOS_1_0.zip',
+      newCommandTimeout: 600,
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'app-android': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      appiumVersion: '1.16.0',
+      automationName: 'uiautomator2',
+      platformName: 'Android',
+      platformVersion: '8.0',
+      deviceName: 'Android Emulator',
+      app: 'https://applitools.bintray.com/Examples/app-debug.apk',
+      appPackage: 'com.applitoolstest',
+      appActivity: 'com.applitoolstest.ScrollActivity',
+      newCommandTimeout: 600,
+      ...SAUCE_CREDENTIALS,
+    },
+  },
   'Android Emulator': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,

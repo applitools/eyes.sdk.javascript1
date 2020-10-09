@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add native mobile app device configurations for iOS and Android
+- add custom coverage tests to check native app viewport screenshots
 
 ## 0.2.0 - 2020/10/7
 
