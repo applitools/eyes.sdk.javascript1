@@ -95,8 +95,6 @@ class FullPageCaptureAlgorithm {
       this._logger.verbose(`Entire size of region context: ${entireSize}`)
     } catch (err) {
       this._logger.log(`Error: Failed to extract entire size of region context ${err}`)
-      this._logger.log(`Using image size instead: ${image.getWidth()}x${image.getHeight()}`)
-      entireSize = new RectangleSize(image.getWidth(), image.getHeight())
     }
 
     // Saving the original position (in case we were already in the outermost frame).
@@ -110,6 +108,13 @@ class FullPageCaptureAlgorithm {
     this._logger.verbose('Getting top/left image...')
     let image = await this._imageProvider.getImage()
     await this._debugScreenshotsProvider.save(image, 'original')
+
+    if (!entireSize) {
+      this._logger.log(
+        `Using image size instead of entire size: ${image.getWidth()}x${image.getHeight()}`,
+      )
+      entireSize = new RectangleSize(image.getWidth(), image.getHeight())
+    }
 
     // FIXME - scaling should be refactored
     const scaleProvider = this._scaleProviderFactory.getScaleProvider(image.getWidth())
