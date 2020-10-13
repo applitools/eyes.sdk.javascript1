@@ -3,6 +3,7 @@
 ## Unreleased
 
 - improve screenshots on native mobile apps (with Appium) so just the application viewport is captured ([PR 135](https://github.com/applitools/eyes.sdk.javascript1/pull/135))
+- prevent taking a screenshot of the invisible part of the region ([Trello 544](https://trello.com/c/wJsUyBPE), [Trello 528](https://trello.com/c/iu2Png9p), [commit](https://github.com/applitools/eyes.sdk.javascript1/commit/c4adcdd74d479284075835e7a99489d8ba37825f))
 
 ## 12.3.1 - 2020/10/7
 

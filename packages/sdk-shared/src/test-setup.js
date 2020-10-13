@@ -252,8 +252,10 @@ function getEyes({
   configuration,
   branchName = 'master',
   showLogs,
+  runner,
 } = {}) {
-  const eyes = new Eyes(isVisualGrid ? new VisualGridRunner(10) : undefined)
+  runner = runner || (isVisualGrid ? new VisualGridRunner() : undefined)
+  const eyes = new Eyes(runner)
   const conf = Object.assign(
     {
       apiKey: process.env.APPLITOOLS_API_KEY_SDK,
@@ -264,6 +266,7 @@ function getEyes({
       matchTimeout: 0,
       stitchMode: isCssStitching ? StitchMode.CSS : StitchMode.SCROLL,
       saveNewTests: false,
+      concurrentSessions: 100,
     },
     configuration,
   )

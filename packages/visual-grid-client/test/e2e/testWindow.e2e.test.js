@@ -8,6 +8,7 @@ const testServer = require('@applitools/sdk-shared/src/run-test-server')
 const {presult} = require('@applitools/functional-commons')
 const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
+const testLogger = require('../util/testLogger')
 
 describe('testWindow', () => {
   let baseUrl, closeServer, testWindow
@@ -21,6 +22,7 @@ describe('testWindow', () => {
         showLogs: process.env.APPLITOOLS_SHOW_LOGS,
         apiKey,
         fetchResourceTimeout: 2000,
+        logger: testLogger,
       }),
     ).testWindow
   })

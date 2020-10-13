@@ -8,7 +8,7 @@ describe('createFramesPaths', () => {
   it('should return an empty array when no cross frames exist', () => {
     const snapshot = {
       frames: [],
-      crossFramesSelectors: [],
+      crossFrames: [],
     }
     const result = createFramesPaths({snapshot, logger})
     assert.deepStrictEqual(result, [])
@@ -16,40 +16,47 @@ describe('createFramesPaths', () => {
 
   it('should create frame paths for cross origin frames', () => {
     const snapshot = {
+      cdt: [{nodeName: 'IFRAME'}],
       frames: [],
-      crossFramesSelectors: ['selector1'],
+      crossFrames: [{selector: 'selector1', index: 0}],
     }
     const result = createFramesPaths({snapshot, logger})
     assert.deepStrictEqual(result, [
       {
-        parentSnapshot: snapshot,
         path: ['selector1'],
+        parentSnapshot: snapshot,
+        cdtNode: snapshot.cdt[0],
       },
     ])
   })
 
   it('should create frame paths for frames that have cross origin frames', () => {
     const frameSnapshot = {
-      cdt: 'frame',
+      cdt: [{nodeName: 'IFRAME-1'}, {nodeName: 'NOT-IFRAME'}, {nodeName: 'IFRAME-2'}],
       frames: [],
-      crossFramesSelectors: ['selector1', 'selector2'],
+      crossFrames: [
+        {selector: 'selector1', index: 0},
+        {selector: 'selector2', index: 2},
+      ],
       selector: 'selector0',
     }
     const snapshot = {
       cdt: 'top',
       frames: [frameSnapshot],
-      crossFramesSelectors: [],
+      crossFrames: [],
     }
 
     const result = createFramesPaths({snapshot, logger})
     assert.deepStrictEqual(result, [
       {
-        parentSnapshot: frameSnapshot,
         path: ['selector0', 'selector1'],
+        parentSnapshot: frameSnapshot,
+        cdtNode: frameSnapshot.cdt[0],
       },
       {
-        parentSnapshot: frameSnapshot,
         path: ['selector0', 'selector2'],
+        parentSnapshot: frameSnapshot,
+        cdtNode: frameSnapshot.cdt[2],
       },
     ])
   })

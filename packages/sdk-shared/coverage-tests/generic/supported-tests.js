@@ -332,4 +332,5 @@ module.exports = [
   {name: 'CheckWindowOnJsLayoutPageWithConfig', executionMode: {isVisualGrid: true}},
   {name: 'CheckRegionWithFractionalMetrics', executionMode: {isCssStitching: true}},
   {name: 'CheckHoveredRegionInViewport', executionMode: {isScrollStitching: true}},
+  {name: 'CheckPageWithBurgerMenuFully', executionMode: {isCssStitching: true}},
 ]

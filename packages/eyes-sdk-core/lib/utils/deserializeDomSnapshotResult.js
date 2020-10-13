@@ -8,7 +8,7 @@ function deserializeDomSnapshotResult(domSnapshotResult) {
   }
   delete ret.blobs
   delete ret.selector
-  delete ret.crossFramesSelectors
+  delete ret.crossFrames
   return ret
 }
 

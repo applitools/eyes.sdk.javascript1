@@ -63,20 +63,25 @@ async function takeDomSnapshot(logger, driver, options = {}) {
 
     const selectorMap = createFramesPaths({snapshot, logger})
 
-    for (const {path, parentSnapshot} of selectorMap) {
+    for (const {path, parentSnapshot, cdtNode} of selectorMap) {
       const references = path.reduce((parent, selector) => {
         return {reference: {type: 'css', selector}, parent}
       }, null)
 
-      try {
-        const frameContext = await context.context(references)
-        const contextSnapshot = await takeContextDomSnapshot(frameContext)
-        parentSnapshot.frames.push(contextSnapshot)
-      } catch (err) {
-        const pathMap = selectorMap.map(({path}) => path.join('->')).join(' | ')
-        logger.verbose(
-          `could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`,
-        )
+      const frameContext = await context
+        .context(references)
+        .then(context => context.focus())
+        .catch(err => {
+          const pathMap = selectorMap.map(({path}) => path.join('->')).join(' | ')
+          logger.verbose(
+            `could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`,
+            err,
+          )
+        })
+      if (frameContext) {
+        const frameSnapshot = await takeContextDomSnapshot(frameContext)
+        parentSnapshot.frames.push(frameSnapshot)
+        cdtNode.attributes.push({name: 'data-applitools-src', value: frameSnapshot.url})
       }
     }
 

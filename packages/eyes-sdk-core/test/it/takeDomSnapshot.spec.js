@@ -55,20 +55,25 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should take a dom snapshot with cross origin frames', async () => {
-    driver.mockScript('dom-snapshot', function() {
-      return this.name === '[data-applitools-selector="123"]'
-        ? generateSnapshotResponse({cdt: 'frame-cdt'})
-        : generateSnapshotResponse({crossFramesSelectors: ['[data-applitools-selector="123"]']})
-    })
     driver.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
       },
     ])
+    driver.mockScript('dom-snapshot', function() {
+      return this.name === '[data-applitools-selector="123"]'
+        ? generateSnapshotResponse({cdt: 'frame-cdt', url: 'http://cors.com'})
+        : generateSnapshotResponse({
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
+          })
+    })
     const snapshot = await takeDomSnapshot(logger, eyesDriver)
     expect(snapshot).to.eql({
-      cdt: [],
+      cdt: [
+        {nodeName: 'IFRAME', attributes: [{name: 'data-applitools-src', value: 'http://cors.com'}]},
+      ],
       resourceContents: {},
       resourceUrls: [],
       scriptVersion: 'mock value',
@@ -77,6 +82,7 @@ describe('takeDomSnapshot', () => {
         {
           cdt: 'frame-cdt',
           frames: [],
+          url: 'http://cors.com',
           resourceContents: {},
           resourceUrls: [],
           scriptVersion: 'mock value',
@@ -104,35 +110,48 @@ describe('takeDomSnapshot', () => {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
-            cdt: 'frame',
-            crossFramesSelectors: ['[data-applitools-selector="456"]'],
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            url: 'http://cors.com',
+            crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
           })
         case '[data-applitools-selector="456"]':
-          return generateSnapshotResponse({cdt: 'nested frame'})
+          return generateSnapshotResponse({
+            cdt: 'nested frame',
+            url: 'http://cors-2.com',
+          })
         default:
           return generateSnapshotResponse({
-            cdt: 'top page',
-            crossFramesSelectors: ['[data-applitools-selector="123"]'],
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
           })
       }
     })
 
     const snapshot = await takeDomSnapshot(logger, eyesDriver)
     expect(snapshot).to.eql({
-      cdt: 'top page',
+      cdt: [
+        {nodeName: 'IFRAME', attributes: [{name: 'data-applitools-src', value: 'http://cors.com'}]},
+      ],
       frames: [
         {
-          cdt: 'frame',
+          cdt: [
+            {
+              nodeName: 'IFRAME',
+              attributes: [{name: 'data-applitools-src', value: 'http://cors-2.com'}],
+            },
+          ],
           frames: [
             {
               cdt: 'nested frame',
               frames: [],
+              url: 'http://cors-2.com',
               resourceContents: {},
               resourceUrls: [],
               scriptVersion: 'mock value',
               srcAttr: null,
             },
           ],
+          url: 'http://cors.com',
           resourceContents: {},
           resourceUrls: [],
           scriptVersion: 'mock value',
@@ -165,6 +184,7 @@ describe('takeDomSnapshot', () => {
         case '[data-applitools-selector="456"]':
           return generateSnapshotResponse({
             cdt: 'nested frame',
+            url: 'http://cors.com',
             selector: '[data-applitools-selector="456"]',
           })
         default:
@@ -172,9 +192,9 @@ describe('takeDomSnapshot', () => {
             cdt: 'top page',
             frames: [
               generateSnapshotObject({
-                cdt: 'frame',
+                cdt: [{nodeName: 'IFRAME', attributes: []}],
                 selector: '[data-applitools-selector="123"]',
-                crossFramesSelectors: ['[data-applitools-selector="456"]'],
+                crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
               }),
             ],
           })
@@ -186,10 +206,16 @@ describe('takeDomSnapshot', () => {
       cdt: 'top page',
       frames: [
         {
-          cdt: 'frame',
+          cdt: [
+            {
+              nodeName: 'IFRAME',
+              attributes: [{name: 'data-applitools-src', value: 'http://cors.com'}],
+            },
+          ],
           frames: [
             {
               cdt: 'nested frame',
+              url: 'http://cors.com',
               frames: [],
               resourceContents: {},
               resourceUrls: [],
@@ -219,7 +245,7 @@ describe('takeDomSnapshot', () => {
     driver.mockScript('dom-snapshot', function() {
       return generateSnapshotResponse({
         cdt: 'top frame',
-        crossFramesSelectors: ['[data-applitools-selector="123"]'],
+        crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
       })
     })
 
@@ -232,6 +258,7 @@ describe('takeDomSnapshot', () => {
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
+        isCORS: true,
         children: [
           {
             selector: '[data-applitools-selector="456"]',
@@ -244,12 +271,12 @@ describe('takeDomSnapshot', () => {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
             cdt: 'inner parent frame',
-            crossFramesSelectors: ['[data-applitools-selector="456"]'],
+            crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
           })
         default:
           return generateSnapshotResponse({
-            cdt: 'top frame',
-            crossFramesSelectors: ['[data-applitools-selector="123"]'],
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
           })
       }
     })
@@ -266,6 +293,36 @@ describe('takeDomSnapshot', () => {
       },
     ])
   })
+
+  it('should add data-applitools-src to the cors frame cdt node', async () => {
+    driver.mockElements([
+      {
+        name: 'cors-frame',
+        selector: '[data-applitools-selector="1"]',
+        frame: true,
+        isCORS: true,
+      },
+    ])
+    driver.mockScript('dom-snapshot', function() {
+      switch (this.name) {
+        case 'cors-frame':
+          return generateSnapshotResponse({
+            cdt: 'cors frame',
+            url: 'http://cors.com',
+          })
+        default:
+          return generateSnapshotResponse({
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            crossFrames: [{selector: '[data-applitools-selector="1"]', index: 0}],
+          })
+      }
+    })
+
+    const {cdt} = await takeDomSnapshot(logger, eyesDriver)
+    expect(cdt).to.deep.equal([
+      {nodeName: 'IFRAME', attributes: [{name: 'data-applitools-src', value: 'http://cors.com'}]},
+    ])
+  })
 })
 
 function generateSnapshotResponse(overrides) {
@@ -279,7 +336,7 @@ function generateSnapshotObject(overrides) {
     resourceUrls: [],
     blobs: [],
     frames: [],
-    crossFramesSelectors: undefined,
+    crossFrames: undefined,
     scriptVersion: 'mock value',
     ...overrides,
   }

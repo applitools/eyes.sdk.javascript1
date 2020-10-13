@@ -177,16 +177,16 @@ class MockDriver {
     }
     elements.push(element)
     if (element.frame) {
-      const contextId = Symbol('contextId' + Math.floor(Math.random() * 100))
+      const contextId = Symbol('contextId' + (element.name || Math.floor(Math.random() * 100)))
       this._contexts.set(contextId, {
         id: contextId,
         parentId: state.parentContextId,
         isCORS: state.isCORS,
         element,
-        document: {id: Symbol('documentId' + Math.floor(Math.random() * 100))},
+        document: {id: Symbol('documentId' + (element.name || Math.floor(Math.random() * 100)))},
         state: {
           get name() {
-            return element.selector
+            return element.name || element.selector
           },
         },
       })

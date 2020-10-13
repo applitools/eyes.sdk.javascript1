@@ -200,7 +200,7 @@ class EyesVisualGrid extends EyesCore {
       saveDebugData: this._configuration.getSaveDebugData(),
       proxy: this._configuration.getProxy(),
       serverUrl: this._configuration.getServerUrl(),
-      renderConcurrencyFactor: this._configuration.getConcurrentSessions(),
+      concurrency: this._configuration.getConcurrentSessions(),
     })
 
     if (this._configuration.getViewportSize()) {

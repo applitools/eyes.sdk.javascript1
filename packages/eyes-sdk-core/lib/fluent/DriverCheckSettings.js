@@ -263,7 +263,7 @@ class CheckSettings {
     if (object.matchLevel) {
       settings.matchLevel(object.matchLevel)
     }
-    if (object.timeout) {
+    if (!Number.isNaN(Number(object.timeout))) {
       settings.timeout(object.timeout)
     }
     if (object.sendDom) {

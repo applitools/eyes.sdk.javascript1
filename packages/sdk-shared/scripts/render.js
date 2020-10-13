@@ -210,8 +210,8 @@ const eyesConfig = {
         }
         return {
           name: match[1],
-          width: Number.parseInt(match[3], 10),
-          height: Number.parseInt(match[5], 10),
+          width: Number.parseInt(match[3], 10) || 700,
+          height: Number.parseInt(match[5], 10) || 460,
         }
       })
     },
@@ -318,10 +318,10 @@ if (!url && !args.attach) {
   eyes.setConfiguration({
     apiKey: args.apiKey,
     serverUrl: args.serverUrl,
-    viewportSize: args.viewportSize || !args.device ? {width: 1024, height: 768} : undefined,
-    browserInfo:
+    viewportSize: args.viewportSize || (!args.device ? {width: 1024, height: 768} : undefined),
+    browsersInfo:
       args.renderBrowsers || args.renderEmulations
-        ? [...args.renderBrowsers, ...args.renderEmulations]
+        ? [...(args.renderBrowsers || []), ...(args.renderEmulations || [])]
         : undefined,
     proxy: args.proxy,
     accessibilityValidation: args.accessibilityValidation,

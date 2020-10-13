@@ -2,7 +2,8 @@
 <html>
 <body>
     <h1>Hello, I have a designer cross origin frame</h1>
-    <iframe src="{{ src }}"
-        style="display: flex; width: 100%; height: 100%; flex-direction: column;"></iframe>
+    <iframe src="{{ src }}" style="display: flex; width: 100%; height: 100%; flex-direction: column;"></iframe>
+    <iframe srcdoc="<script>location.replace('{{ src }}')</script>"></iframe>
+    <iframe src="./redirect.hbs"></iframe>
 </body>
 </html>

@@ -89,6 +89,16 @@ class FullPageCaptureAlgorithm {
       `positionProvider: ${positionProvider.constructor.name}; Region: ${region}`,
     )
 
+    let entireSize
+    try {
+      entireSize = await positionProvider.getEntireSize()
+      this._logger.verbose(`Entire size of region context: ${entireSize}`)
+    } catch (err) {
+      this._logger.log(`Error: Failed to extract entire size of region context ${err}`)
+      this._logger.log(`Using image size instead: ${image.getWidth()}x${image.getHeight()}`)
+      entireSize = new RectangleSize(image.getWidth(), image.getHeight())
+    }
+
     // Saving the original position (in case we were already in the outermost frame).
     const originalPosition = await this._originProvider.getState()
     // Saving the original position (in case we were already in the outermost frame).
@@ -123,16 +133,6 @@ class FullPageCaptureAlgorithm {
     if (pixelRatio !== 1) {
       image = await image.scale(1 / pixelRatio)
       await this._debugScreenshotsProvider.save(image, 'scaled')
-    }
-
-    let entireSize
-    try {
-      entireSize = await positionProvider.getEntireSize()
-      this._logger.verbose(`Entire size of region context: ${entireSize}`)
-    } catch (err) {
-      this._logger.log(`Error: Failed to extract entire size of region context ${err}`)
-      this._logger.log(`Using image size instead: ${image.getWidth()}x${image.getHeight()}`)
-      entireSize = new RectangleSize(image.getWidth(), image.getHeight())
     }
 
     if (!fullArea || fullArea.isEmpty()) {

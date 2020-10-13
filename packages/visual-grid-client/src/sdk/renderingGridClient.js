@@ -87,7 +87,8 @@ function makeRenderingGridClient({
   if (isNaN(openEyesConcurrency)) {
     throw new Error('concurrency is not a number')
   }
-
+  logger = logger || new Logger(showLogs, 'visual-grid-client')
+  logger.verbose('vgc concurrency is', concurrency)
   ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
     [{batchSequenceName}, {batchSequence}],
     [{baselineBranchName}, {baselineBranch}],
@@ -100,7 +101,6 @@ function makeRenderingGridClient({
   let renderInfoPromise
   const eyesTransactionThroat = transactionThroat(openEyesConcurrency)
   const renderThroat = throatPkg(openEyesConcurrency * renderConcurrencyFactor)
-  logger = logger || new Logger(showLogs, 'visual-grid-client')
   renderWrapper =
     renderWrapper ||
     createRenderWrapper({
