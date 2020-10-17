@@ -24,7 +24,6 @@ const {
 function makeOpenEyes({
   appName: _appName,
   browser: _browser,
-  saveDebugData: _saveDebugData,
   batch: _batch,
   properties: _properties,
   baselineBranchName: _baselineBranchName,
@@ -74,7 +73,6 @@ function makeOpenEyes({
     userAgent = _userAgent,
     appName = _appName,
     browser = _browser,
-    saveDebugData = _saveDebugData,
     batchSequenceName,
     batchSequence,
     batchName,
@@ -248,7 +246,6 @@ function makeOpenEyes({
     const checkWindow = makeCheckWindow({
       globalState,
       testController,
-      saveDebugData,
       createRGridDOMAndGetResourceMapping,
       renderBatch,
       waitForRenderedStatus,

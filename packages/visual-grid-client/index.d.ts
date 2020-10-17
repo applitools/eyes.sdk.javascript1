@@ -24,12 +24,6 @@ declare namespace Eyes {
               (ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo)[]
 
       /**
-       * Whether to save troubleshooting data. See the troubleshooting section of this doc for more info.
-       * Default value: false
-       */
-      saveDebugData?:boolean
-
-      /**
        * Provides ability to group tests into batches.
        * Read more about batches here: https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html
        * Default value: random

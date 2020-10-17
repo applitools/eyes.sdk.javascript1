@@ -5,6 +5,7 @@ const {exec} = require('child_process')
 const {promisify} = require('util')
 const TypeUtils = require('./TypeUtils')
 const DateTimeUtils = require('./DateTimeUtils')
+const chalk = require('chalk')
 
 const promisifiedExec = promisify && exec && promisify(exec)
 const ENV_PREFIXES = ['APPLITOOLS_', 'bamboo_APPLITOOLS_']
@@ -467,6 +468,14 @@ function getBreakpointWidth(breakpoints, width) {
   return breakpoint || breakpoints[breakpoints.length - 1] - 1
 }
 
+function deprecationWarning({deprecatedThing, newThing, isDead}) {
+  const msg = isDead
+    ? `Notice: ${deprecatedThing} is no longer supported.`
+    : `Notice: ${deprecatedThing} has been renamed. Please use ${newThing} instead.\n`
+
+  chalk.yellow(msg)
+}
+
 module.exports = {
   urlConcat,
   stripTrailingSlash,
@@ -495,4 +504,5 @@ module.exports = {
   pexec,
   cachify,
   getBreakpointWidth,
+  deprecationWarning,
 }

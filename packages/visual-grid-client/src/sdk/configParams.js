@@ -8,7 +8,6 @@ module.exports = [
   'url',
   'apiKey',
   'showLogs',
-  'saveDebugData',
   'batchName',
   'batchId',
   'batchSequenceName',

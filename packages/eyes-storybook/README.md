@@ -145,7 +145,6 @@ In addition to command-line arguments, it's possible to define the following con
 | `exitcode`                | false                       | If tests failed close with non-zero exit code (also available as command-line argument). |
 | `browser`                 | { width: 800, height: 600, name: 'chrome' } | The size and browser of the generated screenshots. For more info and possible values, see the [browser section below](#configuring-the-browser).|
 | `showLogs`                | false                       | Whether or not you want to see logs of the Eyes-Storybook plugin. |
-| `saveDebugData`           | false                       | Whether to save troubleshooting data. See the troubleshooting section of this doc for more info. |
 | `batchId`                 | random                      | Provides ability to group tests into batches. Read more about batches [here](https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html). |
 | `batchName`               | undefined                   | Provides a name to the batch. |
 | `batchSequenceName`       | undefined                   | Name for managing batch statistics. |
@@ -659,8 +658,3 @@ const date = new Date(isBeingTested ? SOME_FIXED_DATE : undefined)
 
 storiesOf('Some kind', module).add('Date', () => <div>{date}</div>)
 ```
-
-## Troubleshooting
-
-If issues occur, the `saveDebugData` config property can be set to true in order to save helpful information. The information will be saved under a folder named `.applitools` in the current working directory. This could be then used for getting support on your issue.
-<br/>You can also use [DEBUG=eyes*](https://github.com/visionmedia/debug) for debugging.

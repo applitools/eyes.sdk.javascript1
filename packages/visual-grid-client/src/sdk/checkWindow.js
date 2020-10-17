@@ -2,7 +2,6 @@
 
 const {Region} = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
-const saveData = require('../troubleshoot/saveData')
 const createRenderRequests = require('./createRenderRequests')
 const createCheckSettings = require('./createCheckSettings')
 const calculateMatchRegions = require('./calculateMatchRegions')
@@ -11,7 +10,6 @@ const isInvalidAccessibility = require('./isInvalidAccessibility')
 function makeCheckWindow({
   globalState,
   testController,
-  saveDebugData,
   createRGridDOMAndGetResourceMapping,
   renderBatch,
   waitForRenderedStatus,
@@ -309,12 +307,6 @@ function makeCheckWindow({
       renderJobs = renderRequests.map(createRenderJob)
       const renderIds = await renderBatchPromise
       globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() - 1)
-
-      if (saveDebugData) {
-        for (const [index, renderId] of renderIds.entries()) {
-          await saveData({renderId, cdt: snapshots[index].cdt, resources, url, logger})
-        }
-      }
 
       return renderIds
     }

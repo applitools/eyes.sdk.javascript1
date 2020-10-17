@@ -5,7 +5,6 @@ module.exports = {
   serverUrl2: 'https://eyesfabric3eyes.applitools.com',
   concurrency: 10,
   // dontCloseBatches: true,
-  // saveDebugData: false,
   // showLogs: true,
   // eyesTimeout: 1234,
   // failCypressOnDiff: true,

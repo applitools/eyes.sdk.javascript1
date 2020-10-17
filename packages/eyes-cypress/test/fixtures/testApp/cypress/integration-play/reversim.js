@@ -19,7 +19,6 @@ describe('eyes-cypress', () => {
         testName: 'works',
         browser: {width: 1200, height: 800},
         showLogs: true,
-        saveDebugData: true,
       });
       cy.eyesCheckWindow('homepage');
       cy.get(':nth-child(1) > .nav-link').click();

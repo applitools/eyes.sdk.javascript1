@@ -89,7 +89,6 @@ describe('openEyes', () => {
         {deviceName: 'iPhone X'},
       ],
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
-      saveDebugData: process.env.APPLITOOLS_SAVE_DEBUG_DATA,
     })
 
     const scriptHooks = {
@@ -125,7 +124,6 @@ describe('openEyes', () => {
         {deviceName: 'iPhone X'},
       ],
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
-      saveDebugData: process.env.APPLITOOLS_SAVE_DEBUG_DATA,
     })
 
     const scriptHooks = {

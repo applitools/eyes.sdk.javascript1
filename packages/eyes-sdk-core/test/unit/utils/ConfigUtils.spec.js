@@ -98,7 +98,7 @@ describe('ConfigUtils', () => {
         configPath: path.resolve(configPath, 'eyes.json'),
         logger,
       })
-      const expectedConfig = {saveDebugData: true, apiKey: 'default api key'}
+      const expectedConfig = {apiKey: 'default api key'}
       assert.deepStrictEqual(config, expectedConfig)
     })
 
