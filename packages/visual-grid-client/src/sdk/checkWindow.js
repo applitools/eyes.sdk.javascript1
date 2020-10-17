@@ -75,17 +75,6 @@ function makeCheckWindow({
       return
     }
 
-    if (typeof window === 'undefined') {
-      const handleBrowserDebugData = require('../troubleshoot/handleBrowserDebugData')
-      snapshots.forEach(snapshot => {
-        handleBrowserDebugData({
-          frame: snapshot,
-          metaData: {agentId: wrappers[0].getBaseAgentId()},
-          logger,
-        })
-      })
-    }
-
     const getResourcesPromise = Promise.all(
       snapshots.map(snapshot =>
         createRGridDOMAndGetResourceMapping({
