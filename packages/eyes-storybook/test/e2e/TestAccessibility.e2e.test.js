@@ -15,7 +15,7 @@ const testStream = require('../util/testStream');
 const {performance, timeItAsync} = makeTiming();
 const fetch = require('node-fetch');
 
-describe('eyesStorybook', () => {
+describe('eyes-storybook accessibility', () => {
   let closeStorybook;
   before(async () => {
     closeStorybook = await testStorybook({

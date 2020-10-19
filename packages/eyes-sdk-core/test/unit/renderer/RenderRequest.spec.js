@@ -109,6 +109,7 @@ describe('RenderRequest', () => {
         selectorsToFindRegionsFor: 'selectorsToFindRegionsFor',
         sendDom: 'sendDom',
         visualGridOptions: {polyfillAdoptedStyleSheets: true},
+        enableMultipleResultsPerSelector: true,
       })
       const expected = {
         stitchingService: undefined,
@@ -130,6 +131,7 @@ describe('RenderRequest', () => {
         selectorsToFindRegionsFor: 'selectorsToFindRegionsFor',
         sendDom: 'sendDom',
         options: {polyfillAdoptedStyleSheets: true},
+        enableMultipleResultsPerSelector: true,
       }
       assert.deepStrictEqual(renderRequest.toJSON(), expected)
     })
@@ -177,10 +179,11 @@ describe('RenderRequest', () => {
         selectorsToFindRegionsFor: 'selectorsToFindRegionsFor',
         sendDom: 'sendDom',
         visualGridOptions: {polyfillAdoptedStyleSheets: true},
+        enableMultipleResultsPerSelector: true,
       })
       assert.strictEqual(
         renderRequest.toString(),
-        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom","options":{"polyfillAdoptedStyleSheets":true}} }',
+        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"enableMultipleResultsPerSelector":true,"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom","options":{"polyfillAdoptedStyleSheets":true}} }',
       )
     })
   })

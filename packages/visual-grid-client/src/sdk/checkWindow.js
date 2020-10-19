@@ -4,8 +4,8 @@ const {Region} = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
 const createRenderRequests = require('./createRenderRequests')
 const createCheckSettings = require('./createCheckSettings')
-const calculateMatchRegions = require('./calculateMatchRegions')
 const isInvalidAccessibility = require('./isInvalidAccessibility')
+const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 
 function makeCheckWindow({
   globalState,
@@ -89,20 +89,19 @@ function makeCheckWindow({
       ),
     )
 
-    const noOffsetSelectors = {
-      all: [ignore, layout, strict, content, accessibility],
-      ignore: 0,
-      layout: 1,
-      strict: 2,
-      content: 3,
-      accessibility: 4,
-    }
-    const offsetSelectors = {
-      all: [floating],
-      floating: 0,
-    }
-    const renderPromise = presult(startRender())
+    // const userRegions = [ignore, layout, strict, content, accessibility, floating]
+    const {selectorsToFindRegionsFor, getMatchRegions} = calculateSelectorsToFindRegionsFor({
+      sizeMode,
+      selector,
+      ignore,
+      layout,
+      strict,
+      content,
+      accessibility,
+      floating,
+    })
 
+    const renderPromise = presult(startRender())
     let renderJobs // This will be an array of `resolve` functions to rendering jobs. See `createRenderJob` below.
 
     setCheckWindowPromises(
@@ -205,7 +204,7 @@ function makeCheckWindow({
         return
       }
 
-      const imageLocationRegion = sizeMode === 'selector' ? selectorRegions[0] : undefined
+      const {imageLocationRegion, ...regions} = getMatchRegions({selectorRegions})
 
       let imageLocation = undefined
       if (sizeMode === 'selector' && imageLocationRegion) {
@@ -214,20 +213,8 @@ function makeCheckWindow({
         imageLocation = new Region(region).getLocation()
       }
 
-      const {noOffsetRegions, offsetRegions} = calculateMatchRegions({
-        noOffsetSelectors: noOffsetSelectors.all,
-        offsetSelectors: offsetSelectors.all,
-        selectorRegions,
-        imageLocationRegion,
-      })
-
       const checkSettings = createCheckSettings({
-        ignore: noOffsetRegions[noOffsetSelectors.ignore],
-        floating: offsetRegions[offsetSelectors.floating],
-        layout: noOffsetRegions[noOffsetSelectors.layout],
-        strict: noOffsetRegions[noOffsetSelectors.strict],
-        content: noOffsetRegions[noOffsetSelectors.content],
-        accessibility: noOffsetRegions[noOffsetSelectors.accessibility],
+        ...regions,
         useDom,
         enablePatterns,
         ignoreDisplacements,
@@ -280,10 +267,9 @@ function makeCheckWindow({
         renderInfo,
         sizeMode,
         selector,
+        selectorsToFindRegionsFor,
         region,
         scriptHooks,
-        noOffsetSelectors: noOffsetSelectors.all,
-        offsetSelectors: offsetSelectors.all,
         sendDom,
         visualGridOptions,
       })

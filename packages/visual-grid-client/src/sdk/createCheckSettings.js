@@ -28,29 +28,31 @@ function createCheckSettings({
   setEachRegion(content, checkSettings.contentRegions.bind(checkSettings))
 
   if (floating) {
-    floating = [].concat(floating)
     for (const region of floating) {
-      if (region instanceof GetFloatingRegion) {
-        checkSettings.floatingRegion(region)
-      } else {
-        checkSettings.floatingRegion(
-          new Region(region),
-          region.maxUpOffset,
-          region.maxDownOffset,
-          region.maxLeftOffset,
-          region.maxRightOffset,
-        )
+      if (region) {
+        if (region instanceof GetFloatingRegion) {
+          checkSettings.floatingRegion(region)
+        } else {
+          checkSettings.floatingRegion(
+            new Region(region),
+            region.maxUpOffset,
+            region.maxDownOffset,
+            region.maxLeftOffset,
+            region.maxRightOffset,
+          )
+        }
       }
     }
   }
 
   if (accessibility) {
-    accessibility = [].concat(accessibility)
     for (const region of accessibility) {
-      if (region instanceof GetAccessibilityRegion) {
-        checkSettings.accessibilityRegion(region)
-      } else {
-        checkSettings.accessibilityRegion(new Region(region), region.accessibilityType)
+      if (region) {
+        if (region instanceof GetAccessibilityRegion) {
+          checkSettings.accessibilityRegion(region)
+        } else {
+          checkSettings.accessibilityRegion(new Region(region), region.accessibilityType)
+        }
       }
     }
   }

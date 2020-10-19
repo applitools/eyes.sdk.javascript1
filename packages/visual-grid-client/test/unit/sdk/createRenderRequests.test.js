@@ -52,8 +52,7 @@ describe('createRenderRequests', () => {
       region,
       scriptHooks,
       sendDom,
-      noOffsetSelectors: [],
-      offsetSelectors: [],
+      userRegions: [],
     })
 
     const resourcesObj = {url1: 'hash1', url2: 'hash2'}
@@ -73,6 +72,7 @@ describe('createRenderRequests', () => {
         browser: {name: 'b1'},
         scriptHooks,
         sendDom,
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           width: 1,
           height: 2,
@@ -90,6 +90,7 @@ describe('createRenderRequests', () => {
         browser: {name: 'b2'},
         scriptHooks,
         sendDom,
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           width: 3,
           height: 4,
@@ -110,8 +111,7 @@ describe('createRenderRequests', () => {
       pages: [{rGridDom: dom, allResources: resources}],
       browsers,
       renderInfo,
-      noOffsetSelectors: [],
-      offsetSelectors: [],
+      userRegions: [],
     })
 
     expect(renderRequests.map(r => r.toJSON())).to.eql([
@@ -121,6 +121,7 @@ describe('createRenderRequests', () => {
         url,
         dom: domObj,
         resources: resourcesObj,
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           emulationInfo: {deviceName, screenOrientation},
           height: undefined,
@@ -144,8 +145,7 @@ describe('createRenderRequests', () => {
       pages: [{rGridDom: dom, allResources: resources}],
       browsers,
       renderInfo,
-      noOffsetSelectors: [],
-      offsetSelectors: [],
+      userRegions: [],
     })
 
     expect(renderRequests.map(r => r.toJSON())).to.eql([
@@ -155,6 +155,7 @@ describe('createRenderRequests', () => {
         url,
         dom: domObj,
         resources: resourcesObj,
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           emulationInfo: {
             width: 1,
@@ -173,25 +174,14 @@ describe('createRenderRequests', () => {
     ])
   })
 
-  it('handles ignore, layout, strict, content, accessibility and floating regions', () => {
+  it('handles selectorsToFindRegionsFor', () => {
     const browsers = [{width: 1, height: 2}]
-    const ignore = ['kuku', {type: 'css', selector: 'bla'}]
-    const layout = [{type: 'css', selector: 'bla2'}, 'kuku2']
-    const strict = ['kuku3', {type: 'css', selector: 'bla3'}, {type: 'css', selector: 'bla4'}]
-    const content = ['c1', {type: 'css', selector: 'c2'}, {type: 'css', selector: 'c3'}]
-    const accessibility = [
-      'kuku4',
-      {type: 'css', selector: 'bla5', accessibilityType: 'RegularText'},
-      {type: 'css', selector: 'bla6', accessibilityType: 'LargeText'},
-    ]
-    const floating = [{some: 'thing'}, {type: 'css', selector: 'sel'}]
     const renderRequests = createRenderRequests({
       url,
       pages: [{rGridDom: dom, allResources: resources}],
       browsers,
       renderInfo,
-      noOffsetSelectors: [ignore, layout, strict, content, accessibility],
-      offsetSelectors: [floating],
+      selectorsToFindRegionsFor: [{selector: 'bla', type: 'css'}],
     })
 
     expect(renderRequests.map(r => r.toJSON())).to.eql([
@@ -201,6 +191,7 @@ describe('createRenderRequests', () => {
         url,
         dom: domObj,
         resources: resourcesObj,
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           height: 2,
           width: 1,
@@ -208,17 +199,7 @@ describe('createRenderRequests', () => {
           region: undefined,
           sizeMode: undefined,
         },
-        selectorsToFindRegionsFor: [
-          {type: 'css', selector: 'bla'},
-          {type: 'css', selector: 'bla2'},
-          {type: 'css', selector: 'bla3'},
-          {type: 'css', selector: 'bla4'},
-          {type: 'css', selector: 'c2'},
-          {type: 'css', selector: 'c3'},
-          {type: 'css', selector: 'bla5'},
-          {type: 'css', selector: 'bla6'},
-          {type: 'css', selector: 'sel'},
-        ],
+        selectorsToFindRegionsFor: [{type: 'css', selector: 'bla'}],
       },
     ])
   })
@@ -246,6 +227,7 @@ describe('createRenderRequests', () => {
         resources: resourcesObj,
         browser: {name: 'safari'},
         platform: {name: 'ios'},
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           iosDeviceInfo: {
             name: 'ios device',
@@ -293,6 +275,7 @@ describe('createRenderRequests', () => {
         },
         resources: resourcesObj,
         browser: {name: browser.name},
+        enableMultipleResultsPerSelector: true,
         renderInfo: {
           width: browser.width,
           height: browser.height,

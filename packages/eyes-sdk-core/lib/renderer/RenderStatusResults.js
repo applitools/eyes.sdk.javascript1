@@ -14,7 +14,7 @@ class RenderStatusResults {
    * @param {string} os
    * @param {string} userAgent
    * @param {RectangleSize|object} deviceSize
-   * @param {Region[]||object[]} selectorRegions
+   * @param {object[][]} selectorRegions
    */
   constructor({
     status,
@@ -29,18 +29,18 @@ class RenderStatusResults {
     if (deviceSize && !(deviceSize instanceof RectangleSize)) {
       deviceSize = new RectangleSize(deviceSize)
     }
-
-    if (selectorRegions && selectorRegions.length > 0 && !(selectorRegions[0] instanceof Region)) {
-      selectorRegions = selectorRegions.map(
-        region =>
-          new Region({
-            left: region.x,
-            top: region.y,
-            width: region.width,
-            height: region.height,
-            error: region.error,
-          }),
-      )
+    if (selectorRegions && selectorRegions.length > 0) {
+      selectorRegions = selectorRegions.map(regions => {
+        return regions.map(innerRegion => {
+          return new Region({
+            left: innerRegion.x,
+            top: innerRegion.y,
+            width: innerRegion.width,
+            height: innerRegion.height,
+            error: innerRegion.error,
+          })
+        })
+      })
     }
 
     this._status = status
@@ -168,14 +168,14 @@ class RenderStatusResults {
   }
 
   /**
-   * @return {Region[]}
+   * @return {Region[][]}
    */
   getSelectorRegions() {
     return this._selectorRegions
   }
 
   /**
-   * @param {Region[]} value
+   * @param {Region[][]} value
    */
   setSelectorRegions(value) {
     this._selectorRegions = value

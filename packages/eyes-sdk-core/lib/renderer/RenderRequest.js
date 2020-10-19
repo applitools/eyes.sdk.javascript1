@@ -207,6 +207,7 @@ class RenderRequest {
       url: this._url,
       dom: this._dom.getHashAsObject(),
       resources,
+      enableMultipleResultsPerSelector: true,
     }
 
     if (this._renderId) {

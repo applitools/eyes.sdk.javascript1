@@ -1,6 +1,6 @@
 {
   "name": "@applitools/visual-grid-client",
-  "version": "15.0.10",
+  "version": "15.0.11",
   "description": "",
   "keywords": [
     "applitools",
@@ -31,7 +31,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.3.2",
+    "@applitools/eyes-sdk-core": "12.4.3",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.3",
     "@applitools/isomorphic-fetch": "3.0.0",

@@ -16,7 +16,10 @@ circular.inner = circular
 
 storiesOf('Button', module)
   .add('with text', () => (
-    <div style={{position: 'relative'}}>with text <span style={{position: 'absolute', top: -20}} className="ignore-this">{Date.now()}</span></div>
+    <div style={{position: 'relative'}}>with text
+      <span style={{position: 'absolute', top: -20}} className="ignore-this">{Date.now()}</span>
+      <span style={{position: 'absolute', top: -50}} className="ignore-this">{Date.now()}</span>
+    </div>
   ), {
     someParam: 'i was here, goodbye',
     eyes: {
@@ -35,7 +38,10 @@ storiesOf('Image', module)
   </React.Fragment>));
 
 storiesOf('Nested', module)
-  .add('story 1', () => <div>story 1 <span className="global-ignore-this">{Date.now()}</span></div>);
+  .add('story 1', () => <div>story 1
+      <span className="global-ignore-this">{Date.now()}</span>
+      <span className="global-ignore-this">{Date.now()}</span>
+    </div>);
 
 storiesOf('Nested/Component', module)
   .add('story 1.1', () => <div>story 1.1</div>)

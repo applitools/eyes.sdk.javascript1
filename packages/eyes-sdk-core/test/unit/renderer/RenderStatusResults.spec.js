@@ -30,7 +30,7 @@ describe('RenderStatusResults', () => {
     const os = 'some os'
     const userAgent = 'some user agent'
     const deviceSize = {width: 1, height: 2}
-    const selectorRegions = [{x: 1, y: 2, width: 3, height: 4}]
+    const selectorRegions = [[{x: 1, y: 2, width: 3, height: 4}]]
     const results = new RenderStatusResults({
       status,
       error,
@@ -50,8 +50,8 @@ describe('RenderStatusResults', () => {
     assert.strictEqual(results.getUserAgent(), userAgent)
     assert.deepStrictEqual(results.getDeviceSize().toJSON(), deviceSize)
     assert.deepStrictEqual(
-      results.getSelectorRegions().map(region => region.toJSON()),
-      [{left: 1, top: 2, width: 3, height: 4, coordinatesType: 'SCREENSHOT_AS_IS'}],
+      results.getSelectorRegions().map(region => region.map(r => r.toJSON())),
+      [[{left: 1, top: 2, width: 3, height: 4, coordinatesType: 'SCREENSHOT_AS_IS'}]],
     )
   })
 
@@ -63,7 +63,7 @@ describe('RenderStatusResults', () => {
     const os = 'some os'
     const userAgent = 'some user agent'
     const deviceSize = {width: 1, height: 2}
-    const selectorRegions = [{x: 1, y: 2, width: 3, height: 4}]
+    const selectorRegions = [[{x: 1, y: 2, width: 3, height: 4}]]
     const results = new RenderStatusResults({
       status,
       error,
@@ -77,7 +77,7 @@ describe('RenderStatusResults', () => {
 
     assert.strictEqual(
       JSON.stringify(results),
-      '{"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]}',
+      '{"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]]}',
     )
   })
 
@@ -89,7 +89,7 @@ describe('RenderStatusResults', () => {
     const os = 'some os'
     const userAgent = 'some user agent'
     const deviceSize = {width: 1, height: 2}
-    const selectorRegions = [{x: 1, y: 2, width: 3, height: 4}]
+    const selectorRegions = [[{x: 1, y: 2, width: 3, height: 4}]]
     const results = new RenderStatusResults({
       status,
       error,
@@ -103,7 +103,7 @@ describe('RenderStatusResults', () => {
 
     assert.strictEqual(
       results.toString(),
-      'RenderStatusResults { {"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]} }',
+      'RenderStatusResults { {"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]]} }',
     )
   })
 })

@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 12.4.3 - 2020/10/18
+
+- use `enableMultipleResultsPerSelector` in render request
+- updated to @applitools/dom-snapshot@4.2.2 (from 4.2.1)
+
 ## 12.4.2 - 2020/10/14
 
 - re-enable native app viewport screenshotting along with added support for checkRegion

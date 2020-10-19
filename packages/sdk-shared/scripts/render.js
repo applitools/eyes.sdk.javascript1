@@ -190,6 +190,10 @@ const eyesConfig = {
     describe: 'batch name',
     type: 'string',
   },
+  notifyOnCompletion: {
+    describe: 'batch notifications',
+    type: 'boolean',
+  },
   accessibilityValidation: {
     describe: 'accessibility validation (comma-separated, e.g. AA,WCAG_2_0)',
     type: 'string',
@@ -331,8 +335,10 @@ if (!url && !args.attach) {
     displayName: args.displayName,
     baselineEnvName: args.envName, // determines the baseline
     environmentName: args.envName, // shows up in the Environment column in the dashboard
-    batch: args.batchId || args.batchName ? {id: args.batchId, name: args.batchName} : undefined,
-    dontCloseBatches: Boolean(args.batchId),
+    batch:
+      args.batchId || args.batchName || args.notifyOnCompletion
+        ? {id: args.batchId, name: args.batchName, notifyOnCompletion: args.notifyOnCompletion}
+        : undefined,
   })
 
   const {logger, logFilePath} = initLog(eyes, new URL(url).hostname.replace(/\./g, '-'))

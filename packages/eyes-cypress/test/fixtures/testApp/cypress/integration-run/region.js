@@ -40,4 +40,11 @@ describe('eyes-cypress', () => {
       });
     });
   });
+
+  it('ignore regions', () => {
+    cy.visit(`http://localhost:${Cypress.config('testPort')}/dynamic.html`)
+    cy.eyesCheckWindow({
+      ignore: [{selector: '.dynamic-region'}]
+    })
+  })
 });

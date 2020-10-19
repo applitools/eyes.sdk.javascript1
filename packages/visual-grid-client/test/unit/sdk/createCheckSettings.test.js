@@ -40,7 +40,7 @@ describe('createCheckSettings', () => {
 
   it('handles single accessibility region', () => {
     const checkSettings = createCheckSettings({
-      accessibility: {left: 1, top: 2, width: 3, height: 4, accessibilityType: 'RegularText'},
+      accessibility: [{left: 1, top: 2, width: 3, height: 4, accessibilityType: 'RegularText'}],
     })
     expect(checkSettings.getAccessibilityRegions()).to.eql([
       new AccessibilityRegionByRectangle(
@@ -52,11 +52,11 @@ describe('createCheckSettings', () => {
 
   it('handles strict, layout, content, accessibility and ignore regions', () => {
     const checkSettings = createCheckSettings({
-      strict: {left: 1, top: 2, width: 3, height: 4},
-      layout: {left: 5, top: 6, width: 7, height: 8},
-      content: {left: 17, top: 18, width: 19, height: 20},
-      ignore: {left: 9, top: 10, width: 11, height: 12},
-      accessibility: {left: 13, top: 14, width: 15, height: 16, accessibilityType: 'RegularText'},
+      strict: [{left: 1, top: 2, width: 3, height: 4}],
+      layout: [{left: 5, top: 6, width: 7, height: 8}],
+      content: [{left: 17, top: 18, width: 19, height: 20}],
+      ignore: [{left: 9, top: 10, width: 11, height: 12}],
+      accessibility: [{left: 13, top: 14, width: 15, height: 16, accessibilityType: 'RegularText'}],
     })
     expect(checkSettings.getStrictRegions()).to.eql([
       new IgnoreRegionByRectangle(new Region({left: 1, top: 2, width: 3, height: 4})),
@@ -228,16 +228,18 @@ describe('createCheckSettings', () => {
 
   it('handles single floating region', () => {
     const checkSettings = createCheckSettings({
-      floating: {
-        left: 1,
-        top: 2,
-        width: 3,
-        height: 4,
-        maxUpOffset: 5,
-        maxDownOffset: 6,
-        maxLeftOffset: 7,
-        maxRightOffset: 8,
-      },
+      floating: [
+        {
+          left: 1,
+          top: 2,
+          width: 3,
+          height: 4,
+          maxUpOffset: 5,
+          maxDownOffset: 6,
+          maxLeftOffset: 7,
+          maxRightOffset: 8,
+        },
+      ],
     })
     expect(checkSettings.getFloatingRegions()).to.eql([
       new FloatingRegionByRectangle(new Region({left: 1, top: 2, width: 3, height: 4}), 5, 6, 7, 8),

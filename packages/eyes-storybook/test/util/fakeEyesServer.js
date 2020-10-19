@@ -54,9 +54,9 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
             domLocation: `domLoc_${renderId}`,
             selectorRegions: regions.map(region => {
               try {
-                return JSON.parse(region);
+                return [JSON.parse(region)];
               } catch (ex) {}
-              return {x: 1, y: 2, width: 3, height: 4};
+              return [{x: 1, y: 2, width: 3, height: 4}];
             }),
           };
         }
