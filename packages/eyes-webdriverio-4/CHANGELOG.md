@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- deprecate `saveDebugData`
 
 ## 2.23.1 - 2020/10/15
 
