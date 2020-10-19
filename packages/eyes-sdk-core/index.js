@@ -114,6 +114,7 @@ exports.ImageProvider = require('./lib/capture/ImageProvider')
 exports.ImageProviderFactory = require('./lib/capture/ImageProviderFactory')
 exports.CorsIframeHandle = require('./lib/capture/CorsIframeHandles')
 exports.CorsIframeHandler = require('./lib/capture/CorsIframeHandler')
+exports.BatchClose = require('./lib/close/BatchClose')
 
 exports.CutProvider = require('./lib/cropping/CutProvider')
 exports.FixedCutProvider = require('./lib/cropping/FixedCutProvider')
