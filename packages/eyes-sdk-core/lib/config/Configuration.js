@@ -70,7 +70,6 @@ const DEFAULT_VALUES = {
 /**
  * @typedef PlainConfiguration
  * @prop {boolean} showLogs
- * @prop {boolean} saveDebugData
  *
  * @prop {string} appName
  * @prop {string} testName
@@ -136,8 +135,6 @@ class Configuration {
   constructor(configuration) {
     /** @private @type {boolean} */
     this._showLogs = undefined
-    /** @type {boolean} */
-    this._saveDebugData = undefined
 
     /** @type {string} */
     this._appName = undefined
@@ -274,16 +271,15 @@ class Configuration {
    * @return {boolean}
    */
   getSaveDebugData() {
-    return this._saveDebugData
+    GeneralUtils.deprecationWarning({deprecatedThing: 'saveDebugData', isDead: true})
   }
 
   /**
    * @param {boolean} value
    * @return {this}
    */
-  setSaveDebugData(value) {
-    ArgumentGuard.isBoolean(value, 'saveDebugData')
-    this._saveDebugData = value
+  setSaveDebugData(_value) {
+    GeneralUtils.deprecationWarning({deprecatedThing: 'saveDebugData', isDead: true})
     return this
   }
 
@@ -1383,7 +1379,6 @@ class Configuration {
       useDom: this.getUseDom(),
       enablePatterns: this.getEnablePatterns(),
       ignoreDisplacements: this.getIgnoreDisplacements(),
-      saveDebugData: this.getSaveDebugData(),
       accessibilitySettings: this.getAccessibilityValidation(),
       visualGridOptions: this.getVisualGridOptions(),
     }

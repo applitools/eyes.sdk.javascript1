@@ -2,3 +2,4 @@ scripts/*.json
 .env
 .vscode
 .idea
+dist

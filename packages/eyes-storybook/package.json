@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-storybook",
-  "version": "3.8.11",
+  "version": "3.10.0",
   "description": "",
   "engines": {
     "node": ">=8.6.0"
@@ -52,11 +52,11 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "4.1.1",
-    "@applitools/eyes-sdk-core": "12.2.9",
+    "@applitools/dom-snapshot": "4.2.2",
+    "@applitools/eyes-sdk-core": "12.4.4",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/monitoring-commons": "1.0.19",
-    "@applitools/visual-grid-client": "15.0.8",
+    "@applitools/visual-grid-client": "15.0.12",
     "boxen": "4.2.0",
     "chalk": "3.0.0",
     "detect-port": "1.3.0",

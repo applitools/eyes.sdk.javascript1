@@ -17,7 +17,6 @@ const {
   ScreenOrientation,
   MatchLevel,
 } = require(cwd)
-const {BROWSERS, DEVICES} = require('../src/test-setup')
 const scrollPage = require('../src/scroll-page')
 
 const delay = util.promisify(setTimeout)
@@ -98,12 +97,14 @@ const buildOptions = {
     describe: 'preset name of browser. (e.g. "edge-18", "ie-11", "safari-11", "firefox")',
     type: 'string',
     default: 'chrome',
-    choices: Object.keys(BROWSERS),
   },
   device: {
     describe: 'preset name of browser (e.g. "iPhone X", "Pixel 4")',
     type: 'string',
-    choices: Object.keys(DEVICES),
+  },
+  deviceOrientation: {
+    describe: 'device orientation',
+    type: 'string',
   },
   capabilities: {
     describe:
@@ -143,7 +144,6 @@ const eyesConfig = {
   viewportSize: {
     describe: 'viewport size to open the browser (widthxheight)',
     type: 'string',
-    default: '1024x768',
     coerce: utils.parseSize,
     conflicts: ['device'],
   },
@@ -190,6 +190,10 @@ const eyesConfig = {
     describe: 'batch name',
     type: 'string',
   },
+  notifyOnCompletion: {
+    describe: 'batch notifications',
+    type: 'boolean',
+  },
   accessibilityValidation: {
     describe: 'accessibility validation (comma-separated, e.g. AA,WCAG_2_0)',
     type: 'string',
@@ -210,8 +214,8 @@ const eyesConfig = {
         }
         return {
           name: match[1],
-          width: Number.parseInt(match[3], 10),
-          height: Number.parseInt(match[5], 10),
+          width: Number.parseInt(match[3], 10) || 700,
+          height: Number.parseInt(match[5], 10) || 460,
         }
       })
     },
@@ -292,6 +296,7 @@ if (!url && !args.attach) {
   const [driver, destroyDriver] = await spec.build({
     browser: args.browser,
     device: args.device,
+    orientation: args.deviceOrientation,
     capabilities: args.capabilities,
     url: args.driverUrl,
     attach: args.attach,
@@ -317,10 +322,10 @@ if (!url && !args.attach) {
   eyes.setConfiguration({
     apiKey: args.apiKey,
     serverUrl: args.serverUrl,
-    viewportSize: args.viewportSize,
-    browserInfo:
+    viewportSize: args.viewportSize || (!args.device ? {width: 1024, height: 768} : undefined),
+    browsersInfo:
       args.renderBrowsers || args.renderEmulations
-        ? [...args.renderBrowsers, ...args.renderEmulations]
+        ? [...(args.renderBrowsers || []), ...(args.renderEmulations || [])]
         : undefined,
     proxy: args.proxy,
     accessibilityValidation: args.accessibilityValidation,
@@ -330,8 +335,10 @@ if (!url && !args.attach) {
     displayName: args.displayName,
     baselineEnvName: args.envName, // determines the baseline
     environmentName: args.envName, // shows up in the Environment column in the dashboard
-    batch: args.batchId || args.batchName ? {id: args.batchId, name: args.batchName} : undefined,
-    dontCloseBatches: Boolean(args.batchId),
+    batch:
+      args.batchId || args.batchName || args.notifyOnCompletion
+        ? {id: args.batchId, name: args.batchName, notifyOnCompletion: args.notifyOnCompletion}
+        : undefined,
   })
 
   const {logger, logFilePath} = initLog(eyes, new URL(url).hostname.replace(/\./g, '-'))

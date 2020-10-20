@@ -1,0 +1,6 @@
+<h1>Dynamic regions test</h1>
+<div class="dynamic-region"></div>
+<div class="dynamic-region"></div>
+<script>
+[].forEach.call(document.querySelectorAll('.dynamic-region'), el => el.textContent = Date.now())
+</script>

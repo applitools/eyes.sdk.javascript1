@@ -163,7 +163,9 @@ class EyesContext {
         }
         this._element = elements[this._reference]
       } else if (TypeUtils.isString(this._reference) || this.spec.isSelector(this._reference)) {
-        const referenceStr = TypeUtils.isString(this._reference) ? this._reference : JSON.stringify(this._reference)
+        const referenceStr = TypeUtils.isString(this._reference)
+          ? this._reference
+          : JSON.stringify(this._reference)
         this._logger.verbose('Getting frames by name or id or selector...')
         if (TypeUtils.isString(this._reference)) {
           this._logger.verbose('Context init from string -', referenceStr)

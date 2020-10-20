@@ -1,5 +1,5 @@
 'use strict'
-
+const chalk = require('chalk')
 const BrowserType = require('../config/BrowserType')
 const Configuration = require('../config/Configuration')
 const GeneralUtils = require('../utils/GeneralUtils')
@@ -197,10 +197,9 @@ class EyesVisualGrid extends EyesCore {
       agentId: this.getFullAgentId(),
       apiKey: this._configuration.getApiKey(),
       showLogs: this._configuration.getShowLogs(),
-      saveDebugData: this._configuration.getSaveDebugData(),
       proxy: this._configuration.getProxy(),
       serverUrl: this._configuration.getServerUrl(),
-      renderConcurrencyFactor: this._configuration.getConcurrentSessions(),
+      concurrency: this._configuration.getConcurrentSessions(),
     })
 
     if (this._configuration.getViewportSize()) {
@@ -307,53 +306,82 @@ class EyesVisualGrid extends EyesCore {
       this._context = await originalContext.focus()
     }
   }
-  /**
-   * @param {CheckSettings<TElement, TSelector>} checkSettings
-   */
+
   async _takeDomSnapshots({breakpoints, disableBrowserFetching}) {
     const browsers = this._configuration.getBrowsersInfo()
     if (!breakpoints) {
       this._logger.verbose(`taking single dom snapshot`)
-      const snapshot = await takeDomSnapshot({
-        driver: this._driver,
-        disableBrowserFetching,
-        logger: this._logger,
-      })
+      const snapshot = await takeDomSnapshot(this._logger, this._driver, {disableBrowserFetching})
       return Array(browsers.length).fill(snapshot)
     }
-    const widths = await Promise.all(
-      browsers.map(async browser => {
-        const {width} = await this.getBrowserSize(browser)
-        return GeneralUtils.getBreakpointWidth(breakpoints, width)
-      }),
-    )
-    this._logger.verbose(
-      `taking multiple dom snapshots for widths: ${widths} (breakpoints=${breakpoints})`,
-    )
-    const viewportSize = await this.getViewportSize()
-    const snapshots = {}
-    if (widths.includes(viewportSize.getWidth())) {
-      this._logger.log(`taking dom snapshot for existing width ${viewportSize.getWidth()}`)
-      const snapshot = await takeDomSnapshot({
-        driver: this._driver,
-        disableBrowserFetching,
-        logger: this._logger,
+
+    const requiredWidths = await browsers.reduce((widths, browser, index) => {
+      const browserInfo = this.getBrowserInfo(browser)
+      return widths.then(async widths => {
+        const {type, name, width} = await browserInfo
+        const requiredWidth = GeneralUtils.getBreakpointWidth(breakpoints, width)
+        let groupedBrowsers = widths.get(requiredWidth)
+        if (!groupedBrowsers) {
+          groupedBrowsers = []
+          widths.set(requiredWidth, groupedBrowsers)
+        }
+        groupedBrowsers.push({index, width, type, name})
+        return widths
       })
-      snapshots[viewportSize.getWidth()] = snapshot
+    }, Promise.resolve(new Map()))
+
+    const isStrictBreakpoints = Array.isArray(breakpoints)
+    const smallestBreakpoint = Math.min(...(isStrictBreakpoints ? breakpoints : []))
+
+    if (isStrictBreakpoints && requiredWidths.has(smallestBreakpoint - 1)) {
+      const smallestBrowsers = requiredWidths
+        .get(smallestBreakpoint - 1)
+        .map(({name, width}) => `(${name}, ${width})`)
+        .join(', ')
+      const message = chalk.yellow(
+        `The following configuration's viewport-widths are smaller than the smallest configured layout breakpoint (${smallestBreakpoint} pixels): [${smallestBrowsers}]. As a fallback, the resources that will be used for these configurations have been captured on a viewport-width of ${smallestBreakpoint} - 1 pixels. If an additional layout breakpoint is needed for you to achieve better results - please add it to your configuration.`,
+      )
+      console.log(message)
     }
-    for (const width of widths) {
-      if (snapshots[width]) continue
-      this._logger.log(`taking dom snapshot for width ${width}`)
-      await this._driver.setViewportSize({width, height: viewportSize.getHeight()})
-      const snapshot = await takeDomSnapshot({
-        driver: this._driver,
-        disableBrowserFetching,
-        logger: this._logger,
-      })
-      snapshots[width] = snapshot
+
+    this._logger.verbose(`taking multiple dom snapshots for breakpoints: ${breakpoints}`)
+    this._logger.verbose(`required widths: ${[...requiredWidths.keys()].join(', ')}`)
+    const viewportSize = await this.getViewportSize()
+    const snapshots = Array(browsers.length)
+    if (requiredWidths.has(viewportSize.getWidth())) {
+      this._logger.log(`taking dom snapshot for existing width ${viewportSize.getWidth()}`)
+      const snapshot = await takeDomSnapshot(this._logger, this._driver, {disableBrowserFetching})
+      requiredWidths
+        .get(viewportSize.getWidth())
+        .forEach(({index}) => (snapshots[index] = snapshot))
+    }
+    for (const [requiredWidth, browsersInfo] of requiredWidths.entries()) {
+      this._logger.log(`taking dom snapshot for width ${requiredWidth}`)
+      try {
+        await this._driver.setViewportSize({width: requiredWidth, height: viewportSize.getHeight()})
+      } catch (err) {
+        const actualViewportSize = await this._driver.getViewportSize()
+        if (isStrictBreakpoints) {
+          const failedBrowsers = browsersInfo
+            .map(({name, width}) => `(${name}, ${width})`)
+            .join(', ')
+          const message = chalk.yellow(
+            `One of the configured layout breakpoints is ${requiredWidth} pixels, while your local browser has a limit of ${actualViewportSize.getWidth()}, so the SDK couldn't resize it to the desired size. As a fallback, the resources that will be used for the following configurations: [${failedBrowsers}] have been captured on the browser's limit (${actualViewportSize.getWidth()} pixels). To resolve this, you may use a headless browser as it can be resized to any size.`,
+          )
+          console.log(message)
+        } else {
+          const failedBrowsers = browsersInfo.map(({name}) => `(${name})`).join(', ')
+          const message = chalk.yellow(
+            `The following configurations [${failedBrowsers}] have a viewport-width of ${requiredWidth} pixels, while your local browser has a limit of ${actualViewportSize.getWidth()} pixels, so the SDK couldn't resize it to the desired size. As a fallback, the resources that will be used for these checkpoints have been captured on the browser's limit (${actualViewportSize.getWidth()} pixels). To resolve this, you may use a headless browser as it can be resized to any size.`,
+          )
+          console.log(message)
+        }
+      }
+      const snapshot = await takeDomSnapshot(this._logger, this._driver, {disableBrowserFetching})
+      browsersInfo.forEach(({index}) => (snapshots[index] = snapshot))
     }
     await this._driver.setViewportSize(viewportSize)
-    return widths.map(width => snapshots[width])
+    return snapshots
   }
   /**
    * @inheritDoc
@@ -412,9 +440,10 @@ class EyesVisualGrid extends EyesCore {
     return undefined
   }
 
-  async getBrowserSize(browser) {
-    if (TypeUtils.has(browser, 'width')) {
-      return {width: browser.width, height: browser.height}
+  async getBrowserInfo(browser) {
+    if (TypeUtils.has(browser, 'name')) {
+      const {name, width, height} = browser
+      return {type: 'browser', name, width, height}
     } else if (
       TypeUtils.has(browser, 'chromeEmulationInfo') ||
       TypeUtils.has(browser, 'deviceName')
@@ -425,7 +454,8 @@ class EyesVisualGrid extends EyesCore {
         this._emulatedDevicesSizesPromise = this._serverConnector.getEmulatedDevicesSizes()
       }
       const devicesSizes = await this._emulatedDevicesSizesPromise
-      return devicesSizes[deviceName][screenOrientation]
+      const size = devicesSizes[deviceName][screenOrientation]
+      return {type: 'emulation', name: deviceName, screenOrientation, ...size}
     } else if (TypeUtils.has(browser, 'iosDeviceInfo')) {
       const {deviceName, screenOrientation = 'portrait'} = browser.iosDeviceInfo
       if (!this._iosDevicesSizesPromise) {
@@ -433,7 +463,8 @@ class EyesVisualGrid extends EyesCore {
         this._iosDevicesSizesPromise = this._serverConnector.getIosDevicesSizes()
       }
       const devicesSizes = await this._iosDevicesSizesPromise
-      return devicesSizes[deviceName][screenOrientation]
+      const size = devicesSizes[deviceName][screenOrientation]
+      return {type: 'ios', name: deviceName, screenOrientation, ...size}
     }
   }
 }

@@ -9,7 +9,8 @@ const Enum = require('../utils/Enum')
  */
 const IosVersions = Enum('IosVersion', {
   /** @type {'latest'} */
-  Latest: 'latest',
+  LATEST: 'latest',
+  LATEST_ONE_VERSION_BACK: 'latest-1',
 })
 
 module.exports = IosVersions

@@ -5,7 +5,7 @@ const throatPkg = require('throat')
 const {
   BatchInfo,
   Logger,
-  GeneralUtils: {backwardCompatible},
+  GeneralUtils: {backwardCompatible, deprecationWarning},
 } = require('@applitools/eyes-sdk-core')
 const {ptimeoutWithError} = require('@applitools/functional-commons')
 const makeGetAllResources = require('./getAllResources')
@@ -82,12 +82,16 @@ function makeRenderingGridClient({
   dontCloseBatches,
   visualGridOptions,
 }) {
+  if (saveDebugData) {
+    deprecationWarning({deprecatedThing: 'saveDebugData', isDead: true})
+  }
   const openEyesConcurrency = Number(concurrency)
 
   if (isNaN(openEyesConcurrency)) {
     throw new Error('concurrency is not a number')
   }
-
+  logger = logger || new Logger(showLogs, 'visual-grid-client')
+  logger.verbose('vgc concurrency is', concurrency)
   ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
     [{batchSequenceName}, {batchSequence}],
     [{baselineBranchName}, {baselineBranch}],
@@ -100,7 +104,6 @@ function makeRenderingGridClient({
   let renderInfoPromise
   const eyesTransactionThroat = transactionThroat(openEyesConcurrency)
   const renderThroat = throatPkg(openEyesConcurrency * renderConcurrencyFactor)
-  logger = logger || new Logger(showLogs, 'visual-grid-client')
   renderWrapper =
     renderWrapper ||
     createRenderWrapper({
@@ -166,7 +169,6 @@ function makeRenderingGridClient({
     appName,
     browser,
     apiKey,
-    saveDebugData,
     batch,
     properties,
     baselineBranch,

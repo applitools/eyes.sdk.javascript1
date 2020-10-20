@@ -10,6 +10,8 @@ const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eye
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const fs = require('fs')
 const {resolve} = require('path')
+const testLogger = require('../util/testLogger')
+const {ApiAssertions} = require('@applitools/sdk-shared')
 
 describe('openEyes', () => {
   let baseUrl, closeServer, openEyes
@@ -22,6 +24,7 @@ describe('openEyes', () => {
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
       apiKey,
       fetchResourceTimeout: 2000,
+      logger: testLogger,
     }).openEyes
   })
 
@@ -87,7 +90,6 @@ describe('openEyes', () => {
         {deviceName: 'iPhone X'},
       ],
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
-      saveDebugData: process.env.APPLITOOLS_SAVE_DEBUG_DATA,
     })
 
     const scriptHooks = {
@@ -99,6 +101,8 @@ describe('openEyes', () => {
       tag: 'first',
       url,
       scriptHooks,
+      ignore: [{selector: 'div[class*="bg-"]'}],
+      floating: [{selector: 'img[src*="smurfs.jpg"]', maxUpOffset: 3}],
     })
 
     const [errArr, results] = await presult(close())
@@ -107,6 +111,73 @@ describe('openEyes', () => {
 
     expect(results.length).to.eq(3)
     expect(results.map(r => r.getStatus())).to.eql(['Passed', 'Passed', 'Passed'])
+
+    const expectedIgnoreRegions = [
+      [
+        {left: 8, top: 412, width: 151, height: 227},
+        {left: 8, top: 667, width: 151, height: 227},
+        {left: 8, top: 922, width: 151, height: 227},
+      ],
+      [
+        {left: 8, top: 418, width: 151, height: 227},
+        {left: 8, top: 674, width: 151, height: 227},
+        {left: 8, top: 930, width: 151, height: 227},
+      ],
+      [
+        {left: 8, top: 471, width: 151, height: 227},
+        {left: 8, top: 726, width: 151, height: 227},
+        {left: 8, top: 981, width: 151, height: 227},
+      ],
+    ]
+
+    const expectedFloatingRegions = [
+      [
+        {
+          maxLeftOffset: 0,
+          maxRightOffset: 0,
+          maxUpOffset: 3,
+          maxDownOffset: 0,
+          left: 8,
+          top: 163,
+          width: 151,
+          height: 227,
+        },
+      ],
+      [
+        {
+          maxLeftOffset: 0,
+          maxRightOffset: 0,
+          maxUpOffset: 3,
+          maxDownOffset: 0,
+          left: 8,
+          top: 168,
+          width: 151,
+          height: 227,
+        },
+      ],
+      [
+        {
+          maxLeftOffset: 0,
+          maxRightOffset: 0,
+          maxUpOffset: 3,
+          maxDownOffset: 0,
+          left: 8,
+          top: 221,
+          width: 151,
+          height: 227,
+        },
+      ],
+    ]
+
+    for (const [index, testResults] of results.entries()) {
+      const testData = await ApiAssertions.getApiData(testResults, apiKey)
+      expect(testData.actualAppOutput[0].imageMatchSettings.ignore).to.eql(
+        expectedIgnoreRegions[index],
+      )
+      expect(testData.actualAppOutput[0].imageMatchSettings.floating).to.eql(
+        expectedFloatingRegions[index],
+      )
+    }
   })
 
   it('fails with incorrect screenshot', async () => {
@@ -123,7 +194,6 @@ describe('openEyes', () => {
         {deviceName: 'iPhone X'},
       ],
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
-      saveDebugData: process.env.APPLITOOLS_SAVE_DEBUG_DATA,
     })
 
     const scriptHooks = {

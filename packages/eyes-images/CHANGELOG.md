@@ -1,10 +1,10 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/eyes-sdk-core@11.5.0 (from 11.3.4)
-- updated to @applitools/eyes-sdk-core@12.2.5 (from 11.5.0)
+
 - remove yarn workspaces
-- updated to @applitools/eyes-sdk-core@12.2.6 (from 12.2.5)
+- deprecate `saveDebugData`
+- updated to @applitools/eyes-sdk-core@12.2.6 (from 11.3.4)
 
 
 ## 4.14.2 - 2020/7/8

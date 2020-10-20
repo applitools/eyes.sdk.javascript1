@@ -1,6 +1,6 @@
 {
   "name": "@applitools/snippets",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "main": "./dist/index.js",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
@@ -11,11 +11,14 @@
     "test:ios": "mocha --no-timeouts --require test/util/hook.js --grep 'ios safari' ./test/*.spec.js",
     "build": "node ./rollup/cli bundle --format json --format snippet",
     "build:watch": "node ./rollup/cli watch --format json --format snippet",
-    "preversion": "bongo preversion && yarn build && yarn test",
+    "preversion": "yarn build && bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps"
   },
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=8.9.0"
   },
@@ -23,6 +26,7 @@
   "devDependencies": {
     "@applitools/sdk-release-kit": "^0.3.3",
     "@applitools/sdk-shared": "^0.1.0",
+    "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-commonjs": "^15.0.0",

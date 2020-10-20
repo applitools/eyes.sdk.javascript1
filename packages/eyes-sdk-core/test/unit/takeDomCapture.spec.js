@@ -4,7 +4,7 @@ const Axios = require('axios')
 const {Logger} = require('../../index')
 const MockDriver = require('../utils/MockDriver')
 const {Driver} = require('../utils/FakeSDK')
-const takeDomCapture = require('../../lib/takeDomCapture')
+const takeDomCapture = require('../../lib/utils/takeDomCapture')
 
 describe('takeDomCapture', () => {
   let logger = new Logger(false)

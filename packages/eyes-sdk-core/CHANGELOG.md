@@ -3,6 +3,49 @@
 ## Unreleased
 
 
+## 12.4.4 - 2020/10/19
+
+- deprecate `saveDebugData`
+
+## 12.4.3 - 2020/10/18
+
+- use `enableMultipleResultsPerSelector` in render request
+- updated to @applitools/dom-snapshot@4.2.2 (from 4.2.1)
+
+## 12.4.2 - 2020/10/14
+
+- re-enable native app viewport screenshotting along with added support for checkRegion
+
+## 12.4.1 - 2020/10/13
+
+- disable native mobile app viewport screenshotting (until check region functionality is also supported)
+
+## 12.4.0 - 2020/10/13
+
+- improve screenshots on native mobile apps (with Appium) so just the application viewport is captured ([PR 135](https://github.com/applitools/eyes.sdk.javascript1/pull/135))
+=======
+
+## 12.3.2 - 2020/10/13
+
+- override cors frame's src after dom snapshot is taken
+- prevent taking a screenshot of the invisible part of the region ([Trello 544](https://trello.com/c/wJsUyBPE), [Trello 528](https://trello.com/c/iu2Png9p), [commit](https://github.com/applitools/eyes.sdk.javascript1/commit/c4adcdd74d479284075835e7a99489d8ba37825f))
+- updated to @applitools/dom-snapshot@4.2.1 (from 4.2.0)
+
+## 12.3.1 - 2020/10/7
+
+- add support for proxy configurations that use a default port (e.g., port 80) with isHttpOnly ([Trello 539](https://trello.com/c/0RPLxkOo), [commit](https://github.com/applitools/eyes.sdk.javascript1/commit/f0225dd9d5d761f5941eea1fa145bfaea9170877))
+
+## 12.3.0 - 2020/10/6
+
+- added support of chunked dom snapshot results
+- used common polling logic for dom snapshot and dom capture
+- add warnings when `setViewportSize` fails during taking dom snapshot with layout breakpoints
+- support multiple versions of ios for visual grid
+- updated to @applitools/dom-snapshot@4.1.2 (from 4.1.0)
+- updated to @applitools/snippets@2.0.3 (from 2.0.1)
+- updated to @applitools/dom-capture@8.0.0 (from 7.3.0)
+- updated to @applitools/dom-snapshot@4.2.0 (from 4.1.2)
+
 ## 12.2.9 - 2020/9/28
 
 - increase the default number of retries for request

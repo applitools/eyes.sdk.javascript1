@@ -1,6 +1,6 @@
 {
   "name": "@applitools/sdk-coverage-tests",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "engines": {
     "node": ">=10.12.0"
   },
@@ -31,6 +31,7 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
+    "@azure/storage-blob": "12.2.0-preview.1",
     "axios": "0.20.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
@@ -43,7 +44,6 @@
   "devDependencies": {
     "@applitools/sdk-release-kit": "^0.3.1",
     "@applitools/sdk-shared": "0.1.2",
-    "@azure/storage-blob": "^12.2.0-preview.1",
     "@typescript-eslint/parser": "4.2.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- deprecate `saveDebugData`
+
+## 5.25.1 - 2020/10/15
+
+- add iosVersion to readme
+
+## 5.25.0 - 2020/10/14
+
+- updated to @applitools/eyes-sdk-core@12.4.2 (from 12.3.1)
+- updated to @applitools/visual-grid-client@15.0.10 (from 15.0.9)
+
+## 5.24.1 - 2020/10/7
+
+- updated to @applitools/eyes-sdk-core@12.3.1 (from 12.3.0)
+
+## 5.24.0 - 2020/10/6
+
+- updated to @applitools/eyes-sdk-core@12.3.0 (from 12.2.6)
+- updated to @applitools/visual-grid-client@15.0.9 (from 15.0.6)
 
 ## 5.23.1 - 2020/9/23
 

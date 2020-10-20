@@ -46,6 +46,17 @@ describe('translateTo', () => {
   })
 
   for (const name of ['internet explorer', 'ios safari']) {
+    const expectedTransforms = {
+      'internet explorer': {
+        transform: 'translate(-10px, -11px)',
+        webkitTransform: null,
+      },
+      'ios safari': {
+        transform: 'translate(-10px, -11px)',
+        webkitTransform: 'translate(-10px, -11px)',
+      },
+    }
+
     describe(name, () => {
       let driver
 
@@ -66,10 +77,7 @@ describe('translateTo', () => {
             webkitTransform: element.style.webkitTransform,
           }
         }, element)
-        assert.deepStrictEqual(transforms, {
-          transform: 'translate(-10px, -11px)',
-          webkitTransform: 'translate(-10px, -11px)',
-        })
+        assert.deepStrictEqual(transforms, expectedTransforms[name])
       })
 
       it('default element', async () => {
@@ -81,10 +89,7 @@ describe('translateTo', () => {
             webkitTransform: document.documentElement.style.webkitTransform,
           }
         })
-        assert.deepStrictEqual(transforms, {
-          transform: 'translate(-10px, -11px)',
-          webkitTransform: 'translate(-10px, -11px)',
-        })
+        assert.deepStrictEqual(transforms, expectedTransforms[name])
       })
     })
   }

@@ -4,16 +4,17 @@ const pexec = promisify(exec)
 
 const packages = [
   '@applitools/eyes-selenium',
-  '@applitools/eyes-images',
-  'eyes.selenium',
   '@applitools/eyes-webdriverio',
   '@applitools/eyes.webdriverio',
   '@applitools/eyes-webdriverio5-service',
   '@applitools/eyes-webdriverio4-service',
   '@applitools/eyes-protractor',
+  '@applitools/eyes-playwright',
   '@applitools/eyes-cypress',
   '@applitools/eyes-storybook',
   '@applitools/eyes-testcafe',
+  '@applitools/eyes-images',
+  'eyes.selenium',
   '@applitools/dom-snapshot',
   '@applitools/dom-capture',
 ]

@@ -18,11 +18,8 @@ describe('getElementStyleProperties', () => {
       await page.goto(url)
       const element = await page.$('#static')
       await page.evaluate(element => (element.style.backgroundColor = 'red'), element)
-      const {backgroundColor} = await page.evaluate(getElementStyleProperties, [
-        element,
-        ['backgroundColor'],
-      ])
-      assert.deepStrictEqual(backgroundColor, 'red')
+      const styles = await page.evaluate(getElementStyleProperties, [element, ['background-color']])
+      assert.deepStrictEqual(styles['background-color'], {value: 'red', important: false})
     })
   })
 
@@ -43,11 +40,11 @@ describe('getElementStyleProperties', () => {
         await driver.execute(function(element) {
           element.style.backgroundColor = 'red'
         }, element)
-        const {backgroundColor} = await driver.execute(getElementStyleProperties, [
+        const styles = await driver.execute(getElementStyleProperties, [
           element,
-          ['backgroundColor'],
+          ['background-color'],
         ])
-        assert.deepStrictEqual(backgroundColor, 'red')
+        assert.deepStrictEqual(styles['background-color'], {value: 'red', important: false})
       })
     })
   }

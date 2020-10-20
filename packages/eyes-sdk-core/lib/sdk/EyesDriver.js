@@ -133,6 +133,20 @@ class EyesDriver {
   get isMobile() {
     return this._isMobile || false
   }
+  /** @type {boolean} */
+  get isIOS() {
+    return this._platformName === 'iOS'
+  }
+  /** @type {boolean} */
+  get isIE() {
+    return this._browserName === 'internet explorer'
+  }
+  /** @type {boolean} */
+  get isEdgeLegacy() {
+    const browserName = String(this._browserName).toLowerCase()
+    const browserVersion = Number(this._browserVersion)
+    return browserName.includes('edge') && browserVersion <= 44
+  }
   /** @type {string} */
   get deviceName() {
     return this._deviceName || undefined

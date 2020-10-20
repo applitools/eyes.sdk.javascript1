@@ -46,7 +46,7 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions}) {
       visualGridOptions = args.visualGridOptions;
     }
 
-    return processPage(doc, domSnapshotOptions).then(mainFrame => {
+    return processPage(Object.assign({doc}, domSnapshotOptions)).then(mainFrame => {
       const allBlobs = getAllBlobs(mainFrame)
         .filter(blob => !blob.errorStatusCode)
         .map(mapBlob);

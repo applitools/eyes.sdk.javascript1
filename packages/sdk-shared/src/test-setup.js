@@ -25,7 +25,6 @@ const DEVICES = {
       deviceName: 'Android Emulator',
       platformName: 'Android',
       platformVersion: '6.0',
-      deviceOrientation: 'landscape',
       clearSystemFiles: true,
       noReset: true,
       ...SAUCE_CREDENTIALS,
@@ -53,6 +52,27 @@ const DEVICES = {
       appiumVersion: '1.9.1',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
       automationName: 'uiautomator2',
+      newCommandTimeout: 600,
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 5S': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPhone 5s Simulator',
+      platformVersion: '12.4',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 11 Pro': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPhone 11 Pro Simulator',
+      platformVersion: '13.4',
+      platformName: 'iOS',
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -63,6 +83,16 @@ const DEVICES = {
       platformName: 'iOS',
       platformVersion: '13.0',
       deviceName: 'iPhone XS Simulator',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPad Air': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPad Air Simulator',
+      platformVersion: '12.4',
+      platformName: 'iOS',
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -166,14 +196,16 @@ function Env(
         (legacy ? preset.capabilities.legacy : preset.capabilities.w3c) || preset.capabilities,
       )
       env.configurable = preset.type !== 'sauce'
-      if (preset.options) {
-        if (preset.type === 'sauce') {
-          if (legacy) Object.assign(env.capabilities, preset.options)
-          else env.capabilities['sauce:options'] = {...preset.options}
+      if (preset.type === 'sauce') {
+        if (legacy || env.device) {
+          env.options = env.capabilities = {...env.capabilities, ...preset.options}
         } else {
-          env.options = preset.options
+          env.options = env.capabilities['sauce:options'] = {...preset.options}
         }
+      } else {
+        env.options = preset.options || {}
       }
+      env.options.deviceOrientation = env.orientation
     }
   } else if (protocol === 'cdp') {
     url = url || process.env.CVG_TESTS_CDP_REMOTE
@@ -191,8 +223,10 @@ function getEyes({
   configuration,
   branchName = 'master',
   showLogs,
+  runner,
 } = {}) {
-  const eyes = new Eyes(isVisualGrid ? new VisualGridRunner(10) : undefined)
+  runner = runner || (isVisualGrid ? new VisualGridRunner() : undefined)
+  const eyes = new Eyes(runner)
   const conf = Object.assign(
     {
       apiKey: process.env.APPLITOOLS_API_KEY_SDK,
@@ -203,6 +237,7 @@ function getEyes({
       matchTimeout: 0,
       stitchMode: isCssStitching ? StitchMode.CSS : StitchMode.SCROLL,
       saveNewTests: false,
+      concurrentSessions: 100,
     },
     configuration,
   )

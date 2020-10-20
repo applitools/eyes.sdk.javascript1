@@ -256,8 +256,10 @@ async function build(env) {
       if (browserOptionsName) {
         options.capabilities[browserOptionsName] = {
           args: headless ? args.concat('headless') : args,
-          w3c: !attach,
           debuggerAddress: attach === true ? 'localhost:9222' : attach,
+        }
+        if (browser !== 'firefox') {
+          options.capabilities[browserOptionsName].w3c = !attach
         }
       }
     }

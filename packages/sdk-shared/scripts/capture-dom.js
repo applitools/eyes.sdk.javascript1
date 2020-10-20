@@ -6,7 +6,7 @@ const filenamify = require('filenamify')
 const {Logger} = require(cwd)
 const {Driver} = require(path.resolve(cwd, 'src/sdk'))
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
-// eslint-disable-next-line node/no-extraneous-require
+// eslint-disable-next-line node/no-missing-require
 const {takeDomCapture} = require(require.resolve('@applitools/eyes-sdk-core', cwd))
 
 ;(async function main() {

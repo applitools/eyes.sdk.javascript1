@@ -149,7 +149,10 @@ class RenderInfo {
     }
 
     if (this._iosDeviceInfo) {
-      obj.iosDeviceInfo = GeneralUtils.toPlain(this._iosDeviceInfo, undefined, {deviceName: 'name'})
+      obj.iosDeviceInfo = GeneralUtils.toPlain(this._iosDeviceInfo, undefined, {
+        deviceName: 'name',
+        iosVersion: 'version',
+      })
     }
 
     // TODO remove this when rendering-grid changes x/y to left/top

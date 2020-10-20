@@ -171,6 +171,7 @@ describe('spec driver', async () => {
       ;[browser, destroyBrowser] = await spec.build({
         app: 'http://saucelabs.com/example_files/ContactManager.apk',
         device: 'Android Emulator',
+        orientation: 'landscape',
       })
     })
 

@@ -3,6 +3,26 @@
 ## Unreleased
 
 
+## 15.0.12 - 2020/10/19
+
+- deprecate `saveDebugData`
+- updated to @applitools/eyes-sdk-core@12.4.4 (from 12.4.3)
+
+## 15.0.11 - 2020/10/18
+
+- support multiple regions per selector
+- updated to @applitools/eyes-sdk-core@12.4.3 (from 12.3.2)
+
+## 15.0.10 - 2020/10/13
+
+- updated to @applitools/eyes-sdk-core@12.3.1 (from 12.3.0)
+- updated to @applitools/eyes-sdk-core@12.3.2 (from 12.3.1)
+
+## 15.0.9 - 2020/10/6
+
+- updated to @applitools/eyes-sdk-core@12.3.0 (from 12.2.9)
+- support multiple versions of ios
+
 ## 15.0.8 - 2020/9/28
 
 - updated to @applitools/eyes-sdk-core@12.2.9 (from 12.2.8)

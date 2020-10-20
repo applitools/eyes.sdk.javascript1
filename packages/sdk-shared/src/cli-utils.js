@@ -34,7 +34,9 @@ function parseSize(str) {
 
 function parseRegion(str) {
   if (!str) return str
-  const [_, locationStr, sizeStr] = str.match(/^\((.+?)\)(.+?)$/)
+  const match = str.match(/^\((.+?)\)(.+?)$/)
+  if (!match) return null
+  const [_, locationStr, sizeStr] = match
   if (!locationStr || !sizeStr) return null
   const location = parseLocation(locationStr)
   const size = parseSize(sizeStr)

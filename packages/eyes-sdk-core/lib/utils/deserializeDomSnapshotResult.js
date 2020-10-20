@@ -7,6 +7,8 @@ function deserializeDomSnapshotResult(domSnapshotResult) {
     frames: domSnapshotResult.frames.map(deserializeDomSnapshotResult),
   }
   delete ret.blobs
+  delete ret.selector
+  delete ret.crossFrames
   return ret
 }
 

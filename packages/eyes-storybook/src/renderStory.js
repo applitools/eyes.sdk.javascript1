@@ -1,6 +1,6 @@
 'use strict';
 const getStoryTitle = require('./getStoryTitle');
-const deprecationWarning = require('./deprecationWarning');
+const {deprecationWarning} = require('@applitools/eyes-sdk-core').GeneralUtils;
 
 function makeRenderStory({config, logger, testWindow, performance, timeItAsync}) {
   return function renderStory({story, snapshot, url}) {
@@ -28,12 +28,12 @@ function makeRenderStory({config, logger, testWindow, performance, timeItAsync})
     } = eyesOptions;
 
     if (sizeMode) {
-      console.log(deprecationWarning("'sizeMode'", "'target'"));
+      console.log(deprecationWarning({deprecatedThing: "'sizeMode'", newThing: "'target'"}));
     }
 
     let ignoreRegionsBackCompat = ignoreRegions;
     if (ignore && ignoreRegions === undefined) {
-      console.log(deprecationWarning("'ignore'", "'ignoreRegions'"));
+      console.log(deprecationWarning({deprecatedThing: "'ignore'", newThing: "'ignoreRegions'"}));
       ignoreRegionsBackCompat = ignore;
     }
 

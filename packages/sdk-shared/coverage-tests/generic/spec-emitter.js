@@ -43,7 +43,7 @@ function makeSpecEmitter(options) {
   addHook('deps', `const cwd = process.cwd()`)
   addHook('deps', `const path = require('path')`)
   addHook('deps', `const assert = require('assert')`)
-  addHook('deps', `const spec = require(path.resolve(cwd, 'src/SpecDriver'))`)
+  addHook('deps', `const spec = require(path.resolve(cwd, 'src/spec-driver'))`)
   addHook('deps', `const {Configuration} = require(cwd)`)
   addHook('deps', `const {testSetup} = require('@applitools/sdk-shared')`)
 

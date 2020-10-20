@@ -21,7 +21,7 @@ describe('setElementStyleProperties', () => {
         element,
         {overflow: 'hidden'},
       ])
-      assert.deepStrictEqual(overflow, '')
+      assert.deepStrictEqual(overflow, {value: '', important: false})
       const actualOverflow = await page.evaluate(element => element.style.overflow, element)
       assert.deepStrictEqual(actualOverflow, 'hidden')
     })
@@ -45,7 +45,7 @@ describe('setElementStyleProperties', () => {
           element,
           {overflow: 'hidden'},
         ])
-        assert.deepStrictEqual(overflow, '')
+        assert.deepStrictEqual(overflow, {value: '', important: false})
         const actualOverflow = await driver.execute(function(element) {
           return element.style.overflow
         }, element)

@@ -12,7 +12,7 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "cypress": "file:../../../../../../node_modules/cypress"
+    "cypress": "file:../../../../node_modules/cypress"
   },
   "dependencies": {}
 }

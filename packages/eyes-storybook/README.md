@@ -145,7 +145,6 @@ In addition to command-line arguments, it's possible to define the following con
 | `exitcode`                | false                       | If tests failed close with non-zero exit code (also available as command-line argument). |
 | `browser`                 | { width: 800, height: 600, name: 'chrome' } | The size and browser of the generated screenshots. For more info and possible values, see the [browser section below](#configuring-the-browser).|
 | `showLogs`                | false                       | Whether or not you want to see logs of the Eyes-Storybook plugin. |
-| `saveDebugData`           | false                       | Whether to save troubleshooting data. See the troubleshooting section of this doc for more info. |
 | `batchId`                 | random                      | Provides ability to group tests into batches. Read more about batches [here](https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html). |
 | `batchName`               | undefined                   | Provides a name to the batch. |
 | `batchSequenceName`       | undefined                   | Name for managing batch statistics. |
@@ -300,13 +299,20 @@ module.exports = {
   browser: {
     iosDeviceInfo: {
       deviceName: 'iPhone XR',
-      screenOrientation: 'landscape',
+      screenOrientation: 'landscape', // optional, default: 'portrait'
+      iosVersion: 'latest' // optional, default: undefined (i.e. the default is determined by the Ultrafast grid)
     },
   }
 }
 ```
 
 The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
+
+Possible values for `iosVersion` are:
+
+- `'latest'` - the latest iOS version that's supported by the UFG
+- `'latest-1'` - one version prior to the latest version
+- `undefined` - the UFG's default
 
 ## Per component configuration
 
@@ -652,8 +658,3 @@ const date = new Date(isBeingTested ? SOME_FIXED_DATE : undefined)
 
 storiesOf('Some kind', module).add('Date', () => <div>{date}</div>)
 ```
-
-## Troubleshooting
-
-If issues occur, the `saveDebugData` config property can be set to true in order to save helpful information. The information will be saved under a folder named `.applitools` in the current working directory. This could be then used for getting support on your issue.
-<br/>You can also use [DEBUG=eyes*](https://github.com/visionmedia/debug) for debugging.

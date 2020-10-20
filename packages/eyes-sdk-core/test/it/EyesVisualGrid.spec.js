@@ -65,7 +65,7 @@ describe('EyesVisualGrid', async () => {
     driver.mockScript('dom-snapshot', () => JSON.stringify({status: 'ERROR', error: 'bla'}))
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     const err = await eyes.check().catch(err => err)
-    expect(err.message).to.equal('Unable to process dom snapshot: bla')
+    expect(err.message).to.equal("Error during execute poll script: 'bla'")
   })
 
   it('should throw an error on invalid dom snapshot JSON', async () => {
@@ -74,9 +74,11 @@ describe('EyesVisualGrid', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     const err = await eyes.check().catch(err => err)
     expect(err.message).to.contain(
-      `dom snapshot is not a valid JSON string. response length: ${
+      `Response is not a valid JSON string. length: ${
         response.length
-      }, first 100 chars: "${response.substr(0, 100)}", last 100 chars: "${response.substr(-100)}"`,
+      }, first 100 chars: "${response.substr(0, 100)}", last 100 chars: "${response.substr(
+        -100,
+      )}". error: SyntaxError: Unexpected number in JSON at position 1`,
     )
   })
 

@@ -3,6 +3,31 @@
 ## Unreleased
 
 
+## 3.10.0 - 2020/10/19
+
+- deprecate `saveDebugData`
+- updated to @applitools/eyes-sdk-core@12.4.4 (from 12.4.3)
+- updated to @applitools/visual-grid-client@15.0.12 (from 15.0.11)
+
+## 3.9.2 - 2020/10/18
+
+- updated to @applitools/dom-snapshot@4.2.2 (from 4.2.1)
+- updated to @applitools/eyes-sdk-core@12.4.3 (from 12.4.2)
+- updated to @applitools/visual-grid-client@15.0.11 (from 15.0.10)
+
+## 3.9.1 - 2020/10/14
+
+- add iosVersion to readme
+- updated to @applitools/dom-snapshot@4.2.1 (from 4.2.0)
+- updated to @applitools/eyes-sdk-core@12.4.2 (from 12.3.1)
+- updated to @applitools/visual-grid-client@15.0.10 (from 15.0.9)
+
+## 3.9.0 - 2020/10/12
+
+- updated to @applitools/dom-snapshot@4.2.0 (from 4.1.1)
+- updated to @applitools/eyes-sdk-core@12.3.1 (from 12.2.9)
+- updated to @applitools/visual-grid-client@15.0.9 (from 15.0.8)
+
 ## 3.8.11 - 2020/10/1
 
 - added "See details at..." at the beginning

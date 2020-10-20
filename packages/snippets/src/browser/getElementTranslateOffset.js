@@ -3,14 +3,15 @@ const getElementStyleProperties = require('./getElementStyleProperties')
 function getTranslateOffset([
   element = document.scrollingElement || document.documentElement,
 ] = []) {
-  const transforms = getElementStyleProperties([element, ['transform', 'webkitTransform']])
+  const transforms = getElementStyleProperties([element, ['transform', '-webkit-transform']])
   const translates = Object.keys(transforms).reduce((translates, key) => {
-    if (transforms[key]) {
-      const match = transforms[key].match(
+    const transform = transforms[key].value
+    if (transform) {
+      const match = transform.match(
         /^translate\s*\(\s*(\-?[\d, \.]+)px\s*(,\s*(-?[\d, \.]+)px)?\s*\)/,
       )
       if (!match) {
-        throw new Error(`Can't parse CSS transition: ${transforms[key]}!`)
+        throw new Error(`Can't parse CSS transition: ${transform}!`)
       }
       const x = match[1]
       const y = match[3] !== undefined ? match[3] : 0

@@ -811,14 +811,23 @@ eyes.setConfiguration(configuration)
 #### iOS device
 
 ```js
-const {IosDeviceName, ScreenOrientation} = require('@applitools/eyes-protractor')
+const {IosDeviceName, ScreenOrientation, IosVersion} = require('@applitools/eyes-protractor')
 // ...
 const configuration = eyes.getConfiguration()
 configuration.addBrowser({
   iosDeviceInfo: {
     deviceName: IosDeviceName.iPhone_11,
-    screenOrientation: ScreenOrientation.LANDSCAPE,
+    screenOrientation: ScreenOrientation.LANDSCAPE, // optional, default: ScreenOrientation.PORTRAIT
+    iosVersion: IosVersion.LATEST // optional, default: undefined (i.e. the default is determined by the Ultrafast grid)
   },
 })
 eyes.setConfiguration(configuration)
 ```
+
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
+
+Possible values for `iosVersion` are:
+
+- `IosVersion.LATEST` - the latest iOS version that's supported by the UFG
+- `IosVersion.LATEST_ONE_VERSION_BACK'` - one version prior to the latest version
+- `undefined` - the UFG's default

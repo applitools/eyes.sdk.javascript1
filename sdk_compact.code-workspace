@@ -72,6 +72,10 @@
 			"name": "shared",
 			"path": "packages/sdk-shared"
 		},
+		{
+			"name": "side",
+			"path": "packages/side-eyes"
+		}
 	],
 	"settings": {}
 }

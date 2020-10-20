@@ -2165,7 +2165,7 @@ class EyesBase {
       // START NOTE (amit): the following is something I'm not proud nor confident of. I copied it from EyesSelenium::getScreenshot, and it is to solve https://trello.com/c/O5sTPAU1. This should be rewritten asap.
       const forceFullPageScreenshot = this._configuration.getForceFullPageScreenshot()
       if ((forceFullPageScreenshot || this._stitchContent) && !isMobileDevice) {
-        positionProvider.setPosition(Location.ZERO)
+        await positionProvider.setPosition(Location.ZERO)
       }
       // END NOTE
 
@@ -2177,7 +2177,7 @@ class EyesBase {
 
     // START NOTE (amit): the following is something I'm not proud nor confident of. I copied it from EyesSelenium::getScreenshot, and it is to solve https://trello.com/c/O5sTPAU1. This should be rewritten asap.
     if (originalPosition) {
-      positionProvider.restoreState(originalPosition)
+      await positionProvider.restoreState(originalPosition)
     }
     // END NOTE
 

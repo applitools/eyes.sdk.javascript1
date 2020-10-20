@@ -5,8 +5,8 @@ const {TypeUtils} = require('../../index')
 const FakeDomSnapshot = require('./FakeDomSnapshot')
 
 const WELL_KNOWN_SCRIPTS = {
-  'dom-snapshot': script => /^\/\* @applitools\/dom-snapshot@[\d.]+ \*\//.test(script),
-  'dom-capture': script => /^\/\* @applitools\/dom-capture@[\d.]+ \*\//.test(script),
+  'dom-snapshot': script => /\/\* @applitools\/dom-snapshot@[\d.]+ \*\//.test(script),
+  'dom-capture': script => /\/\* @applitools\/dom-capture@[\d.]+ \*\//.test(script),
 }
 
 const DEFAULT_DESKTOP_UA =
@@ -27,7 +27,7 @@ const DEFAULT_PROPS = {
 }
 
 class MockDriver {
-  constructor({device, platform, browser, ua} = {}) {
+  constructor({viewport = {width: 1000, height: 1000}, device, platform, browser, ua} = {}) {
     this._device = device
     this._platform = platform
     this._browser = browser
@@ -35,8 +35,9 @@ class MockDriver {
     this._window = {
       title: 'Default Page Title',
       url: 'http://default.url',
-      rect: {x: 0, y: 0, width: 1000, height: 1000},
+      rect: {x: 0, y: 0, ...viewport},
     }
+    this._methods = new Map()
     this._scripts = new Map()
     this._elements = new Map()
     this._contexts = new Map()
@@ -76,7 +77,7 @@ class MockDriver {
     })
     this.mockScript(snippets.setElementStyleProperties, ([element, properties]) => {
       return Object.entries(properties).reduce((original, [name, value]) => {
-        original[name] = element.style[name]
+        original[name] = {value: element.style[name], important: false}
         element.style[name] = value
         return original
       }, {})
@@ -176,16 +177,16 @@ class MockDriver {
     }
     elements.push(element)
     if (element.frame) {
-      const contextId = Symbol('contextId' + Math.floor(Math.random() * 100))
+      const contextId = Symbol('contextId' + (element.name || Math.floor(Math.random() * 100)))
       this._contexts.set(contextId, {
         id: contextId,
         parentId: state.parentContextId,
         isCORS: state.isCORS,
         element,
-        document: {id: Symbol('documentId' + Math.floor(Math.random() * 100))},
+        document: {id: Symbol('documentId' + (element.name || Math.floor(Math.random() * 100)))},
         state: {
           get name() {
-            return element.selector
+            return element.name || element.selector
           },
         },
       })
@@ -209,6 +210,19 @@ class MockDriver {
         })
       }
     }
+  }
+  wrapMethod(name, wrapper) {
+    if (!this[name] || name.startsWith('_') || !TypeUtils.isFunction(this[name])) return
+    if (this._methods.has(name)) this.unwrapMethod(name)
+    this._methods.set(name, this[name])
+    this[name] = new Proxy(this[name], {
+      apply: (method, driver, args) => wrapper(method, driver, args),
+    })
+  }
+  unwrapMethod(name) {
+    const method = this._methods.get(name)
+    if (!method) return
+    this[name] = method
   }
 
   get info() {

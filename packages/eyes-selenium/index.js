@@ -23,6 +23,7 @@ exports.BrowserType = core.BrowserType
 exports.Configuration = core.Configuration
 exports.DeviceName = core.DeviceName
 exports.IosDeviceName = core.IosDeviceName
+exports.IosVersion = core.IosVersion
 exports.ExactMatchSettings = core.ExactMatchSettings
 exports.FloatingMatchSettings = core.FloatingMatchSettings
 exports.ImageMatchSettings = core.ImageMatchSettings

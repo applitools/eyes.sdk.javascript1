@@ -226,7 +226,7 @@ exports.EyesContext = require('./lib/sdk/EyesContext')
 exports.EyesElement = require('./lib/sdk/EyesElement')
 exports.EyesSDK = require('./lib/sdk/EyesSDK')
 
-exports.takeDomCapture = require('./lib/takeDomCapture')
+exports.takeDomCapture = require('./lib/utils/takeDomCapture')
 
 exports.EyesRunner = require('./lib/runner/EyesRunner')
 exports.ClassicRunner = require('./lib/runner/ClassicRunner')
