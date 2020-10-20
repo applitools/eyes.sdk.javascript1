@@ -5,9 +5,15 @@ describe('BatchClose', () => {
   const BatchClose = makeBatchClose(() => 'hi')
   it('should provide a fluent API', () => {
     const batchClose = BatchClose()
-    expect(batchClose).to.haveOwnProperty('setUrl')
-    expect(batchClose).to.haveOwnProperty('setBatchIds')
-    expect(batchClose).to.haveOwnProperty('close')
+    expect(batchClose)
+      .to.haveOwnProperty('setUrl')
+      .and.be.a('function')
+    expect(batchClose)
+      .to.haveOwnProperty('setBatchIds')
+      .and.be.a('function')
+    expect(batchClose)
+      .to.haveOwnProperty('close')
+      .and.be.a('function')
   })
 
   it('should set batchIds', () => {
