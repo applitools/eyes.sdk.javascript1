@@ -1,29 +1,22 @@
-'use strict'
+function BatchClose(closeBatch) {
+  this._batchIds = null
+  this._serverUrl = null
 
-const closeBatch = require('./closeBatch')
-
-class BatchClose {
-  constructor() {
-    this._batchIds = null
-    this._serverUrl = null
-    this._apiKey = null
-  }
-
-  setBatchIds(batchIds) {
+  this.setBatchIds = function(batchIds) {
     if (batchIds && batchIds.length > 0) {
       this._batchIds = batchIds
-      return this
     }
+    return this
   }
 
-  setUrl(serverUrl) {
+  this.setUrl = function(serverUrl) {
     if (serverUrl) {
       this._serverUrl = serverUrl
-      return this
     }
+    return this
   }
 
-  async close() {
+  this.close = async function() {
     try {
       const serverUrl = this._serverUrl
       const batchIds = this._batchIds
@@ -32,6 +25,8 @@ class BatchClose {
       throw new Error(error.message)
     }
   }
+
+  return this
 }
 
 module.exports = BatchClose
