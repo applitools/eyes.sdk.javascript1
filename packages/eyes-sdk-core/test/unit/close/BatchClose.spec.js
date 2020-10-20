@@ -1,7 +1,8 @@
-const BatchClose = require('../../../lib/close/BatchClose')
+const makeBatchClose = require('../../../lib/close/BatchClose')
 const {expect} = require('chai')
 
 describe('BatchClose', () => {
+  const BatchClose = makeBatchClose(() => 'hi')
   it('should provide a fluent API', () => {
     const batchClose = BatchClose()
     expect(batchClose).to.haveOwnProperty('setUrl')
@@ -23,7 +24,8 @@ describe('BatchClose', () => {
 
   it('should call closeBatch', async () => {
     const result = []
-    BatchClose(() => result.push('works'))
+    const BatchClose = makeBatchClose(() => result.push('works'))
+    BatchClose()
       .setUrl('http://localhost:1234')
       .setBatchIds(['123', '456'])
       .close()

@@ -7,16 +7,12 @@ const Logger = require('../logging/Logger')
 function setupServerConfig({serverUrl, apiKey}) {
   const logger = new Logger(!!process.env.APPLITOOLS_SHOW_LOGS)
   const configuration = new Configuration()
-  configuration.setServerUrl(serverUrl)
-  configuration.setApiKey(apiKey)
+  if (serverUrl) configuration.setServerUrl(serverUrl)
+  if (apiKey) configuration.setApiKey(apiKey)
   return {configuration, logger}
 }
 
-async function closeBatch({
-  batchIds = [],
-  serverUrl = '',
-  apiKey = process.env.APPLITOOLS_API_KEY,
-}) {
+async function closeBatch({batchIds = [], serverUrl, apiKey = process.env.APPLITOOLS_API_KEY}) {
   try {
     const getAgentId = () => 'core/close'
     const {logger, configuration} = setupServerConfig({serverUrl, apiKey})
