@@ -1,6 +1,5 @@
 const makeBatchClose = require('../../../lib/close/BatchClose')
 const {expect} = require('chai')
-const {presult} = require('../../../lib/troubleshoot/utils')
 
 describe('BatchClose', () => {
   it('should provide a fluent API', () => {
