@@ -9,8 +9,32 @@ describe('closeBatch', () => {
   beforeEach(() => {
     serverUrl = 'http://localhost:1234'
     apiKey = '12345'
-
     batchIds = ['123', '456']
+  })
+
+  it('should throw', async () => {
+    nock(serverUrl)
+      .delete(`/api/sessions/batches/678/close/bypointerid`)
+      .query({apiKey})
+      .replyWithError({message: 'something went wrong', code: 500})
+    const [err] = await presult(closeBatch({batchIds: ['678'], serverUrl, apiKey}))
+    expect(err.message).to.equal('something went wrong')
+  })
+
+  it('should handle a single batchId deletion failure', async () => {
+    nock(serverUrl)
+      .delete(`/api/sessions/batches/888/close/bypointerid`)
+      .query({apiKey})
+      .reply(200)
+    nock(serverUrl)
+      .delete(`/api/sessions/batches/999/close/bypointerid`)
+      .query({apiKey})
+      .replyWithError({message: 'something went wrong', code: 500})
+    const [err] = await presult(closeBatch({batchIds: ['888', '999'], serverUrl, apiKey}))
+    expect(err.message).to.equal('something went wrong')
+  })
+
+  it('should send the correct close batch requests to the server', async () => {
     scopes = []
 
     batchIds.forEach(batchId => {
@@ -20,20 +44,8 @@ describe('closeBatch', () => {
         .reply(200)
       scopes.push(scope)
     })
-  })
 
-  it('should throw', async () => {
-    nock(serverUrl)
-      .delete(`/api/sessions/batches/678/close/bypointerid`)
-      .query({apiKey})
-      .replyWithError({message: 'something went wrong', code: 500})
-    const [err] = await presult(closeBatch({batchIds: ['678'], serverUrl, apiKey}))
-    expect(err.message).to.equal('Error: something went wrong')
-  })
-
-  it('should send the correct close batch requests to the server', async () => {
-    const [err] = await presult(closeBatch({batchIds, serverUrl, apiKey}))
-    expect(err).to.be.undefined
+    await closeBatch({batchIds, serverUrl, apiKey})
     batchIds.forEach((batchId, index) => {
       expect(scopes[index].basePath).to.equal(serverUrl)
       expect(scopes[index].interceptors[0].path).to.equal(

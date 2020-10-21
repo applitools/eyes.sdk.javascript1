@@ -26,15 +26,11 @@ function makeBatchClose(closeBatch) {
     }
 
     this.close = async function() {
-      try {
-        const serverUrl = this._serverUrl
-        const batchIds = this._batchIds
-        const apiKey = this._apiKey
-        const proxy = this._proxy
-        await closeBatch({batchIds, serverUrl, apiKey, proxy})
-      } catch (error) {
-        throw new Error(error.message)
-      }
+      const serverUrl = this._serverUrl
+      const batchIds = this._batchIds
+      const apiKey = this._apiKey
+      const proxy = this._proxy
+      await closeBatch({batchIds, serverUrl, apiKey, proxy})
     }
 
     return this
