@@ -5,7 +5,8 @@ const Configuration = require('../config/Configuration')
 const Logger = require('../logging/Logger')
 const {presult} = require('../troubleshoot/utils')
 
-async function closeBatch({batchIds = [], serverUrl, apiKey, proxy}) {
+async function closeBatch({batchIds, serverUrl, apiKey, proxy}) {
+  if (!batchIds) throw new Error('no batchIds were set')
   const serverConnector = new ServerConnector({
     logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
     configuration: new Configuration({serverUrl, apiKey}),
@@ -15,8 +16,8 @@ async function closeBatch({batchIds = [], serverUrl, apiKey, proxy}) {
 
   const promises = batchIds.map(batchId => serverConnector.deleteBatchSessions(batchId))
   const results = await Promise.all(promises.map(presult))
-  const err = results.find(([err]) => !!err)
-  if (err) throw err[0]
+  const error = results.find(([err]) => !!err)
+  if (error) throw error[0]
 }
 
 module.exports = closeBatch

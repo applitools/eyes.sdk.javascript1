@@ -1,39 +1,38 @@
 function makeBatchClose(closeBatch) {
   return function BatchClose() {
-    this._batchIds = null
-    this._serverUrl = null
-    this._apiKey = null
-    this._proxy = null
-
-    this.setBatchIds = function(batchIds) {
-      this._batchIds = batchIds
-      return this
+    const that = {
+      batchIds: null,
+      serverUrl: null,
+      apiKey: null,
+      proxy: null,
     }
 
-    this.setUrl = function(serverUrl) {
-      this._serverUrl = serverUrl
-      return this
+    that.setBatchIds = function(batchIds) {
+      that.batchIds = batchIds
+      return that
     }
 
-    this.setApiKey = function(apiKey) {
-      this._apiKey = apiKey
-      return this
+    that.setUrl = function(serverUrl) {
+      that.serverUrl = serverUrl
+      return that
     }
 
-    this.setProxy = function(proxy) {
-      this._proxy = proxy
-      return this
+    that.setApiKey = function(apiKey) {
+      that.apiKey = apiKey
+      return that
     }
 
-    this.close = async function() {
-      const serverUrl = this._serverUrl
-      const batchIds = this._batchIds
-      const apiKey = this._apiKey
-      const proxy = this._proxy
+    that.setProxy = function(proxy) {
+      that.proxy = proxy
+      return that
+    }
+
+    that.close = async function() {
+      const {batchIds, serverUrl, apiKey, proxy} = that
       await closeBatch({batchIds, serverUrl, apiKey, proxy})
     }
 
-    return this
+    return that
   }
 }
 

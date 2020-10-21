@@ -4,24 +4,24 @@ const {expect} = require('chai')
 const {presult} = require('../../../lib/troubleshoot/utils')
 
 describe('closeBatch', () => {
-  let serverUrl, apiKey, batchIds, scopes
+  it('should throw if delete batch failed', async () => {
+    const serverUrl = 'http://localhost:1234'
+    const apiKey = '12345'
+    const message = 'something went wrong'
 
-  beforeEach(() => {
-    serverUrl = 'http://localhost:1234'
-    apiKey = '12345'
-    batchIds = ['123', '456']
-  })
-
-  it('should throw', async () => {
     nock(serverUrl)
       .delete(`/api/sessions/batches/678/close/bypointerid`)
       .query({apiKey})
-      .replyWithError({message: 'something went wrong', code: 500})
+      .replyWithError({message, code: 500})
     const [err] = await presult(closeBatch({batchIds: ['678'], serverUrl, apiKey}))
-    expect(err.message).to.equal('something went wrong')
+    expect(err.message).to.equal(message)
   })
 
   it('should handle a single batchId deletion failure', async () => {
+    const serverUrl = 'http://localhost:1234'
+    const apiKey = '12345'
+    const message = 'something went wrong'
+
     nock(serverUrl)
       .delete(`/api/sessions/batches/888/close/bypointerid`)
       .query({apiKey})
@@ -29,20 +29,27 @@ describe('closeBatch', () => {
     nock(serverUrl)
       .delete(`/api/sessions/batches/999/close/bypointerid`)
       .query({apiKey})
-      .replyWithError({message: 'something went wrong', code: 500})
+      .replyWithError({message, code: 500})
     const [err] = await presult(closeBatch({batchIds: ['888', '999'], serverUrl, apiKey}))
-    expect(err.message).to.equal('something went wrong')
+    expect(err.message).to.equal(message)
+  })
+
+  it('should throw if no batchIds were provided', async () => {
+    const message = 'no batchIds were set'
+    const [err] = await presult(closeBatch({}))
+    expect(err.message).to.equal(message)
   })
 
   it('should send the correct close batch requests to the server', async () => {
-    scopes = []
+    const serverUrl = 'http://localhost:1234'
+    const apiKey = '12345'
+    const batchIds = ['123', '456']
 
-    batchIds.forEach(batchId => {
-      const scope = nock(serverUrl)
+    const scopes = batchIds.map(batchId => {
+      return nock(serverUrl)
         .delete(`/api/sessions/batches/${batchId}/close/bypointerid`)
         .query({apiKey})
         .reply(200)
-      scopes.push(scope)
     })
 
     await closeBatch({batchIds, serverUrl, apiKey})
