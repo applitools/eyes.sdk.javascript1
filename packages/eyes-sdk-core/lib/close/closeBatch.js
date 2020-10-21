@@ -9,8 +9,7 @@ async function closeBatch({batchIds, serverUrl, apiKey, proxy}) {
   if (!batchIds) throw new Error('no batchIds were set')
   const serverConnector = new ServerConnector({
     logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
-    configuration: new Configuration({serverUrl, apiKey}),
-    proxy,
+    configuration: new Configuration({serverUrl, apiKey, proxy}),
     getAgentId: () => '',
   })
 

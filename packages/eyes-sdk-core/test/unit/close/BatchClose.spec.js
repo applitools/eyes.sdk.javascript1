@@ -51,7 +51,7 @@ describe('BatchClose', () => {
       url: 'http://localhost:1234',
     }
     let expectedProxy = {}
-    const BatchClose = makeBatchClose(({proxy}) => Object.assign(expectedProxy, proxy))
+    const BatchClose = makeBatchClose(({proxy}) => (expectedProxy = proxy))
     await BatchClose()
       .setProxy(proxy)
       .close()
@@ -88,7 +88,7 @@ describe('BatchClose', () => {
     expect(response).to.eql({serverUrl, batchIds, apiKey, proxy})
   })
 
-  it('should throw if no batchIds were provided', async () => {
+  it('should set empty batchIds', async () => {
     let expectedBatchIds
     const BatchClose = makeBatchClose(({batchIds}) => (expectedBatchIds = batchIds))
     await BatchClose()
