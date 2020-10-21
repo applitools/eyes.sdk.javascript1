@@ -6,30 +6,22 @@ function makeBatchClose(closeBatch) {
     this._proxy = null
 
     this.setBatchIds = function(batchIds) {
-      if (batchIds && batchIds.length > 0) {
-        this._batchIds = batchIds
-      }
+      this._batchIds = batchIds
       return this
     }
 
     this.setUrl = function(serverUrl) {
-      if (serverUrl) {
-        this._serverUrl = serverUrl
-      }
+      this._serverUrl = serverUrl
       return this
     }
 
     this.setApiKey = function(apiKey) {
-      if (apiKey) {
-        this._apiKey = apiKey
-      }
+      this._apiKey = apiKey
       return this
     }
 
     this.setProxy = function(proxy) {
-      if (proxy) {
-        this._proxy = proxy
-      }
+      this._proxy = proxy
       return this
     }
 
@@ -38,7 +30,7 @@ function makeBatchClose(closeBatch) {
         const serverUrl = this._serverUrl
         const batchIds = this._batchIds
         const apiKey = this._apiKey
-        const proxy = this._apiKey
+        const proxy = this._proxy
         await closeBatch({batchIds, serverUrl, apiKey, proxy})
       } catch (error) {
         throw new Error(error.message)

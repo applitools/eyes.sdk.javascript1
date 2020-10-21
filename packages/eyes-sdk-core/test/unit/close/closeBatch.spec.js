@@ -31,12 +31,14 @@ describe('closeBatch', () => {
     expect(err.message).to.equal('Error: something went wrong')
   })
 
-  it('should setup configuration', async () => {
+  it('should send the correct close batch requests to the server', async () => {
     const [err] = await presult(closeBatch({batchIds, serverUrl, apiKey}))
     expect(err).to.be.undefined
     batchIds.forEach((batchId, index) => {
       expect(scopes[index].basePath).to.equal(serverUrl)
-      expect(scopes[index].interceptors[0].path).to.include(batchId)
+      expect(scopes[index].interceptors[0].path).to.equal(
+        `/api/sessions/batches/${batchId}/close/bypointerid`,
+      )
       expect(scopes[index].interceptors[0].queries).to.eql({apiKey})
     })
   })
@@ -44,7 +46,9 @@ describe('closeBatch', () => {
   it('should call deleteBatchSession per batchId', async () => {
     await closeBatch({batchIds, serverUrl, apiKey})
     batchIds.forEach((batchId, index) => {
-      expect(scopes[index].interceptors[0].path).to.include(batchId[index])
+      expect(scopes[index].interceptors[0].path).to.equal(
+        `/api/sessions/batches/${batchId}/close/bypointerid`,
+      )
     })
   })
 })
