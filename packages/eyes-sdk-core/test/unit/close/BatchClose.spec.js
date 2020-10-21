@@ -14,6 +14,12 @@ describe('BatchClose', () => {
     expect(batchClose)
       .to.haveOwnProperty('close')
       .and.be.a('function')
+    expect(batchClose)
+      .to.haveOwnProperty('setApiKey')
+      .and.be.a('function')
+    expect(batchClose)
+      .to.haveOwnProperty('setProxy')
+      .and.be.a('function')
   })
 
   it('should set batchIds', () => {
