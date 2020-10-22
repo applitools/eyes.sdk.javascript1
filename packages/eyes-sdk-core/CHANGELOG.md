@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 12.5.0 - 2020/10/22
+
+- added ability to close batches using batch IDs
+
 ## 12.4.4 - 2020/10/19
 
 - deprecate `saveDebugData`

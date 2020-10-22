@@ -115,6 +115,10 @@ exports.ImageProviderFactory = require('./lib/capture/ImageProviderFactory')
 exports.CorsIframeHandle = require('./lib/capture/CorsIframeHandles')
 exports.CorsIframeHandler = require('./lib/capture/CorsIframeHandler')
 
+const closeBatch = require('./lib/close/closeBatch')
+const makeBatchClose = require('./lib/close/BatchClose')
+exports.BatchClose = makeBatchClose(closeBatch)
+
 exports.CutProvider = require('./lib/cropping/CutProvider')
 exports.FixedCutProvider = require('./lib/cropping/FixedCutProvider')
 exports.NullCutProvider = require('./lib/cropping/NullCutProvider')
