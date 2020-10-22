@@ -49,8 +49,8 @@
   },
   "devDependencies": {
     "@applitools/dom-snapshot": "^4.0.5",
-    "@applitools/sdk-release-kit": "^0.3.1",
-    "@applitools/sdk-shared": "^0.1.0",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
+    "@applitools/sdk-shared": "link:../sdk-shared",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "chai-uuid": "^1.0.6",

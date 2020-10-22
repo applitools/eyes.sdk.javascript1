@@ -36,10 +36,10 @@
     "webdriverio": "~4.14.4"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^1.0.13",
-    "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.3.1",
-    "@applitools/sdk-shared": "^0.1.0",
+    "@applitools/sdk-coverage-tests": "link:../sdk-coverage-tests",
+    "@applitools/sdk-fake-eyes-server": "link:../sdk-fake-eyes-server",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
+    "@applitools/sdk-shared": "link:../sdk-shared",
     "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

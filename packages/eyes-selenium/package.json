@@ -40,9 +40,9 @@
     "@applitools/visual-grid-client": "15.0.10"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^1.0.14",
-    "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.3.1",
+    "@applitools/sdk-coverage-tests": "link:../sdk-coverage-tests",
+    "@applitools/sdk-fake-eyes-server": "link:../sdk-fake-eyes-server",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "@applitools/sdk-shared": "^0.3.0",
     "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",

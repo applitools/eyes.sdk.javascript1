@@ -24,8 +24,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.3.3",
-    "@applitools/sdk-shared": "^0.1.0",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
+    "@applitools/sdk-shared": "link:../sdk-shared",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@rollup/plugin-babel": "^5.2.1",

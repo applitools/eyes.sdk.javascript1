@@ -39,10 +39,10 @@
     "playwright": ">=1.0.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^1.0.15",
-    "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.4.2",
-    "@applitools/sdk-shared": "^0.3.0",
+    "@applitools/sdk-coverage-tests": "link:../sdk-coverage-tests",
+    "@applitools/sdk-fake-eyes-server": "link:../sdk-fake-eyes-server",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
+    "@applitools/sdk-shared": "link:../sdk-shared",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",

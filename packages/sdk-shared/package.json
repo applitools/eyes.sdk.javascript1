@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@applitools/functional-commons": "1.6.0",
-    "@applitools/sdk-coverage-tests": "1.0.16",
+    "@applitools/sdk-coverage-tests": "link:../sdk-coverage-tests",
     "axios": "0.20.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
@@ -48,7 +48,7 @@
     "yargs": "15.3.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.3.1",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",

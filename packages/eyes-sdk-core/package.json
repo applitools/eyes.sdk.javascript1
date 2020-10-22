@@ -47,8 +47,8 @@
     "tunnel": "0.0.6"
   },
   "devDependencies": {
-    "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.3.4",
+    "@applitools/sdk-fake-eyes-server": "link:../sdk-fake-eyes-server",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "@applitools/visual-grid-client": "^15.0.8",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",

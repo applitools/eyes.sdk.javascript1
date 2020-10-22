@@ -51,7 +51,7 @@
     "zlib": "1.0.5"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.3.1",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "chai": "^4.2.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

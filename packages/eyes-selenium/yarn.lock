@@ -127,100 +127,25 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/sdk-coverage-tests@1.0.14":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-1.0.14.tgz#7e9a73612a58b1557a51f04ef3566c34c176fcf1"
-  integrity sha512-bvy7ISD/lMMWapx/ZqpPfvfUxRzWFVm9cGU/za3/26t7DRfBTGPX3M+eh6o4a7vKRsZRRQcoFPRhsCxTBx80iA==
-  dependencies:
-    axios "^0.19.2"
-    chai "^4.2.0"
-    chai-as-promised "^7.1.1"
-    chalk "3.0.0"
-    micromatch "^4.0.2"
-    node-fetch "^2.6.0"
-    xml-js "^1.6.11"
-    yargs "^15.0.2"
+"@applitools/sdk-coverage-tests@link:../sdk-coverage-tests":
+  version "0.0.0"
+  uid ""
 
-"@applitools/sdk-coverage-tests@^1.0.14":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-1.0.16.tgz#26e07b10c1ef4f41a403c028829332963c8840b7"
-  integrity sha512-h4K4sS+KuY+IaUhdNChqax2OjSlKWg5eLibLo3hw8Z6c/zbMmtOmTXLyZOAHpSTLo60isc/LbyhujUkVBH447A==
-  dependencies:
-    "@azure/storage-blob" "12.2.0-preview.1"
-    axios "0.20.0"
-    chai "4.2.0"
-    chai-as-promised "7.1.1"
-    chalk "4.1.0"
-    micromatch "4.0.2"
-    node-fetch "2.6.1"
-    xml-js "1.6.11"
-    yargs "16.0.3"
+"@applitools/sdk-fake-eyes-server@link:../sdk-fake-eyes-server":
+  version "0.0.0"
+  uid ""
 
-"@applitools/sdk-fake-eyes-server@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-fake-eyes-server/-/sdk-fake-eyes-server-2.0.1.tgz#7647da53f10fc0b12c0220ac7604cb4066b33747"
-  integrity sha512-O7cJd3+NCNMkXC6/bwF+U9dZ+PKig5Baz0qLdvpunKQk3JsqiglbupontxDujVK9hGNndh8E4wXG1To4YI2xUQ==
-  dependencies:
-    express "4.17.1"
-    filenamify "4.1.0"
-    node-fetch "2.6.0"
-    ua-parser-js "0.7.21"
-    uuid "3.3.3"
-    zlib "1.0.5"
-
-"@applitools/sdk-release-kit@^0.3.1":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.3.4.tgz#c340f6bc4fd65d464312e54bd9f7c3a6e6f208c1"
-  integrity sha512-fEBR9v68TigW66U2bOx+fe7VToHVYh4qgyIdKmIE4tyBUhtol2Kcp1YTRh3nCoE3/ETF645/qJRx5N9Lue1D9g==
-  dependencies:
-    "@applitools/sdk-shared" "0.1.3"
-    chalk "3.0.0"
-    lodash.pickby "4.6.0"
-    micromatch "4.0.2"
-    node-fetch "2.6.0"
-    yargs "15.0.2"
-
-"@applitools/sdk-shared@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.1.3.tgz#13c6ec7e56867dbc1471807e75b9061112abbec3"
-  integrity sha512-pXlX6/ziCVLYqk4k7dSonjegmBJcNVgoHNS1QyzyHEBqIwn8TRj6z3RJdB6n99y/8nx3V+hAyhLf3h2Iblb+BQ==
-  dependencies:
-    "@applitools/functional-commons" "1.6.0"
-    "@applitools/sdk-coverage-tests" "1.0.14"
-    axios "0.20.0"
-    chai "4.2.0"
-    chai-as-promised "7.1.1"
-    chalk "3.0.0"
-    chromedriver "83.0.0"
-    cookie-parser "1.4.5"
-    cors "2.8.5"
-    express "4.17.1"
-    filenamify "4.1.0"
-    handlebars "4.7.6"
-    morgan "1.10.0"
-    ncp "2.0.0"
-    yargs "15.3.1"
+"@applitools/sdk-release-kit@link:../sdk-release-kit":
+  version "0.0.0"
+  uid ""
 
 "@applitools/sdk-shared@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.3.0.tgz#68fe4c7f5aa2ed09e3512dd718f5cf3462b0fbf2"
-  integrity sha512-44cbaLF61L/nmOwi+wXjBpCp0uGOXn6SVtDlNL6JHafEhxCWqCrMYyHUSFSoLqLD7jd5goa68xnfUcdeTnpccg==
-  dependencies:
-    "@applitools/functional-commons" "1.6.0"
-    "@applitools/sdk-coverage-tests" "1.0.16"
-    axios "0.20.0"
-    chai "4.2.0"
-    chai-as-promised "7.1.1"
-    chalk "3.0.0"
-    chromedriver "84.0.0"
-    cookie-parser "1.4.5"
-    cors "2.8.5"
-    express "4.17.1"
-    filenamify "4.1.0"
-    handlebars "4.7.6"
-    morgan "1.10.0"
-    ncp "2.0.0"
-    yargs "15.3.1"
+  version "0.0.0"
+  uid ""
+
+"@applitools/sdk-shared@link:../sdk-shared":
+  version "0.0.0"
+  uid ""
 
 "@applitools/snippets@2.0.3":
   version "2.0.3"
@@ -864,18 +789,6 @@ chokidar@3.4.2:
     readdirp "~3.4.0"
   optionalDependencies:
     fsevents "~2.1.2"
-
-chromedriver@83.0.0:
-  version "83.0.0"
-  resolved "https://registry.yarnpkg.com/chromedriver/-/chromedriver-83.0.0.tgz#75d7d838e58014658c3990089464166fef951926"
-  integrity sha512-AePp9ykma+z4aKPRqlbzvVlc22VsQ6+rgF+0aL3B5onHOncK18dWSkLrSSJMczP/mXILN9ohGsvpuTwoRSj6OQ==
-  dependencies:
-    "@testim/chrome-version" "^1.0.7"
-    axios "^0.19.2"
-    del "^5.1.0"
-    extract-zip "^2.0.0"
-    mkdirp "^1.0.4"
-    tcp-port-used "^1.0.1"
 
 chromedriver@84.0.0:
   version "84.0.0"
@@ -3621,7 +3534,7 @@ ws@^7.0.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.3.1.tgz#d0547bf67f7ce4f12a72dfe31262c68d7dc551c8"
   integrity sha512-D3RuNkynyHmEJIpD2qrgVkc9DQ23OrN/moAwZX4L8DfvszsJxpjQuUq3LMx6HoYji9fbIOBY18XWBsAux1ZZUA==
 
-xml-js@1.6.11, xml-js@^1.6.11:
+xml-js@1.6.11:
   version "1.6.11"
   resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.6.11.tgz#927d2f6947f7f1c19a316dd8eea3614e8b18f8e9"
   integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
@@ -3794,7 +3707,7 @@ yargs@^14.2.3:
     y18n "^4.0.0"
     yargs-parser "^15.0.1"
 
-yargs@^15.0.2, yargs@^15.3.1:
+yargs@^15.3.1:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.4.1.tgz#0d87a16de01aee9d8bec2bfbf74f67851730f4f8"
   integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==

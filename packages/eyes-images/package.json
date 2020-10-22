@@ -34,7 +34,7 @@
     "@applitools/eyes-sdk-core": "12.5.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.3.1",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "assert-rejects": "^1.0.0",
     "axios": "^0.19.0",
     "eslint": "^7.9.0",

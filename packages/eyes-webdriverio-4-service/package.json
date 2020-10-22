@@ -19,7 +19,7 @@
     "@applitools/eyes.webdriverio": "2.20.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.2.2",
+    "@applitools/sdk-release-kit": "link:../sdk-release-kit",
     "chromedriver": "^83.0.0",
     "mocha": "^6.2.2",
     "wdio-chromedriver-service": "^0.1.5",
