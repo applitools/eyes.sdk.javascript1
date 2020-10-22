@@ -53,6 +53,7 @@
     "@applitools/sdk-shared": "^0.1.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
+    "chai-uuid": "^1.0.6",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "eslint": "^7.9.0",

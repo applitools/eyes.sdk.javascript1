@@ -1,6 +1,8 @@
 'use strict'
 const {describe, it, before, after, beforeEach, afterEach} = require('mocha')
-const {expect} = require('chai')
+const chai = require('chai')
+chai.use(require('chai-uuid'))
+const {expect} = chai
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const makeGlobalState = require('../../src/sdk/globalState')
 const createFakeWrapper = require('../util/createFakeWrapper')
@@ -266,8 +268,8 @@ describe('closeEyes', () => {
     await close()
 
     // this simulates setting batchId: 'secondBatchId' in openEyes
-    const wrapper3 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'})
-    const wrapper4 = createFakeWrapper(baseUrl, {batchId: 'secondBatchId'})
+    const wrapper3 = createFakeWrapper(baseUrl)
+    const wrapper4 = createFakeWrapper(baseUrl)
 
     ;({checkWindow, close} = await openEyes({
       wrappers: [wrapper3, wrapper4],
@@ -276,10 +278,15 @@ describe('closeEyes', () => {
         {width: 2, height: 2},
       ],
       appName,
+      batchId: 'secondBatchId',
     }))
     await close()
 
-    expect([...globalState.batchStore.ids.values()]).to.eql(['1', 'secondBatchId'])
+    expect(globalState.batchStore.ids.size).to.equal(2)
+
+    const batchStoreArr = [...globalState.batchStore.ids]
+    expect(batchStoreArr[0]).to.be.a.uuid('v4')
+    expect(batchStoreArr[1]).to.equal('secondBatchId')
   })
 
   it('resolves with empty array if aborted by user with throwEx=false', async () => {
