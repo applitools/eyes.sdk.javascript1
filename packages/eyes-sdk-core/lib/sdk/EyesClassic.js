@@ -261,10 +261,7 @@ class EyesClassic extends EyesCore {
 
     this.setPositionProvider(positionProvider)
 
-    const shouldHideScrollbars =
-      !this._driver.isMobile &&
-      (this._configuration.getHideScrollbars() ||
-        (this._configuration.getStitchMode() === StitchMode.CSS && this._stitchContent))
+    const shouldHideScrollbars = !this._driver.isMobile && this._configuration.getHideScrollbars()
 
     for (const context of this._context.path) {
       const scrollRootElement = await context.getScrollRootElement()

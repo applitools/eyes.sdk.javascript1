@@ -182,6 +182,8 @@ In addition to command-line arguments, it's possible to define the following con
 | `contentRegions`          | undefined                   | An array of regions to consider as match level **Content** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - contentRegions](#contentRegions)|
 | `accessibilityRegions`    | undefined                   | An array of regions to validate accessibility when comparing the checkpoint screenshot with the baseline screenshot. Validation is according to the configured `accessibilityValidation`. For more information, see [per component  configuration - contentRegions](#contentRegions)|
 | `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`. For more information, see [per component  configuration - accessibilityValidation](#accessibilityValidation)|
+|`enablePatterns`| false | |
+|`useDom`| false | |
 
 There are 2 ways to specify test configuration:
 

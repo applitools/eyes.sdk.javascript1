@@ -39,6 +39,6 @@ describe('TestEyesDifferentRunners Selenium', () => {
     ['https://youtube.com', MatchLevel.Layout],
   ]
   cases.forEach(testData => {
-    it(testData[0], testCase(...testData))
+    it('TestEyesDifferentRunners', testCase(...testData))
   })
 })

@@ -24,7 +24,7 @@ typings
 .bongo
 
 # sdk-coverage-tests
-**/test/coverage/generic/
+**/test/generic/
 coverage-test-report.xml
 coverage-tests-metadata.json
 

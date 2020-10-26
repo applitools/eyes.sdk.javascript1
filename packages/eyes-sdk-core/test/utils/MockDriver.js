@@ -141,16 +141,16 @@ class MockDriver {
     this.mockScript(snippets.blurElement, () => {
       return null
     })
-    this.mockScript(snippets.markElements, ([elements, ids]) => {
+    this.mockScript(snippets.setElementMarkers, ([elements, ids]) => {
       for (const [index, el] of elements.entries()) {
         el.attributes = el.attributes || []
-        el.attributes.push({name: 'data-eyes-selector', value: ids[index]})
+        el.attributes.push({name: 'data-applitools-marker', value: ids[index]})
       }
     })
-    this.mockScript(snippets.cleanupElementIds, ([elements]) => {
+    this.mockScript(snippets.cleanupElementMarkers, ([elements]) => {
       for (const el of elements) {
         el.attributes.splice(
-          el.attributes.findIndex(({name}) => name === 'data-eyes-selector'),
+          el.attributes.findIndex(({name}) => name === 'data-applitools-marker'),
           1,
         )
       }

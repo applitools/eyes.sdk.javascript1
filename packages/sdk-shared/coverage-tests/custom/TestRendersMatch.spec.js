@@ -15,7 +15,7 @@ let viewportList = [
 ]
 
 describe(appName, async () => {
-  it('TestSuccess', async () => {
+  it.skip('TestSuccess', async () => {
     const runner = new VisualGridRunner(10)
 
     const [driver, destroyDriver] = await spec.build({browser: 'chrome'})
@@ -70,6 +70,7 @@ async function initEyes(runner, driver, viewport, name) {
   const eyes = new Eyes(runner)
   const conf = new Configuration()
   conf.setBatch(batch)
+  conf.setDontCloseBatches(true)
   conf.setViewportSize(viewport)
   conf.setTestName(name)
   conf.setAppName(appName)

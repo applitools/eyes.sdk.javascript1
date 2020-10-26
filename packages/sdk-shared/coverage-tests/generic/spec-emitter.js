@@ -1,5 +1,3 @@
-const {makeEmitTracker} = require('@applitools/sdk-coverage-tests')
-
 function js(chunks, ...values) {
   const commands = []
   let code = ''
@@ -24,7 +22,7 @@ function serialize(data) {
     return `[${data.map(serialize).join(', ')}]`
   } else if (typeof data === 'object' && data !== null) {
     const properties = Object.entries(data).reduce((data, [key, value]) => {
-      return data.concat(`${key}: ${serialize(value)}`)
+      return value !== undefined ? data.concat(`${key}: ${serialize(value)}`) : data
     }, [])
     return `{${properties.join(', ')}}`
   } else {
@@ -32,10 +30,10 @@ function serialize(data) {
   }
 }
 
-function makeSpecEmitter(options) {
-  const {addSyntax, addCommand, addHook, withScope, getOutput} = makeEmitTracker()
+module.exports = function(tracker, test) {
+  const {addSyntax, addCommand, addHook, withScope} = tracker
 
-  addSyntax('var', ({name, value}) => `const ${name} = ${value}`)
+  addSyntax('var', ({constant, name, value}) => `${constant ? 'const' : 'let'} ${name} = ${value}`)
   addSyntax('getter', ({target, key}) => `${target}['${key}']`)
   addSyntax('call', ({target, args}) => `${target}(${js`...${args}`})`)
   addSyntax('return', ({value}) => `return ${value}`)
@@ -44,24 +42,17 @@ function makeSpecEmitter(options) {
   addHook('deps', `const path = require('path')`)
   addHook('deps', `const assert = require('assert')`)
   addHook('deps', `const spec = require(path.resolve(cwd, 'src/spec-driver'))`)
-  addHook('deps', `const {Configuration} = require(cwd)`)
-  addHook('deps', `const {testSetup} = require('@applitools/sdk-shared')`)
+  addHook('deps', `const {testSetup, getTestInfo} = require('@applitools/sdk-shared')`)
 
   addHook('vars', `let driver, destroyDriver, eyes`)
-  addHook('vars', 'let baselineTestName')
 
   addHook(
     'beforeEach',
-    js`[driver, destroyDriver] = await spec.build(${options.env} || {browser: 'chrome'})`,
+    js`[driver, destroyDriver] = await spec.build(${test.env} || {browser: 'chrome'})`,
   )
-
   addHook(
     'beforeEach',
-    js`eyes = testSetup.getEyes({
-      isVisualGrid: ${options.executionMode.isVisualGrid},
-      isCssStitching: ${options.executionMode.isCssStitching},
-      branchName: ${options.branchName},
-    })`,
+    js`eyes = testSetup.getEyes(${{vg: test.vg, displayName: test.name, ...test.config}})`,
   )
 
   addHook('afterEach', js`await destroyDriver(driver)`)
@@ -88,14 +79,10 @@ function makeSpecEmitter(options) {
       addCommand(js`await spec.mainContext(driver)`)
     },
     findElement(selector) {
-      return addCommand(
-        js`await spec.findElement(driver, {type: 'css', selector: ${selector}})`,
-      ).type('Element')
+      return addCommand(js`await spec.findElement(driver, ${selector})`).type('Element')
     },
     findElements(selector) {
-      return addCommand(
-        js`await spec.findElements(driver, {type: 'css', selector: ${selector}})`,
-      ).type('Array<Element>')
+      return addCommand(js`await spec.findElements(driver, ${selector})`).type('Array<Element>')
     },
     click(element) {
       addCommand(js`await spec.click(driver, ${element})`)
@@ -130,68 +117,45 @@ function makeSpecEmitter(options) {
         js`await eyes.open(
             driver,
             ${appName},
-            ${options.baselineTestName},
+            ${test.config.baselineName},
             ${viewportSize},
           )`,
       )
     },
-    check(checkSettings) {
-      return addCommand(js`await eyes.check(${checkSettings})`)
-    },
-    checkWindow(tag, matchTimeout, stitchContent) {
-      return addCommand(js`await eyes.checkWindow(${tag}, ${matchTimeout}, ${stitchContent})`)
-    },
-    checkFrame(element, matchTimeout, tag) {
-      return addCommand(js`await eyes.checkFrame(
-        ${element},
-        ${matchTimeout},
-        ${tag},
-      )`)
-    },
-    checkElement(element, matchTimeout, tag) {
-      return addCommand(js`await eyes.checkElement(
-        ${element},
-        ${matchTimeout},
-        ${tag},
-      )`)
-    },
-    checkElementBy(selector, matchTimeout, tag) {
-      return addCommand(js`await eyes.checkElementBy(
-        ${selector},
-        ${matchTimeout},
-        ${tag},
-      )`)
-    },
-    checkRegion(region, matchTimeout, tag) {
-      return addCommand(js`await eyes.checkRegion(
-        ${region},
-        ${tag},
-        ${matchTimeout},
-      )`)
-    },
-    checkRegionByElement(element, matchTimeout, tag) {
-      return addCommand(js`await eyes.checkRegionByElement(
-        ${element},
-        ${tag},
-        ${matchTimeout},
-      )`)
-    },
-    checkRegionBy(selector, tag, matchTimeout, stitchContent) {
-      return addCommand(js`await eyes.checkRegionByElement(
-        ${selector},
-        ${tag},
-        ${matchTimeout},
-        ${stitchContent},
-      )`)
-    },
-    checkRegionInFrame(frameReference, selector, matchTimeout, tag, stitchContent) {
-      return addCommand(js`await eyes.checkRegionInFrame(
-        ${frameReference},
-        ${selector},
-        ${matchTimeout},
-        ${tag},
-        ${stitchContent},
-      )`)
+    check(checkSettings = {}) {
+      if (test.api !== 'classic') {
+        return addCommand(js`await eyes.check(${checkSettings})`)
+      } else if (checkSettings.region) {
+        if (checkSettings.frames && checkSettings.frames.length > 0) {
+          const [frameReference] = checkSettings.frames
+          return addCommand(js`await eyes.checkRegionInFrame(
+            ${frameReference.frame || frameReference},
+            ${checkSettings.region},
+            ${checkSettings.timeout},
+            ${checkSettings.name},
+            ${checkSettings.isFully},
+          )`)
+        }
+        return addCommand(js`await eyes.checkRegionBy(
+          ${checkSettings.region},
+          ${checkSettings.name},
+          ${checkSettings.timeout},
+          ${checkSettings.isFully},
+        )`)
+      } else if (checkSettings.frames && checkSettings.frames.length > 0) {
+        const [frameReference] = checkSettings.frames
+        return addCommand(js`await eyes.checkFrame(
+          ${frameReference.frame || frameReference},
+          ${checkSettings.timeout},
+          ${checkSettings.name},
+        )`)
+      } else {
+        return addCommand(js`await eyes.checkWindow(
+          ${checkSettings.name},
+          ${checkSettings.timeout},
+          ${checkSettings.isFully}
+        )`)
+      }
     },
     close(throwEx) {
       return addCommand(js`await eyes.close(${throwEx})`)
@@ -223,6 +187,9 @@ function makeSpecEmitter(options) {
     ok(value, message) {
       addCommand(js`assert.ok(${value}, ${message})`)
     },
+    instanceOf(object, className, message) {
+      addCommand(js`assert.ok(${object}.constructor.name === ${className}, ${message})`)
+    },
     throws(func, check, message) {
       let command
       if (check) {
@@ -242,7 +209,11 @@ function makeSpecEmitter(options) {
     },
   }
 
-  return {driver, eyes, assert, tracker: {getOutput}}
-}
+  const helpers = {
+    getTestInfo(result) {
+      return addCommand(js`await getTestInfo(${result})`).type('TestInfo')
+    },
+  }
 
-module.exports = makeSpecEmitter
+  return {driver, eyes, assert, helpers}
+}

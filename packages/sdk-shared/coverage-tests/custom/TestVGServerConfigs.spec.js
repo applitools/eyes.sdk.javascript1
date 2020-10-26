@@ -26,7 +26,7 @@ describe('TestVGServerConfigs', () => {
 
   beforeEach(async () => {
     ;[webDriver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = await getEyes({isVisualGrid: true})
+    eyes = await getEyes({vg: true})
     runner = eyes.getRunner()
   })
 
@@ -138,7 +138,7 @@ describe('TestVGServerConfigs', () => {
     conf
       .setAccessibilityValidation({
         level: AccessibilityLevel.AA,
-        version: AccessibilityGuidelinesVersion.WCAG_2_0,
+        guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
       })
       .setIgnoreDisplacements(false)
     eyes.setConfiguration(conf)
@@ -148,7 +148,7 @@ describe('TestVGServerConfigs', () => {
     conf
       .setAccessibilityValidation({
         level: AccessibilityLevel.AAA,
-        version: AccessibilityGuidelinesVersion.WCAG_2_1,
+        guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_1,
       })
       .setIgnoreDisplacements(true)
     eyes.setConfiguration(conf)
@@ -158,7 +158,7 @@ describe('TestVGServerConfigs', () => {
     conf
       .setAccessibilityValidation({
         level: AccessibilityLevel.AA,
-        version: AccessibilityGuidelinesVersion.WCAG_2_0,
+        guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
       })
       .setMatchLevel(MatchLevel.Layout)
     eyes.setConfiguration(conf)
@@ -220,7 +220,7 @@ describe('Miscellaneous VG tests', () => {
     const edgeWarning = chalk.yellow(edgeWarningText)
 
     try {
-      const eyes = getEyes({isVisualGrid: true})
+      const eyes = getEyes({vg: true})
       const configuration = eyes.getConfiguration()
       configuration.addBrowser(1000, 900, BrowserType.EDGE)
       configuration.addBrowser(1000, 900, BrowserType.FIREFOX)

@@ -83,7 +83,7 @@ class FluentRegion {
       return Object.keys(this._elementsById).map(elementId => ({
         ...this._options,
         type: 'css',
-        selector: `[data-eyes-selector="${elementId}"]`,
+        selector: `[data-applitools-marker~="${elementId}"]`,
       }))
     }
   }

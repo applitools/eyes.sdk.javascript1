@@ -11,7 +11,9 @@ function extractElementId(element) {
 }
 
 function transformSelector(selector) {
-  if (TypeUtils.has(selector, ['type', 'selector'])) {
+  if (selector instanceof LegacySelector) {
+    return selector.toString()
+  } else if (TypeUtils.has(selector, ['type', 'selector'])) {
     if (selector.type === 'css') return `css selector:${selector.selector}`
     else if (selector.type === 'xpath') return `xpath:${selector.selector}`
   }
@@ -77,15 +79,11 @@ async function childContext(browser, element) {
   await browser.frame(element)
 }
 async function findElement(browser, selector) {
-  const {value} = await browser.element(
-    selector instanceof LegacySelector ? selector.toString() : transformSelector(selector),
-  )
+  const {value} = await browser.element(transformSelector(selector))
   return value
 }
 async function findElements(browser, selector) {
-  const {value} = await browser.elements(
-    selector instanceof LegacySelector ? selector.toString() : transformSelector(selector),
-  )
+  const {value} = await browser.elements(transformSelector(selector))
   return value
 }
 async function getElementRect(browser, element) {
@@ -138,26 +136,23 @@ async function visit(browser, url) {
 async function takeScreenshot(driver) {
   return driver.saveScreenshot()
 }
-async function click(browser, selector) {
-  return browser.click(selector)
+async function click(browser, element) {
+  if (isSelector(element)) browser.click(transformSelector(element))
+  else browser.elementIdClick(extractElementId(element))
 }
 async function type(browser, element, keys) {
-  if (TypeUtils.isString(element)) browser.setValue(element, keys)
+  if (isSelector(element)) browser.setValue(transformSelector(element), keys)
   else browser.elementIdValue(extractElementId(element), keys)
 }
 async function waitUntilDisplayed(browser, selector, timeout) {
   return browser.waitForVisible(selector, timeout)
 }
 async function scrollIntoView(browser, element, align = false) {
-  if (isSelector(element)) {
-    element = await findElement(browser, element)
-  }
+  if (isSelector(element)) element = await findElement(browser, element)
   await browser.execute('arguments[0].scrollIntoView(arguments[1])', element, align)
 }
 async function hover(browser, element, {x, y} = {}) {
-  if (isSelector(element)) {
-    element = await findElement(browser, element)
-  }
+  if (isSelector(element)) element = await findElement(browser, element)
   await browser.moveTo(extractElementId(element), x, y)
 }
 
@@ -201,12 +196,16 @@ async function build(env) {
       options.port = '9515'
       options.path = '/'
     }
-    const browserOptionsName = browserOptionsNames[browser]
+    const browserOptionsName =
+      browserOptionsNames[browser || options.desiredCapabilities.browserName]
     if (browserOptionsName) {
-      options.desiredCapabilities[browserOptionsName] = {
-        args: headless ? args.concat('headless') : args,
-        debuggerAddress: attach === true ? 'localhost:9222' : attach,
+      const browserOptions = options.desiredCapabilities[browserOptionsName] || {}
+      browserOptions.args = [...(browserOptions.args || []), ...args]
+      if (headless) browserOptions.args.push('headless')
+      if (attach) {
+        browserOptions.debuggerAddress = attach === true ? 'localhost:9222' : attach
       }
+      options.desiredCapabilities[browserOptionsName] = browserOptions
     }
   }
   if (proxy) {

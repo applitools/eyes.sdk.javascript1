@@ -1,24 +1,25 @@
-function makeMochaTestTemplate(test) {
+function makeMochaTestTemplate({name, skip, output, meta}) {
   const tags = []
-  if (test.meta.features) tags.push(...test.meta.features.map(feature => `@${feature}`))
-  if (test.meta.native) tags.push('@native')
-  if (test.meta.mobile) tags.push('@mobile')
-  if (test.meta.browser) {
-    tags.push(`@${test.meta.browser.replace(/-[\d.]+$/, '')}`)
+  if (meta.features) tags.push(...meta.features.map(feature => `@${feature}`))
+  if (meta.native) tags.push('@native')
+  if (meta.mobile) tags.push('@mobile')
+  if (meta.browser) {
+    tags.push(`@${meta.browser.replace(/-[\d.]+$/, '')}`)
   }
 
-  return `${test.hooks.deps.join('\n')}
+  return `// ${name}
+${output.hooks.deps.join('\n')}
 
-describe${test.disabled ? '.skip' : ''}('Coverage Tests', () => {
-  ${test.hooks.vars.join('\n  ')}
+describe${skip ? '.skip' : ''}('Coverage Tests', () => {
+  ${output.hooks.vars.join('\n  ')}
   beforeEach(async () => {
-    ${test.hooks.beforeEach.join('\n    ')}
+    ${output.hooks.beforeEach.join('\n    ')}
   })
   afterEach(async () => {
-    ${test.hooks.afterEach.join('\n    ')}
+    ${output.hooks.afterEach.join('\n    ')}
   })
-  it('${test.name}${tags.length > 0 ? ` (${tags.join(' ')})` : ''}', async () => {
-    ${test.commands.join('\n    ')}
+  it('${name}${tags.length > 0 ? ` (${tags.join(' ')})` : ''}', async () => {
+    ${output.commands.join('\n    ')}
   })
 })`
 }

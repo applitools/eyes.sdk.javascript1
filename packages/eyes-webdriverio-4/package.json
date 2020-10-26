@@ -10,13 +10,13 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/*.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.js\"",
     "test:unit": "mocha \"test/unit/**/*.js\"",
-    "coverage:generate": "coverage-tests create-tests",
-    "coverage:sandbox": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report",
-    "coverage:prod": "coverage-tests create-tests && yarn test:coverage && coverage-tests process-report --send-report prod",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
+    "coverage:generate": "coverage-tests generate ../sdk-shared/coverage-tests/generic/index.js --name 'eyes.webdriverio.javascript4'",
+    "coverage:report": "coverage-tests report ../sdk-shared/coverage-tests/generic/index.js --name 'eyes.webdriverio.javascript4'",
+    "coverage:sandbox": "yarn coverage:generate && yarn test:coverage && yarn coverage:report --sandbox",
+    "coverage:prod": "yarn coverage:generate && yarn test:coverage && yarn coverage:report",
     "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
-    "types:generate": "rm -rf ./typings && tsc --declaration --declarationDir ./typings --allowJs --emitDeclarationOnly ./index.js",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion",
@@ -29,8 +29,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": "https://github.com/applitools/eyes.sdk.javascript1",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.4.2",
-    "@applitools/visual-grid-client": "15.0.10"
+    "@applitools/eyes-sdk-core": "12.5.2",
+    "@applitools/visual-grid-client": "15.0.14"
   },
   "peerDependencies": {
     "webdriverio": "~4.14.4"

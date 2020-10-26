@@ -23,6 +23,7 @@ function testSetup(getCheckSettings, validateResults) {
 function getCheckSettings() {
   return Target.window()
 }
+
 function getCheckSettingsWithHook() {
   return getCheckSettings().beforeRenderScreenshotHook(
     'document.body.style="background-color: red"',
@@ -75,9 +76,29 @@ async function validateVG(eyes) {
   assert.deepStrictEqual(browsers.length, 0)
 }
 
+async function validateVG2(eyes) {
+  let container = await eyes.getRunner().getAllTestResults(false)
+  let results = container.getAllResults()
+  let result = results[0]
+  let data = await getApiData(result.getTestResults())
+  assert.deepStrictEqual(
+    data.actualAppOutput.length,
+    2,
+    `There should be 2 images detected but was found: ${data.actualAppOutput.length}`,
+  )
+  let image1 = data.actualAppOutput[0].image
+  assert.ok(image1.hasDom)
+  assert.deepStrictEqual(800, image1.size.width)
+  assert.deepStrictEqual(600, image1.size.height)
+
+  let image2 = data.actualAppOutput[1].image
+  assert.ok(image2.hasDom)
+}
+
 module.exports = {
   testSetup: testSetup,
   getCheckSettings: getCheckSettings,
   getCheckSettingsWithHook: getCheckSettingsWithHook,
   validateVG: validateVG,
+  validateVG2: validateVG2,
 }

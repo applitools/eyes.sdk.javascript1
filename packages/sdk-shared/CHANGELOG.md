@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 0.4.0 - 2020/10/23
+
+- update `getEyes` api
+- remove unused dependencies
+- updated to @applitools/sdk-coverage-tests@2.0.0 (from 1.0.16)
+
 ## 0.3.0 - 2020/10/14
 
 - add native mobile app device configurations for iOS and Android

@@ -11,7 +11,7 @@ describe('TestCounts', () => {
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
     await spec.visit(driver, 'https://applitools.com/helloworld')
-    eyes = await getEyes({isVisualGrid: true})
+    eyes = await getEyes({vg: true})
     runner = eyes.getRunner()
     await eyes.setSendDom(false)
   })

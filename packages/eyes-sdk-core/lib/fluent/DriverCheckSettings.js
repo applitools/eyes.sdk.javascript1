@@ -75,7 +75,7 @@ const TypeUtils = require('../utils/TypeUtils')
  * @prop {({frame: FrameReference<TElement, TSelector>, scrollRootElement?: ElementReference<TElement, TSelector>}|FrameReference<TElement, TSelector>)[]} [frames]
  * @prop {ElementReference<TElement, TSelector>} [scrollRootElement]
  * @prop {RegionReference<TElement, TSelector>[]} [ignoreRegions]
- * @prop {RegionReference<TElement, TSelector>[]} [layoutRegion]
+ * @prop {RegionReference<TElement, TSelector>[]} [layoutRegions]
  * @prop {RegionReference<TElement, TSelector>[]} [strictRegions]
  * @prop {RegionReference<TElement, TSelector>[]} [contentRegions]
  * @prop {(FloatingRegionReference<TElement, TSelector>|RegionReference<TElement, TSelector>)[]} [floatingRegions]
@@ -167,7 +167,7 @@ class CheckSettings {
     /** @private @type {string} */
     this._name = undefined
     /** @private @type {number} */
-    this._timeout = undefined
+    this._timeout = -1
     /** @private @type {boolean} */
     this._sendDom = undefined
     /** @private @type {MatchLevel} */
@@ -266,10 +266,10 @@ class CheckSettings {
     if (!Number.isNaN(Number(object.timeout))) {
       settings.timeout(object.timeout)
     }
-    if (object.sendDom) {
+    if (object.sendDom !== undefined) {
       settings.sendDom(object.sendDom)
     }
-    if (object.useDom) {
+    if (object.useDom !== undefined) {
       settings.useDom(object.useDom)
     }
     if (object.enablePatterns) {

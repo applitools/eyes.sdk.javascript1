@@ -43,14 +43,14 @@ describe('CheckSettingsUtils', () => {
     })
 
     assert.deepStrictEqual(checkWindowConfiguration.ignore, [
-      {selector: `[data-eyes-selector="${ids[0]}"]`, type: 'css'},
-      {selector: `[data-eyes-selector="${ids[1]}"]`, type: 'css'},
-      {selector: `[data-eyes-selector="${ids[2]}"]`, type: 'css'},
+      {selector: `[data-applitools-marker~="${ids[0]}"]`, type: 'css'},
+      {selector: `[data-applitools-marker~="${ids[1]}"]`, type: 'css'},
+      {selector: `[data-applitools-marker~="${ids[2]}"]`, type: 'css'},
       {left: 1, top: 2, width: 3, height: 5},
     ])
     assert.deepStrictEqual(checkWindowConfiguration.floating, [
       {
-        selector: `[data-eyes-selector="${ids[3]}"]`,
+        selector: `[data-applitools-marker~="${ids[3]}"]`,
         type: 'css',
         maxUpOffset: 1,
         maxDownOffset: 2,
@@ -58,7 +58,7 @@ describe('CheckSettingsUtils', () => {
         maxRightOffset: 4,
       },
       {
-        selector: `[data-eyes-selector="${ids[4]}"]`,
+        selector: `[data-applitools-marker~="${ids[4]}"]`,
         type: 'css',
         maxUpOffset: 5,
         maxDownOffset: 6,
@@ -77,8 +77,8 @@ describe('CheckSettingsUtils', () => {
       },
     ])
     assert.deepStrictEqual(checkWindowConfiguration.accessibility, [
-      {accessibilityType: 'bla', selector: `[data-eyes-selector="${ids[5]}"]`, type: 'css'},
-      {accessibilityType: 'bla', selector: `[data-eyes-selector="${ids[6]}"]`, type: 'css'},
+      {accessibilityType: 'bla', selector: `[data-applitools-marker~="${ids[5]}"]`, type: 'css'},
+      {accessibilityType: 'bla', selector: `[data-applitools-marker~="${ids[6]}"]`, type: 'css'},
     ])
   })
 

@@ -36,7 +36,7 @@ describe('TestDisableBrowserFetching', () => {
   it('sends dontFetchResources to dom snapshot', async () => {
     const url = adjustUrlToDocker('http://localhost:5557/ua.html')
     await spec.visit(driver, url)
-    const eyes = getEyes({isVisualGrid: true, configuration: {disableBrowserFetching: true}})
+    const eyes = getEyes({vg: true, disableBrowserFetching: true})
     await eyes.open(driver, 'VgFetch', 'TestDisableBrowserFetching', {width: 800, height: 600})
     await eyes.check(Target.window())
     await eyes.close()

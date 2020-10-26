@@ -1,5 +1,5 @@
 'use strict'
-const axios = require('axios')
+const fetch = require('node-fetch')
 const {expect} = require('chai')
 
 const RegionType = ['ignore', 'strict', 'content', 'layout', 'floating', 'accessibility']
@@ -21,8 +21,8 @@ async function getApiData(
     .getApiUrls()
     .getSession()}?format=json&AccessToken=${testResults.getSecretToken()}&apiKey=${apiKey}`
 
-  let response = await axios.get(url)
-  return response.data
+  let response = await fetch(url)
+  return response.json()
 }
 
 function assertProperties(actual, expected) {

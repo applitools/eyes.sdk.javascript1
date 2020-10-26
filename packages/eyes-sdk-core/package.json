@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "12.5.1",
+  "version": "12.5.3",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -32,10 +32,10 @@
   "main": "./index.js",
   "typings": "./typings/index.d.ts",
   "dependencies": {
-    "@applitools/dom-capture": "8.0.0",
+    "@applitools/dom-capture": "8.0.1",
     "@applitools/dom-snapshot": "4.2.2",
     "@applitools/isomorphic-fetch": "3.0.0",
-    "@applitools/snippets": "2.0.3",
+    "@applitools/snippets": "2.1.0",
     "axios": "0.19.2",
     "chalk": "3.0.0",
     "cosmiconfig": "6.0.0",
@@ -53,17 +53,14 @@
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
-    "chromedriver": "^83.0.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "jsdoc": "3.6.4",
     "mocha": "^8.0.1",
     "ncp": "^2.0.0",
     "nock": "^13.0.4",
-    "prettier": "1.19.0",
-    "typescript": "^3.9.5"
+    "prettier": "1.19.0"
   },
   "browser": {
     "tunnel": false
@@ -73,7 +70,6 @@
     "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "types:generate": "node ./scripts/build-typings",
     "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",

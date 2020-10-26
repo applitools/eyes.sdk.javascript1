@@ -13,7 +13,7 @@ describe('Coverage tests', () => {
 
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = await getEyes({isCssStitching: true})
+    eyes = await getEyes({stitchMode: 'CSS'})
   })
 
   afterEach(async () => {

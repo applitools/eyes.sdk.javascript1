@@ -36,8 +36,8 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.4.2",
-    "@applitools/visual-grid-client": "15.0.10"
+    "@applitools/eyes-sdk-core": "12.4.4",
+    "@applitools/visual-grid-client": "15.0.12"
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "link:../sdk-coverage-tests",
@@ -71,13 +71,13 @@
     "render": "node ../sdk-shared/scripts/render.js",
     "test": "yarn test:it",
     "test:it": "mocha --timeout 120000 './test/it/**/*.spec.js'",
-    "coverage:generate": "coverage-tests create-tests",
-    "coverage:sandbox": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report",
-    "coverage:prod": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report --send-report prod",
+    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-protractor' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
+    "coverage:generate": "coverage-tests generate ../sdk-shared/coverage-tests/generic/index.js --name 'eyes-protractor'",
+    "coverage:report": "coverage-tests report ../sdk-shared/coverage-tests/generic/index.js --name 'eyes-protractor'",
+    "coverage:sandbox": "yarn coverage:generate && yarn test:coverage && yarn coverage:report --sandbox",
+    "coverage:prod": "yarn coverage:generate && yarn test:coverage && yarn coverage:report",
     "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "test:coverage": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-protractor' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
-    "types:generate": "rm -rf ./typings && tsc --declaration --declarationDir ./typings --allowJs --emitDeclarationOnly ./index.js",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
     "postversion": "bongo postversion",

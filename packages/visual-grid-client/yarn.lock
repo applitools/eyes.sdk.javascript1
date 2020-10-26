@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/dom-capture@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-8.0.0.tgz#71c6eb7f7fd21f518330878eeba4d28c5204605f"
-  integrity sha512-k74FW0r1s5CkL6X84h15Nc4B6AqiKj0Pcg+oPOjacgjF1fjG0Bvd1Qpi/VoCz8gqhbX+Ff2bpz732RNvdIPCXQ==
+"@applitools/dom-capture@8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-8.0.1.tgz#70a9e2badba612f2964c950db008175612eecca8"
+  integrity sha512-YbNp5Bu/sDW3TTYhCXnYcMUq0W1i9KSDKSwECyZjWNUbDBUeaNEyYgxp5Mhin3c1HvkSa2aLGA/3q0HXqMD8kw==
   dependencies:
     "@applitools/dom-shared" "1.0.4"
     "@applitools/functional-commons" "1.6.0"
@@ -25,15 +25,15 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/eyes-sdk-core@12.5.1":
-  version "12.5.1"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.5.1.tgz#4251aeb4de1a1af91356e53860cfa63138b9a0b4"
-  integrity sha512-qe1Bsq4jmZT7l3QL5JjGs9YBc6Rl2EmJ5grIXtVcy674QkJ7kK6bqfUpHfjVt7+8r6SHiDtArUUedhrppK7RPA==
+"@applitools/eyes-sdk-core@12.5.2":
+  version "12.5.2"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.5.2.tgz#9ef974370bb47454813f9e1944ba4d993e41f33a"
+  integrity sha512-X0/pDMZfPaMJ3x6OBHWE9vjhajD5KDkINuwZvBYlpVCjbg6kYsLNNlleDkTZs+/zemSbmmIoflFuAayhl6dgWw==
   dependencies:
-    "@applitools/dom-capture" "8.0.0"
+    "@applitools/dom-capture" "8.0.1"
     "@applitools/dom-snapshot" "4.2.2"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/snippets" "2.0.3"
+    "@applitools/snippets" "2.1.0"
     axios "0.19.2"
     chalk "3.0.0"
     cosmiconfig "6.0.0"
@@ -176,10 +176,10 @@
     ncp "2.0.0"
     yargs "15.3.1"
 
-"@applitools/snippets@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.0.3.tgz#3e326a3e6d18b10fda97052a4557d52305fe7d6b"
-  integrity sha512-YKJIUr+Cu1UvM/GLZ9HJXR+hbmnXU5rT+x4wiG/zmzyYG6es5LlZIU752e27XqxTRmszgTf79GvImNuA0uLl+A==
+"@applitools/snippets@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.0.tgz#edd143ec52ec19db19e94a5c3e0da8647e60eaf7"
+  integrity sha512-8bzQIweiMcdkuRQolbT4IqI+D0libRa7pJSRDC4yHud2TpXIV/QjFLcYzBZvCG4N8Ggqp4Dx7FfFWkW1to+vCg==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"

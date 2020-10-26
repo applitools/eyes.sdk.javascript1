@@ -14,7 +14,7 @@ describe('TestEyesDifferentRunners VG', () => {
 
   beforeEach(async function() {
     ;[this.webDriver, this.destroyDriver] = await spec.build({browser: 'chrome'})
-    this.eyes = await getEyes({isVisualGrid: true})
+    this.eyes = await getEyes({vg: true})
     let conf = this.eyes.getConfiguration()
     conf.setTestName(`Top Sites - ${this.currentTest.title}`)
     conf.setAppName(`Top Sites`)
@@ -35,6 +35,6 @@ describe('TestEyesDifferentRunners VG', () => {
     // ['https://ebay.com', MatchLevel.Layout],
   ]
   cases.forEach(testData => {
-    it(testData[0], testCase(...testData))
+    it('TestEyesDifferentRunners', testCase(...testData))
   })
 })

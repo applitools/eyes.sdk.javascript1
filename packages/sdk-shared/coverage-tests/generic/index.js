@@ -1,3 +1,11 @@
-exports.makeTemplate = require('./mocha-template')
-exports.makeEmitter = require('./spec-emitter')
-exports.supportedTests = require('./supported-tests')
+const makeTemplate = require('./mocha-template')
+const makeEmitter = require('./spec-emitter')
+const overrideTests = require('./override-tests')
+
+module.exports = {
+  outPath: './test/generic',
+  ext: '.spec.js',
+  initializeSdk: makeEmitter,
+  testFrameworkTemplate: makeTemplate,
+  overrideTests,
+}

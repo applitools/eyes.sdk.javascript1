@@ -259,13 +259,10 @@ describe('spec driver', async () => {
   function parentContext() {
     return async () => {
       try {
-        console.log()
-        console.log(await browser.element('#centered'))
         await browser.frame(await browser.element('[name="frame1"]').then(({value}) => value))
         const {value: parentDocument} = await browser.element('html')
         await browser.frame(await browser.element('[name="frame1-1"]').then(({value}) => value))
         const {value: frameDocument} = await browser.element('html')
-        console.log(parentDocument, frameDocument)
         assert.ok(!(await spec.isEqualElements(browser, parentDocument, frameDocument)))
         await spec.parentContext(browser)
         const {value: resultDocument} = await browser.element('html')

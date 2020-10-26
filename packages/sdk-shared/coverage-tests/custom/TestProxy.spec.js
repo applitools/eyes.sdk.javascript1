@@ -23,7 +23,7 @@ describe.skip('TestProxy', () => {
 
   async function checkNetworkPassThroughProxy() {
     const [webDriver, destroyDriver] = await spec.build({browser: 'chrome'})
-    const eyes = await getEyes({isVisualGrid: true})
+    const eyes = await getEyes({vg: true})
     try {
       let conf = eyes.getConfiguration()
       conf.setProxy(new ProxySettings('http://127.0.0.1:8080', undefined, undefined, true))
@@ -45,7 +45,7 @@ describe.skip('TestProxy', () => {
 
   async function checkNetworkFailIfNoProxy() {
     const [webDriver, destroyDriver] = await spec.build({browser: 'chrome'})
-    const eyes = await getEyes({isVisualGrid: true})
+    const eyes = await getEyes({vg: true})
     try {
       let conf = eyes.getConfiguration()
       conf.setProxy(new ProxySettings('http://127.0.0.1:8080', undefined, undefined, true))

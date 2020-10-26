@@ -11,7 +11,9 @@ function extractElementId(element) {
 }
 
 function transformSelector(selector) {
-  if (TypeUtils.has(selector, ['type', 'selector'])) {
+  if (selector instanceof LegacySelector) {
+    return selector.toString()
+  } else if (TypeUtils.has(selector, ['type', 'selector'])) {
     if (selector.type === 'css') return `css selector:${selector.selector}`
     else if (selector.type === 'xpath') return `xpath:${selector.selector}`
   }
@@ -83,15 +85,11 @@ async function childContext(browser, element) {
   return browser
 }
 async function findElement(browser, selector) {
-  const element = await browser.$(
-    selector instanceof LegacySelector ? selector.toString() : transformSelector(selector),
-  )
+  const element = await browser.$(transformSelector(selector))
   return !element.error ? element : null
 }
 async function findElements(browser, selector) {
-  const elements = await browser.$$(
-    selector instanceof LegacySelector ? selector.toString() : transformSelector(selector),
-  )
+  const elements = await browser.$$(transformSelector(selector))
   return Array.from(elements)
 }
 async function getElementRect(browser, element) {
@@ -175,27 +173,23 @@ async function takeScreenshot(driver) {
   return driver.takeScreenshot()
 }
 async function click(browser, element) {
-  const extendedElement = await browser.$(element)
-  return extendedElement.click()
+  if (isSelector(element)) element = await findElement(browser, element)
+  return element.click()
 }
 async function type(browser, element, keys) {
-  const extendedElement = await browser.$(element)
-  return extendedElement.setValue(keys)
+  if (isSelector(element)) element = await findElement(browser, element)
+  return element.setValue(keys)
 }
 async function waitUntilDisplayed(browser, selector, timeout) {
   const element = await findElement(browser, selector)
   return element.waitForDisplayed({timeout})
 }
 async function scrollIntoView(browser, element, align = false) {
-  if (isSelector(element)) {
-    const element = await findElement(browser, element)
-  }
+  if (isSelector(element)) element = await findElement(browser, element)
   return element.scrollIntoView(align)
 }
 async function hover(browser, element, {x, y} = {}) {
-  if (isSelector(element)) {
-    const element = await findElement(browser, element)
-  }
+  if (isSelector(element)) element = await findElement(browser, element)
   // NOTE: WDIO6 changed the signature of moveTo method
   if (process.env.APPLITOOLS_WDIO_MAJOR_VERSION === '5') {
     await element.moveTo(x, y)
@@ -252,15 +246,16 @@ async function build(env) {
         options.port = 9515
         options.path = '/'
       }
-      const browserOptionsName = browserOptionsNames[browser]
+      const browserOptionsName = browserOptionsNames[browser || options.capabilities.browserName]
       if (browserOptionsName) {
-        options.capabilities[browserOptionsName] = {
-          args: headless ? args.concat('headless') : args,
-          debuggerAddress: attach === true ? 'localhost:9222' : attach,
+        const browserOptions = options.capabilities[browserOptionsName] || {}
+        browserOptions.args = [...(browserOptions.args || []), ...args]
+        if (headless) browserOptions.args.push('headless')
+        if (attach) {
+          browserOptions.debuggerAddress = attach === true ? 'localhost:9222' : attach
+          if (browser !== 'firefox') browserOptions.w3c = false
         }
-        if (browser !== 'firefox') {
-          options.capabilities[browserOptionsName].w3c = !attach
-        }
+        options.capabilities[browserOptionsName] = browserOptions
       }
     }
   }

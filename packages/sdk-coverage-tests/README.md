@@ -1,66 +1,87 @@
-# `sdk-coverage-tests`
+# SDK Agnostic Test-framework
 
-## Implementations
+SAT is internal CLI tool for Applitools SDKs. With the CLI, you can:
 
-- [eyes-selenium](../eyes-selenium/test/coverage/index.js)
-- [eyes-testcafe](../eyes-testcafe/test/coverage/index.js)
-- [eyes-webdriverio-4](../eyes-webdriverio-4/test/coverage/index.js)
-- [eyes-webdriverio-5](../eyes-webdriverio-5/test/coverage/index.js)
+- Generate code: create test suites and generate test files.
+- Send reports: send reports to the dashboard as part of release event.
 
-## Workflow
+## Usage
 
-1. Generate tests
-2. Run tests (handled by the SDK)
-3. Process results
+```sh
+# To save as a dependency
+$ npm install -D sdk-coverage-test
+# or
+$ yarn add --dev sdk-coverage-test
 
-For an example of how this has been done in other SDKs, see the `coverage` scripts in a `package.json` for one of the implementations listed above.
-
-### Generate tests
-
-After an SDK has specified an implementation, the command-line utility can be used to generate tests files either with the built-in generator (e.g., for Mocha) or with one the SDK implementation has provided.
-
-Each test will be generated into its own file and saved to `test/coverage/generic`.
-
-### Running tests
-
-Once the tests have been created you can run them from the SDK.
-
-The only hard requirement is that the results be outputted to an aggregate file using XUnit XML. The expected filename is `coverage-test-report.xml`.
-
-### Process results
-
-After a test run completes and an XML result file has been rendered, the coverage-test CLI can be invoked to process it and send the results to the QA dashboard.
-
-## Running with containers
-
-In order to pick up the correct baselines, you need the following things:
-
-- the correct API key
-- the correct app environment
-
-The coverage-tests CLI looks to see that the SDK team API has been set to the `APPLITOOLS_API_KEY_SDK` environment variable. It will warn if it hasn't been set. If it has been set, it will use it in the generated test files.
-
-For most baselines, the correct environment is Chrome running on Linux. If you're running this on your local development machine then there's nothing to do. But if you're running on a Mac, you'll end up comparing against the wrong baseline images. The simplest thing to do in this case is to use a Docker image.
-
-The Selenium project maintains an image for standalone-chrome which you can spin up with the following command.
-
-```
-docker run -p 4444:4444 --shm-size=2g selenium/standalone-chrome:3.141.59-zinc
+$ npx coverage-tests --help
 ```
 
-To use this when running coverage-tests you'll want to become familiar with a couple of environment variables.
+## Generate Code
 
-- `SKIP_CHROMEDRIVER`
-- `CVG_TESTS_REMOTE`
+```sh
+$ npx coverage-tests generate [config-path]
+```
 
-### SKIP_CHROMEDRIVER
+### Configuration
 
-When running coverage-tests for the WDIO SDKs, they implicitly look for a driver running on `http://localhost:4444/wd/hub`. To support this, the coverage-tests script in the SDK spins up an instance of ChromeDriver on this port as a preliminary step.
+You can specify path to the configuration file (by default: `./test/coverage/index.js`) or specify almost everything using CLI options.
 
-But, instead, if you want to use the Docker container specified above, run the tests with `SKIP_CHROMEDRIVER=true`.
+Configuration file should export a config object with next structure:
 
-### CVG_TESTS_REMOTE
+```ts
+type Configuration = {
+  name: string, // SDK name
+  testsPath: string, // path or url to the file with tests declarations
+  outPath: string, // path to save generated tests files
+  metaPath: string, // path to save metadata file
+  ext: string, // extension for generated files (e.g. `.spec.js`)
+  initializeSdk: (tracker: Tracker, test: Test) => SDKEmitter, // skd constructor which returns all possible commands
+  testFrameworkTemplate: (test: Test) => string,
+  overrideTests: object
+}
+```
 
-When running coverage-tests on eyes-selenium, no preliminary steps are taken by the SDK's coverage-tests script since Selenium handles this behind the scenes.
+### Test declarations
 
-If you want to use the Docker container, specify `CVG_TESTS_REMOTE=http://localhost:4444/wd/hub`.
+All test declarations should be placed in a file (you can specify path to this file using `testsPath` configuration option). The file itself is a `js` file which have two special global methods `test` and `config`. You can use `test` method to add a test declaration and `config` method to set a declaration level tests configuration object.
+
+```ts
+type TestsConfiguration = {
+  pages: {
+    [key: string]: string
+  }
+}
+
+type TestDeclaration = {
+  page: string, // page (name or raw url) to visit in a very beginning of the test
+  env: {
+    url: string // driver url (better use browser and/or device to target a specific driver)
+    browser: string, // browser name supported by sdk implementation (e.g. 'chrome' or 'ie-11')
+    device: string, // device name supported by sdk implementation (e.g 'Pixel 4' or 'iPhone XS')
+    app: string, // url to the native app to be run (make sens only in combination with `device`)
+    headless: boolean, // whether browser should be ran in headless mode
+    orientations: 'portrait' | 'landscape', // device orientation (make sens only in combination with `device`)
+    proxy: { // driver proxy configuration
+      http: string,
+      https: string,
+      server: string,
+      ftp: string,
+      bypass: string[]
+    }
+  },
+  config: EyesConfiguration & {vg: boolean, check: 'classic' | 'fluent'}
+  variants: { [key: string]: TestDeclaration }
+  test: ({eyes: object, driver: object, assert: object}) => void
+}
+
+type SetTestsConfiguration = (config: TestsConfiguration) => void
+type AddTestDeclaration = (string: name, test: TestDeclaration) => void
+```
+
+## Report
+
+```sh
+$ npx coverage-tests report [config-path]
+```
+
+TBD

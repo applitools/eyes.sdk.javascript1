@@ -1,48 +1,49 @@
-const {convertJunitXmlToResultSchema} = require('./xml')
+const path = require('path')
+const fs = require('fs')
+const chalk = require('chalk')
+const {createReport} = require('./create')
+const {sendReport} = require('./send')
+const uploadToStorage = require('./upload')
 
-function convertSdkNameToReportName(sdkName) {
-  switch (sdkName) {
-    case 'eyes-selenium':
-      return 'js_selenium_4'
-    case 'eyes-selenium-3':
-      return 'js_selenium_3'
-    case 'eyes.webdriverio.javascript5':
-      return 'js_wdio_5'
-    case 'eyes.webdriverio.javascript4':
-      return 'js_wdio_4'
-    case 'eyes-images':
-      return 'js_images'
-    case 'eyes-testcafe':
-      return 'testcafe'
-    case 'eyes-protractor':
-      return 'js_protractor'
-    case 'eyes_selenium_python':
-      return 'python'
-    case 'eyes_selenium_ruby':
-      return 'ruby'
-    case 'eyes_selenium_java':
-      return 'java'
-    case 'eyes_selenium_dotnet':
-      return 'dotnet'
-    case 'playwright':
-      return 'playwright'
-    default:
-      throw new Error('Unsupported SDK')
+const DEFAULT_CONFIG = {
+  metaPath: '',
+  resultPath: '',
+}
+
+async function report({configPath, ...options}) {
+  const config = {
+    ...DEFAULT_CONFIG,
+    ...require(path.join(path.resolve('.'), configPath)),
+    ...options,
   }
-}
+  const cwd = process.cwd()
+  const junit = fs.readFileSync(path.resolve(cwd, config.resultPath, 'coverage-test-report.xml'), {
+    encoding: 'utf-8',
+  })
+  const metadata = require(path.resolve(cwd, config.metaPath, 'coverage-tests-metadata.json'))
 
-function createReport({sdkName, xmlResult, browser, group, sandbox, id, metaData} = {}) {
-  return {
-    sdk: convertSdkNameToReportName(sdkName),
-    group: group ? group : 'selenium',
-    sandbox: sandbox !== undefined ? sandbox : true,
-    results: convertJunitXmlToResultSchema({xmlResult, browser, metaData}),
-    id,
+  process.stdout.write(`\nSending report to QA dashboard ${config.sandbox ? '(sandbox)' : ''}... `)
+  const report = createReport({
+    reportId: config.reportId,
+    name: config.name,
+    sandbox: config.sandbox,
+    junit,
+    metadata,
+  })
+
+  const result = await sendReport(report)
+  process.stdout.write(result.isSuccessful ? chalk.green('Done!\n') : chalk.red('Failed!\n'))
+  if (!result.isSuccessful) {
+    console.log(result.message)
   }
+  await uploadToStorage({
+    sdkName: config.name,
+    reportId: config.reportId,
+    isSandbox: config.sandbox,
+    payload: JSON.stringify(report),
+  }).catch(err => {
+    console.log(chalk.gray('Error uploading results to Azure:', err.message))
+  })
 }
 
-module.exports = {
-  createReport,
-  convertJunitXmlToResultSchema,
-  convertSdkNameToReportName,
-}
+module.exports = report

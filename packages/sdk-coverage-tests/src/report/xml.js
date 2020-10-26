@@ -1,8 +1,8 @@
 const convert = require('xml-js')
 const {logDebug} = require('../log')
 
-function convertJunitXmlToResultSchema({xmlResult, browser, metaData}) {
-  const tests = parseJunitXmlForTests(xmlResult).filter(test => !test.skipped && !test.ignored)
+function convertJunitXmlToResultSchema({junit, browser, metadata}) {
+  const tests = parseJunitXmlForTests(junit).filter(test => !test.skipped && !test.ignored)
   logDebug(tests)
   return tests.map(test => {
     const testName = parseBareTestName(test._attributes.name)
@@ -15,7 +15,7 @@ function convertJunitXmlToResultSchema({xmlResult, browser, metaData}) {
         mode: parseExecutionMode(testName),
       },
       passed: !test.failure,
-      ...metaData[testName],
+      ...metadata[testName],
     }
   })
 }

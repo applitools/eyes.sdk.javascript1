@@ -14,7 +14,7 @@ describe(appName, async () => {
   describe('CSS', async () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-      eyes = await getEyes({isCssStitching: true})
+      eyes = await getEyes({vg: true})
     })
     it('TestDuplicatedIFrames', TestDuplicatedIFrames('TestDuplicatedIFrames'))
   })
@@ -30,7 +30,7 @@ describe(appName, async () => {
   describe.skip('VG', async () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-      eyes = await getEyes({isVisualGrid: true})
+      eyes = await getEyes({vg: true})
     })
     it('TestDuplicatedIFrames', TestDuplicatedIFrames('TestDuplicatedIFrames_VG'))
   })

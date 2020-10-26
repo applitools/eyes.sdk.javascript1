@@ -504,6 +504,8 @@ The following configuration properties cannot be defined using the first method 
 | `concurrency`             | 1                           | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
 |`dontCloseBatches`| false | If true, batches are not closed for  [notifyOnCompletion](#advanced-configuration).|
 |`disableBrowserFetching`| false | If true, page resources for rendering on the UFG will be fetched from outside of the browser.|
+|`enablePatterns`| false | |
+|`useDom`| false | |
 
 
 ### Method 1: Arguments for `cy.eyesOpen`

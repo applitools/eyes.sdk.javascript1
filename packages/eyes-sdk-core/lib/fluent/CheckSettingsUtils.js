@@ -47,7 +47,8 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
     fully: configuration.getForceFullPageScreenshot() || checkSettings.getStitchContent(),
     tag: checkSettings.getName(),
     scriptHooks: checkSettings.getScriptHooks(),
-    sendDom: configuration.getSendDom() || checkSettings.getSendDom(), // this is wrong, but kept for backwards compatibility
+    sendDom: configuration.getSendDom() || checkSettings.getSendDom(), // this is wrong, but kept for backwards compatibility,
+    ignoreDisplacements: checkSettings.getIgnoreDisplacements(),
     matchLevel: TypeUtils.getOrDefault(
       checkSettings.getMatchLevel(),
       configuration.getMatchLevel(),

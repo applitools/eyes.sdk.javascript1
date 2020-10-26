@@ -1,4 +1,4 @@
-const axios = require('axios')
+const fetch = require('node-fetch')
 const {delay} = require('@applitools/functional-commons')
 
 async function waitForDockerBrowsers(
@@ -11,7 +11,7 @@ async function waitForDockerBrowsers(
     throw new Error('browsers docker containers failed to start before running tests')
   }
   try {
-    await axios(remoteUrl)
+    await fetch(remoteUrl)
   } catch (_ex) {
     await delay(100)
     return waitForDockerBrowsers({remoteUrl, retries: retries - 1})

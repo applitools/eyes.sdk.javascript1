@@ -99,7 +99,7 @@ describe('FluentRegion', () => {
     assert.deepStrictEqual(Object.values(elementsById), [element])
     const persistedRegions = fluentRegion.toPersistedRegions()
     assert.deepStrictEqual(persistedRegions, [
-      {type: 'css', selector: `[data-eyes-selector="${Object.keys(elementsById)[0]}"]`},
+      {type: 'css', selector: `[data-applitools-marker~="${Object.keys(elementsById)[0]}"]`},
     ])
   })
 
@@ -110,8 +110,8 @@ describe('FluentRegion', () => {
     const persistedRegions = fluentRegion.toPersistedRegions()
     const ids = Object.keys(elementsById)
     assert.deepStrictEqual(persistedRegions, [
-      {type: 'css', selector: `[data-eyes-selector="${ids[0]}"]`},
-      {type: 'css', selector: `[data-eyes-selector="${ids[1]}"]`},
+      {type: 'css', selector: `[data-applitools-marker~="${ids[0]}"]`},
+      {type: 'css', selector: `[data-applitools-marker~="${ids[1]}"]`},
     ])
   })
 
@@ -137,7 +137,7 @@ describe('FluentRegion', () => {
     assert.deepStrictEqual(persistedRegionsElement, [
       {
         type: 'css',
-        selector: `[data-eyes-selector="${Object.keys(elementsByIdElement)[0]}"]`,
+        selector: `[data-applitools-marker~="${Object.keys(elementsByIdElement)[0]}"]`,
         key: 'b',
       },
     ])
@@ -150,8 +150,8 @@ describe('FluentRegion', () => {
     const persistedRegionsSelector = fluentRegionSelector.toPersistedRegions()
     const idsSelector = Object.keys(elementsByIdSelector)
     assert.deepStrictEqual(persistedRegionsSelector, [
-      {type: 'css', selector: `[data-eyes-selector="${idsSelector[0]}"]`, key: 'c'},
-      {type: 'css', selector: `[data-eyes-selector="${idsSelector[1]}"]`, key: 'c'},
+      {type: 'css', selector: `[data-applitools-marker~="${idsSelector[0]}"]`, key: 'c'},
+      {type: 'css', selector: `[data-applitools-marker~="${idsSelector[1]}"]`, key: 'c'},
     ])
   })
 })

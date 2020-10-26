@@ -252,7 +252,7 @@ class EyesVisualGrid extends EyesCore {
         checkSettings,
         context: this._driver,
       })
-      await EyesUtils.markElements(this._logger, this._driver, elementsById)
+      await EyesUtils.setElementMarkers(this._logger, this._driver, elementsById)
 
       this._logger.verbose(`elements marked: ${Object.keys(elementsById)}`)
 
@@ -282,7 +282,11 @@ class EyesVisualGrid extends EyesCore {
           url,
         })
       } finally {
-        await EyesUtils.cleanupElementIds(this._logger, this._driver, Object.values(elementsById))
+        await EyesUtils.cleanupElementMarkers(
+          this._logger,
+          this._driver,
+          Object.values(elementsById),
+        )
       }
     })
   }

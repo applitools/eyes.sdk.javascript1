@@ -13,7 +13,7 @@ describe.skip('Coverage Tests', async () => {
 
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'edge-18', remote: 'sauce'})
-      eyes = getEyes({isCssStitching: true})
+      eyes = getEyes({stitchMode: 'CSS'})
       eyes.setMatchTimeout(0)
     })
 
