@@ -36,6 +36,7 @@ module.exports = {
         browserName: 'chrome',
         'goog:chromeOptions': {
           args: ['--headless'],
+          w3c: false,
         },
       },
       // W3C
@@ -48,9 +49,8 @@ module.exports = {
       //},
 
       webdriver: {
-        port: 9515,
-        start_process: true,
-        server_path: Services.chromedriver ? Services.chromedriver.path : '',
+        port: 4444,
+        default_path_prefix: '/wd/hub',
       },
     },
 
