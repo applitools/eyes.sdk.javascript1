@@ -64,7 +64,7 @@ async function childContext(driver, element) {
   if (isSelector(element)) {
     element = await driver.element('css selector', element)
   }
-  await driver.frame(element.value)
+  await driver.frame(element)
 }
 async function findElement(driver, selector) {
   const result = await new Promise(resolve => {
