@@ -56,11 +56,28 @@ describe('ServerConnector', () => {
 
   it('retry startSession if it blocked by concurrency', async () => {
     const serverConnector = getServerConnector()
+    assert.deepStrictEqual(serverConnector._axios.defaults.concurrencyBackoff, [
+      2000,
+      2000,
+      2000,
+      2000,
+      2000,
+      5000,
+      5000,
+      5000,
+      5000,
+      10000,
+    ])
+    serverConnector._axios.defaults.concurrencyBackoff = [50, 50, 100, 100, 100]
     let retries = 0
+    let timeoutPassed = false
+    const timeoutId = setTimeout(() => (timeoutPassed = true), 1000)
     serverConnector._axios.defaults.adapter = async config =>
       new Promise((resolve, reject) => {
         retries += 1
-        if (retries >= 3) {
+        if (retries >= 7) {
+          clearTimeout(timeoutId)
+          assert.strictEqual(timeoutPassed, false)
           return settle(resolve, reject, {
             status: 200,
             config,
@@ -93,7 +110,7 @@ describe('ServerConnector', () => {
         agentSessionId: guid,
       }),
     )
-    assert.strictEqual(retries, 3)
+    assert.strictEqual(retries, 7)
     assert.deepStrictEqual(runningSession.toJSON(), {
       id: 'id',
       sessionId: 'sessionId',

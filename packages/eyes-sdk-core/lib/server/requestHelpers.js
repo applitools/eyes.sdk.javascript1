@@ -134,6 +134,7 @@ async function startPollingRequest({url, config, axios}) {
       : config.delayBeforePolling,
     method: 'GET',
     url,
+    repeat: 0,
   }
   const response = await axios.request(pollingConfig)
   switch (response.status) {
@@ -156,7 +157,18 @@ async function startPollingRequest({url, config, axios}) {
       throw new Error(`Unknown error during long request: ${JSON.stringify(response)}`)
   }
 }
+
+async function startConcurrencyPolling({config, axios}) {
+  return axios.request({
+    isConcurrencyPolling: true,
+    delay: config.concurrencyBackoff[0],
+    repeat: 0,
+    ...config,
+  })
+}
+
 async function handleRequestError({err, axios, logger}) {
+  debugger
   if (!err.config) {
     throw err
   }
@@ -176,11 +188,14 @@ async function handleRequestError({err, axios, logger}) {
   }
 
   if (response && isConcurrencyBlockedRequest(response)) {
-    config.repeat += 1
-    config.delay = TypeUtils.isArray(config.delayBeforePolling)
-      ? config.delayBeforePolling[Math.min(config.repeat, config.delayBeforePolling.length - 1)]
-      : config.delayBeforePolling
-    return axios.request(config)
+    if (config.isConcurrencyPolling) {
+      config.repeat += 1
+      config.delay =
+        config.concurrencyBackoff[Math.min(config.repeat, config.concurrencyBackoff.length - 1)]
+      return axios.request(config)
+    } else {
+      return startConcurrencyPolling({config, axios})
+    }
   }
 
   if (

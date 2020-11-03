@@ -36,6 +36,11 @@ const DELAY_BEFORE_POLLING = [].concat(
   Array(5).fill(2000), // 5 tries with delay 2s
   5000, // all next tries with delay 5s
 )
+const CONCURRENCY_BACKOFF = [].concat(
+  Array(5).fill(2000), // 5 tries with delay 2s (total 10s)
+  Array(4).fill(5000), // 4 tries with delay 5s (total 20s)
+  10000, // all next tries with delay 10s
+)
 
 const DEFAULT_HEADERS = {
   Accept: 'application/json',
@@ -103,6 +108,7 @@ class ServerConnector {
       repeat: 0,
       delayBeforeRetry: 200,
       delayBeforePolling: DELAY_BEFORE_POLLING,
+      concurrencyBackoff: CONCURRENCY_BACKOFF,
       createRequestId,
       proxy: undefined,
       headers: DEFAULT_HEADERS,
