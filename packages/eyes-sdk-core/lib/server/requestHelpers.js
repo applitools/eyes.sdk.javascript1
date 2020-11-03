@@ -158,15 +158,6 @@ async function startPollingRequest({url, config, axios}) {
   }
 }
 
-async function startConcurrencyPolling({config, axios}) {
-  return axios.request({
-    isConcurrencyPolling: true,
-    delay: config.concurrencyBackoff[0],
-    repeat: 0,
-    ...config,
-  })
-}
-
 async function handleRequestError({err, axios, logger}) {
   debugger
   if (!err.config) {
@@ -188,14 +179,21 @@ async function handleRequestError({err, axios, logger}) {
   }
 
   if (response && isConcurrencyBlockedRequest(response)) {
+    let backoffIndex, repeat
     if (config.isConcurrencyPolling) {
-      config.repeat += 1
-      config.delay =
-        config.concurrencyBackoff[Math.min(config.repeat, config.concurrencyBackoff.length - 1)]
-      return axios.request(config)
+      backoffIndex = Math.min(config.repeat, config.concurrencyBackoff.length - 1)
+      repeat = config.repeat + 1
     } else {
-      return startConcurrencyPolling({config, axios})
+      backoffIndex = 0
+      repeat = 0
     }
+
+    return axios.request({
+      ...config,
+      delay: config.concurrencyBackoff[backoffIndex],
+      repeat,
+      isConcurrencyPolling: true,
+    })
   }
 
   if (
