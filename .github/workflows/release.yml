@@ -20,13 +20,12 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           cd "packages/${{github.event.inputs.sdkName}}"
-          echo "yarn publish --${{github.event.inputs.version}}"
-          touch test.txt
-          git add test.txt
-          git commit -m 'test'
-          git push
+          yarn
+          yarn docker:setup
+          yarn publish --${{github.event.inputs.version}}
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
       SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
       SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
