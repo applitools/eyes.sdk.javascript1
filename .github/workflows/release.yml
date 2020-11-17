@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: 14
       - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           cd "packages/${{github.event.inputs.sdkName}}"
           echo "yarn publish --${{github.event.inputs.version}}"
           touch test.txt
