@@ -5,6 +5,9 @@ on:
       sdkName:
         description: "SDK name"
         required: true
+      version:
+        description: "version type (specify 'major', 'minor, or 'patch')"
+        required: true
 jobs:
   coverage_sandbox:
     runs-on: ubuntu-latest
@@ -15,9 +18,11 @@ jobs:
           node-version: 14
       - run: |
           cd "packages/${{github.event.inputs.sdkName}}"
-          yarn
-          yarn docker:setup
-          yarn coverage:sandbox
+          echo "yarn publish --${{github.event.inputs.version}}"
+          touch test.txt
+          git add test.txt
+          git commit -m 'test'
+          git push
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
