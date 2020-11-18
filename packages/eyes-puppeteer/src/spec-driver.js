@@ -88,6 +88,10 @@ async function scriptRunner() {
   return result
 }
 
+async function findElementByXpath(frame, selector) {
+  const result = await frame.$x(selector)
+  return result[0]
+}
 // #endregion
 
 // #region UTILITY
@@ -160,7 +164,7 @@ async function childContext(_frame, element) {
 async function findElement(frame, selector) {
   const transformedSelector = transformSelector(selector)
   return transformedSelector.startsWith('xpath=')
-    ? frame.$x(transformedSelector.replace(/^xpath=/, ''))
+    ? findElementByXpath(transformedSelector.replace(/^xpath=/, ''))
     : frame.$(transformedSelector)
 }
 async function findElements(frame, selector) {
