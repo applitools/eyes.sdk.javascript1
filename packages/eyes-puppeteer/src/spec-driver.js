@@ -168,7 +168,10 @@ async function findElement(frame, selector) {
     : frame.$(transformedSelector)
 }
 async function findElements(frame, selector) {
-  return frame.$$(transformSelector(selector))
+  const transformedSelector = transformSelector(selector)
+  return transformedSelector.startsWith('xpath=')
+    ? frame.$x(transformedSelector.replace(/^xpath=/, ''))
+    : frame.$$(transformedSelector)
 }
 async function getElementRect(_frame, element) {
   const {x, y, width, height} = await element.boundingBox()
