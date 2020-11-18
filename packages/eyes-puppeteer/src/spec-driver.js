@@ -83,15 +83,14 @@ async function scriptRunner() {
       }
       return deserializedArgs
     }
-    return result
   }
   const args = Array.from(arguments)
-  const script = new Function(args[0].script.replace(/^function/, 'return function blah')) // needs a name and to be returned so it's usable
+  let script = args[0].script
+  script = new Function(
+    script.startsWith('return') ? script : `return (${script}).apply(null, arguments)`,
+  )
   const deserializedArgs = deserializeArgs(args[0].argsWithElementMarkers, args.slice(1))
-  const result = args[0].script.startsWith('function')
-    ? await script()(deserializedArgs) // e.g., snippets
-    : await script(deserializedArgs) // e.g., dom-snapshot can be invoked directly
-  return result
+  return script(deserializedArgs)
 }
 
 async function findElementByXpath(frame, selector) {
