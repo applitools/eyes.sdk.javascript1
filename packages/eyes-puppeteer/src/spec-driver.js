@@ -19,15 +19,10 @@ async function handleToObject(handle) {
     return handle.jsonValue()
   }
 }
-
 function transformSelector(selector) {
-  if (TypeUtils.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return `${selector.selector}`
-    else if (selector.type === 'xpath') return `xpath=${selector.selector}`
-  }
+  if (TypeUtils.has(selector, ['type', 'selector'])) return `${selector.selector}`
   return selector
 }
-
 function serializeArgs(args, elements = []) {
   let argsWithElementMarkers
   if (TypeUtils.isArray(args)) {
@@ -57,16 +52,14 @@ function serializeArgs(args, elements = []) {
   }
   return {argsWithElementMarkers, elements}
 }
-
 // NOTE:
 // A few things to note:
+//  - this function runs inside of the browser process
 //  - evaluations in Puppeteer accept multiple arguments (not just one like in Playwright)
 //  - an element reference (a.k.a. an ElementHandle) can only be sent as its
 //    own argument. To account for this, we use a wrapper function to receive all
 //    of the arguments in a serialized structure, deserialize them, and call the script,
 //    and pass the arguments as originally intended
-//  - this function runs inside of the browser process
-//  - apologies for the terrible things I have done to make this work - feedback welcome!
 async function scriptRunner() {
   function deserializeArgs(args, elements = []) {
     if (args === undefined) {
@@ -92,11 +85,14 @@ async function scriptRunner() {
   const deserializedArgs = deserializeArgs(args[0].argsWithElementMarkers, args.slice(1))
   return script(deserializedArgs)
 }
-
 async function findElementByXpath(frame, selector) {
   const result = await frame.$x(selector)
   return result[0]
 }
+function isXpath(selector) {
+  return selector.startsWith('//') || selector.startsWith('..')
+}
+
 // #endregion
 
 // #region UTILITY
@@ -167,16 +163,12 @@ async function childContext(_frame, element) {
   return element.contentFrame()
 }
 async function findElement(frame, selector) {
-  const transformedSelector = transformSelector(selector)
-  return transformedSelector.startsWith('xpath=')
-    ? findElementByXpath(transformedSelector.replace(/^xpath=/, ''))
-    : frame.$(transformedSelector)
+  selector = transformSelector(selector)
+  return isXpath(selector) ? findElementByXpath(selector) : frame.$(selector)
 }
 async function findElements(frame, selector) {
-  const transformedSelector = transformSelector(selector)
-  return transformedSelector.startsWith('xpath=')
-    ? frame.$x(transformedSelector.replace(/^xpath=/, ''))
-    : frame.$$(transformedSelector)
+  selector = transformSelector(selector)
+  return isXpath(selector) ? frame.$x(selector) : frame.$$(selector)
 }
 async function getElementRect(_frame, element) {
   const {x, y, width, height} = await element.boundingBox()
