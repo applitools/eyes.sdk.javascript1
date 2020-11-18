@@ -42,12 +42,16 @@ function serializeArgs(args, elements = []) {
         return arg
       }
     })
-  } else if (TypeUtils.isObject) {
-    argsWithElementMarkers = {...args}
-    for (const [key, value] of Object.entries(args)) {
-      if (isElement(value)) {
-        elements.push(value)
-        argsWithElementMarkers[key] = {isElement: true}
+  } else if (TypeUtils.isObject(args)) {
+    if (isElement(args)) {
+      elements.push(args)
+    } else {
+      argsWithElementMarkers = {...args}
+      for (const [key, value] of Object.entries(args)) {
+        if (isElement(value)) {
+          elements.push(value)
+          argsWithElementMarkers[key] = {isElement: true}
+        }
       }
     }
   }
@@ -64,8 +68,10 @@ function serializeArgs(args, elements = []) {
 //  - this function runs inside of the browser process
 //  - apologies for the terrible things I have done to make this work - feedback welcome!
 async function scriptRunner() {
-  function deserializeArgs(args, elements) {
-    if (Array.isArray(args)) {
+  function deserializeArgs(args, elements = []) {
+    if (args === undefined) {
+      return elements
+    } else if (Array.isArray(args)) {
       return args.map(arg => {
         if (Array.isArray(arg)) return deserializeArgs(arg, elements)
         return arg && arg.isElement ? elements.shift() : arg
