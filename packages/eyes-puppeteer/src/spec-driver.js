@@ -132,20 +132,12 @@ async function executeScript(frame, script, args = []) {
   // a function is not serializable, so we pass it as a string instead
   script = TypeUtils.isString(script) ? script : script.toString()
   const {argsWithElementMarkers, elements} = serializeArgs(args)
-  try {
-    const result = await frame.evaluateHandle(
-      scriptRunner,
-      {script, argsWithElementMarkers},
-      ...elements,
-    )
-    return await handleToObject(result)
-  } catch (error) {
-    if (/JSHandles can be evaluated only in the context they were created/.test(error)) {
-      // https://github.com/puppeteer/puppeteer/issues/3568
-      debugger
-    }
-    throw error
-  }
+  const result = await frame.evaluateHandle(
+    scriptRunner,
+    {script, argsWithElementMarkers},
+    ...elements,
+  )
+  return await handleToObject(result)
 }
 async function mainContext(frame) {
   frame = extractContext(frame)
