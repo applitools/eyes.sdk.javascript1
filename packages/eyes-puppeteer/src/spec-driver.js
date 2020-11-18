@@ -229,6 +229,7 @@ async function build(env) {
   if (process.env.APPLITOOLS_DEBUG) {
     env.headless = false
     env.devtools = true
+    delete env.executablePath
   }
   const driver = await puppeteer.launch(env)
   const page = await driver.newPage()
