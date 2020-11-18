@@ -80,7 +80,7 @@ async function scriptRunner() {
   const args = Array.from(arguments)
   let script = args[0].script
   script = new Function(
-    script.startsWith('return') ? script : `return (${script}).apply(null, arguments)`,
+    script.startsWith('function') ? `return (${script}).apply(null, arguments)` : script,
   )
   const deserializedArgs = deserializeArgs(args[0].argsWithElementMarkers, args.slice(1))
   return script(deserializedArgs)
