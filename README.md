@@ -35,4 +35,5 @@
 - https://github.com/applitools/tutorial-testcafe
 - https://github.com/applitools/tutorial-storybook-vue
 - https://github.com/applitools/tutorial-storybook-react
-- 
+- https://github.com/applitools/tutorial-puppeteer-basic
+- https://github.com/applitools/tutorial-puppeteer-ultrafastgrid
