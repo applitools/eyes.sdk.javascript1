@@ -238,7 +238,13 @@ class EyesContext {
       const result = await this.spec.executeScript(this._context, script, ...serialize(args))
       return result
     } catch (err) {
-      this._logger.verbose(`WARNING: execute script error: ${err}`)
+      const selectors = args.map(arg => JSON.stringify(arg.selector))
+      this._logger.verbose(
+        `WARNING: execute script
+error: ${err}
+with script: ${script}
+with selector(s): ${selectors.length ? selectors.join('') : 'N/A'}`,
+      )
       throw err
     }
   }
