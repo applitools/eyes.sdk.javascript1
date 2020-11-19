@@ -164,55 +164,41 @@ class EyesClassic extends EyesCore {
 
     return this._driver.wrapper
   }
-  /**
-   * @param {string|CheckSettings<TElement, TSelector>} [nameOrCheckSettings] - name of the test case
-   * @param {CheckSettings<TElement, TSelector>} [checkSettings] - check settings for the described test case
-   * @returns {Promise<MatchResult>}
-   */
-  async check(nameOrCheckSettings, checkSettings) {
-    if (this._configuration.getIsDisabled()) {
-      this._logger.log(`check(${nameOrCheckSettings}, ${checkSettings}): Ignored`)
-      return new MatchResult()
-    }
-    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
-
-    if (TypeUtils.isNull(checkSettings) && !TypeUtils.isString(nameOrCheckSettings)) {
-      checkSettings = nameOrCheckSettings
-      nameOrCheckSettings = null
-    }
-
-    checkSettings = this.spec.newCheckSettings(checkSettings)
-
-    if (TypeUtils.isString(nameOrCheckSettings)) {
-      checkSettings.withName(nameOrCheckSettings)
-    }
-
-    this._logger.verbose(`check(${nameOrCheckSettings}, checkSettings) - begin`)
-
+  async _check(checkSettings, closeAfterMatch = false, throwEx = true) {
     checkSettings.ignoreCaret(checkSettings.getIgnoreCaret() || this.getIgnoreCaret())
     this._checkSettings = checkSettings // TODO remove
 
     return this._checkPrepare(checkSettings, async () => {
       if (checkSettings.getTargetRegion()) {
         if (this._stitchContent) {
-          return this._checkFullRegion(checkSettings, checkSettings.getTargetRegion())
+          return this._checkFullRegion(
+            checkSettings,
+            checkSettings.getTargetRegion(),
+            closeAfterMatch,
+            throwEx,
+          )
         } else {
-          return this._checkRegion(checkSettings, checkSettings.getTargetRegion())
+          return this._checkRegion(
+            checkSettings,
+            checkSettings.getTargetRegion(),
+            closeAfterMatch,
+            throwEx,
+          )
         }
       } else if (checkSettings.getTargetElement()) {
         const targetElement = await this._context.element(checkSettings.getTargetElement())
         if (!targetElement) throw new ElementNotFoundError() // TODO move in a proper place
         if (this._driver.isNative) process.env.APPLITOOLS_SKIP_MOBILE_NATIVE_SCREENSHOT_HOOK = true
         if (this._stitchContent) {
-          return this._checkFullElement(checkSettings, targetElement)
+          return this._checkFullElement(checkSettings, targetElement, closeAfterMatch, throwEx)
         } else {
-          return this._checkElement(checkSettings, targetElement)
+          return this._checkElement(checkSettings, targetElement, closeAfterMatch, throwEx)
         }
       } else if (checkSettings.getContext()) {
         if (this._stitchContent) {
-          return this._checkFullFrame(checkSettings)
+          return this._checkFullFrame(checkSettings, throwEx)
         } else {
-          return this._checkFrame(checkSettings)
+          return this._checkFrame(checkSettings, throwEx)
         }
       } else {
         const source = await this._driver.getUrl()
@@ -222,6 +208,8 @@ class EyesClassic extends EyesCore {
           false,
           checkSettings,
           source,
+          closeAfterMatch,
+          throwEx,
         )
       }
     })
@@ -294,7 +282,7 @@ class EyesClassic extends EyesCore {
    * @param {Region} targetRegion - region to check
    * @return {Promise<MatchResult>}
    */
-  async _checkRegion(checkSettings, targetRegion) {
+  async _checkRegion(checkSettings, targetRegion, closeAfterMatch, throwEx) {
     try {
       this._regionToCheck = targetRegion
 
@@ -312,6 +300,8 @@ class EyesClassic extends EyesCore {
         false,
         checkSettings,
         source,
+        closeAfterMatch,
+        throwEx,
       )
     } finally {
       this._regionToCheck = null
@@ -323,7 +313,7 @@ class EyesClassic extends EyesCore {
    * @param {Region} targetRegion - region to check
    * @return {Promise<MatchResult>}
    */
-  async _checkFullRegion(checkSettings, targetRegion) {
+  async _checkFullRegion(checkSettings, targetRegion, closeAfterMatch, throwEx) {
     this._shouldCheckFullRegion = true
 
     this._regionToCheck = new Region(targetRegion)
@@ -355,6 +345,8 @@ class EyesClassic extends EyesCore {
         false,
         checkSettings,
         source,
+        closeAfterMatch,
+        throwEx,
       )
     } finally {
       this._regionToCheck = null
@@ -368,7 +360,7 @@ class EyesClassic extends EyesCore {
    * @param {EyesWrappedElement<TDriver, TElement, TSelector>} targetElement - element to check
    * @return {Promise<MatchResult>}
    */
-  async _checkElement(checkSettings, targetElement) {
+  async _checkElement(checkSettings, targetElement, closeAfterMatch, throwEx) {
     try {
       this._regionToCheck = await targetElement.getRect()
 
@@ -386,6 +378,8 @@ class EyesClassic extends EyesCore {
         false,
         checkSettings,
         source,
+        closeAfterMatch,
+        throwEx,
       )
     } finally {
       this._regionToCheck = null
@@ -397,7 +391,7 @@ class EyesClassic extends EyesCore {
    * @param {EyesWrappedElement} targetElement - element to check
    * @return {Promise<MatchResult>}
    */
-  async _checkFullElement(checkSettings, targetElement) {
+  async _checkFullElement(checkSettings, targetElement, closeAfterMatch, throwEx) {
     this._shouldCheckFullRegion = true
 
     if (this._configuration.getHideScrollbars()) {
@@ -451,6 +445,8 @@ class EyesClassic extends EyesCore {
         false,
         checkSettings,
         source,
+        closeAfterMatch,
+        throwEx,
       )
     } finally {
       this._regionToCheck = null
@@ -466,12 +462,12 @@ class EyesClassic extends EyesCore {
    * @param {CheckSettings<TElement, TSelector>} checkSettings - check settings for the described test case
    * @return {Promise<MatchResult>}
    */
-  async _checkFrame(checkSettings) {
+  async _checkFrame(checkSettings, closeAfterMatch, throwEx) {
     const targetElement = await this._context.getFrameElement()
     const originalContext = this._context
     this._context = this._context.parent
     try {
-      return await this._checkElement(checkSettings, targetElement)
+      return await this._checkElement(checkSettings, targetElement, closeAfterMatch, throwEx)
     } finally {
       this._context = await originalContext.focus()
     }
@@ -481,7 +477,7 @@ class EyesClassic extends EyesCore {
    * @param {CheckSettings<TElement, TSelector>} checkSettings - check settings for the described test case
    * @return {Promise<MatchResult>}
    */
-  async _checkFullFrame(checkSettings) {
+  async _checkFullFrame(checkSettings, closeAfterMatch, throwEx) {
     this._shouldCheckFullRegion = true
     await EyesUtils.ensureRegionVisible(
       this._logger,
@@ -518,6 +514,8 @@ class EyesClassic extends EyesCore {
         false,
         checkSettings,
         source,
+        closeAfterMatch,
+        throwEx,
       )
     } finally {
       this._regionToCheck = null

@@ -1,0 +1,1 @@
+APPLITOOLS_SERVER_URL=https://testeyes.applitools.com MEASURE_ENFORCEMENT=true MEASURE_STEPS=1 MEASURE_CONCURRENCY=20 MEASURE_BROWSERS=6   yarn mocha --no-timeouts measurements.js

@@ -152,26 +152,27 @@ describe('eyesStorybook', () => {
         {name: 'some prop', value: 'some value'},
       ]);
 
-      expect(session.steps[0].options.imageMatchSettings.strict).to.eql([
+      const {imageMatchSettings} = session.steps[0].options;
+      expect(imageMatchSettings.strict).to.eql([
         {
           ...strict[0],
           coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
-      expect(session.steps[0].options.imageMatchSettings.layout).to.eql([
+      expect(imageMatchSettings.layout).to.eql([
         {
           ...layout[0],
           coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
-      expect(session.steps[0].options.imageMatchSettings.content).to.eql([
+      expect(imageMatchSettings.content).to.eql([
         {
           ...content[0],
           coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
-      expect(session.steps[0].options.imageMatchSettings.floating).to.eql(floating);
-      expect(session.steps[0].options.imageMatchSettings.accessibility).to.eql(accessibility);
+      expect(imageMatchSettings.floating).to.eql(floating);
+      expect(imageMatchSettings.accessibility).to.eql(accessibility);
     }
 
     expect(

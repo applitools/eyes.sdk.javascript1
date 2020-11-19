@@ -34,8 +34,8 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
         renderings[renderId] = renderRequest;
         return {
           renderId,
-          renderStatus: renderRequest.renderId ? 'rendering' : 'need-more-resources',
-          needMoreDom: !renderRequest.renderId,
+          renderStatus: 'rendering',
+          needMoreDom: false,
         };
       }),
     );
@@ -64,9 +64,36 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
     );
   });
 
+  // check resources
+  app.post('/resources/query/resources-exist/', (req, res) => {
+    res.send(Array(req.body.length).fill(false));
+  });
+
   // put resource
   app.put('/resources/sha256/:hash', (_req, res) => {
     res.send({success: true});
+  });
+
+  app.post('/job-info', (req, res) => {
+    const requests = req.body;
+    res.send(new Array(requests.length).fill().map(() => ({eyesEnvironment: {}, renderer: ''})));
+  });
+
+  app.get('/user-agents', (_req, res) => {
+    res.send({
+      chrome: 'chrome-ua',
+      'chrome-1': 'chrome-1-ua',
+      'chrome-2': 'chrome-2-ua',
+      firefox: 'firefox-ua',
+      'firefox-1': 'firefox-1-ua',
+      'firefox-2': 'firefox-2-ua',
+      safari: 'safari-ua',
+      'safari-2': 'safari-2-ua',
+      'safari-1': 'safari-1-ua',
+      edge: 'edge-ua',
+      ie: 'ie-ua',
+      ie10: 'ie10-ua',
+    });
   });
 
   // matchSingleWindow
@@ -75,6 +102,18 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
     const runningSession = createRunningSessionFromStartInfo(startInfo);
     runningSession.steps = [{asExpected: true, appOutput, options}]; // TODO
     runningSessions[runningSession.id] = runningSession;
+    res.set(
+      'location',
+      `${serverUrl}/api/tasks/matchsingle/${encodeURIComponent(runningSession.id)}`,
+    );
+    res.status(202).send({success: true});
+  });
+
+  // matchWindowAndClose
+  app.post('/api/sessions/running/:id/matchandend', async (req, res) => {
+    const {appOutput, options} = req.body;
+    const runningSession = runningSessions[req.params.id];
+    runningSession.steps = [{asExpected: true, appOutput, options}]; // TODO
     res.set(
       'location',
       `${serverUrl}/api/tasks/matchsingle/${encodeURIComponent(runningSession.id)}`,
@@ -156,25 +195,32 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
   app.post('/api/sessions/running/:id', express.raw({limit: '100MB'}), (req, res) => {
     const runningSession = runningSessions[req.params.id];
     const {steps: _steps, hostOS, hostApp} = runningSession;
-    const buff = req.body;
-    const len = buff.slice(0, 4).readUInt32BE();
-    const matchWindowData = JSON.parse(buff.slice(4, len + 4));
-    console.log(matchWindowData);
-    const imgBuff = buff.slice(len + 4);
-    const {appOutput: _appOutput} = matchWindowData;
-
-    const expectedPath = path.resolve(
-      expectedFolder,
-      `${filenamify(`${req.params.id}__${hostOS}__${hostApp}`)}.png`,
-    );
-
-    if (updateFixtures) {
-      console.log('[fake-eyes-server] updating fixture at', expectedPath);
-      fs.writeFileSync(expectedPath, imgBuff);
+    let matchWindowData, imageBuf;
+    if (Buffer.isBuffer(req.body)) {
+      const buff = req.body;
+      const len = buff.slice(0, 4).readUInt32BE();
+      matchWindowData = JSON.parse(buff.slice(4, len + 4));
+      imageBuf = buff.slice(len + 4);
+    } else {
+      matchWindowData = req.body;
     }
+    // console.log(matchWindowData);
 
-    const expectedBuff = fs.readFileSync(expectedPath);
-    const asExpected = imgBuff.compare(expectedBuff) === 0;
+    let asExpected = true;
+    if (imageBuf) {
+      const expectedPath = path.resolve(
+        expectedFolder,
+        `${filenamify(`${req.params.id}__${hostOS}__${hostApp}`)}.png`,
+      );
+
+      if (updateFixtures) {
+        console.log('[fake-eyes-server] updating fixture at', expectedPath);
+        fs.writeFileSync(expectedPath, imageBuf);
+      }
+
+      const expectedBuff = fs.readFileSync(expectedPath);
+      asExpected = imageBuf.compare(expectedBuff) === 0;
+    }
     runningSession.steps.push({matchWindowData, asExpected});
     res.send({asExpected});
   });

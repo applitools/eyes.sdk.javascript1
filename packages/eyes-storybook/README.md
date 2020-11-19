@@ -124,8 +124,8 @@ Options:
 
 ## Concurrency
 
-The default level of concurrency for free accounts is `10`. This means that only up to 10 visual tests can run in parallel, and therefore the execution might be slow.
-If your account does support a higher level of concurrency, it's possible to pass a different value by specifying it in the property `concurrency` in the applitools.config.js file (see [Advanced configuration](#advanced-configuration) section below).
+The default level of concurrency for free accounts is `5`. This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slow.
+If your account does support a higher level of concurrency, it's possible to pass a different value by specifying it in the property `testConcurrency` in the applitools.config.js file (see [Advanced configuration](#advanced-configuration) section below).
 
 If you are interested in speeding up your visual tests, contact sdr@applitools.com to get a trial account and faster tests with more concurrency.
 
@@ -171,7 +171,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component  configuration - variations](#variations).|
 | `notifyOnCompletion`      | false                       | If `true` batch completion notifications are sent. |
 | `dontCloseBatches`        | false                       | If true, batches are not closed for notifyOnCompletion.|
-| `concurrency`             | 10                          | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
+| `testConcurrency`             | 5                          | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
 | `readStoriesTimeout`      | 60000                       | The amount of time (in milliseconds) Eyes-Storybook waits for storybook to load. For old storybook versions 2 and 3, this is also the time it takes for Eyes-Storybook to acknowledge it is working on those versions. So it is recommended to make this value small (e.g. 3000) when working with Storybook version 2 or 3. |
 | `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. This can also be specified per-story, see [per component  configuration - ignoreDisplacements](#ignoreDisplacements)|
 | `properties`              | undefined                   | Adds custom properties for each test. These show up in Test Manager, and tests can be grouped by custom properties. By default, Eyes-Storybook adds 2 custom properties for each test: the **Component name** and **State** of each component. Adding more properties via this config param will **not** override these two properties.|

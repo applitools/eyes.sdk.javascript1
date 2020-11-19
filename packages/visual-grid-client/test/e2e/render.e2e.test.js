@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const {describe, it, before} = require('mocha')
 const {expect} = require('chai')
 const makeRenderer = require('../../src/sdk/renderer')
-const createRenderRequests = require('../../src/sdk/createRenderRequests')
+const createRenderRequest = require('../../src/sdk/createRenderRequest')
 const {RenderingInfo} = require('@applitools/eyes-sdk-core')
 
 describe('render e2e', () => {
@@ -35,28 +35,31 @@ describe('render e2e', () => {
       {width: 640, height: 480, name: 'edgechromium-2'},
     ]
 
-    const {createRGridDOMAndGetResourceMapping, renderBatch, waitForRenderedStatus} = makeRenderer({
+    const {createRGridDOMAndGetResourceMapping, render, waitForRenderedStatus} = makeRenderer({
       apiKey,
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
       renderingInfo,
     })
 
-    const page = await createRGridDOMAndGetResourceMapping({
+    const {rGridDom, allResources} = await createRGridDOMAndGetResourceMapping({
       resourceUrls: [],
       resourceContents: [],
       cdt: [{nodeType: 3, nodeValue: 'renders older browser versions - works!'}],
       frames: [],
     })
 
-    const renderRequests = createRenderRequests({
-      url: 'http://something',
-      pages: Array(browsers.length).fill(page),
-      browsers,
-      renderInfo: renderingInfo,
-      sizeMode: 'full-page',
-    })
+    const renderRequests = browsers.map(browser =>
+      createRenderRequest({
+        url: 'http://something',
+        dom: rGridDom,
+        resources: Object.values(allResources),
+        browser,
+        renderInfo: renderingInfo,
+        sizeMode: 'full-page',
+      }),
+    )
 
-    const renderIds = await renderBatch(renderRequests)
+    const renderIds = await Promise.all(renderRequests.map(render))
 
     const renderStatusResults = await Promise.all(
       renderIds.map(renderId => waitForRenderedStatus(renderId)),

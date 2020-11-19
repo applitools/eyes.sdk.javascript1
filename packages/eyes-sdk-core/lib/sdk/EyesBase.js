@@ -55,7 +55,7 @@ const ServerConnector = require('../server/ServerConnector')
 const FailureReports = require('../FailureReports')
 const AppEnvironment = require('../AppEnvironment')
 const MatchWindowTask = require('../MatchWindowTask')
-const MatchSingleWindowTask = require('../MatchSingleWindowTask')
+const MatchWindowAndCloseTask = require('../MatchWindowAndCloseTask')
 const getScmInfo = require('../getScmInfo')
 
 const USE_DEFAULT_TIMEOUT = -1
@@ -114,7 +114,6 @@ class EyesBase {
     /** @type {boolean} */ this._isVisualGrid = false
 
     /** @type {boolean} */ this._useImageDeltaCompression = true
-    /** @type {boolean} */ this._render = false
 
     /**
      * Will be set for separately for each test.
@@ -1045,18 +1044,12 @@ class EyesBase {
     return this._scaleProviderHandler.get().getScaleRatio()
   }
 
-  /**
-   * @param {boolean} value - If true, createSession request will return renderingInfo properties
-   */
-  setRender(value) {
-    this._render = value
+  setRender(_value) {
+    GeneralUtils.deprecationWarning({deprecatedThing: 'setRender', isDead: true})
   }
 
-  /**
-   * @return {boolean}
-   */
   getRender() {
-    return this._render
+    GeneralUtils.deprecationWarning({deprecatedThing: 'getRender', isDead: true})
   }
 
   /**
@@ -1302,7 +1295,19 @@ class EyesBase {
     ignoreMismatch = false,
     checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT),
     source,
+    closeAfterMatch,
+    throwEx,
   ) {
+    if (closeAfterMatch) {
+      return this.checkWindowAndCloseBase(
+        regionProvider,
+        tag,
+        ignoreMismatch,
+        checkSettings,
+        source,
+        throwEx,
+      )
+    }
     if (this._configuration.getIsDisabled()) {
       this._logger.verbose('Ignored')
       const result = new MatchResult()
@@ -1325,13 +1330,28 @@ class EyesBase {
 
     await this.beforeMatchWindow()
     await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo)
+
+    await this._ensureRunningSession()
+    const outputProvider = new AppOutputProvider()
+    // A callback which will call getAppOutput
+    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
+      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
+
+    this._matchWindowTask = new MatchWindowTask(
+      this._logger,
+      this._serverConnector,
+      this._runningSession,
+      this._configuration.getMatchTimeout(),
+      this,
+      outputProvider,
+    )
+
     const matchResult = await EyesBase.matchWindow(
       regionProvider,
       tag,
       ignoreMismatch,
       checkSettings,
       this,
-      undefined,
       source,
     )
     await this.afterMatchWindow()
@@ -1364,14 +1384,16 @@ class EyesBase {
    * @param {CheckSettings} [checkSettings] - The settings to use.
    * @return {Promise<TestResults>} - The result of matching the output with the expected output.
    */
-  async checkSingleWindowBase(
+  async checkWindowAndCloseBase(
     regionProvider,
     tag = '',
     ignoreMismatch = false,
     checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT),
+    source,
+    throwEx = true,
   ) {
     if (this._configuration.getIsDisabled()) {
-      this._logger.verbose('checkSingleWindowBase Ignored')
+      this._logger.verbose('checkWindowAndCloseBase Ignored')
       const result = new TestResults()
       result.setStatus(TestResultsStatus.Passed)
       return result
@@ -1380,31 +1402,9 @@ class EyesBase {
     ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
     ArgumentGuard.notNull(regionProvider, 'regionProvider')
 
-    await this._ensureViewportSize()
+    await this.beforeMatchWindow()
 
-    const appEnvironment = await this.getAppEnvironment()
-    this._sessionStartInfo = new SessionStartInfo({
-      agentId: this.getFullAgentId(),
-      sessionType: this._configuration.getSessionType(),
-      appIdOrName: this.getAppName(),
-      verId: undefined,
-      scenarioIdOrName: this._configuration.getTestName(),
-      displayName: this._configuration.getDisplayName(),
-      batchInfo: this._configuration.getBatch(),
-      baselineEnvName: this._configuration.getBaselineEnvName(),
-      environmentName: this._configuration.getEnvironmentName(),
-      environment: appEnvironment,
-      defaultMatchSettings: this._configuration.getDefaultMatchSettings(),
-      branchName: this._configuration.getBranchName(),
-      parentBranchName: this._configuration.getParentBranchName(),
-      baselineBranchName: this._configuration.getBaselineBranchName(),
-      compareWithParentBranch: this._configuration.getCompareWithParentBranch(),
-      ignoreBaseline: this._configuration.getIgnoreBaseline(),
-      render: this._render,
-      saveDiffs: this._configuration.getSaveDiffs(),
-      properties: this._configuration.getProperties(),
-    })
-
+    await this._ensureRunningSession()
     const outputProvider = new AppOutputProvider()
     // A callback which will call getAppOutput
 
@@ -1412,40 +1412,93 @@ class EyesBase {
       this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
 
     this._shouldMatchWindowRunOnceOnTimeout = true
-    this._matchWindowTask = new MatchSingleWindowTask(
+    this._matchWindowTask = new MatchWindowAndCloseTask(
       this._logger,
       this._serverConnector,
+      this._runningSession,
       this._configuration.getMatchTimeout(),
       this,
       outputProvider,
-      this._sessionStartInfo,
       this._configuration.getSaveNewTests(),
     )
 
-    await this.beforeMatchWindow()
-    const testResult = await EyesBase.matchWindow(
+    const results = await EyesBase.matchWindow(
       regionProvider,
       tag,
       ignoreMismatch,
       checkSettings,
       this,
-      true,
+      source,
     )
     await this.afterMatchWindow()
 
-    this._logger.verbose('MatchSingleWindow Done!')
+    try {
+      if (!ignoreMismatch) {
+        this.clearUserInputs()
+      }
 
-    if (!ignoreMismatch) {
-      this.clearUserInputs()
+      const isNewSession = this._runningSession.getIsNew()
+      const sessionResultsUrl = this._runningSession.getUrl()
+
+      const matchResult = new MatchResult()
+      matchResult.setAsExpected(!results.getIsDifferent())
+      this._validateResult(tag, matchResult)
+
+      this._logger.verbose('Done!')
+
+      results.setIsNew(isNewSession)
+      results.setUrl(sessionResultsUrl)
+
+      // for backwards compatibility with outdated servers
+      if (!results.getStatus()) {
+        if (results.getMissing() === 0 && results.getMismatches() === 0) {
+          results.setStatus(TestResultsStatus.Passed)
+        } else {
+          results.setStatus(TestResultsStatus.Unresolved)
+        }
+      }
+
+      this._logger.verbose(`Results: ${results}`)
+
+      const status = results.getStatus()
+      await this._sessionEventHandlers.testEnded(await this.getAUTSessionId(), results)
+
+      if (status === TestResultsStatus.Unresolved) {
+        if (results.getIsNew()) {
+          this._logger.log(
+            `--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`,
+          )
+          if (throwEx) {
+            throw new NewTestError(results, this._sessionStartInfo)
+          }
+        } else {
+          this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
+          if (throwEx) {
+            throw new DiffsFoundError(results, this._sessionStartInfo)
+          }
+        }
+      } else if (status === TestResultsStatus.Failed) {
+        this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
+        if (throwEx) {
+          throw new TestFailedError(results, this._sessionStartInfo)
+        }
+      } else {
+        this._logger.log(`--- Test passed. See details at ${sessionResultsUrl}`)
+      }
+
+      results.setServerConnector(this._serverConnector)
+      return results
+    } catch (err) {
+      this._logger.log(`Failed to abort server session: ${err.message}`)
+      throw err
+    } finally {
+      // Making sure that we reset the running session even if an exception was thrown during close.
+      this._matchWindowTask = null
+      this._autSessionId = undefined
+      this._runningSession = null
+      this._currentAppName = undefined
+      this._logger.getLogHandler().close()
     }
-
-    const matchResult = new MatchResult()
-    matchResult.setAsExpected(!testResult.getIsDifferent())
-    this._validateResult(tag, matchResult)
-
-    this._logger.verbose('Done!')
-
-    return testResult
   }
 
   /**
@@ -1526,19 +1579,10 @@ class EyesBase {
    * @param {boolean} ignoreMismatch
    * @param {CheckSettings} checkSettings
    * @param {EyesBase} self
-   * @param {boolean} [skipStartingSession=false]
    * @param {string} [source]
    * @return {Promise<MatchResult>}
    */
-  static async matchWindow(
-    regionProvider,
-    tag,
-    ignoreMismatch,
-    checkSettings,
-    self,
-    skipStartingSession = false,
-    source,
-  ) {
+  static async matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, self, source) {
     let retryTimeout = -1
 
     if (checkSettings) {
@@ -1548,10 +1592,6 @@ class EyesBase {
     self._logger.verbose(
       `CheckWindowBase(${regionProvider.constructor.name}, '${tag}', ${ignoreMismatch}, ${retryTimeout})`,
     )
-
-    if (!skipStartingSession) {
-      await self._ensureRunningSession()
-    }
 
     const region = await regionProvider.getRegion()
     self._logger.verbose('Calling match window...')
@@ -1711,20 +1751,6 @@ class EyesBase {
     await this.startSession()
     this._logger.setSessionId(this._runningSession.getSessionId())
     this._logger.verbose('Done!')
-
-    const outputProvider = new AppOutputProvider()
-    // A callback which will call getAppOutput
-    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
-      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
-
-    this._matchWindowTask = new MatchWindowTask(
-      this._logger,
-      this._serverConnector,
-      this._runningSession,
-      this._configuration.getMatchTimeout(),
-      this,
-      outputProvider,
-    )
   }
 
   /**
@@ -1993,9 +2019,10 @@ class EyesBase {
       baselineBranchName: this._configuration.getBaselineBranchName(),
       compareWithParentBranch: this._configuration.getCompareWithParentBranch(),
       ignoreBaseline: this._configuration.getIgnoreBaseline(),
-      render: this._render,
       saveDiffs: this._configuration.getSaveDiffs(),
       properties: this._configuration.getProperties(),
+      agentSessionId: GeneralUtils.guid(),
+      timeout: this._configuration.getAbortIdleTestTimeout(),
     })
 
     this._logger.verbose('Starting server session...')

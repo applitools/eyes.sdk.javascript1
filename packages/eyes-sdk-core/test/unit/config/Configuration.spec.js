@@ -61,6 +61,7 @@ const NUMBER_CONFIGS = [
   '_concurrentSessions',
   '_matchTimeout',
   '_connectionTimeout',
+  '_abortIdleTestTimeout',
 ]
 
 describe('Configuration', () => {
@@ -215,6 +216,11 @@ describe('Configuration', () => {
 
       assert.strictEqual(configuration.getAppName(), 'test')
       assert.strictEqual(configuration.getApiKey(), 'apiKey')
+    })
+
+    it('default values', () => {
+      const configuration = new Configuration()
+      assert.strictEqual(configuration.getConcurrentSessions(), 1)
     })
   })
 

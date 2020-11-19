@@ -1,9 +1,10 @@
 'use strict'
 
 const assert = require('assert')
-const {
-  GeneralUtils: {sleep},
-} = require('../..')
+const chai = require('chai')
+chai.use(require('chai-uuid'))
+const {expect} = chai
+const {GeneralUtils, MatchLevel} = require('../..')
 const {EyesBaseImpl} = require('../testUtils')
 const {EyesBase, Configuration, RunningSession, BatchInfo} = require('../../index')
 
@@ -97,15 +98,15 @@ describe('EyesBase', () => {
     beforeEach(async () => {
       eyes = new EyesBaseImpl()
       eyes.handleScmMergeBaseTime = async () => {
-        await sleep(10)
+        await GeneralUtils.sleep(10)
         return 'some-datetime'
       }
       const rs = new RunningSession()
       eyes._serverConnector = {startSession: async args => ((startSessionArgs = args), rs)}
-      await eyes.openBase('appName', 'testName')
     })
 
     it('should set SessionStartInfo with ParentBranchBaselineSavedBefore', async () => {
+      await eyes.openBase('appName', 'testName')
       await eyes.startSession()
 
       assert.strictEqual(startSessionArgs.getBranchName(), undefined)
@@ -120,11 +121,128 @@ describe('EyesBase', () => {
         testName: 'ddd',
       })
       eyes.setConfiguration(configuration)
+      await eyes.openBase('appName', 'testName')
       await eyes.startSession()
 
       assert.strictEqual(startSessionArgs.getBranchName(), 'aaa')
       assert.strictEqual(startSessionArgs.getParentBranchName(), 'bbb')
       assert.strictEqual(startSessionArgs.getParentBranchBaselineSavedBefore(), 'some-datetime')
+    })
+
+    it('should set SessionStartInfo with correct values from configuration', async () => {
+      const configuration = new Configuration({
+        appName: 'appName',
+        testName: 'dummy testName',
+        displayName: 'displayName',
+        batch: {
+          name: 'batchName',
+          id: 'batchId',
+          notifyOnCompletion: true,
+          sequenceName: 'sequenceName',
+          startedAt: '2020-11-03T07:46:55.859Z',
+        },
+        baselineEnvName: 'baselineEnvName',
+        environmentName: 'environmentName',
+        hostOS: 'hostOS',
+        hostApp: 'hostApp',
+        deviceInfo: 'deviceInfo',
+        hostAppInfo: 'hostAppInfo',
+        hostOSInfo: 'hostOSInfo',
+        viewportSize: {width: 1, height: 2},
+        defaultMatchSettings: {
+          matchLevel: MatchLevel.Exact,
+          // exact: {
+          //   minDiffIntensity: 1,
+          //   minDiffWidth: 2,
+          //   minDiffHeight: 3,
+          //   matchThreshold: 4,
+          // },
+          ignoreCaret: true,
+          useDom: true,
+          enablePatterns: true,
+          ignoreDisplacements: true,
+          ignore: ['ignore'],
+          layout: ['layout'],
+          strict: ['strict'],
+          content: ['content'],
+          accessibility: ['accessibility'],
+          floating: ['floating'],
+          accessibilitySettings: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
+        },
+        branchName: 'branchName',
+        parentBranchName: 'parentBranchName',
+        baselineBranchName: 'baselineBranchName',
+        compareWithParentBranch: true,
+        ignoreBaseline: true,
+        saveDiffs: true,
+        properties: [{name: 'propName', value: 'propValue'}],
+        abortIdleTestTimeout: 42,
+      })
+
+      eyes.setConfiguration(configuration)
+      await eyes.openBase(null, 'testName')
+      await eyes.startSession()
+
+      const startInfo = JSON.parse(JSON.stringify(startSessionArgs))
+      const agentSessionId = startInfo.agentSessionId
+      expect(agentSessionId).to.be.a.uuid('v4')
+      delete startInfo.agentSessionId
+
+      expect(startInfo).to.eql({
+        agentId: 'implBaseAgent',
+        sessionType: 'SEQUENTIAL',
+        appIdOrName: 'appName',
+        scenarioIdOrName: 'testName',
+        displayName: 'displayName',
+        batchInfo: {
+          name: 'batchName',
+          id: 'batchId',
+          notifyOnCompletion: true,
+          batchSequenceName: 'sequenceName',
+          startedAt: '2020-11-03T07:46:55.859Z',
+        },
+        baselineEnvName: 'baselineEnvName',
+        environmentName: 'environmentName',
+        environment: {
+          os: 'hostOS',
+          hostingApp: 'hostApp',
+          displaySize: {width: 1, height: 2},
+          deviceInfo: 'deviceInfo',
+          osInfo: 'hostOSInfo',
+          hostingAppInfo: 'hostAppInfo',
+          inferred: 'impl-inferred-environment',
+        },
+        defaultMatchSettings: {
+          matchLevel: MatchLevel.Exact,
+          // exact: {
+          //   minDiffIntensity: 1,
+          //   minDiffWidth: 2,
+          //   minDiffHeight: 3,
+          //   matchThreshold: 4,
+          // },
+          ignoreCaret: true,
+          useDom: true,
+          enablePatterns: true,
+          ignoreDisplacements: true,
+          ignore: ['ignore'],
+          layout: ['layout'],
+          strict: ['strict'],
+          content: ['content'],
+          accessibility: ['accessibility'],
+          floating: ['floating'],
+          accessibilitySettings: {level: 'AAA', version: 'WCAG_2_0'},
+        },
+        branchName: 'branchName',
+        parentBranchName: 'parentBranchName',
+        parentBranchBaselineSavedBefore: 'some-datetime',
+        baselineBranchName: 'baselineBranchName',
+        compareWithParentBranch: true,
+        ignoreBaseline: true,
+        saveDiffs: true,
+        properties: [{name: 'propName', value: 'propValue'}],
+        timeout: 42,
+        concurrencyVersion: 1,
+      })
     })
   })
 

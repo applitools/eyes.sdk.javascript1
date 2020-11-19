@@ -21,6 +21,10 @@ const RenderStatusResults = require('../renderer/RenderStatusResults')
  * @typedef {import('../geometry/Region').RegionObject} RegionObject
  */
 
+/**
+ * @typedef {import('../logging/LogEvent').LogEvent} LogEvent
+ */
+
 // Constants
 const EYES_API_PATH = '/api/sessions'
 const DEFAULT_TIMEOUT_MS = 300000 // ms (5 min)
@@ -31,6 +35,11 @@ const DELAY_BEFORE_POLLING = [].concat(
   Array(5).fill(1000), // 5 tries with delay 1s
   Array(5).fill(2000), // 5 tries with delay 2s
   5000, // all next tries with delay 5s
+)
+const CONCURRENCY_BACKOFF = [].concat(
+  Array(5).fill(2000), // 5 tries with delay 2s (total 10s)
+  Array(4).fill(5000), // 4 tries with delay 5s (total 20s)
+  10000, // all next tries with delay 10s
 )
 
 const DEFAULT_HEADERS = {
@@ -99,6 +108,7 @@ class ServerConnector {
       repeat: 0,
       delayBeforeRetry: 200,
       delayBeforePolling: DELAY_BEFORE_POLLING,
+      concurrencyBackoff: CONCURRENCY_BACKOFF,
       createRequestId,
       proxy: undefined,
       headers: DEFAULT_HEADERS,
@@ -211,7 +221,7 @@ class ServerConnector {
         this._configuration.getServerUrl(),
         EYES_API_PATH,
         '/running',
-        runningSession.getId(),
+        encodeURIComponent(runningSession.getId()),
       ),
       params: {
         aborted: isAborted,
@@ -346,7 +356,7 @@ class ServerConnector {
         this._configuration.getServerUrl(),
         EYES_API_PATH,
         '/running',
-        runningSession.getId(),
+        encodeURIComponent(runningSession.getId()),
       ),
       headers: {},
       data: matchWindowData,
@@ -373,44 +383,65 @@ class ServerConnector {
     throw new Error(`ServerConnector.matchWindow - unexpected status (${response.statusText})`)
   }
 
-  /**
-   * Matches the current window in single request.
-   *
-   * @param {MatchSingleWindowData} matchSingleWindowData - Encapsulation of a capture taken from the application.
-   * @return {Promise<TestResults>} - The results of the window matching.
-   */
-  async matchSingleWindow(matchSingleWindowData) {
-    ArgumentGuard.notNull(matchSingleWindowData, 'matchSingleWindowData')
-    this._logger.verbose(`ServerConnector.matchSingleWindow called with ${matchSingleWindowData}`)
+  async matchWindowAndClose(runningSession, matchWindowData) {
+    if (this._matchWindowAndCloseFallback) {
+      this._logger.verbose(
+        'ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used',
+      )
+      await this.matchWindow(runningSession, matchWindowData)
+      return this.stopSession(runningSession, false, matchWindowData.getUpdateBaselineIfNew())
+    }
+    ArgumentGuard.notNull(runningSession, 'runningSession')
+    ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
+    this._logger.verbose(
+      `ServerConnector.matchWindowAndClose called with ${matchWindowData} for session: ${runningSession}`,
+    )
 
     const config = {
-      name: 'matchSingleWindow',
+      name: 'matchWindow',
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH),
+      url: GeneralUtils.urlConcat(
+        this._configuration.getServerUrl(),
+        EYES_API_PATH,
+        '/running',
+        encodeURIComponent(runningSession.getId()),
+        '/matchandend',
+      ),
       headers: {},
-      data: matchSingleWindowData,
+      data: matchWindowData,
+      dontRetryOn404: true,
     }
 
-    if (matchSingleWindowData.getAppOutput().getScreenshot64()) {
+    if (matchWindowData.getAppOutput().getScreenshot64()) {
       // if there is screenshot64, then we will send application/octet-stream body instead of application/json
-      const screenshot64 = matchSingleWindowData.getAppOutput().getScreenshot64()
-      matchSingleWindowData.getAppOutput().setScreenshot64(null) // remove screenshot64 from json
+      const screenshot64 = matchWindowData.getAppOutput().getScreenshot64()
+      matchWindowData.getAppOutput().setScreenshot64(null) // remove screenshot64 from json
       config.headers['Content-Type'] = 'application/octet-stream'
 
-      config.data = Buffer.concat([createDataBytes(matchSingleWindowData), screenshot64])
-      matchSingleWindowData.getAppOutput().setScreenshot64(screenshot64)
+      config.data = Buffer.concat([createDataBytes(matchWindowData), screenshot64])
+      matchWindowData.getAppOutput().setScreenshot64(screenshot64)
     }
 
-    const response = await this._axios.request(config)
+    let response
+    try {
+      response = await this._axios.request(config)
+    } catch (err) {
+      response = err.response || {}
+    }
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       const testResults = new TestResults(response.data)
-      this._logger.verbose('ServerConnector.matchSingleWindow - post succeeded', testResults)
+      this._logger.verbose('ServerConnector.matchWindowAndClose - post succeeded', testResults)
       return testResults
+    } else if (response.status === HTTP_STATUS_CODES.NOT_FOUND) {
+      this._matchWindowAndCloseFallback = true
+      this._logger.verbose('ServerConnector.matchWindowAndClose was not found. Fallback is used')
+      await this.matchWindow(runningSession, matchWindowData)
+      return this.stopSession(runningSession, false, matchWindowData.getUpdateBaselineIfNew())
     }
 
     throw new Error(
-      `ServerConnector.matchSingleWindow - unexpected status (${response.statusText})`,
+      `ServerConnector.matchWindowAndClose - unexpected status (${response.statusText})`,
     )
   }
 
@@ -549,63 +580,88 @@ class ServerConnector {
     throw new Error(`ServerConnector.render - unexpected status (${response.statusText})`)
   }
 
+  async renderGetRenderJobInfo(renderRequests) {
+    ArgumentGuard.notNull(renderRequests, 'renderRequests')
+    this._logger.verbose(`ServerConnector.renderGetRenderJobInfo called with ${renderRequests}`)
+
+    const config = {
+      name: 'renderGetRenderJobInfo',
+      withApiKey: false,
+      method: 'POST',
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/job-info'),
+      headers: {
+        'X-Auth-Token': this._renderingInfo.getAccessToken(),
+      },
+      data: renderRequests,
+    }
+
+    const response = await this._axios.request(config)
+    const validStatusCodes = [HTTP_STATUS_CODES.OK]
+    if (validStatusCodes.includes(response.status)) {
+      this._logger.verbose('ServerConnector.renderGetRenderJobInfo - post succeeded', response.data)
+      return response.data
+    }
+
+    throw new Error(
+      `ServerConnector.renderGetRendererInfo - unexpected status (${response.statusText})`,
+    )
+  }
+
   /**
-   * Check if resource exists on the server
+   * Checks if resources already exist on the server
    *
-   * @param {RunningRender} runningRender - The running render (for second request only)
-   * @param {RGridResource} resource - The resource to use
-   * @return {Promise<boolean>} - Whether resource exists on the server or not
+   * @param {RGridResource[]} resources - The resource to use
+   * @return {Promise<boolean[]>} - Whether resource exists on the server or not
    */
-  async renderCheckResource(runningRender, resource) {
-    ArgumentGuard.notNull(runningRender, 'runningRender')
-    ArgumentGuard.notNull(resource, 'resource')
-    // eslint-disable-next-line max-len
+  async renderCheckResources(resources) {
+    ArgumentGuard.notNull(resources, 'resources')
+    const hashes = resources.map(resource => resource.getHashAsObject())
     this._logger.verbose(
-      `ServerConnector.checkResourceExists called with resource#${resource.getSha256Hash()} for render: ${runningRender}`,
+      `ServerConnector.renderCheckResources called with resources - ${hashes.map(
+        ({hash}) => hash,
+      )}`,
     )
 
     const config = {
-      name: 'renderCheckResource',
+      name: 'renderCheckResources',
       withApiKey: false,
-      method: 'HEAD',
+      method: 'POST',
       url: GeneralUtils.urlConcat(
         this._renderingInfo.getServiceUrl(),
-        '/resources/sha256/',
-        resource.getSha256Hash(),
+        '/resources/query/resources-exist/',
       ),
       headers: {
         'X-Auth-Token': this._renderingInfo.getAccessToken(),
       },
       params: {
-        'render-id': runningRender.getRenderId(),
+        'render-id': GeneralUtils.guid(),
       },
+      data: hashes,
     }
 
     const response = await this._axios.request(config)
-    const validStatusCodes = [HTTP_STATUS_CODES.OK, HTTP_STATUS_CODES.NOT_FOUND]
+    const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.checkResourceExists - request succeeded')
-      return response.status === HTTP_STATUS_CODES.OK
+      this._logger.verbose('ServerConnector.renderCheckResources - request succeeded')
+      return response.data
     }
 
     throw new Error(
-      `ServerConnector.checkResourceExists - unexpected status (${response.statusText})`,
+      `ServerConnector.renderCheckResources - unexpected status (${response.statusText})`,
     )
   }
 
   /**
    * Upload resource to the server
    *
-   * @param {RunningRender} runningRender - The running render (for second request only)
    * @param {RGridResource} resource - The resource to upload
    * @return {Promise<boolean>} - True if resource was uploaded
    */
-  async renderPutResource(runningRender, resource) {
-    ArgumentGuard.notNull(runningRender, 'runningRender')
+  async renderPutResource(resource) {
     ArgumentGuard.notNull(resource, 'resource')
     ArgumentGuard.notNull(resource.getContent(), 'resource.getContent()')
     this._logger.verbose(
-      `ServerConnector.putResource called with resource#${resource.getSha256Hash()} for render: ${runningRender}`,
+      `ServerConnector.putResource called with resource#${resource.getSha256Hash()}`,
     )
 
     const config = {
@@ -623,7 +679,7 @@ class ServerConnector {
       },
       maxContentLength: 15.5 * 1024 * 1024, // 15.5 MB  (VG limit is 16MB)
       params: {
-        'render-id': runningRender.getRenderId(),
+        'render-id': GeneralUtils.guid(),
       },
       data: resource.getContent(),
     }
@@ -824,6 +880,30 @@ class ServerConnector {
         `ServerConnector.getIosDevicesSizes - unexpected status (${response.statusText})`,
       )
     }
+  }
+
+  /**
+   * @param {LogEvent[]} events
+   * @return {Promise<string>}
+   */
+  async logEvents(events) {
+    ArgumentGuard.isArray(events, 'events')
+    this._logger.verbose(`ServerConnector.logEvents called with ${events.length} events`)
+
+    const config = {
+      name: 'logEvents',
+      method: 'POST',
+      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/log'),
+      data: {events},
+    }
+
+    const response = await this._axios.request(config)
+    if (response.status === HTTP_STATUS_CODES.OK) {
+      this._logger.verbose('ServerConnector.logEvents - post succeeded', response.data)
+      return response.data
+    }
+
+    throw new Error(`ServerConnector.logEvents - unexpected status (${response.statusText})`)
   }
 }
 

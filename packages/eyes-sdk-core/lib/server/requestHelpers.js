@@ -121,6 +121,9 @@ async function handleRequestResponse({response, axios, logger}) {
 function isLongRequest(response) {
   return response.status === HTTP_STATUS_CODES.ACCEPTED && Boolean(response.headers.location)
 }
+function isConcurrencyBlockedRequest(response) {
+  return response.status === HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
+}
 async function startPollingRequest({url, config, axios}) {
   const pollingConfig = {
     name: config.name,
@@ -131,6 +134,7 @@ async function startPollingRequest({url, config, axios}) {
       : config.delayBeforePolling,
     method: 'GET',
     url,
+    repeat: 0,
   }
   const response = await axios.request(pollingConfig)
   switch (response.status) {
@@ -153,6 +157,7 @@ async function startPollingRequest({url, config, axios}) {
       throw new Error(`Unknown error during long request: ${JSON.stringify(response)}`)
   }
 }
+
 async function handleRequestError({err, axios, logger}) {
   if (!err.config) {
     throw err
@@ -170,6 +175,28 @@ async function handleRequestError({err, axios, logger}) {
 
   if (response && response.data) {
     logger.verbose(`axios error interceptor - ${config.name} - failure body:\n${response.data}`)
+  }
+
+  if (response && response.status === HTTP_STATUS_CODES.NOT_FOUND && config.dontRetryOn404) {
+    throw err
+  }
+
+  if (response && isConcurrencyBlockedRequest(response)) {
+    let backoffIndex, repeat
+    if (config.isConcurrencyPolling) {
+      backoffIndex = Math.min(config.repeat, config.concurrencyBackoff.length - 1)
+      repeat = config.repeat + 1
+    } else {
+      backoffIndex = 0
+      repeat = 0
+    }
+
+    return axios.request({
+      ...config,
+      delay: config.concurrencyBackoff[backoffIndex],
+      repeat,
+      isConcurrencyPolling: true,
+    })
   }
 
   if (

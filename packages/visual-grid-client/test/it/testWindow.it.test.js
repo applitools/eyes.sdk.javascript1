@@ -62,10 +62,10 @@ describe('testWindow', () => {
     wrapper.on('openEnd', args => {
       done(args)
     })
-    wrapper.on('testWindowEnd', args => {
+    wrapper.on('checkWindowEnd', args => {
       done2(args)
     })
-    wrapper.on('closeTestWindowEnd', args => {
+    wrapper.on('closed', args => {
       done3(args)
     })
 
@@ -74,9 +74,9 @@ describe('testWindow', () => {
     expect(err).to.be.undefined
     const results = resultsArr[0]
 
-    const [openArgs, testWindowArgs, closeTestWindowArgs] = await ptimeoutWithError(
+    const [openArgs, checkWindowArgs] = await ptimeoutWithError(
       Promise.all([p, p2, p3]),
-      1000,
+      10000,
       'timeout',
     )
 
@@ -84,7 +84,7 @@ describe('testWindow', () => {
     expect(openArgs).to.eql([
       {
         appName: 'some app name',
-        skipStartingSession: true,
+        skipStartingSession: false,
         testName: 'some test name',
         viewportSize: {
           _height: 768,
@@ -99,63 +99,12 @@ describe('testWindow', () => {
       return JSON.stringify(obj)
     }
 
-    closeTestWindowArgs[0]._stepsInfo[0]._renderId = removeSalt(
-      closeTestWindowArgs[0]._stepsInfo[0]._renderId,
+    checkWindowArgs[0].checkSettings._renderId = removeSalt(
+      checkWindowArgs[0].checkSettings._renderId,
     )
+    checkWindowArgs[0].screenshotUrl = removeSalt(checkWindowArgs[0].screenshotUrl)
 
-    expect(closeTestWindowArgs).to.eql([
-      {
-        _accessibilityStatus: undefined,
-        _apiUrls: undefined,
-        _appName: undefined,
-        _appUrls: undefined,
-        _batchId: undefined,
-        _batchName: undefined,
-        _branchName: undefined,
-        _contentMatches: undefined,
-        _duration: undefined,
-        _exactMatches: undefined,
-        _hostApp: undefined,
-        _hostDisplaySize: undefined,
-        _hostOS: undefined,
-        _id: undefined,
-        _isAborted: undefined,
-        _isDifferent: undefined,
-        _isNew: undefined,
-        _layoutMatches: undefined,
-        _matches: undefined,
-        _mismatches: undefined,
-        _missing: undefined,
-        _name: undefined,
-        _noneMatches: undefined,
-        _secretToken: undefined,
-        _serverConnector: undefined,
-        _startedAt: undefined,
-        _status: undefined,
-        _steps: undefined,
-        _stepsInfo: [
-          {
-            _appUrls: undefined,
-            _hasBaselineImage: undefined,
-            _hasCurrentImage: undefined,
-            _isDifferent: undefined,
-            _name: undefined,
-            _apiUrls: undefined,
-            _renderId: '{"isGood":true,"sizeMode":"full-page"}',
-          },
-        ],
-        _strictMatches: undefined,
-        _url: undefined,
-      },
-      true,
-    ])
-
-    testWindowArgs[0].checkSettings._renderId = removeSalt(
-      testWindowArgs[0].checkSettings._renderId,
-    )
-    testWindowArgs[0].screenshotUrl = removeSalt(testWindowArgs[0].screenshotUrl)
-
-    expect(testWindowArgs).to.eql([
+    expect(checkWindowArgs).to.eql([
       {
         checkSettings: {
           _accessibilityLevel: undefined,
@@ -176,6 +125,8 @@ describe('testWindow', () => {
           _timeout: 0,
           _useDom: undefined,
         },
+        closeAfterMatch: true,
+        throwEx: true,
         domUrl: undefined,
         imageLocation: undefined,
         screenshotUrl: '{"isGood":true,"sizeMode":"full-page"}',
@@ -195,7 +146,7 @@ describe('testWindow', () => {
     const cdt = loadJsonFixture('test.cdt.json')
     const checkParams = {snapshot: {resourceUrls, cdt}, tag: 'good1', url: `${baseUrl}/test.html`}
 
-    wrapper.closeTestWindow = () => {
+    wrapper.close = () => {
       return Promise.reject(new Error('test diff'))
     }
 

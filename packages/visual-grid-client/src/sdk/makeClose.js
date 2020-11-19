@@ -10,7 +10,6 @@ function makeClose({
   testController,
   logger,
   globalState,
-  isSingleWindow,
 }) {
   const waitAndResolveTests = makeWaitForTestEnd({
     getCheckWindowPromises,
@@ -31,12 +30,12 @@ function makeClose({
     const batchId = wrappers[0].getBatchIdWithoutGenerating()
     globalState.batchStore.addId(batchId)
 
-    return waitAndResolveTests(async (testIndex, checkWindowResult) => {
+    return waitAndResolveTests(async testIndex => {
       resolveTests[testIndex]()
 
       if ((error = testController.getFatalError())) {
         logger.log('closeEyes() fatal error found')
-        !isSingleWindow && (await wrappers[testIndex].ensureAborted())
+        await wrappers[testIndex].ensureAborted()
         return (didError = true), error
       }
       if ((error = testController.getError(testIndex))) {
@@ -44,9 +43,7 @@ function makeClose({
         return (didError = true), error
       }
 
-      const closePromise = !isSingleWindow
-        ? wrappers[testIndex].close(throwEx)
-        : wrappers[testIndex].closeTestWindow(checkWindowResult, throwEx)
+      const closePromise = wrappers[testIndex].close(throwEx)
       const [closeError, closeResult] = await presult(closePromise)
       if (!closeError) {
         setRenderIds(closeResult, testIndex)

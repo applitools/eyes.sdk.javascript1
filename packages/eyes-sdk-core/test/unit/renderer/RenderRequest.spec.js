@@ -6,35 +6,6 @@ const {RenderRequest} = require('../../../index')
 
 describe('RenderRequest', () => {
   describe('constructor', () => {
-    it("doesn't allow empty webhook", () => {
-      assert.throws(() => new RenderRequest(), /IllegalArgument: webhook is null or empty/)
-      assert.throws(
-        () => new RenderRequest({webhook: ''}),
-        /IllegalArgument: webhook is null or empty/,
-      )
-    })
-
-    it("doesn't allow empty url", () => {
-      assert.throws(
-        () => new RenderRequest({webhook: 'webhook'}),
-        /IllegalArgument: url is null or undefined/,
-      )
-    })
-
-    it("doesn't allow empty dom", () => {
-      assert.throws(
-        () => new RenderRequest({webhook: 'webhook', url: 'url'}),
-        /IllegalArgument: dom is null or undefined/,
-      )
-    })
-
-    it("doesn't allow empty resources", () => {
-      assert.throws(
-        () => new RenderRequest({webhook: 'webhook', url: 'url', dom: 'dom'}),
-        /IllegalArgument: resources is null or undefined/,
-      )
-    })
-
     it('fills values', () => {
       const renderRequest = new RenderRequest({
         webhook: 'webhook',

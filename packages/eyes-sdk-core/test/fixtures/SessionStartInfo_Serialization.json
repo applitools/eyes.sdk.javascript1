@@ -72,5 +72,6 @@
       "name": "property 1",
       "value": "value 1"
     }
-  ]
+  ],
+  "concurrencyVersion": 1
 }

@@ -1,40 +1,27 @@
 'use strict'
 const GeneralUtils = require('./utils/GeneralUtils')
 const MatchWindowTask = require('./MatchWindowTask')
-const MatchSingleWindowData = require('./match/MatchSingleWindowData')
 const Options = require('./match/ImageMatchOptions')
+const MatchWindowAndCloseData = require('./match/MatchWindowAndCloseData')
 
 /**
  * Handles matching of output with the expected output (including retry and 'ignore mismatch' when needed).
  *
  * @ignore
  */
-class MatchSingleWindowTask extends MatchWindowTask {
-  /**
-   * @param {Logger} logger - A logger instance.
-   * @param {ServerConnector} serverConnector - Our gateway to the agent
-   * @param {number} retryTimeout - The default total time to retry matching (ms).
-   * @param {EyesBase} eyes - The eyes object.
-   * @param {AppOutputProvider} appOutputProvider - A callback for getting the application output when performing match.
-   * @param {SessionStartInfo} startInfo - The start parameters for the session.
-   * @param {boolean} saveNewTests - Used for automatic save of a test run. New tests are automatically saved by default.
-   */
+class MatchWindowAndCloseTask extends MatchWindowTask {
   constructor(
     logger,
     serverConnector,
+    runningSession,
     retryTimeout,
     eyes,
     appOutputProvider,
-    startInfo,
-    saveNewTests,
+    updateBaselineIfNew,
   ) {
-    super(logger, serverConnector, null, retryTimeout, eyes, appOutputProvider)
-
-    /** @type {SessionStartInfo} */ this._startInfo = startInfo
-    /** @type {TestResults} */ this._matchResult = undefined
-    /** @type {boolean} */ this._saveNewTests = saveNewTests
+    super(logger, serverConnector, runningSession, retryTimeout, eyes, appOutputProvider)
+    this._updateBaseLineIfNew = updateBaselineIfNew
   }
-
   /**
    * Creates the match model and calls the server connector matchWindow method.
    *
@@ -58,19 +45,29 @@ class MatchSingleWindowTask extends MatchWindowTask {
       forceMatch: false,
       imageMatchSettings,
     })
-    const data = new MatchSingleWindowData({
+    const data = new MatchWindowAndCloseData({
       startInfo: this._startInfo,
       userInputs,
       appOutput: appOutput.getAppOutput(),
       tag: name,
       ignoreMismatch,
       options,
+      updateBaselineIfNew: this._saveNewTest,
+      removeSessionIfMatching: ignoreMismatch,
     })
-    data.setRemoveSessionIfMatching(ignoreMismatch)
-    data.setUpdateBaselineIfNew(this._saveNewTests)
+
+    if (data.getAppOutput().getScreenshot64()) {
+      const screenshot = data.getAppOutput().getScreenshot64()
+      data.getAppOutput().setScreenshot64(null)
+
+      await this._eyes._renderingInfoPromise
+      const id = GeneralUtils.guid()
+      const screenshotUrl = await this._serverConnector.uploadScreenshot(id, screenshot)
+      data.getAppOutput().setScreenshotUrl(screenshotUrl)
+    }
 
     // Perform match.
-    return this._serverConnector.matchSingleWindow(data)
+    return this._serverConnector.matchWindowAndClose(this._runningSession, data)
   }
 
   /**
@@ -168,4 +165,4 @@ class MatchSingleWindowTask extends MatchWindowTask {
   }
 }
 
-module.exports = MatchSingleWindowTask
+module.exports = MatchWindowAndCloseTask

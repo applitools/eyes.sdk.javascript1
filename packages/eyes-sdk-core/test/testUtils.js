@@ -17,7 +17,9 @@ class EyesBaseImpl extends EyesBase {
   }
   getAndSetBatchInfo() {}
   getAndSaveRenderingInfo() {}
-  getInferredEnvironment() {}
+  getInferredEnvironment() {
+    return 'impl-inferred-environment'
+  }
 }
 
 const colors = {

@@ -29,10 +29,7 @@ class MatchWindowTask {
     ArgumentGuard.notNull(logger, 'logger')
     ArgumentGuard.notNull(serverConnector, 'serverConnector')
     ArgumentGuard.greaterThanOrEqualToZero(retryTimeout, 'retryTimeout')
-    if (new.target === MatchWindowTask) {
-      // only if target is current class, because session can be null for MatchSingleWindowTask
-      ArgumentGuard.notNull(runningSession, 'runningSession')
-    }
+    ArgumentGuard.notNull(runningSession, 'runningSession')
 
     this._logger = logger
     this._serverConnector = serverConnector

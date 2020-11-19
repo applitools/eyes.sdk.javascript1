@@ -1,13 +1,13 @@
 /* global fetch */
 'use strict'
 
-const throatPkg = require('throat')
 const {
   BatchInfo,
   Logger,
   GeneralUtils: {backwardCompatible, deprecationWarning},
+  RunnerStartedEvent,
 } = require('@applitools/eyes-sdk-core')
-const {ptimeoutWithError} = require('@applitools/functional-commons')
+const {ptimeoutWithError, presult} = require('@applitools/functional-commons')
 const makeGetAllResources = require('./getAllResources')
 const extractCssResources = require('./extractCssResources')
 const makeFetchResource = require('./fetchResource')
@@ -15,8 +15,8 @@ const createResourceCache = require('./createResourceCache')
 const makeWaitForRenderedStatus = require('./waitForRenderedStatus')
 const makeGetRenderStatus = require('./getRenderStatus')
 const makePutResources = require('./putResources')
-const makeRenderBatch = require('./renderBatch')
-const makeGetUserAgents = require('./getUserAgents')
+const makeGetRenderJobInfo = require('./getRenderJobInfo')
+const makeRender = require('./render')
 const makeOpenEyes = require('./openEyes')
 const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping')
 const makeCloseBatch = require('./makeCloseBatch')
@@ -31,6 +31,7 @@ const {
   blockedAccountErrMsg,
   badRequestErrMsg,
 } = require('./wrapperUtils')
+const getFinalConcurrency = require('./getFinalConcurrency')
 require('@applitools/isomorphic-fetch')
 
 // TODO when supporting only Node version >= 8.6.0 then we can use ...config for all the params that are just passed on to makeOpenEyes
@@ -38,10 +39,13 @@ function makeRenderingGridClient({
   renderWrapper, // for tests
   logger,
   showLogs,
+  renderTimeout,
+  renderJobInfoTimeout,
+  putResourcesTimeout,
   renderStatusTimeout,
   renderStatusInterval,
-  concurrency = Infinity,
-  renderConcurrencyFactor = 5,
+  concurrency,
+  testConcurrency,
   appName,
   browser = {width: 1024, height: 768},
   apiKey,
@@ -81,17 +85,20 @@ function makeRenderingGridClient({
   globalState: _globalState,
   dontCloseBatches,
   visualGridOptions,
+  concurrentRendersPerTest = 1,
 }) {
   if (saveDebugData) {
     deprecationWarning({deprecatedThing: 'saveDebugData', isDead: true})
   }
-  const openEyesConcurrency = Number(concurrency)
 
-  if (isNaN(openEyesConcurrency)) {
-    throw new Error('concurrency is not a number')
+  let finalConcurrency = getFinalConcurrency({concurrency, testConcurrency})
+  let defaultConcurrency
+  if (!finalConcurrency) {
+    finalConcurrency = defaultConcurrency = 5
   }
+
   logger = logger || new Logger(showLogs, 'visual-grid-client')
-  logger.verbose('vgc concurrency is', concurrency)
+  logger.verbose('vgc concurrency is', finalConcurrency)
   ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
     [{batchSequenceName}, {batchSequence}],
     [{baselineBranchName}, {baselineBranch}],
@@ -101,9 +108,8 @@ function makeRenderingGridClient({
     logger,
   ))
 
-  let renderInfoPromise
-  const eyesTransactionThroat = transactionThroat(openEyesConcurrency)
-  const renderThroat = throatPkg(openEyesConcurrency * renderConcurrencyFactor)
+  let initialDataPromise
+  const eyesTransactionThroat = transactionThroat(finalConcurrency)
   renderWrapper =
     renderWrapper ||
     createRenderWrapper({
@@ -116,10 +122,12 @@ function makeRenderingGridClient({
   const {
     doGetRenderInfo,
     doRenderBatch,
+    doCheckResources,
     doPutResource,
     doGetRenderStatus,
     setRenderingInfo,
-    doGetUserAgents,
+    doGetRenderJobInfo,
+    doLogEvents,
   } = getRenderMethods(renderWrapper)
   const resourceCache = createResourceCache()
   const fetchCache = createResourceCache()
@@ -127,14 +135,16 @@ function makeRenderingGridClient({
   const fetchWithTimeout = (url, opt) =>
     ptimeoutWithError(fetch(url, opt), fetchResourceTimeout, 'fetch timed out')
   const fetchResource = makeFetchResource({logger, fetchCache, fetch: fetchWithTimeout})
-  const putResources = makePutResources({doPutResource})
-  const renderBatch = makeRenderBatch({
-    putResources,
-    resourceCache,
-    fetchCache,
+  const putResources = makePutResources({
     logger,
-    doRenderBatch,
+    doPutResource,
+    doCheckResources,
+    fetchCache,
+    resourceCache,
+    timeout: putResourcesTimeout,
   })
+  const render = makeRender({logger, doRenderBatch, timeout: renderTimeout})
+  const getRenderJobInfo = makeGetRenderJobInfo({doGetRenderJobInfo, timeout: renderJobInfoTimeout})
   const getRenderStatus = makeGetRenderStatus({
     logger,
     doGetRenderStatus,
@@ -154,7 +164,6 @@ function makeRenderingGridClient({
   const createRGridDOMAndGetResourceMapping = makeCreateRGridDOMAndGetResourceMapping({
     getAllResources,
   })
-  const getUserAgents = makeGetUserAgents(doGetUserAgents)
 
   const batch = new BatchInfo({
     name: batchName,
@@ -191,18 +200,17 @@ function makeRenderingGridClient({
     ignoreBaseline,
     serverUrl,
     logger,
-    renderBatch,
+    putResources,
+    getRenderJobInfo,
+    render,
     waitForRenderedStatus,
-    renderThroat,
-    getRenderInfoPromise,
-    getHandledRenderInfoPromise,
-    getRenderInfo,
+    concurrentRendersPerTest,
+    getInitialData,
     createRGridDOMAndGetResourceMapping,
     eyesTransactionThroat,
     agentId,
     userAgent,
     globalState,
-    getUserAgents,
     visualGridOptions,
   }
 
@@ -217,41 +225,45 @@ function makeRenderingGridClient({
     testWindow,
   }
 
-  function getRenderInfo() {
+  async function getInitialData() {
+    if (initialDataPromise) return initialDataPromise
+
+    initialDataPromise = doGetInitialData()
+    return initialDataPromise
+  }
+
+  async function doGetInitialData() {
     if (!renderWrapper.getApiKey()) {
       renderWrapper.setApiKey(apiKey)
     }
 
-    return doGetRenderInfo()
-  }
+    const runnerStaredEvent = RunnerStartedEvent({concurrency, testConcurrency, defaultConcurrency})
+    logger.verbose('runnerStartedEvent', runnerStaredEvent)
+    const [[err, renderInfo]] = await Promise.all([
+      presult(doGetRenderInfo()),
+      doLogEvents([runnerStaredEvent]).catch(err =>
+        logger.log('error when logging batchStart', err),
+      ),
+    ])
 
-  function getRenderInfoPromise() {
-    return renderInfoPromise
-  }
-
-  function getHandledRenderInfoPromise(promise) {
-    renderInfoPromise = promise
-      .then(renderInfo => {
-        setRenderingInfo(renderInfo)
-        return renderInfo
-      })
-      .catch(err => {
-        if (err.response) {
-          if (err.response.status === 401) {
-            return new Error(authorizationErrMsg)
-          }
-          if (err.response.status === 403) {
-            return new Error(blockedAccountErrMsg)
-          }
-          if (err.response.status === 400) {
-            return new Error(badRequestErrMsg)
-          }
+    if (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          throw new Error(authorizationErrMsg)
         }
+        if (err.response.status === 403) {
+          throw new Error(blockedAccountErrMsg)
+        }
+        if (err.response.status === 400) {
+          throw new Error(badRequestErrMsg)
+        }
+      }
 
-        return err
-      })
+      throw err
+    }
 
-    return renderInfoPromise
+    setRenderingInfo(renderInfo)
+    return {renderInfo}
   }
 }
 

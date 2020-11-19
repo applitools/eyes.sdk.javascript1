@@ -2,8 +2,19 @@
 
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
+const settle = require('axios/lib/core/settle')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
-const {ServerConnector, Logger, Configuration, GeneralUtils} = require('../../../')
+const {
+  ServerConnector,
+  Logger,
+  Configuration,
+  GeneralUtils,
+  SessionStartInfo,
+  MatchWindowAndCloseData,
+  AppOutput,
+  Location,
+  TestResults,
+} = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
@@ -45,6 +56,74 @@ describe('ServerConnector', () => {
     } finally {
       await close()
     }
+  })
+
+  it('retry startSession if it blocked by concurrency', async () => {
+    const serverConnector = getServerConnector()
+    assert.deepStrictEqual(serverConnector._axios.defaults.concurrencyBackoff, [
+      2000,
+      2000,
+      2000,
+      2000,
+      2000,
+      5000,
+      5000,
+      5000,
+      5000,
+      10000,
+    ])
+    serverConnector._axios.defaults.concurrencyBackoff = [50, 50, 100, 100, 100]
+    let retries = 0
+    let timeoutPassed = false
+    const timeoutId = setTimeout(() => (timeoutPassed = true), 1000)
+    serverConnector._axios.defaults.adapter = async config =>
+      new Promise((resolve, reject) => {
+        retries += 1
+        if (retries >= 7) {
+          clearTimeout(timeoutId)
+          assert.strictEqual(timeoutPassed, false)
+          return settle(resolve, reject, {
+            status: 200,
+            config,
+            data: {
+              id: 'id',
+              sessionId: 'sessionId',
+              batchId: 'batchId',
+              baselineId: 'baselineId',
+              isNew: true,
+              url: 'url',
+            },
+            headers: {},
+            request: {},
+          })
+        }
+        const data = JSON.parse(config.data)
+        assert.strictEqual(data.startInfo.concurrencyVersion, 1)
+        assert.strictEqual(data.startInfo.agentSessionId, guid)
+        return settle(resolve, reject, {status: 503, config, data: {}, headers: {}, request: {}})
+      })
+    const guid = GeneralUtils.guid()
+    const runningSession = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agentId',
+        appIdOrName: 'appIdOrName',
+        scenarioIdOrName: 'scenarioIdOrName',
+        environment: {displaySize: {width: 1, height: 2}},
+        batchInfo: {id: 'batchId'},
+        defaultMatchSettings: {},
+        agentSessionId: guid,
+      }),
+    )
+    assert.strictEqual(retries, 7)
+    assert.deepStrictEqual(runningSession.toJSON(), {
+      id: 'id',
+      sessionId: 'sessionId',
+      batchId: 'batchId',
+      baselineId: 'baselineId',
+      isNew: true,
+      renderingInfo: undefined,
+      url: 'url',
+    })
   })
 
   // [trello] https://trello.com/c/qjmAw1Sc/160-storybook-receiving-an-inconsistent-typeerror
@@ -306,5 +385,80 @@ describe('ServerConnector', () => {
 
     await assertRejects(serverConnector.startSession({}), 'ENOTFOUND')
     assert.strictEqual(tries, 6)
+  })
+
+  it('logEvent', async () => {
+    const events = [
+      {timestamp: new Date().toISOString(), level: 'Notice', event: 'test 1'},
+      {timestamp: new Date().toISOString(), level: 'Notice', event: 'test 2'},
+    ]
+    const serverConnector = getServerConnector()
+    serverConnector._axios.defaults.adapter = async config => {
+      assert.deepStrictEqual(config.data, JSON.stringify({events}))
+      return {
+        status: 200,
+        config,
+      }
+    }
+    await serverConnector.logEvents(events)
+  })
+
+  it('matchWindowAndClose works', async () => {
+    const serverConnector = getServerConnector()
+    serverConnector._axios.defaults.adapter = async config => {
+      if (config.url === 'https://eyesapi.applitools.com/api/sessions/running/id/matchandend') {
+        return {
+          status: 200,
+          config,
+          data: {name: 'result'},
+          headers: {},
+          request: {},
+        }
+      }
+      throw new Error()
+    }
+    const appOutput = new AppOutput({
+      title: 'Dummy',
+      screenshotUrl: 'bla',
+      imageLocation: new Location(20, 40),
+    })
+    const data = new MatchWindowAndCloseData({appOutput, tag: 'mytag'})
+    const results = await serverConnector.matchWindowAndClose({getId: () => 'id'}, data)
+    assert.ok(results instanceof TestResults)
+    assert.strictEqual(results.getName(), 'result')
+  })
+
+  it('matchWindowAndClose should fallback', async () => {
+    const serverConnector = getServerConnector()
+    serverConnector._axios.defaults.adapter = async config =>
+      new Promise((resolve, reject) => {
+        if (config.url === 'https://eyesapi.applitools.com/api/sessions/running/id/matchandend') {
+          return settle(resolve, reject, {
+            status: 404,
+            config,
+            data: {},
+            headers: {},
+            request: {},
+          })
+        } else if (config.url === 'https://eyesapi.applitools.com/api/sessions/running/id') {
+          return settle(resolve, reject, {
+            status: 200,
+            config,
+            data: {name: 'fallback result'},
+            headers: {},
+            request: {},
+          })
+        }
+        throw new Error()
+      })
+    const appOutput = new AppOutput({
+      title: 'Dummy',
+      screenshotUrl: 'bla',
+      imageLocation: new Location(20, 40),
+    })
+    const data = new MatchWindowAndCloseData({appOutput, tag: 'mytag'})
+    const results = await serverConnector.matchWindowAndClose({getId: () => 'id'}, data)
+    assert.ok(results instanceof TestResults)
+    assert.strictEqual(results.getName(), 'fallback result')
   })
 })

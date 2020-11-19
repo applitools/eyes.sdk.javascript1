@@ -1,4 +1,4 @@
-name: Coverage tests sandbox
+name: Publish SDK
 on:
   workflow_dispatch:
     inputs:
@@ -9,7 +9,7 @@ on:
         description: "version type (specify 'major', 'minor, or 'patch')"
         required: true
 jobs:
-  coverage_sandbox:
+  publish_sdk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 14
       - run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "always-auth=true" >> .npmrc
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           cd "packages/${{github.event.inputs.sdkName}}"

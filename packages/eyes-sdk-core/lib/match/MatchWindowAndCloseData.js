@@ -8,9 +8,8 @@ const MatchWindowData = require('./MatchWindowData')
  *
  * @ignore
  */
-class MatchSingleWindowData extends MatchWindowData {
+class MatchWindowAndCloseData extends MatchWindowData {
   /**
-   * @param {SessionStartInfo} startInfo - The start parameters for the session.
    * @param {Trigger[]} userInputs - A list of triggers between the previous matchWindow call and the current matchWindow
    *   call. Can be array of size 0, but MUST NOT be null.
    * @param {AppOutput} appOutput - The appOutput for the current matchWindow call.
@@ -18,19 +17,26 @@ class MatchSingleWindowData extends MatchWindowData {
    * @param {boolean} [ignoreMismatch]
    * @param {Options} [options]
    */
-  constructor({startInfo, userInputs, appOutput, tag, ignoreMismatch, options} = {}) {
+  constructor({
+    userInputs,
+    appOutput,
+    tag,
+    ignoreMismatch,
+    options,
+    updateBaselineIfNew,
+    removeSessionIfMatching,
+  } = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }
 
     super({userInputs, appOutput, tag, ignoreMismatch, options})
 
-    this._startInfo = startInfo
     this._updateBaseline = false
     this._updateBaselineIfDifferent = false
-    this._updateBaselineIfNew = true
+    this._updateBaselineIfNew = updateBaselineIfNew
     this._removeSession = false
-    this._removeSessionIfMatching = false
+    this._removeSessionIfMatching = removeSessionIfMatching
     /** @type {string} */
     this._agentId = undefined
   }
@@ -150,8 +156,8 @@ class MatchSingleWindowData extends MatchWindowData {
       object.appOutput.screenshot64 = 'REMOVED_FROM_OUTPUT'
     }
 
-    return `MatchSingleWindowData { ${JSON.stringify(object)} }`
+    return `MatchWindowAndCloseData { ${JSON.stringify(object)} }`
   }
 }
 
-module.exports = MatchSingleWindowData
+module.exports = MatchWindowAndCloseData

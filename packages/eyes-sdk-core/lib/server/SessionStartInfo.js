@@ -28,6 +28,7 @@ class SessionStartInfo {
    * @param {boolean} [info.saveDiffs]
    * @param {boolean} [info.render]
    * @param {PropertyData[]} [info.properties]
+   * @param {number} [info.timeout]
    */
   constructor({
     agentId,
@@ -50,6 +51,8 @@ class SessionStartInfo {
     saveDiffs,
     render,
     properties,
+    agentSessionId,
+    timeout,
   } = {}) {
     ArgumentGuard.notNullOrEmpty(agentId, 'agentId')
     ArgumentGuard.notNullOrEmpty(appIdOrName, 'appIdOrName')
@@ -78,6 +81,9 @@ class SessionStartInfo {
     this._saveDiffs = saveDiffs
     this._render = render
     this._properties = properties
+    this._concurrencyVersion = 1
+    this._agentSessionId = agentSessionId
+    this._timeout = timeout
   }
 
   /**
@@ -208,7 +214,7 @@ class SessionStartInfo {
   }
 
   /**
-   * @return {boolean}
+   * @return {boolean} If true, createSession request will return renderingInfo properties
    */
   getRender() {
     return this._render

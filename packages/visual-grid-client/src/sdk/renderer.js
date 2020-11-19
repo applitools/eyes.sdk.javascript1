@@ -8,7 +8,7 @@ const createResourceCache = require('./createResourceCache')
 const makeWaitForRenderedStatus = require('./waitForRenderedStatus')
 const makeGetRenderStatus = require('./getRenderStatus')
 const makePutResources = require('./putResources')
-const makeRenderBatch = require('./renderBatch')
+const makeRender = require('./render')
 const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping')
 const getRenderMethods = require('./getRenderMethods')
 const {createRenderWrapper} = require('./wrapperUtils')
@@ -17,7 +17,7 @@ const {Logger} = require('@applitools/eyes-sdk-core')
 
 const fetchResourceTimeout = 120000
 
-function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo}) {
+function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo, renderTimeout}) {
   const logger = new Logger(showLogs)
 
   const renderWrapper = createRenderWrapper({
@@ -27,7 +27,9 @@ function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo}) {
     proxy,
   })
 
-  const {doRenderBatch, doPutResource, doGetRenderStatus} = getRenderMethods(renderWrapper)
+  const {doRenderBatch, doCheckResources, doPutResource, doGetRenderStatus} = getRenderMethods(
+    renderWrapper,
+  )
   renderWrapper.setRenderingInfo(renderingInfo)
 
   const resourceCache = createResourceCache()
@@ -35,14 +37,14 @@ function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo}) {
   const fetchWithTimeout = url =>
     ptimeoutWithError(fetch(url), fetchResourceTimeout, 'fetch timed out')
   const fetchResource = makeFetchResource({logger, fetchCache, fetch: fetchWithTimeout})
-  const putResources = makePutResources({doPutResource})
-  const renderBatch = makeRenderBatch({
-    putResources,
-    resourceCache,
-    fetchCache,
+  const putResources = makePutResources({
     logger,
-    doRenderBatch,
+    doPutResource,
+    doCheckResources,
+    fetchCache,
+    resourceCache,
   })
+  const render = makeRender({logger, doRenderBatch, timeout: renderTimeout})
   const getRenderStatus = makeGetRenderStatus({logger, doGetRenderStatus})
   const waitForRenderedStatus = makeWaitForRenderedStatus({logger, getRenderStatus})
   const getAllResources = makeGetAllResources({
@@ -55,7 +57,12 @@ function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo}) {
     getAllResources,
   })
 
-  return {createRGridDOMAndGetResourceMapping, renderBatch, waitForRenderedStatus}
+  return {createRGridDOMAndGetResourceMapping, render: putResourcesAndRender, waitForRenderedStatus}
+
+  async function putResourcesAndRender(renderRequest) {
+    await putResources([renderRequest.getDom(), ...renderRequest.getResources()])
+    return render(renderRequest)
+  }
 }
 
 module.exports = makeRenderer

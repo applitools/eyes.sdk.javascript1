@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "12.5.7",
+  "version": "12.6.0",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -33,7 +33,7 @@
   "typings": "./typings/index.d.ts",
   "dependencies": {
     "@applitools/dom-capture": "8.0.1",
-    "@applitools/dom-snapshot": "4.2.5",
+    "@applitools/dom-snapshot": "4.2.7",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/snippets": "2.1.0",
     "axios": "0.19.2",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.5.2",
+    "@applitools/sdk-release-kit": "0.6.0",
     "@applitools/visual-grid-client": "^15.0.16",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",

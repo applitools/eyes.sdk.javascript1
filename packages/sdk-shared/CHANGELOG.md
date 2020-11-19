@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 0.5.6 - 2020/11/19
+
+- updated to @applitools/sdk-coverage-tests@2.1.0 (from 2.0.4)
+
 ## 0.5.5 - 2020/11/16
 
 - update Mocha test names for TestEyesDifferentRunners for better traceability in test output

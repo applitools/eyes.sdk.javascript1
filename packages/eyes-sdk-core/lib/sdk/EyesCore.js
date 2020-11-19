@@ -17,6 +17,9 @@ const ScaleProviderIdentityFactory = require('../scaling/ScaleProviderIdentityFa
 const FixedScaleProviderFactory = require('../scaling/FixedScaleProviderFactory')
 const ContextBasedScaleProviderFactory = require('../scaling/ContextBasedScaleProviderFactory')
 const ImageProviderFactory = require('../capture/ImageProviderFactory')
+const TypeUtils = require('../utils/TypeUtils')
+const MatchResult = require('../match/MatchResult')
+const TestResults = require('../TestResults')
 
 const UNKNOWN_DEVICE_PIXEL_RATIO = 0
 const DEFAULT_DEVICE_PIXEL_RATIO = 1
@@ -75,6 +78,42 @@ class EyesCore extends EyesBase {
       this,
       this._userAgent,
     )
+  }
+
+  async check(nameOrCheckSettings, checkSettings) {
+    if (this._configuration.getIsDisabled()) {
+      this._logger.log(`check(${nameOrCheckSettings}, ${checkSettings}): Ignored`)
+      return new MatchResult()
+    }
+    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
+    if (TypeUtils.isNull(checkSettings) && !TypeUtils.isString(nameOrCheckSettings)) {
+      checkSettings = nameOrCheckSettings
+      nameOrCheckSettings = null
+    }
+
+    checkSettings = this.spec.newCheckSettings(checkSettings)
+
+    if (TypeUtils.isString(nameOrCheckSettings)) {
+      checkSettings.withName(nameOrCheckSettings)
+    }
+
+    this._logger.verbose(`check(${nameOrCheckSettings}, checkSettings) - begin`)
+
+    return this._check(checkSettings)
+  }
+
+  async checkAndClose(checkSettings, throwEx) {
+    if (this._configuration.getIsDisabled()) {
+      this._logger.log(`checkAndClose(${checkSettings}): Ignored`)
+      return new TestResults()
+    }
+    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
+
+    checkSettings = this.spec.newCheckSettings(checkSettings)
+
+    this._logger.verbose(`checkAndClose(checkSettings) - begin`)
+
+    return this._check(checkSettings, true, throwEx)
   }
 
   /* ------------ Classic API ------------ */

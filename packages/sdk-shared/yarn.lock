@@ -21,10 +21,10 @@
     xml-js "^1.6.11"
     yargs "^15.0.2"
 
-"@applitools/sdk-coverage-tests@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.0.3.tgz#63939359945373003bc03b28931a0cb54cf36d2d"
-  integrity sha512-SbyACR7qdhgRYyM1BiQdRssuy+7ThY40BqVFDPAhmnHHbXxSCK9wp4G1JbMolzKvvHZyFZsY/oDMB/GKVrSGdQ==
+"@applitools/sdk-coverage-tests@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.1.0.tgz#b056b4084894445260d45ea31d9d2ce362611a07"
+  integrity sha512-mLO2wjn6zvCqA+WDskBghRYqWuvIeWf/2ADDfhWJ8vSGEn/9tAtXHgw6HEgThiuzQTrHJeuBZiVf3hh/i0faBA==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     axios "0.20.0"
@@ -36,10 +36,10 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-release-kit@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.5.3.tgz#f35818a65d8323e2419cef6603194b9d077bf7ea"
-  integrity sha512-CeKQZNFNNTd763LALlvp68B3+R0/NkgtQS6WkA0aHPhM9bOIm1fIlw5VFHvn7wE3jubWYe4+jbQFHtLTAY3ioA==
+"@applitools/sdk-release-kit@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.6.0.tgz#aedfe1182313b07ebdd60e60799d440a62f9762f"
+  integrity sha512-lTxdiPk6VEdV20qnu03AJA3yb93cMBCvJl9z3tfZ2vhniOgFS2nDF/2QdXygF5670fXookKYDDKuXl2QcZu5SQ==
   dependencies:
     "@applitools/sdk-shared" "0.1.3"
     chalk "3.0.0"

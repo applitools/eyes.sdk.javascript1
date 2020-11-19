@@ -173,6 +173,7 @@ declare namespace Eyes {
            'edgelegacy'                    |
            'ie10'                          |
            'ie11'                          |
+           'ie'                            |
            'safari'                        |
            'chrome-one-version-back'       |
            'chrome-two-versions-back'      |

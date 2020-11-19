@@ -108,6 +108,11 @@ function startFakeEyesServer({
     )
   })
 
+  app.post('/job-info', jsonMiddleware, (req, res) => {
+    const requests = req.body
+    res.send(new Array(requests.length).fill().map(() => ({eyesEnvironment: {}, renderer: ''})))
+  })
+
   // put resource
   app.put('/resources/sha256/:hash', rawMiddleware, (req, res) => {
     resources[req.params.hash] = req.body
@@ -260,6 +265,43 @@ function startFakeEyesServer({
       }
       steps.push({matchWindowData, asExpected})
       res.send({asExpected})
+    },
+  )
+
+  // matchWindowAndClose
+  app.post(
+    '/api/sessions/running/:id/matchandend',
+    (req, res, next) => {
+      if (req.headers['content-type'] === 'application/octet-stream') {
+        return rawMiddleware(req, res, next)
+      } else {
+        return jsonMiddleware(req, res, next)
+      }
+    },
+    async (req, res) => {
+      const runningSession = runningSessions[req.params.id]
+      const {steps, hostOS, hostApp} = runningSession
+      const {matchWindowData, screenshot} = await getMatchWindowDataFromRequest(req)
+      logger.log('matchWindowData', matchWindowData)
+      const {appOutput: _appOutput} = matchWindowData
+
+      let asExpected = matchMode === 'always'
+      if (matchMode === 'fair') {
+        const expectedPath = path.resolve(
+          expectedFolder,
+          `${filenamify(`${req.params.id}__${hostOS}__${hostApp}`)}.png`,
+        )
+
+        if (updateFixtures) {
+          logger.log('[sdk-fake-eyes-server] updating fixture at', expectedPath)
+          fs.writeFileSync(expectedPath, screenshot)
+        }
+
+        const expectedBuff = fs.readFileSync(expectedPath)
+        asExpected = screenshot.compare(expectedBuff) === 0
+      }
+      steps.push({matchWindowData, asExpected})
+      res.send(createTestResultFromRunningSession(runningSession))
     },
   )
 

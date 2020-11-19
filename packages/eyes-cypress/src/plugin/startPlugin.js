@@ -13,7 +13,7 @@ const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
 
 const config = Object.assign(
-  {concurrency: 1, agentId},
+  {agentId},
   ConfigUtils.getConfig({
     configParams: [
       ...configParams,

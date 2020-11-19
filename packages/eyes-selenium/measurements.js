@@ -28,7 +28,7 @@ describe('Measurements', () => {
   before(() => {
     startAll = Date.now()
     ;({logHandler, logFilePath} = initLog(
-      `steps-${STEPS}__conc-${CONCURRENCY}__tests-${TESTS}__browsers-${BROWSERS}_before`,
+      `steps-${STEPS}__conc-${CONCURRENCY}__tests-${TESTS}__browsers-${BROWSERS}_after`,
     ))
     console.log('log file at:', logFilePath)
   })

@@ -1,7 +1,7 @@
 'use strict'
 
 const makeRenderer = require('./renderer')
-const createRenderRequests = require('./createRenderRequests')
+const createRenderRequest = require('./createRenderRequest')
 const {RenderingInfo, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 
 require('@applitools/isomorphic-fetch') // TODO can just use node-fetch
@@ -28,7 +28,7 @@ async function takeScreenshot({
     resultsUrl: renderInfo.resultsUrl,
   })
 
-  const {createRGridDOMAndGetResourceMapping, renderBatch, waitForRenderedStatus} = makeRenderer({
+  const {createRGridDOMAndGetResourceMapping, render, waitForRenderedStatus} = makeRenderer({
     apiKey,
     showLogs,
     serverUrl,
@@ -36,26 +36,31 @@ async function takeScreenshot({
     renderingInfo,
   })
 
-  const pages = await Promise.all(
-    snapshots.map(snapshot => {
+  const renderRequests = await Promise.all(
+    snapshots.map(async (snapshot, index) => {
       const {resourceUrls, resourceContents, frames, cdt} = deserializeDomSnapshotResult(snapshot)
-      return createRGridDOMAndGetResourceMapping({resourceUrls, resourceContents, frames, cdt})
+      const {rGridDom, allResources} = await createRGridDOMAndGetResourceMapping({
+        resourceUrls,
+        resourceContents,
+        frames,
+        cdt,
+      })
+      return createRenderRequest({
+        url,
+        dom: rGridDom,
+        resources: Object.values(allResources),
+        browser: browsers[index],
+        renderInfo: renderingInfo,
+        sizeMode,
+        selector,
+        region,
+        scriptHooks,
+        sendDom: true,
+      })
     }),
   )
 
-  const renderRequests = createRenderRequests({
-    url,
-    pages,
-    browsers,
-    renderInfo: renderingInfo,
-    sizeMode,
-    selector,
-    region,
-    scriptHooks,
-    sendDom: true,
-  })
-
-  const renderIds = await renderBatch(renderRequests)
+  const renderIds = await Promise.all(renderRequests.map(render))
 
   const renderStatusResults = await Promise.all(
     renderIds.map(renderId =>

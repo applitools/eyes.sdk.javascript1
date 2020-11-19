@@ -126,7 +126,6 @@ describe('spec driver', () => {
         assert.ok(!(await spec.isEqualElements(driver, mainDocument, frameDocument)))
         await spec.mainContext(driver)
         const resultDocument = await driver.element('css selector', 'html')
-        debugger
         assert.ok(await spec.isEqualElements(driver, resultDocument, mainDocument))
       } finally {
         await driver.frame()

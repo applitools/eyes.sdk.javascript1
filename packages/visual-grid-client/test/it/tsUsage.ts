@@ -20,6 +20,7 @@ eyes.open({
     {width: 1024, height: 768, name: 'edgechromium-one-version-back'},
     {width: 1024, height: 768, name: 'edgechromium-two-versions-back'},
     {width: 1024, height: 768, name: 'ie11'},
+    {width: 1024, height: 768, name: 'ie'},
     {width: 1024, height: 768}, // chrome is the default
     {
       deviceName: 'iPhone X',

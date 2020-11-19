@@ -1,12 +1,5 @@
 'use strict'
-const {
-  EyesBase,
-  NullRegionProvider,
-  TestResultsStatus,
-  DiffsFoundError,
-  NewTestError,
-  TestFailedError,
-} = require('@applitools/eyes-sdk-core')
+const {EyesBase, NullRegionProvider} = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
 const VERSION = require('../../package.json').version
 
@@ -26,9 +19,13 @@ class EyesWrapper extends EyesBase {
     }
   }
 
-  async ensureAborted() {
-    if (!this.getRunningSession() && this._viewportSizeHandler.get()) {
-      const [err] = await presult(this._ensureRunningSession())
+  async ensureRunningSession() {
+    if (!this.getRunningSession()) {
+      if (!this._ensureRunningSessionPromise) {
+        this._ensureRunningSessionPromise = this._ensureRunningSession()
+      }
+      const [err] = await presult(this._ensureRunningSessionPromise)
+      this._ensureRunningSessionPromise = null
       if (err) {
         this._logger.log(
           'failed to ensure a running session (probably due to a previous fatal error)',
@@ -36,6 +33,10 @@ class EyesWrapper extends EyesBase {
         )
       }
     }
+  }
+
+  async ensureAborted() {
+    await this.ensureRunningSession()
     await this.abort()
   }
 
@@ -45,6 +46,19 @@ class EyesWrapper extends EyesBase {
 
   async getScreenshotUrl() {
     return this.screenshotUrl
+  }
+
+  getRenderer() {
+    return this._renderer
+  }
+
+  getAppEnvironment() {
+    return this._eyesEnvironment
+  }
+
+  setRenderJobInfo({eyesEnvironment, renderer} = {}) {
+    this._eyesEnvironment = eyesEnvironment
+    this._renderer = renderer
   }
 
   async getInferredEnvironment() {
@@ -114,66 +128,43 @@ class EyesWrapper extends EyesBase {
     return this._serverConnector.render(renderRequests)
   }
 
-  putResource(runningRender, resource) {
-    return this._serverConnector.renderPutResource(runningRender, resource)
+  checkResources(resources) {
+    return this._serverConnector.renderCheckResources(resources)
+  }
+
+  getRenderJobInfo(renderRequests) {
+    return this._serverConnector.renderGetRenderJobInfo(renderRequests)
+  }
+
+  putResource(resource) {
+    return this._serverConnector.renderPutResource(resource)
   }
 
   getRenderStatus(renderId) {
     return this._serverConnector.renderStatusById(renderId)
   }
 
-  getUserAgents() {
-    return this._serverConnector.getUserAgents()
+  logEvents(events) {
+    return this._serverConnector.logEvents(events)
   }
 
-  checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, url}) {
+  checkWindow({
+    screenshotUrl,
+    tag,
+    domUrl,
+    checkSettings,
+    imageLocation,
+    url,
+    closeAfterMatch,
+    throwEx,
+  }) {
     const regionProvider = new NullRegionProvider()
     this.screenshotUrl = screenshotUrl
     this.domUrl = domUrl
     this.imageLocation = imageLocation
-    return this.checkWindowBase(regionProvider, tag, false, checkSettings, url)
-  }
-
-  testWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {
-    this._logger.verbose(`EyesWrapper.testWindow() called`)
-    this.screenshotUrl = screenshotUrl
-    this.domUrl = domUrl
-    this.imageLocation = imageLocation
-    const regionProvider = new NullRegionProvider()
-    return this.checkSingleWindowBase(regionProvider, tag, false, checkSettings)
-  }
-
-  closeTestWindow(results, throwEx) {
-    this._logger.verbose(`EyesWrapper.closeTestWindow() called`)
-    const status = results.getStatus()
-    if (status === TestResultsStatus.Unresolved) {
-      if (results.getIsNew()) {
-        if (throwEx) {
-          return Promise.reject(new NewTestError(results, this._sessionStartInfo))
-        }
-      } else {
-        if (throwEx) {
-          return Promise.reject(new DiffsFoundError(results, this._sessionStartInfo))
-        }
-      }
-    } else if (status === TestResultsStatus.Failed) {
-      if (throwEx) {
-        return Promise.reject(new TestFailedError(results, this._sessionStartInfo))
-      }
-    }
-
-    const sessionResultsUrl = results.getAppUrls().getSession()
-    results.setUrl(sessionResultsUrl)
-
-    this._isOpen = false
-    this._lastScreenshot = null
-    this.clearUserInputs()
-    this._initProviders(true)
-    this._logger.getLogHandler().close()
-    this._matchWindowTask = null
-    this._autSessionId = undefined
-    this._currentAppName = undefined
-    return Promise.resolve(results)
+    return closeAfterMatch
+      ? this.checkWindowAndCloseBase(regionProvider, tag, false, checkSettings, url, throwEx)
+      : this.checkWindowBase(regionProvider, tag, false, checkSettings, url)
   }
 
   setProxy(proxy) {
@@ -181,10 +172,6 @@ class EyesWrapper extends EyesBase {
       proxy.url = proxy.uri // backward compatible
     }
     super.setProxy(proxy)
-  }
-
-  setInferredEnvironment(value) {
-    this.inferredEnvironment = value
   }
 
   async getAndSaveRenderingInfo() {

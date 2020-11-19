@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 12.6.0 - 2020/11/19
+
+- new concurrency model
+- updated to @applitools/dom-snapshot@4.2.7 (from 4.2.5)
+
 ## 12.5.7 - 2020/11/9
 
 - fix region compensation issue in firefox

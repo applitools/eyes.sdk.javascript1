@@ -175,26 +175,38 @@ class FakeEyesWrapper extends EventEmitter {
     this.renderingInfo = val
   }
 
-  async putResource() {}
-
-  async getUserAgents() {
-    return {
-      chrome: 'chrome-ua',
-      'chrome-1': 'chrome-1-ua',
-      'chrome-2': 'chrome-2-ua',
-      firefox: 'firefox-ua',
-      'firefox-1': 'firefox-1-ua',
-      'firefox-2': 'firefox-2-ua',
-      safari: 'safari-ua',
-      'safari-2': 'safari-2-ua',
-      'safari-1': 'safari-1-ua',
-      edge: 'edge-ua',
-      ie: 'ie-ua',
-      ie10: 'ie10-ua',
-    }
+  async checkResources(resources = []) {
+    return Array(resources.length).fill(true)
   }
 
-  async checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation}) {
+  async putResource() {}
+
+  async getRenderJobInfo(renderRequests) {
+    return renderRequests.map(renderRequest => {
+      const renderInfo = renderRequest.getRenderInfo()
+      const emulationInfo = renderInfo.getEmulationInfo()
+      const iosDeviseInfo = renderInfo.getIosDeviceInfo()
+      const deviceName =
+        (emulationInfo && emulationInfo.getDeviceName()) ||
+        (iosDeviseInfo && iosDeviseInfo.deviceName)
+      return {
+        renderer: 'renderer-uid',
+        eyesEnvironment: {
+          os: renderRequest.getPlatform(),
+          osInfo: renderRequest.getPlatform(),
+          hostingApp: renderRequest.getBrowserName(),
+          hostingAppInfo: renderRequest.getBrowserName(),
+          deviceInfo: deviceName || 'Desktop',
+          inferred: `useragent:${renderRequest.getBrowserName()}`,
+          displaySize: deviceName && devices[deviceName],
+        },
+      }
+    })
+  }
+
+  async logEvents() {}
+
+  async checkWindow({screenshotUrl, tag, domUrl, checkSettings, imageLocation, closeAfterMatch}) {
     if (tag && this.goodTags && !this.goodTags.includes(tag))
       throw new Error(`Tag ${tag} should be one of the good tags ${this.goodTags}`)
 
@@ -239,27 +251,9 @@ class FakeEyesWrapper extends EventEmitter {
     this.results.push(result)
     return new Promise(res =>
       setTimeout(() => {
-        this.emit('checkWindowEnd')
-        res(result)
-      }, 100),
-    )
-  }
-
-  async testWindow(...args) {
-    return new Promise(res =>
-      setTimeout(() => {
-        this.emit('testWindowEnd', args)
-        const results = new TestResults({stepsInfo: [{}]})
-        res(results)
-      }, 100),
-    )
-  }
-
-  async closeTestWindow(results, throwEx) {
-    return new Promise(res =>
-      setTimeout(() => {
-        this.emit('closeTestWindowEnd', [results, throwEx])
-        res(results)
+        this.emit('checkWindowEnd', Array.from(arguments))
+        if (closeAfterMatch) res(this.close())
+        else res(result)
       }, 100),
     )
   }
@@ -279,6 +273,8 @@ class FakeEyesWrapper extends EventEmitter {
   }
 
   async ensureAborted() {}
+
+  async ensureRunningSession() {}
 
   resultsToTestResults(results) {
     const steps = Array.from(new Array(results.length).map(() => ({})))
@@ -393,12 +389,17 @@ class FakeEyesWrapper extends EventEmitter {
     this.serverUrl = value
   }
 
-  async getInferredEnvironment() {
-    return this.inferredEnvironment
+  getAppEnvironment() {
+    return this.eyesEnvironment
   }
 
-  setInferredEnvironment(value) {
-    this.inferredEnvironment = value
+  getRenderer() {
+    return this.referer
+  }
+
+  setRenderJobInfo({referer, eyesEnvironment} = {}) {
+    this.referer = referer
+    this.eyesEnvironment = eyesEnvironment
   }
 
   setViewportSize(value) {

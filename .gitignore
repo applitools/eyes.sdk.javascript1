@@ -39,3 +39,7 @@ docker-compose.yaml
 tags
 support
 eyes-testcafe-bak
+
+types
+doc
+dist
