@@ -52,9 +52,12 @@ function makeGetStoryData({
     }
 
     logger.log(`running processPageAndSerialize for story ${title}`);
-    const {resourceUrls, resourceContents, frames, cdt} = await page
-      .evaluate(processPageAndSerialize)
-      .then(deserializeDomSnapshotResult);
+    const {resourceUrls, resourceContents, frames, cdt} = await processPageAndSerialize().then(
+      result => {
+        debugger;
+        return deserializeDomSnapshotResult(result);
+      },
+    );
 
     logger.log(`done getting data from story`, title);
     logger.log('dom result: cdt', JSON.stringify(cdt));
