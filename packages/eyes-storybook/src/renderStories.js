@@ -38,7 +38,7 @@ function makeRenderStories({
     async function processStoryLoop() {
       if (currIndex === stories.length) return;
 
-      const {page, pageId, markPageAsFree, removePage, getCreatedAt} = await pagePool.getFreePage();
+      const {page, pageId, markPageAsFree, removePage, getCreatedAt, driver} = await pagePool.getFreePage();
       const livedTime = Date.now() - getCreatedAt();
       logger.log(`[prepareNewPage] got free page: ${pageId}, lived time: ${livedTime}`);
       if (newPageIdToAdd && livedTime > maxPageTTL) {
@@ -69,6 +69,7 @@ function makeRenderStories({
               storyUrl,
               page,
               waitBeforeStory: waitBeforeScreenshot,
+              driver,
             }),
           );
 
@@ -88,6 +89,7 @@ function makeRenderStories({
                 storyUrl,
                 page: newPageObj.page,
                 waitBeforeStory: waitBeforeScreenshot,
+                driver: newPageObj.driver,
               }),
             );
             error = newError;

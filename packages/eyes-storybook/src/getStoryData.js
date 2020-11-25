@@ -8,7 +8,7 @@ const getStoryTitle = require('./getStoryTitle');
 const {URL} = require('url');
 
 function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reloadPagePerStory}) {
-  return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
+  return async function getStoryData({story, storyUrl, page, waitBeforeStory, driver}) {
     const title = getStoryTitle(story);
     logger.log(`getting data from story`, title);
 
@@ -47,7 +47,8 @@ function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reload
     }
 
     logger.log(`running takeDomSnapshot for story ${title}`);
-    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(page).then(
+
+    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(driver).then(
       result => {
         debugger;
         return deserializeDomSnapshotResult(result);
@@ -60,7 +61,7 @@ function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reload
 
     async function renderStoryLegacy() {
       logger.log(`getting data from story ${storyUrl}`);
-      const [err] = await presult(page.goto(storyUrl, {timeout: 10000}));
+      const [err] = await presult(driver.spec.visit(storyUrl, {timeout: 10000}));
       if (err) {
         logger.log(`error navigating to story ${storyUrl}`, err);
         throw err;
