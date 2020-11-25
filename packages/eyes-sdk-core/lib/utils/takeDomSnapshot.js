@@ -16,7 +16,6 @@ const POLL_TIMEOUT = 200
 const DEFAULT_CHUNK_BYTE_LENGTH = 262144000 // 250MB (could be 256MB but decide to leave a 6MB buffer)
 
 async function takeDomSnapshot(logger, driver, options = {}) {
-  debugger
   ArgumentGuard.notNull(logger, 'logger')
   ArgumentGuard.notNull(driver, 'driver')
   const {
