@@ -52,7 +52,7 @@ function makeGetStoryData({
     }
 
     logger.log(`running processPageAndSerialize for story ${title}`);
-    const {resourceUrls, resourceContents, frames, cdt} = await processPageAndSerialize().then(
+    const {resourceUrls, resourceContents, frames, cdt} = await processPageAndSerialize(page).then(
       result => {
         debugger;
         return deserializeDomSnapshotResult(result);

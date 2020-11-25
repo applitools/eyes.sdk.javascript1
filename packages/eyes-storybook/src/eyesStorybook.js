@@ -2,7 +2,6 @@
 const puppeteer = require('puppeteer');
 const getStories = require('../dist/getStories');
 const {makeVisualGridClient} = require('@applitools/visual-grid-client');
-const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot');
 const {presult} = require('@applitools/functional-commons');
 const chalk = require('chalk');
 const makeInitPage = require('./initPage');
@@ -56,13 +55,12 @@ async function eyesStorybook({
 
   const pagePool = createPagePool({initPage, logger});
 
-  const driver = new Driver(logger, page);
-
-  const processPageAndSerialize = async () => {
+  const processPageAndSerialize = async page => {
+    const driver = new Driver(logger, page);
     const domSnapshotOptions = {
       useSessionCache: true,
       showLogs: !!config.showLogs,
-      disableBrowserFetching: !!config.disableBrowserFetching,
+      dontFetchResources: !!config.disableBrowserFetching,
     };
     return takeDomSnapshot(logger, driver, domSnapshotOptions);
   };
