@@ -60,7 +60,7 @@ async function eyesStorybook({
     const domSnapshotOptions = {
       useSessionCache: true,
       showLogs: !!config.showLogs,
-      dontFetchResources: !!config.disableBrowserFetching,
+      disableBrowserFetching: !!config.disableBrowserFetching,
     };
     return takeDomSnapshot(logger, driver, domSnapshotOptions);
   };
