@@ -55,7 +55,7 @@ async function eyesStorybook({
 
   const pagePool = createPagePool({initPage, logger});
 
-  const processPageAndSerialize = async page => {
+  const doTakeDomSnapshot = async page => {
     const driver = new Driver(logger, page);
     const domSnapshotOptions = {
       useSessionCache: true,
@@ -89,7 +89,11 @@ async function eyesStorybook({
 
     logger.log(`starting to run ${storiesIncludingVariations.length} stories`);
 
-    const getStoryData = makeGetStoryData({logger, processPageAndSerialize, waitBeforeScreenshot});
+    const getStoryData = makeGetStoryData({
+      logger,
+      takeDomSnapshot: doTakeDomSnapshot,
+      waitBeforeScreenshot,
+    });
     const renderStory = makeRenderStory({
       config,
       logger: logger.extend('renderStory'),

@@ -7,12 +7,7 @@ const runRunBeforeScript = require('../dist/runRunBeforeScript');
 const getStoryTitle = require('./getStoryTitle');
 const {URL} = require('url');
 
-function makeGetStoryData({
-  logger,
-  processPageAndSerialize,
-  waitBeforeScreenshot,
-  reloadPagePerStory,
-}) {
+function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
     const title = getStoryTitle(story);
     logger.log(`getting data from story`, title);
@@ -51,8 +46,8 @@ function makeGetStoryData({
       });
     }
 
-    logger.log(`running processPageAndSerialize for story ${title}`);
-    const {resourceUrls, resourceContents, frames, cdt} = await processPageAndSerialize(page).then(
+    logger.log(`running takeDomSnapshot for story ${title}`);
+    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(page).then(
       result => {
         debugger;
         return deserializeDomSnapshotResult(result);
