@@ -48,12 +48,7 @@ function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reload
 
     logger.log(`running takeDomSnapshot for story ${title}`);
 
-    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(driver).then(
-      result => {
-        debugger;
-        return deserializeDomSnapshotResult(result);
-      },
-    );
+    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(driver);
 
     logger.log(`done getting data from story`, title);
     logger.log('dom result: cdt', JSON.stringify(cdt));

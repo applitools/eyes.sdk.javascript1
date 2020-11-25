@@ -55,19 +55,12 @@ async function eyesStorybook({
 
   const pagePool = createPagePool({initPage, logger});
 
-  const doTakeDomSnapshot = async driver => {
-    const domSnapshotOptions = {
+  const doTakeDomSnapshot = async driver =>
+    takeDomSnapshot(logger, driver, {
       useSessionCache: true,
       showLogs: !!config.showLogs,
       disableBrowserFetching: !!config.disableBrowserFetching,
-    };
-    return takeDomSnapshot(logger, driver, domSnapshotOptions);
-    //
-    //const processPageAndSerialize = `(${await getProcessPageAndSerialize()})(document, {useSessionCache: true, showLogs: ${
-    //  config.showLogs
-    //}, dontFetchResources: ${config.disableBrowserFetching}})`;
-    //return page.evaluate(processPageAndSerialize);
-  };
+    });
 
   logger.log('got script for processPage');
   browserLog({
