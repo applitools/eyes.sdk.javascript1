@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-puppeteer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Applitools Eyes SDK for Puppeteer",
   "keywords": [
     "eyes-puppeteer",
@@ -32,17 +32,17 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.5.7",
-    "@applitools/visual-grid-client": "15.1.1"
+    "@applitools/eyes-sdk-core": "12.6.1",
+    "@applitools/visual-grid-client": "15.2.0"
   },
   "peerDependencies": {
     "puppeteer": ">=5.3.0"
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "^2.1.0",
-    "@applitools/sdk-fake-eyes-server": "^2.0.0",
-    "@applitools/sdk-release-kit": "^0.6.0",
-    "@applitools/sdk-shared": "^0.5.5",
+    "@applitools/sdk-fake-eyes-server": "2.1.1",
+    "@applitools/sdk-release-kit": "0.10.4",
+    "@applitools/sdk-shared": "0.5.13",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",

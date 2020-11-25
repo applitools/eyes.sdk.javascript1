@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+
+## 2.1.3 - 2020/11/25
+
+- fix playwright report sdk name
+
+## 2.1.2 - 2020/11/25
+
+- fix metadata names
+
+## 2.1.1 - 2020/11/25
+
+- skipping heafull tests in CI
+
 ## 2.1.0 - 2020/11/17
 
 - add eyes-puppeteer as a supported SDK

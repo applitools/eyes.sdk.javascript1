@@ -48,19 +48,6 @@ describe('spec driver', async () => {
     it('getTitle()', getTitle())
     it('getUrl()', getUrl())
     it('visit()', visit())
-  })
-
-  describe('onscreen desktop', async () => {
-    before(async () => {
-      ;[page, destroyPage] = await spec.build(
-        testSetup.Env({browser: 'chrome', headless: false}, 'cdp'),
-      )
-    })
-
-    after(async () => {
-      await destroyPage()
-    })
-
     it('getViewportSize()', getViewportSize())
     it(
       'setViewportSize({width, height})',

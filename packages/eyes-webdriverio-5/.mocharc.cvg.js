@@ -1,5 +1,6 @@
 const tags = {
   wd: [
+    'headfull',
     'webdriver',
     'mobile',
     'native',

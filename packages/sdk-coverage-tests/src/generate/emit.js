@@ -24,6 +24,7 @@ function emitTest(test, {makeSdk, fileTemplate}) {
     test.meta.browser = test.env.browser
     test.meta.mobile = Boolean(test.env.device)
     test.meta.native = Boolean(test.env.device && !test.env.browser)
+    test.meta.headfull = Boolean(!test.env.headless)
   }
   const [output, emitter] = useEmitter()
   const sdk = makeSdk(emitter, test)

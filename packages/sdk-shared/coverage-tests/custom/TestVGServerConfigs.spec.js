@@ -106,7 +106,7 @@ describe('TestVGServerConfigs', () => {
     await eyes.close()
   })
 
-  it(`TestDesktopBrowser_VG`, async () => {
+  it.only(`TestDesktopBrowser_VG`, async () => {
     const conf = eyes.getConfiguration()
     conf.addBrowser({
       name: BrowserType.EDGE_CHROMIUM_TWO_VERSIONS_BACK,

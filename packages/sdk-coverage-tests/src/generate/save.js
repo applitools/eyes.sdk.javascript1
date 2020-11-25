@@ -18,7 +18,7 @@ async function createTestMetaData(tests, {metaPath = ''} = {}) {
   fs.mkdirSync(targetDirectory, {recursive: true})
 
   const meta = tests.reduce((meta, test) => {
-    meta[test.key] = {isGeneric: true}
+    meta[test.name] = {isGeneric: true}
     return meta
   }, {})
 

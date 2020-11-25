@@ -50,4 +50,6 @@ module.exports = {
    */
   'check window fully on android chrome emulator on desktop page': {skip: true},
   'should send accessibility regions by selector with vg': {config: {branchName: 'v1'}},
+  'check region in frame hidden under top bar fully with css stitching': {skip: true},
+  'check region in frame hidden under top bar fully with scroll stitching': {skip: true},
 }

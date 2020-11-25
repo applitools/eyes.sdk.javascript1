@@ -104,6 +104,9 @@ describe('fake eyes server utils', () => {
         scenarioIdOrName: testName,
         batchInfo: {id: batchId, name: batchName},
         environment: {displaySize, inferred},
+        defaultMatchSettings: {
+          accessibilitySettings: {},
+        },
       },
       appOutput: {
         screenshotUrl,

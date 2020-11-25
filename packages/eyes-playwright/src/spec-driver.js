@@ -112,13 +112,13 @@ async function takeScreenshot(page) {
   return page.screenshot()
 }
 async function click(frame, selector) {
-  await frame.click(selector)
+  await frame.click(transformSelector(selector))
 }
 async function type(_frame, element, keys) {
   return element.type(keys)
 }
 async function waitUntilDisplayed(frame, selector) {
-  return frame.waitForSelector(selector)
+  return frame.waitForSelector(transformSelector(selector))
 }
 async function scrollIntoView(frame, element, align = false) {
   if (isSelector(element)) {

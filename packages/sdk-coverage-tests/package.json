@@ -1,6 +1,6 @@
 {
   "name": "@applitools/sdk-coverage-tests",
-  "version": "2.1.0",
+  "version": "2.1.3",
   "engines": {
     "node": ">=10.12.0"
   },

@@ -8,6 +8,7 @@ const path = require('path')
 const filenamify = require('filenamify')
 const uuid = require('uuid/v4')
 const fetch = require('node-fetch')
+const {json} = require('express')
 
 function startFakeEyesServer({
   matchMode = 'fair', // fair|always|never
@@ -61,10 +62,9 @@ function startFakeEyesServer({
         }
         return {
           renderId,
-          renderStatus: renderRequest.renderId ? 'rendering' : 'need-more-resources',
-          needMoreDom: !renderRequest.renderId,
-          needMoreResources:
-            screenshotEntry && !renderRequest.renderId ? [screenshotEntry[0]] : undefined,
+          renderStatus: renderId ? 'rendering' : 'need-more-resources',
+          needMoreDom: !renderId,
+          needMoreResources: screenshotEntry && !renderId ? [screenshotEntry[0]] : undefined,
         }
       }),
     )
@@ -110,7 +110,15 @@ function startFakeEyesServer({
 
   app.post('/job-info', jsonMiddleware, (req, res) => {
     const requests = req.body
-    res.send(new Array(requests.length).fill().map(() => ({eyesEnvironment: {}, renderer: ''})))
+    res.send(
+      requests.map(request => ({
+        eyesEnvironment: {
+          displaySize: 'widthxheight',
+          originalRenderRequest: JSON.stringify(request),
+        },
+        renderer: '',
+      })),
+    )
   })
 
   // put resource
@@ -368,6 +376,11 @@ function startFakeEyesServer({
       scmSourceBranch: `scmSourceBranch_${req.params.batchId}`,
       scmTargetBranch_: `scmTargetBranch_${req.params.batchId}`,
     })
+  })
+
+  app.post('/resources/query/resources-exist', jsonMiddleware, (req, res) => {
+    const response = new Array(req.body ? req.body.length : 0).fill(true)
+    res.status(200).send(response)
   })
 
   function createTestResultFromRunningSession(runningSession) {

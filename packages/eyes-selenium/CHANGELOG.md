@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 4.49.0 - 2020/11/24
+
 - using new concurrency model
+- updated to @applitools/eyes-sdk-core@12.6.1 (from 12.5.7)
+- updated to @applitools/visual-grid-client@15.2.0 (from 15.1.1)
 
 ## 4.48.0 - 2020/11/9
 

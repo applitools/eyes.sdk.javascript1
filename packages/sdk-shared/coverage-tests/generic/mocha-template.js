@@ -5,6 +5,7 @@ function makeMochaTestTemplate({name, skip, output, meta}) {
   if (meta.features) tags.push(...meta.features.map(feature => `@${feature}`))
   if (meta.native) tags.push('@native')
   if (meta.mobile) tags.push('@mobile')
+  if (meta.headfull) tags.push('@headfull')
   if (meta.browser) {
     tags.push(`@${meta.browser.replace(/-[\d.]+$/, '')}`)
   }

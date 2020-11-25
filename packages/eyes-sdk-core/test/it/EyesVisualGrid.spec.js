@@ -44,6 +44,22 @@ describe('EyesVisualGrid', async () => {
     expect(matchLevel).to.be.eql('Layout')
   })
 
+  it('should return original render request', async () => {
+    const config = eyes.getConfiguration()
+    config.addBrowser({width: 888, height: 777, name: 'firefox'})
+    eyes.setConfiguration(config)
+    await eyes.open(driver, 'FakeApp', 'FakeTest')
+    await eyes.check({matchLevel: MatchLevel.Layout})
+    const results = await eyes.close()
+    const {startInfo} = await getSession(results, serverUrl)
+    const {
+      environment: {originalRenderRequest},
+    } = startInfo
+    const {browser, renderInfo} = JSON.parse(originalRenderRequest)
+    expect(browser).to.deep.equal({name: 'firefox'})
+    expect(renderInfo).to.deep.equal({width: 888, height: 777, sizeMode: 'viewport'})
+  })
+
   it('should not create session with missing device size', async () => {
     const origStartSession = ServerConnector.prototype.startSession
     let startSessionCalled

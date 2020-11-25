@@ -12,6 +12,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    name: publish ${{github.event.inputs.name}}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -37,18 +38,21 @@ jobs:
           echo "::group::publish ${{github.event.inputs.name}}"
           cd "packages/${{github.event.inputs.name}}"
           yarn
+          yarn deps
           yarn prepublish:setup
           yarn publish "--${{github.event.inputs.version}}" --access public
           echo "::endgroup::"
 
           echo "::group::update master from $BRANCH"
           git checkout master
+          git pull origin master
           git merge $BRANCH
           git push origin master
           echo "::endgroup::"
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
       SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
       SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
       NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

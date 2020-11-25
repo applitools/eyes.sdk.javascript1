@@ -33,7 +33,7 @@ const {lint} = require('../lint')
 const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
-const {gitAdd, gitCommit, gitPushWithTags, isStagedForCommit} = require('../git')
+const {gitAdd, gitCommit, gitPushWithTags, isChanged} = require('../git')
 const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
 
 const command = args._[0]
@@ -60,8 +60,6 @@ const command = args._[0]
         if (!args.skipDeps) {
           console.log('[bongo preversion] yarn install')
           await yarnInstall()
-          console.log('[bongo preversion] yarn deps')
-          await deps()
         }
         console.log('[bongo preversion] lint')
         await lint(cwd)
@@ -88,6 +86,7 @@ const command = args._[0]
             installedDirectory: path.join('.bongo', 'dry-run'),
           })
         }
+        await commitFiles()
         console.log('[bongo preversion] done!')
         return
       case 'send-release-notification':
@@ -122,7 +121,8 @@ const command = args._[0]
         writeReleaseEntryToChangelog(cwd)
         return await gitAdd('CHANGELOG.md')
       case 'deps':
-        return deps({shouldCommit: !args.skipCommit})
+        await deps()
+        return await commitFiles()
       default:
         throw new Error('Invalid option provided')
     }
@@ -137,17 +137,26 @@ const command = args._[0]
   }
 })()
 
-async function deps({shouldCommit} = {}) {
+async function deps() {
   verifyUnfixedDeps(cwd)
   await yarnUpgrade({
     folder: cwd,
     upgradeAll: args.upgradeAll,
   })
+}
+
+async function commitFiles(shouldCommit = true) {
   if (shouldCommit) {
-    await gitAdd('package.json')
-    await gitAdd('CHANGELOG.md')
-    await gitAdd('yarn.lock')
-    if (await isStagedForCommit('package.json', 'CHANGELOG.md', 'yarn.lock')) {
+    const files = ['package.json', 'CHANGELOG.md', 'yarn.lock']
+    for (const file of files) {
+      // git add fails when trying to add files that weren't changed
+      if (await isChanged(file)) {
+        await gitAdd(file)
+      }
+    }
+
+    // git commit fails when trying to commit files that weren't changed
+    if (await isChanged(files)) {
       const pkgName = JSON.parse(fs.readFileSync(path.resolve(cwd, 'package.json'))).name
       await gitCommit(`[auto commit] ${pkgName}: upgrade deps`)
     }

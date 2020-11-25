@@ -4,6 +4,11 @@
 
 
 
+## 1.2.0 - 2020/11/24
+
+- updated to @applitools/eyes-sdk-core@12.6.1 (from 12.5.7)
+- updated to @applitools/visual-grid-client@15.2.0 (from 15.1.1)
+
 ## 1.1.0 - 2020/11/12
 
 - fix firefox region compensation issue

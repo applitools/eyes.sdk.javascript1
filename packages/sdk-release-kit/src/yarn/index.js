@@ -20,7 +20,7 @@ async function yarnUpgrade({folder, upgradeAll}) {
     : Object.assign(applitoolsDeps, applitoolsDevDeps)
   if (Object.keys(depsToUpgrade).length) {
     const depsStr = Object.keys(depsToUpgrade).join(' ')
-    const cmd = `yarn upgrade --exact --latest ${depsStr}`
+    const cmd = `yarn add --exact --latest ${depsStr}`
     console.log(chalk.cyan(cmd))
     await sh(cmd)
 

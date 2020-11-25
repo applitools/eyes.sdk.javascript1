@@ -34,7 +34,7 @@ function convertSdkNameToReportName(sdkName) {
       return 'java'
     case 'eyes_selenium_dotnet':
       return 'dotnet'
-    case 'playwright':
+    case 'eyes-playwright':
       return 'playwright'
     case 'eyes-nightwatch':
       return 'nightwatch'

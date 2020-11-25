@@ -137,6 +137,21 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
+"@applitools/sdk-coverage-tests@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.1.0.tgz#b056b4084894445260d45ea31d9d2ce362611a07"
+  integrity sha512-mLO2wjn6zvCqA+WDskBghRYqWuvIeWf/2ADDfhWJ8vSGEn/9tAtXHgw6HEgThiuzQTrHJeuBZiVf3hh/i0faBA==
+  dependencies:
+    "@azure/storage-blob" "12.2.0-preview.1"
+    axios "0.20.0"
+    chai "4.2.0"
+    chai-as-promised "7.1.1"
+    chalk "4.1.0"
+    micromatch "4.0.2"
+    node-fetch "2.6.1"
+    xml-js "1.6.11"
+    yargs "16.0.3"
+
 "@applitools/sdk-fake-eyes-server@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@applitools/sdk-fake-eyes-server/-/sdk-fake-eyes-server-2.0.1.tgz#7647da53f10fc0b12c0220ac7604cb4066b33747"
@@ -149,10 +164,10 @@
     uuid "3.3.3"
     zlib "1.0.5"
 
-"@applitools/sdk-release-kit@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.9.0.tgz#21211d1f9c98843f98df84d27634fdef2b82266f"
-  integrity sha512-NJQ0PLZwLS2QuHujjLWdhAIzZpMIuBFfGv74CHQyjDFgSNOVT0tYtvAbRAWGeBiXLxt8pMkNpMoFL+WWOISbQQ==
+"@applitools/sdk-release-kit@0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.10.2.tgz#137f03ebaf55b7f2e383f18591541bf57d5c8401"
+  integrity sha512-0XQqd4I6E/5FCEmI9KYVG8mGCCy9yt+rk5ApLEzUW8p6uqzpPpuM5gXLHY3EYNJzOKgBOzlwDCeXi+9i4ozVCA==
   dependencies:
     "@applitools/sdk-shared" "0.1.3"
     chalk "3.0.0"
@@ -182,13 +197,13 @@
     ncp "2.0.0"
     yargs "15.3.1"
 
-"@applitools/sdk-shared@0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.5.2.tgz#4d0f8be4ff1e455a779ab27e0d0fa1a653b8e511"
-  integrity sha512-a4ObQ8TzEclCe8xAoQq9FDlTmWT4xxMPXNZrLivWT14LBdNq/lhWX1/RlfTiHj4f7q9a+VkPTWHv0AO/K9K+TQ==
+"@applitools/sdk-shared@0.5.13":
+  version "0.5.13"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.5.13.tgz#f3dc126149967df57cf1af6a70ae649deb8f64d4"
+  integrity sha512-tf6x+fgWkRrxwfK9YeCE+6dvCmWYIvXm3Db/PqfYHmIcut2gR6ZIEpfvcwqEivNwS6xkRxKSA46tJ7Ci8iQLOw==
   dependencies:
     "@applitools/functional-commons" "1.6.0"
-    "@applitools/sdk-coverage-tests" "2.0.3"
+    "@applitools/sdk-coverage-tests" "2.1.0"
     chai "4.2.0"
     chai-as-promised "7.1.1"
     chalk "3.0.0"
