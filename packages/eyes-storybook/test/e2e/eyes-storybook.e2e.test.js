@@ -41,6 +41,7 @@ describe('eyes-storybook', () => {
     const stderr = err ? err.stderr : result.stderr;
 
     const normalizedStdout = stdout
+      .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
