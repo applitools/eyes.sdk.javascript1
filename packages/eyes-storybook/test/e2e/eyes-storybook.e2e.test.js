@@ -166,6 +166,59 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
 `);
   });
 
+  it('renders cross-origin iframes', async () => {
+    let closeServerA, closeServerB;
+    const staticPath = path.join(
+      process.cwd(),
+      'node_modules/@applitools/sdk-shared/coverage-tests/fixtures',
+    );
+    try {
+      closeServerA = (
+        await testServer({
+          port: 7373,
+          staticPath,
+          allowCors: false,
+          middlewareFile: path.resolve(
+            process.cwd(),
+            'node_modules/@applitools/sdk-shared/coverage-tests/util/handlebars-middleware.js',
+          ),
+          hbData: {
+            src: 'http://localhost:7374/cors_frames/frame.html',
+          },
+        })
+      ).close;
+      closeServerB = (await testServer({port: 7374, staticPath})).close;
+      const [err, result] = await presult(
+        sh(
+          `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
+            __dirname,
+            'happy-config/cross-origin-iframe.config.js',
+          )}`,
+          {
+            spawnOptions: {stdio: 'pipe'},
+          },
+        ),
+      );
+      const stdout = err ? err.stdout : result.stdout;
+      //const stderr = err ? err.stderr : result.stderr;
+
+      const normalizedStdout = stdout
+        .replace(
+          /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+          'See details at <some_url>',
+        )
+        .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+        .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1]');
+
+      expect(normalizedStdout).to.include(
+        'Cross-origin iframe: Single story [Chrome] [640x480] - Passed',
+      );
+    } finally {
+      await closeServerA();
+      await closeServerB();
+    }
+  });
+
   it('renders multi browser versions', async () => {
     const [err, result] = await presult(
       sh(
