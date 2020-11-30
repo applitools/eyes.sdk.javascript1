@@ -5,6 +5,7 @@ const {presult} = require('@applitools/functional-commons');
 const makeGetStoryData = require('../../src/getStoryData');
 const renderStoryWithClientAPI = require('../../dist/renderStoryWithClientAPI');
 const logger = require('../util/testLogger');
+const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core');
 
 describe('getStoryData', () => {
   it('works', async () => {
@@ -16,16 +17,17 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const processPageAndSerialize = () => ({
-      resourceUrls: ['url1'],
-      blobs,
-      cdt: 'cdt',
-      frames: [],
-    });
+    const takeDomSnapshot = () =>
+      deserializeDomSnapshotResult({
+        resourceUrls: ['url1'],
+        blobs,
+        cdt: 'cdt',
+        frames: [],
+      });
 
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize,
+      takeDomSnapshot,
       waitBeforeScreenshot: 50,
     });
     const {resourceUrls, resourceContents, cdt} = await getStoryData({
@@ -56,15 +58,16 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const processPageAndSerialize = () => ({
-      resourceUrls: ['url1'],
-      blobs,
-      cdt: 'cdt',
-      frames: [],
-    });
+    const takeDomSnapshot = () =>
+      deserializeDomSnapshotResult({
+        resourceUrls: ['url1'],
+        blobs,
+        cdt: 'cdt',
+        frames: [],
+      });
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize,
+      takeDomSnapshot,
       waitBeforeScreenshot,
     });
 
@@ -96,15 +99,16 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const processPageAndSerialize = () => ({
-      resourceUrls: ['url1'],
-      blobs,
-      cdt: 'cdt',
-      frames: [],
-    });
+    const takeDomSnapshot = () =>
+      deserializeDomSnapshotResult({
+        resourceUrls: ['url1'],
+        blobs,
+        cdt: 'cdt',
+        frames: [],
+      });
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize,
+      takeDomSnapshot,
       waitBeforeScreenshot: 2000,
     });
 
@@ -128,16 +132,17 @@ describe('getStoryData', () => {
     };
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
-    const processPageAndSerialize = () => ({
-      resourceUrls: ['url1'],
-      blobs,
-      cdt: 'cdt',
-      frames: [],
-    });
+    const takeDomSnapshot = () =>
+      deserializeDomSnapshotResult({
+        resourceUrls: ['url1'],
+        blobs,
+        cdt: 'cdt',
+        frames: [],
+      });
 
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize,
+      takeDomSnapshot,
       waitBeforeScreenshot: 50,
     });
     let err;
@@ -157,16 +162,17 @@ describe('getStoryData', () => {
     };
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
-    const processPageAndSerialize = () => ({
-      resourceUrls: ['url1'],
-      blobs,
-      cdt: 'cdt',
-      frames: [],
-    });
+    const takeDomSnapshot = () =>
+      deserializeDomSnapshotResult({
+        resourceUrls: ['url1'],
+        blobs,
+        cdt: 'cdt',
+        frames: [],
+      });
 
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize,
+      takeDomSnapshot,
       waitBeforeScreenshot: -50,
     });
     let err;
@@ -190,7 +196,7 @@ describe('getStoryData', () => {
     };
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize: () => {},
+      takeDomSnapshot: () => {},
     });
     const [err] = await presult(
       getStoryData({
@@ -222,12 +228,13 @@ describe('getStoryData', () => {
     };
     const getStoryData = makeGetStoryData({
       logger,
-      processPageAndSerialize: () => ({
-        resourceUrls: [],
-        blobs: [],
-        cdt: 'cdt',
-        frames: [],
-      }),
+      takeDomSnapshot: () =>
+        deserializeDomSnapshotResult({
+          resourceUrls: [],
+          blobs: [],
+          cdt: 'cdt',
+          frames: [],
+        }),
       reloadPagePerStory: true,
     });
     const data = await getStoryData({
