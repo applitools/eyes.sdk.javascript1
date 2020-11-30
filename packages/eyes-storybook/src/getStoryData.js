@@ -1,6 +1,5 @@
 'use strict';
 const {presult} = require('@applitools/functional-commons');
-const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core');
 const {ArgumentGuard} = require('@applitools/eyes-sdk-core');
 const renderStoryWithClientAPI = require('../dist/renderStoryWithClientAPI');
 const runRunBeforeScript = require('../dist/runRunBeforeScript');
@@ -8,7 +7,7 @@ const getStoryTitle = require('./getStoryTitle');
 const {URL} = require('url');
 
 function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reloadPagePerStory}) {
-  return async function getStoryData({story, storyUrl, page, waitBeforeStory, driver}) {
+  return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
     const title = getStoryTitle(story);
     logger.log(`getting data from story`, title);
 
@@ -48,7 +47,7 @@ function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reload
 
     logger.log(`running takeDomSnapshot for story ${title}`);
 
-    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(driver);
+    const {resourceUrls, resourceContents, frames, cdt} = await takeDomSnapshot(page);
 
     logger.log(`done getting data from story`, title);
     logger.log('dom result: cdt', JSON.stringify(cdt));
@@ -56,7 +55,7 @@ function makeGetStoryData({logger, takeDomSnapshot, waitBeforeScreenshot, reload
 
     async function renderStoryLegacy() {
       logger.log(`getting data from story ${storyUrl}`);
-      const [err] = await presult(driver.spec.visit(page, storyUrl, {timeout: 10000}));
+      const [err] = await presult(page.goto(storyUrl, {timeout: 10000}));
       if (err) {
         logger.log(`error navigating to story ${storyUrl}`, err);
         throw err;

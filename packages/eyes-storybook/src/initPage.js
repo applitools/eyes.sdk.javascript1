@@ -1,12 +1,10 @@
 const {presult} = require('@applitools/functional-commons');
 const browserLog = require('./browserLog');
-const {Driver} = require('@applitools/eyes-puppeteer');
 
 function makeInitPage({iframeUrl, config, browser, logger}) {
   return async function initPage({pageId, pagePool}) {
     logger.log('initializing puppeteer page number ', pageId);
     const page = await browser.newPage();
-    const driver = new Driver(logger, page);
     if (config.viewportSize) {
       await page.setViewport(config.viewportSize);
       const viewportSize = await getViewportSize(page);
@@ -38,14 +36,14 @@ function makeInitPage({iframeUrl, config, browser, logger}) {
         pagePool.addToPool(pageId);
       }
     });
-    const [err] = await presult(driver.spec.visit(page, iframeUrl, {timeout: config.readStoriesTimeout}));
+    const [err] = await presult(page.goto(iframeUrl, {timeout: config.readStoriesTimeout}));
     if (err) {
       logger.log(`error navigating to iframe.html`, err);
       if (pagePool.isInPool(pageId)) {
         throw err;
       }
     }
-    return {page, driver};
+    return page;
   };
 }
 

@@ -55,7 +55,7 @@ function createPagePool({initPage, logger}) {
     let resolveWork;
     let isActive;
     let createdAt;
-    const {page, driver} = await initPage({pageId, pagePool});
+    const page = await initPage({pageId, pagePool});
     return {
       page,
       pageId,
@@ -66,7 +66,6 @@ function createPagePool({initPage, logger}) {
       isInPool,
       addToPool,
       getCreatedAt,
-      driver,
     };
 
     function markPageAsFree() {
@@ -104,8 +103,8 @@ function createPagePool({initPage, logger}) {
     }
   }
 
-  function toSmallPageObj({page, pageId, markPageAsFree, removePage, getCreatedAt, driver}) {
-    return {page, pageId, markPageAsFree, removePage, getCreatedAt, driver};
+  function toSmallPageObj({page, pageId, markPageAsFree, removePage, getCreatedAt}) {
+    return {page, pageId, markPageAsFree, removePage, getCreatedAt};
   }
 }
 
