@@ -109,6 +109,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshot,
+      // eslint-disable-next-line no-undef
       waitBeforeScreenshot: () => window.ready === 'ok',
     });
 
