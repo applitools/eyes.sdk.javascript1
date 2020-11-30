@@ -126,6 +126,75 @@ describe('ServerConnector', () => {
     })
   })
 
+  it('retry startSession long running task if it blocked by concurrency', async () => {
+    const serverConnector = getServerConnector()
+    serverConnector._axios.defaults.concurrencyBackoff = [50]
+    serverConnector._axios.defaults.delayBeforePolling = [50]
+    let startSessionRequests = 0
+    let pollingRequests = 0
+    let blockedResponses = 0
+    serverConnector._axios.defaults.adapter = async config =>
+      new Promise((resolve, reject) => {
+        if (config.url === 'https://eyesapi.applitools.com/api/sessions/running') {
+          startSessionRequests += 1
+          const headers = {location: 'polling url'}
+          return settle(resolve, reject, {status: 202, config, headers, request: {}})
+        } else if (config.url === 'polling url') {
+          pollingRequests += 1
+          if (pollingRequests < 3) {
+            return settle(resolve, reject, {status: 200, config, headers: {}, request: {}})
+          } else {
+            pollingRequests = 0
+            const headers = {location: 'get result url'}
+            return settle(resolve, reject, {status: 201, config, headers, request: {}})
+          }
+        } else if (config.url === 'get result url') {
+          if (startSessionRequests <= 2) {
+            blockedResponses += 1
+            return settle(resolve, reject, {status: 503, config, headers: {}, request: {}})
+          } else {
+            return settle(resolve, reject, {
+              status: 200,
+              config,
+              data: {
+                id: 'id',
+                sessionId: 'sessionId',
+                batchId: 'batchId',
+                baselineId: 'baselineId',
+                isNew: true,
+                url: 'url',
+              },
+              headers: {},
+              request: {},
+            })
+          }
+        }
+      })
+    const guid = GeneralUtils.guid()
+    const runningSession = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agentId',
+        appIdOrName: 'appIdOrName',
+        scenarioIdOrName: 'scenarioIdOrName',
+        environment: {displaySize: {width: 1, height: 2}},
+        batchInfo: {id: 'batchId'},
+        defaultMatchSettings: {},
+        agentSessionId: guid,
+      }),
+    )
+    assert.strictEqual(startSessionRequests, 3)
+    assert.strictEqual(blockedResponses, 2)
+    assert.deepStrictEqual(runningSession.toJSON(), {
+      id: 'id',
+      sessionId: 'sessionId',
+      batchId: 'batchId',
+      baselineId: 'baselineId',
+      isNew: true,
+      renderingInfo: undefined,
+      url: 'url',
+    })
+  })
+
   // [trello] https://trello.com/c/qjmAw1Sc/160-storybook-receiving-an-inconsistent-typeerror
   it("doesn't throw exception on server failure", async () => {
     const {port, close} = await startFakeEyesServer({logger, hangUp: true})

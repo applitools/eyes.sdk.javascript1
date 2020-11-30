@@ -1,0 +1,30 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "types/",
+    "logs",
+    "tmp/"
+  ],
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
+  "rules": {
+    "prettier/prettier": ["error", {
+      "arrowParens": "avoid",
+      "printWidth": 120
+    }],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off"
+  }
+}

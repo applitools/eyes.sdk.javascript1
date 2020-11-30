@@ -161,6 +161,18 @@ exports.config = {
 }
 ```
 
+To specify the maximum concurrency rate according to your team/organization's plan:
+
+```js
+exports.config = {
+  eyes: {
+    useVisualGrid: true,
+    testConcurrency: 50, // default: 5
+    // ...
+  }
+}
+```
+
 #### Verbose logging
 
 For troubleshooting, it is possible to enable versbose logging by specifying the following in the `wdio.conf.js` file:

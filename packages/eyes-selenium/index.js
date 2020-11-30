@@ -87,3 +87,4 @@ exports.TestResultContainer = core.TestResultContainer
 exports.TestResultsSummary = core.TestResultsSummary
 exports.ClassicRunner = core.ClassicRunner
 exports.VisualGridRunner = core.VisualGridRunner
+exports.RunnerOptions = core.RunnerOptions

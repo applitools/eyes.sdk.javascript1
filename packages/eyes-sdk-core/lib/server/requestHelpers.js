@@ -103,7 +103,7 @@ async function handleRequestResponse({response, axios, logger}) {
   )
 
   if (isLongRequest(response)) {
-    return startPollingRequest({url: response.headers.location, config, axios})
+    return startPollingRequest({url: response.headers.location, originalConfig: config, axios})
   }
 
   if (config.isPollingRequest) {
@@ -124,14 +124,14 @@ function isLongRequest(response) {
 function isConcurrencyBlockedRequest(response) {
   return response.status === HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
 }
-async function startPollingRequest({url, config, axios}) {
+async function startPollingRequest({url, originalConfig, axios}) {
   const pollingConfig = {
-    name: config.name,
+    name: originalConfig.name,
     isPollingRequest: true,
-    delayBeforePolling: config.delayBeforePolling,
-    delay: TypeUtils.isArray(config.delayBeforePolling)
-      ? config.delayBeforePolling[0]
-      : config.delayBeforePolling,
+    delayBeforePolling: originalConfig.delayBeforePolling,
+    delay: TypeUtils.isArray(originalConfig.delayBeforePolling)
+      ? originalConfig.delayBeforePolling[0]
+      : originalConfig.delayBeforePolling,
     method: 'GET',
     url,
     repeat: 0,
@@ -149,6 +149,7 @@ async function startPollingRequest({url, config, axios}) {
         headers: {
           [CUSTOM_HEADER_NAMES.EYES_DATE]: DateTimeUtils.toRfc1123DateTime(),
         },
+        originalRequestConfig: originalConfig,
       }
       return axios.request(nextConfig)
     case HTTP_STATUS_CODES.GONE:
@@ -192,7 +193,7 @@ async function handleRequestError({err, axios, logger}) {
     }
 
     return axios.request({
-      ...config,
+      ...(config.originalRequestConfig || config),
       delay: config.concurrencyBackoff[backoffIndex],
       repeat,
       isConcurrencyPolling: true,

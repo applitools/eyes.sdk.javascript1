@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-webdriverio5-service",
-  "version": "1.7.0",
+  "version": "1.8.1",
   "description": "",
   "keywords": [
     "wdio-plugin",
@@ -20,7 +20,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@applitools/eyes-webdriverio": "5.26.0"
+    "@applitools/eyes-webdriverio": "5.27.1"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "^0.3.1",
@@ -45,7 +45,9 @@
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:teardown": "docker-compose down",
+    "prepublish:setup": "yarn docker:setup"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

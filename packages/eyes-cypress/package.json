@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-cypress",
-  "version": "3.15.5",
+  "version": "3.16.1",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
@@ -8,12 +8,11 @@
   },
   "scripts": {
     "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
-    "test:mocha": "mocha --no-timeouts --parallel --jobs 15 'test/**/*.test.js'",
     "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
     "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
-    "test:e2e": "mocha --no-timeouts --parallel --jobs 15 'test/e2e/**/*.test.js'",
+    "test:e2e": "mocha --no-timeouts 'test/e2e/**/*.test.js'",
     "lint": "eslint '**/*.js'",
-    "test": "yarn test:mocha && yarn lint",
+    "test": "yarn test:unit && yarn test:it && yarn test:e2e && yarn lint",
     "cypress": "cd test/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js",
     "cypress:run": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js",
     "cypress:play": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
@@ -21,7 +20,7 @@
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "prepublish:setup": "sudo apt-get install xvfb"
   },
   "files": [
     "src",
@@ -40,9 +39,9 @@
   },
   "dependencies": {
     "@applitools/dom-snapshot": "4.2.6",
-    "@applitools/eyes-sdk-core": "12.5.7",
+    "@applitools/eyes-sdk-core": "12.6.2",
     "@applitools/functional-commons": "1.6.0",
-    "@applitools/visual-grid-client": "15.1.1",
+    "@applitools/visual-grid-client": "15.2.1",
     "body-parser": "1.19.0",
     "chalk": "3.0.0",
     "cors": "2.8.5",
@@ -50,12 +49,12 @@
     "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.5.1",
-    "@applitools/sdk-shared": "^0.4.0",
+    "@applitools/sdk-release-kit": "0.10.5",
+    "@applitools/sdk-shared": "0.5.16",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.4",
-    "cypress": "^4.6.0",
+    "cypress": "^6.0.0",
     "eslint": "^6.8.0",
     "eslint-plugin-mocha-no-only": "^1.1.0",
     "eslint-plugin-node": "^7.0.1",

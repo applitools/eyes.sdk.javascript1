@@ -122,10 +122,10 @@
     xml-js "^1.6.11"
     yargs "^15.0.2"
 
-"@applitools/sdk-fake-eyes-server@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-fake-eyes-server/-/sdk-fake-eyes-server-2.1.0.tgz#6b983c93e9191f1e97dff4dcac29acba9b7f9e53"
-  integrity sha512-1q7mZWVT23gIQSf8Bj7OxyKy7FRg2+efLHdLH6Jb3lylvito7qE2+HokcOpP+2TNDVjpTNIAj0YFmjSVtfc5zA==
+"@applitools/sdk-fake-eyes-server@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-fake-eyes-server/-/sdk-fake-eyes-server-2.1.1.tgz#a0c5d270a57f8ea97f974565a4273d3066fc6529"
+  integrity sha512-22ummE6qfVgCBZQh3tOTlEZv0sJjL0w+TmN1Os+l9hzSDeBNfy9gSSw5vvvY4MRsaguo6CPILzEJGgANSA4rxQ==
   dependencies:
     express "4.17.1"
     filenamify "4.1.0"
@@ -134,10 +134,10 @@
     uuid "3.3.3"
     zlib "1.0.5"
 
-"@applitools/sdk-release-kit@0.10.4":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.10.4.tgz#b5fba1a87afbb2a76ab1cc2316ff0d0b98178a41"
-  integrity sha512-7J7ctSHDoattjHGPv6VToZXfW37EqcWK+Nffjq/3AtcIwXjlA0fZYhrD5YtWDeLJdTk9JwQkhlcyLzeAbcTgvQ==
+"@applitools/sdk-release-kit@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.10.5.tgz#2731337298b5a1e83403458cdedf5bd0276f5f81"
+  integrity sha512-8d/r7D4rUQe90akRv4u71rw9KFobhb0wo2PE+bzjHYZKy8nh6ksu3dsAzy5GCOQ52Ji2l1U6PoTT+s2jmp9Sow==
   dependencies:
     "@applitools/sdk-shared" "0.1.3"
     chalk "3.0.0"

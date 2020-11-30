@@ -1,0 +1,1 @@
+declare module '@applitools/eyes-sdk-core';

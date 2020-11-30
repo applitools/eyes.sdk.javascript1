@@ -75,3 +75,4 @@ exports.TestResultsFormatter = core.TestResultsFormatter
 exports.TestResultsStatus = core.TestResultsStatus
 exports.ClassicRunner = core.ClassicRunner
 exports.VisualGridRunner = core.VisualGridRunner
+exports.RunnerOptions = core.RunnerOptions

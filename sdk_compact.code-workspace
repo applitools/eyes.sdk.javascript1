@@ -79,6 +79,9 @@
 		{
 			"name": "side",
 			"path": "packages/side-eyes"
+		},
+		{
+			"path": "packages/eyes-puppeteer"
 		}
 	],
 	"settings": {}

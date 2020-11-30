@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes.webdriverio",
-  "version": "2.25.0",
+  "version": "2.25.1",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
   "repository": "https://github.com/applitools/eyes.sdk.javascript1",
   "dependencies": {
     "@applitools/eyes-sdk-core": "12.5.7",
-    "@applitools/visual-grid-client": "15.2.0"
+    "@applitools/visual-grid-client": "15.2.1"
   },
   "peerDependencies": {
     "webdriverio": "~4.14.4"

@@ -40,6 +40,9 @@ tags
 support
 eyes-testcafe-bak
 
-types
-doc
+# generated
 dist
+types
+docs
+doc
+bin

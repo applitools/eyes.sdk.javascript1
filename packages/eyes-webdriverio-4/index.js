@@ -33,3 +33,4 @@ exports.AccessibilityGuidelinesVersion = core.AccessibilityGuidelinesVersion
 exports.AccessibilityRegionBySelector = core.AccessibilityRegionBySelector
 exports.AccessibilityRegionByElement = core.AccessibilityRegionByElement
 exports.ProxySettings = core.ProxySettings
+exports.RunnerOptions = core.RunnerOptions

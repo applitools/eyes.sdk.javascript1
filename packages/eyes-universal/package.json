@@ -1,0 +1,69 @@
+{
+  "name": "@applitools/eyes-universal",
+  "version": "0.0.1",
+  "description": "Applitools Eyes Universal SDK",
+  "keywords": [
+    "applitools",
+    "eyes",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests"
+  ],
+  "homepage": "https://applitools.com",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:applitools/eyes.sdk.javascript1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "directories": {
+    "example": "./example",
+    "lib": "./src",
+    "test": "./test"
+  },
+  "main": "./index.js",
+  "bin": {
+    "eyes-universal-linux": "./bin/app-linux",
+    "eyes-universal-macos": "./bin/app-macos",
+    "eyes-universal-windows": "./bin/app-win.exe"
+  },
+  "dependencies": {
+    "@applitools/eyes-sdk-core": "12.4.2",
+    "@applitools/visual-grid-client": "15.0.10",
+    "chalk": "^4.1.0",
+    "uuid": "^8.3.1",
+    "ws": "^7.3.1",
+    "yargs": "^16.1.0"
+  },
+  "devDependencies": {
+    "@applitools/sdk-coverage-tests": "^1.0.15",
+    "@applitools/sdk-fake-eyes-server": "^2.0.0",
+    "@applitools/sdk-release-kit": "^0.4.2",
+    "@applitools/sdk-shared": "^0.3.0",
+    "eslint": "^7.13.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "pkg": "^4.4.9",
+    "prettier": "1.19.0"
+  },
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "build": "pkg app.js --targets node14-linux-x64,node14-macos-x64,node14-win-x64 --out-path ./bin",
+    "preversion": "bongo preversion && yarn build",
+    "version": "bongo version",
+    "postversion": "bongo postversion",
+    "deps": "bongo deps"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=14.15.0"
+  }
+}

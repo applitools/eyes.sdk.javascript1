@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-webdriverio",
-  "version": "5.27.0",
+  "version": "5.27.2",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "keywords": [
     "eyes-webdriverio",
@@ -33,7 +33,7 @@
   "main": "./index.js",
   "dependencies": {
     "@applitools/eyes-sdk-core": "12.6.1",
-    "@applitools/visual-grid-client": "15.2.0"
+    "@applitools/visual-grid-client": "15.2.1"
   },
   "peerDependencies": {
     "webdriverio": "5.0.0 - 6.x.x"
@@ -58,7 +58,7 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-testcafe": "^0.2.1",
-    "geckodriver": "^1.19.1",
+    "geckodriver": "^1.20.0",
     "mocha": "^8.0.1",
     "module-alias": "^2.2.2",
     "prettier": "1.19.0",
