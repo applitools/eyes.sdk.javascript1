@@ -28,8 +28,8 @@
     "deps": "src/cli/index.js deps",
     "prepublish:setup": "echo 'no setup'",
     "preversion": "src/cli/index.js preversion && yarn test",
-    "version": "src/cli/index.js version",
-    "postversion": "src/cli/index.js postversion"
+    "version": "src/cli/index.js version",  
+    "postversion": "src/cli/index.js postversion --skip-release-notification"
   },
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
