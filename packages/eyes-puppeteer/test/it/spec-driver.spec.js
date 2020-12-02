@@ -135,7 +135,7 @@ describe('spec driver', async () => {
         return arguments
       }
       let result = await spec.executeScript(page, fn, el)
-      assert.ok(await spec.isEqualElements(page, result[0][0], el))
+      assert.ok(await spec.isEqualElements(page, result[0], el))
     }
   }
   function mainContext() {

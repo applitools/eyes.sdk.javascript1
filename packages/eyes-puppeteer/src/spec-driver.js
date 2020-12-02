@@ -53,31 +53,28 @@ function serializeArgs(args) {
 //    of the arguments in a serialized structure, deserialize them, and call the script,
 //    and pass the arguments as originally intended
 async function scriptRunner() {
-  function deserializeArgs(args, elements = []) {
-    return args.map(deserializeArg)
-
-    function deserializeArg(arg) {
-      if (!arg) {
-        return arg
-      } else if (arg.isElement) {
-        return elements.shift()
-      } else if (Array.isArray(arg)) {
-        return arg.map(deserializeArg)
-      } else if (typeof arg === 'object') {
-        return Object.entries(arg).reduce((object, [key, value]) => {
-          return Object.assign(object, {[key]: deserializeArg(value)})
-        }, {})
-      } else {
-        return arg
-      }
+  function deserializeArg(arg) {
+    if (!arg) {
+      return arg
+    } else if (arg.isElement) {
+      return elements.shift()
+    } else if (Array.isArray(arg)) {
+      return arg.map(deserializeArg)
+    } else if (typeof arg === 'object') {
+      return Object.entries(arg).reduce((object, [key, value]) => {
+        return Object.assign(object, {[key]: deserializeArg(value)})
+      }, {})
+    } else {
+      return arg
     }
   }
   const args = Array.from(arguments)
+  const elements = args.slice(1)
   let script = args[0].script
   script = new Function(
     script.startsWith('function') ? `return (${script}).apply(null, arguments)` : script,
   )
-  const deserializedArgs = deserializeArgs(args[0].argsWithElementMarkers, args.slice(1))
+  const deserializedArgs = args[0].argsWithElementMarkers.map(deserializeArg)
   return script.apply(null, deserializedArgs)
 }
 async function findElementByXpath(frame, selector) {
@@ -226,6 +223,7 @@ async function build(env) {
     env.devtools = true
     delete env.executablePath
   }
+  if (process.platform !== 'linux') delete env.executablePath
   const driver = await puppeteer.launch(env)
   const page = await driver.newPage()
   return [page, () => driver.close()]
