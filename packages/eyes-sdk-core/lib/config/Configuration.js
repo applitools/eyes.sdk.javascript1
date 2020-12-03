@@ -1382,6 +1382,7 @@ class Configuration {
       baselineName: this.getBaselineEnvName(),
       envName: this.getEnvironmentName(),
       branchName: this.getBranchName(),
+      saveDiffs: this.getSaveDiffs(),
       saveFailedTests: this.getSaveFailedTests(),
       saveNewTests: this.getSaveNewTests(),
       compareWithParentBranch: this.getCompareWithParentBranch(),
