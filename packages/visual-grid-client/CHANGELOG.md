@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `saveDiffs` to `renderingGridClient` and `openEyes`
 
 ## 15.2.1 - 2020/11/26
 

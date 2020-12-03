@@ -1133,6 +1133,7 @@ Received: 'firefox-1'.`,
       accessibilitySettings: 'accessibilitySettings',
       parentBranch: 'parentBranch',
       branch: 'branch',
+      saveDiffs: 'saveDiffs',
       saveFailedTests: 'saveFailedTests',
       saveNewTests: 'saveNewTests',
       compareWithParentBranch: 'compareWithParentBranch',
@@ -1154,6 +1155,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.parentBranchName).to.equal('parentBranch')
       expect(wrapper.branchName).to.equal('branch')
       expect(wrapper.proxy).to.equal('proxy')
+      expect(wrapper.saveDiffs).to.equal('saveDiffs')
       expect(wrapper.saveFailedTests).to.equal('saveFailedTests')
       expect(wrapper.saveNewTests).to.equal('saveNewTests')
       expect(wrapper.compareWithParentBranch).to.equal('compareWithParentBranch')
@@ -1192,6 +1194,7 @@ Received: 'firefox-1'.`,
       accessibilitySettings: 'accessibilitySettings',
       parentBranch: 'parentBranch',
       branch: 'branch',
+      saveDiffs: 'saveDiffs',
       saveFailedTests: 'saveFailedTests',
       saveNewTests: 'saveNewTests',
       compareWithParentBranch: 'compareWithParentBranch',
@@ -1217,6 +1220,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.parentBranchName).to.equal('parentBranch')
       expect(wrapper.branchName).to.equal('branch')
       expect(wrapper.proxy).to.equal('proxy')
+      expect(wrapper.saveDiffs).to.equal('saveDiffs')
       expect(wrapper.saveFailedTests).to.equal('saveFailedTests')
       expect(wrapper.saveNewTests).to.equal('saveNewTests')
       expect(wrapper.compareWithParentBranch).to.equal('compareWithParentBranch')

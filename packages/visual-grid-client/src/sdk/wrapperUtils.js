@@ -47,6 +47,7 @@ function configureWrappers({
   parentBranch,
   branch,
   proxy,
+  saveDiffs,
   saveFailedTests,
   saveNewTests,
   compareWithParentBranch,
@@ -82,6 +83,7 @@ function configureWrappers({
     parentBranch !== undefined && wrapper.setParentBranchName(parentBranch)
     branch !== undefined && wrapper.setBranchName(branch)
     proxy !== undefined && wrapper.setProxy(proxy)
+    saveDiffs !== undefined && wrapper.setSaveDiffs(saveDiffs)
     saveFailedTests !== undefined && wrapper.setSaveFailedTests(saveFailedTests)
     saveNewTests !== undefined && wrapper.setSaveNewTests(saveNewTests)
     compareWithParentBranch !== undefined &&

@@ -106,6 +106,12 @@ declare namespace Eyes {
       branch?:string
 
       /**
+       * Set whether or not different baselines should be updated or not.
+       * Default value: false
+       */
+      saveDiffs?:boolean
+
+      /**
        * Set whether or not failed tests are saved by default.
        * Default value: false
        */

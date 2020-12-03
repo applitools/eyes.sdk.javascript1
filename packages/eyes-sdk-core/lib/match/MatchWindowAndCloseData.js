@@ -23,6 +23,7 @@ class MatchWindowAndCloseData extends MatchWindowData {
     tag,
     ignoreMismatch,
     options,
+    updateBaselineIfDifferent,
     updateBaselineIfNew,
     removeSessionIfMatching,
   } = {}) {
@@ -32,8 +33,7 @@ class MatchWindowAndCloseData extends MatchWindowData {
 
     super({userInputs, appOutput, tag, ignoreMismatch, options})
 
-    this._updateBaseline = false
-    this._updateBaselineIfDifferent = false
+    this._updateBaselineIfDifferent = updateBaselineIfDifferent
     this._updateBaselineIfNew = updateBaselineIfNew
     this._removeSession = false
     this._removeSessionIfMatching = removeSessionIfMatching

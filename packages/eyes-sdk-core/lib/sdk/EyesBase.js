@@ -1153,13 +1153,11 @@ class EyesBase {
 
       this._logger.verbose('Ending server session...')
 
-      const save =
-        (isNewSession && this._configuration.getSaveNewTests()) ||
-        (!isNewSession && this._configuration.getSaveFailedTests())
-      this._logger.verbose(`Automatically save test? ${save}`)
-
       // Session was started, call the server to end the session.
-      const results = await this._serverConnector.stopSession(this._runningSession, false, save)
+      const results = await this._serverConnector.stopSession(this._runningSession, false, {
+        updateBaselineIfNew: this._configuration.getSaveNewTests(),
+        updateBaselineIfDifferent: this._configuration.getSaveFailedTests(),
+      })
       results.setIsNew(isNewSession)
       results.setUrl(sessionResultsUrl)
 
@@ -1248,7 +1246,7 @@ class EyesBase {
       }
 
       this._logger.verbose('Aborting server session...')
-      const testResults = await this._serverConnector.stopSession(this._runningSession, true, false)
+      const testResults = await this._serverConnector.stopSession(this._runningSession, true)
 
       this._logger.log('--- Test aborted.')
       return testResults
@@ -1422,6 +1420,7 @@ class EyesBase {
       this,
       outputProvider,
       this._configuration.getSaveNewTests(),
+      this._configuration.getSaveFailedTests(),
     )
 
     const results = await EyesBase.matchWindow(

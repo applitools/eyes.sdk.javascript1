@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fix `saveFailedTests`
+
 ## 3.13.0 - 2020/12/2
 
 - use eyes-puppeteer SDK for running dom-snapshot - adds support for cross-origin iframes [Trello 635](https://trello.com/c/TgiAqTUM) and [Trello 551](https://trello.com/c/wPl3ef7y))

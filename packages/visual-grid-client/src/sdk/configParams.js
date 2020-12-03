@@ -26,6 +26,7 @@ module.exports = [
   'branchName',
   'branch',
   'proxy',
+  'saveDiffs',
   'saveFailedTests',
   'saveNewTests',
   'compareWithParentBranch',

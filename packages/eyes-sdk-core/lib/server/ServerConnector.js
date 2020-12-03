@@ -202,15 +202,20 @@ class ServerConnector {
    *
    * @param {RunningSession} runningSession - The running session to be stopped.
    * @param {boolean} isAborted
-   * @param {boolean} save
+   * @param {{updateBaselineIfDifferent: boolean, updateBaselineIfNew: boolean}} save
    * @return {Promise<TestResults>} - TestResults object for the stopped running session
    */
-  async stopSession(runningSession, isAborted, save) {
+  async stopSession(
+    runningSession,
+    isAborted,
+    {updateBaselineIfDifferent, updateBaselineIfNew} = {},
+  ) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     this._logger.verbose(
       `ServerConnector.stopSession called with ${JSON.stringify({
         isAborted,
-        updateBaseline: save,
+        updateBaselineIfNew,
+        updateBaselineIfDifferent,
       })} for session: ${runningSession}`,
     )
 
@@ -225,7 +230,8 @@ class ServerConnector {
       ),
       params: {
         aborted: isAborted,
-        updateBaseline: save,
+        updateBaselineIfNew,
+        updateBaselineIfDifferent,
       },
     }
 
@@ -389,7 +395,10 @@ class ServerConnector {
         'ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used',
       )
       await this.matchWindow(runningSession, matchWindowData)
-      return this.stopSession(runningSession, false, matchWindowData.getUpdateBaselineIfNew())
+      return this.stopSession(runningSession, false, {
+        updateBaselineIfNew: matchWindowData.getUpdateBaselineIfNew(),
+        updateBaselineIfDifferent: matchWindowData.getUpdateBaselineIfDifferent(),
+      })
     }
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
@@ -437,7 +446,10 @@ class ServerConnector {
       this._matchWindowAndCloseFallback = true
       this._logger.verbose('ServerConnector.matchWindowAndClose was not found. Fallback is used')
       await this.matchWindow(runningSession, matchWindowData)
-      return this.stopSession(runningSession, false, matchWindowData.getUpdateBaselineIfNew())
+      return this.stopSession(runningSession, false, {
+        updateBaselineIfNew: matchWindowData.getUpdateBaselineIfNew(),
+        updateBaselineIfDifferent: matchWindowData.getUpdateBaselineIfDifferent(),
+      })
     }
 
     throw new Error(

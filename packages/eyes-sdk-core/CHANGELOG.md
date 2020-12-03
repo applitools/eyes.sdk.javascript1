@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add `updateBaselineIfDifferent` to MatchWindowAndCloseTask
+- split `updateBaseline` to `updateBaselineIfNew` and `updateBaselineIfDifferent` in EyesBase.close
 
 ## 12.8.1 - 2020/12/1
 

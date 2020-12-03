@@ -369,6 +369,10 @@ class FakeEyesWrapper extends EventEmitter {
     this.proxy = value
   }
 
+  setSaveDiffs(value) {
+    this.saveDiffs = value
+  }
+
   setSaveFailedTests(value) {
     this.saveFailedTests = value
   }
