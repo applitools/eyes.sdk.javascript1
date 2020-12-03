@@ -57,6 +57,9 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
       checkSettings.getVisualGridOptions(),
       configuration.getVisualGridOptions(),
     ),
+    saveDiffs: configuration.getSaveDiffs(),
+    saveNewTests: configuration.getSaveNewTests(),
+    saveFailedTests: configuration.getSaveFailedTests(),
   }
 
   if (config.target === 'region') {
