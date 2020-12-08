@@ -49,6 +49,10 @@ function createResourceCache() {
     }, {})
   }
 
+  function getKeys() {
+    return Object.keys(cache)
+  }
+
   const cache = {}
 
   return {
@@ -58,6 +62,7 @@ function createResourceCache() {
     getWithDependencies,
     remove,
     toJSON,
+    getKeys,
   }
 }
 

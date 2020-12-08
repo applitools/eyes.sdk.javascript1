@@ -58,6 +58,9 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
         // "preResources" are not fetched and not in "fetchCache" so cache them to "resourceCache".
         const rGridResource = fromFetchedToRGridResource(resource)
         resourceCache.setValue(url, toCacheEntry(rGridResource))
+        if (resource.dependencies) {
+          resourceCache.setDependencies(url, resource.dependencies)
+        }
         handledResources.add(url)
         assignContentfulResources(resources, {[url]: rGridResource})
       }

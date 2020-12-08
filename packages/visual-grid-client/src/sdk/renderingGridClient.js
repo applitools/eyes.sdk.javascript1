@@ -225,6 +225,7 @@ function makeRenderingGridClient({
     closeBatch,
     globalState,
     testWindow,
+    getResourceUrlsInCache,
   }
 
   async function getInitialData() {
@@ -266,6 +267,10 @@ function makeRenderingGridClient({
 
     setRenderingInfo(renderInfo)
     return {renderInfo}
+  }
+
+  function getResourceUrlsInCache() {
+    return resourceCache.getKeys()
   }
 }
 

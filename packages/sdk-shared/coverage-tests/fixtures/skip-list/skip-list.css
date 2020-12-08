@@ -1,0 +1,11 @@
+@import 'skip-list-nested.css';
+
+[class^=bg-smurfs] {
+  width: 151px;
+  height: 227px;
+}
+
+.bg-smurfs1 {
+  background-image: url('smurfs1.jpg');
+  filter: hue-rotate(60deg);
+}

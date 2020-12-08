@@ -25,6 +25,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     executionTimeout = EXECUTION_TIMEOUT,
     useSessionCache,
     showLogs,
+    skipResources,
   } = options
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
   const arg = {
@@ -34,6 +35,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     compressResources: false,
     useSessionCache,
     showLogs,
+    skipResources,
   }
   const scripts = {
     main: {
@@ -89,6 +91,9 @@ async function takeDomSnapshot(logger, driver, options = {}) {
       }
     }
 
+    logger.verbose(`dom snapshot cdt length: ${snapshot.cdt.length}`)
+    logger.verbose(`blobs urls (${snapshot.blobs.length}):`, JSON.stringify(snapshot.blobs.map(({url}) => url))) // eslint-disable-line prettier/prettier
+    logger.verbose(`resource urls (${snapshot.resourceUrls.length}):`, JSON.stringify(snapshot.resourceUrls)) // eslint-disable-line prettier/prettier
     return snapshot
   }
 }

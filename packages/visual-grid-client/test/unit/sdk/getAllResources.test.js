@@ -781,4 +781,25 @@ describe('getAllResources', () => {
       [url]: toRGridResource({url, errorStatusCode: 500}),
     })
   })
+
+  it('handles preResources with dependencies', async () => {
+    const url1 = 'http://resource-1'
+    const url2 = 'http://resource-2'
+    const resources1 = await getAllResources({
+      resourceUrls: [],
+      preResources: {
+        [url1]: {url: url1, type: 'type-1', value: 'value-1', dependencies: [url2]},
+        [url2]: {url: url2, type: 'type-2', value: 'value-2'},
+      },
+    })
+
+    const expectedResources = {
+      [url1]: toRGridResource({url: url1, type: 'type-1', value: 'value-1'}),
+      [url2]: toRGridResource({url: url2, type: 'type-2', value: 'value-2'}),
+    }
+
+    expect(resources1).to.eql(expectedResources)
+    const resources2 = await getAllResources({resourceUrls: [url1], preResources: {}})
+    expect(resources2).to.eql(expectedResources)
+  })
 })
