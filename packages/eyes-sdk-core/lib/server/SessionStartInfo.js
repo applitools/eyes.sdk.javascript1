@@ -81,7 +81,7 @@ class SessionStartInfo {
     this._saveDiffs = saveDiffs
     this._render = render
     this._properties = properties
-    this._concurrencyVersion = 1
+    this._concurrencyVersion = 2
     this._agentSessionId = agentSessionId
     this._timeout = timeout
   }

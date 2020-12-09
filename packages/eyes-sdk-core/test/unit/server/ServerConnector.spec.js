@@ -98,7 +98,7 @@ describe('ServerConnector', () => {
           })
         }
         const data = JSON.parse(config.data)
-        assert.strictEqual(data.startInfo.concurrencyVersion, 1)
+        assert.strictEqual(data.startInfo.concurrencyVersion, 2)
         assert.strictEqual(data.startInfo.agentSessionId, guid)
         return settle(resolve, reject, {status: 503, config, data: {}, headers: {}, request: {}})
       })
@@ -303,6 +303,7 @@ describe('ServerConnector', () => {
       if (config.url === 'http://long-request.url') {
         response.status = 202
         response.headers.location = 'http://polling.url'
+        response.headers['Retry-After'] = '1'
         timestampBefore = Date.now()
       } else if (config.isPollingRequest) {
         const timestampAfter = Date.now()
@@ -319,7 +320,8 @@ describe('ServerConnector', () => {
     })
     assert.strictEqual(timeouts.length, ANSWER_AFTER)
     timeouts.forEach((timeout, index) => {
-      const expectedTimeout = delayBeforePolling[Math.min(index, delayBeforePolling.length - 1)]
+      const expectedTimeout =
+        index === 0 ? 1000 : delayBeforePolling[Math.min(index, delayBeforePolling.length - 1)]
       assert(timeout >= expectedTimeout && timeout <= expectedTimeout + 10)
     })
   })
@@ -345,6 +347,47 @@ describe('ServerConnector', () => {
         } else {
           response.status = 200
         }
+      } else if (config.url === 'http://finish-polling.url') {
+        response.status = 200
+        response.data = RES_DATA
+        pollingWasFinished = true
+      }
+      return response
+    }
+    const result = await serverConnector._axios.request({
+      url: 'http://long-request.url',
+    })
+
+    assert(pollingWasStarted)
+    assert.strictEqual(pollsCount, MAX_POLLS_COUNT)
+    assert(pollingWasFinished)
+    assert.deepStrictEqual(result.data, RES_DATA)
+  })
+
+  it('check polling protocol v2', async () => {
+    const serverConnector = getServerConnector()
+    const MAX_POLLS_COUNT = 2
+    const RES_DATA = {createdAt: Date.now()}
+    let pollingWasStarted = false
+    let pollsCount = 0
+    let pollingWasFinished = false
+    serverConnector._axios.defaults.adapter = async config => {
+      const response = {status: 200, config, data: {}, headers: {}, request: {}}
+      if (!pollingWasStarted) {
+        response.status = 202
+        response.headers.location = 'http://polling.url'
+        pollingWasStarted = true
+      } else if (config.url === 'http://polling.url') {
+        pollsCount += 1
+        if (pollsCount >= MAX_POLLS_COUNT) {
+          response.headers.location = 'http://polling-2.url'
+          response.status = 200
+        } else {
+          response.status = 200
+        }
+      } else if (config.url === 'http://polling-2.url') {
+        response.status = 201
+        response.headers.location = 'http://finish-polling.url'
       } else if (config.url === 'http://finish-polling.url') {
         response.status = 200
         response.data = RES_DATA

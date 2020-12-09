@@ -48,6 +48,7 @@ describe('requestHelpers', () => {
         'x-applitools-eyes-client': 'testAgent',
         'x-applitools-eyes-client-request-id': REQUEST_ID,
         'Eyes-Expect': '202+location',
+        'Eyes-Expect-Version': '2',
         'Eyes-Date': TIMESTAMP.toUTCString(),
       },
       data: {},

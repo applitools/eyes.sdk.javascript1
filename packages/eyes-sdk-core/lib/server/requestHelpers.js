@@ -30,7 +30,9 @@ const CUSTOM_HEADER_NAMES = {
   REQUEST_ID: 'x-applitools-eyes-client-request-id',
   AGENT_ID: 'x-applitools-eyes-client',
   EYES_EXPECT: 'Eyes-Expect',
+  EYES_EXPECT_VERSION: 'Eyes-Expect-Version',
   EYES_DATE: 'Eyes-Date',
+  RETRY_AFTER: 'Retry-After',
 }
 
 function configAxiosProxy({axiosConfig, proxy, logger}) {
@@ -78,6 +80,7 @@ function configureAxios({axiosConfig, configuration, agentId, logger}) {
   }
   // TODO remove when Eyes server stops being backwards compatible with old SDK's that don't support long running tasks
   if (!axiosConfig.isPollingRequest) {
+    axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT_VERSION] = '2'
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT] = '202+location'
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_DATE] = DateTimeUtils.toRfc1123DateTime(
       axiosConfig.timestamp,
@@ -103,15 +106,31 @@ async function handleRequestResponse({response, axios, logger}) {
   )
 
   if (isLongRequest(response)) {
-    return startPollingRequest({url: response.headers.location, originalConfig: config, axios})
+    return startPollingRequest({
+      url: response.headers.location,
+      delay: response.headers[CUSTOM_HEADER_NAMES.RETRY_AFTER]
+        ? Number(response.headers[CUSTOM_HEADER_NAMES.RETRY_AFTER]) * 1000
+        : null,
+      originalConfig: config,
+      axios,
+    })
   }
 
   if (config.isPollingRequest) {
     if (response.status === HTTP_STATUS_CODES.OK) {
       config.repeat += 1
-      config.delay = TypeUtils.isArray(config.delayBeforePolling)
-        ? config.delayBeforePolling[Math.min(config.repeat, config.delayBeforePolling.length - 1)]
-        : config.delayBeforePolling
+      if (response.headers[CUSTOM_HEADER_NAMES.RETRY_AFTER]) {
+        config.delay = Number(response.headers[CUSTOM_HEADER_NAMES.RETRY_AFTER]) * 1000
+      } else {
+        config.delay = TypeUtils.isArray(config.delayBeforePolling)
+          ? config.delayBeforePolling[Math.min(config.repeat, config.delayBeforePolling.length - 1)]
+          : config.delayBeforePolling
+      }
+
+      if (response.headers.location) {
+        config.url = response.headers.location
+      }
+
       return axios.request(config)
     }
   }
@@ -124,14 +143,16 @@ function isLongRequest(response) {
 function isConcurrencyBlockedRequest(response) {
   return response.status === HTTP_STATUS_CODES.SERVICE_UNAVAILABLE
 }
-async function startPollingRequest({url, originalConfig, axios}) {
+async function startPollingRequest({url, delay, originalConfig, axios}) {
   const pollingConfig = {
     name: originalConfig.name,
     isPollingRequest: true,
     delayBeforePolling: originalConfig.delayBeforePolling,
-    delay: TypeUtils.isArray(originalConfig.delayBeforePolling)
-      ? originalConfig.delayBeforePolling[0]
-      : originalConfig.delayBeforePolling,
+    delay:
+      delay ||
+      (TypeUtils.isArray(originalConfig.delayBeforePolling)
+        ? originalConfig.delayBeforePolling[0]
+        : originalConfig.delayBeforePolling),
     method: 'GET',
     url,
     repeat: 0,

@@ -241,7 +241,7 @@ describe('EyesBase', () => {
         saveDiffs: true,
         properties: [{name: 'propName', value: 'propValue'}],
         timeout: 42,
-        concurrencyVersion: 1,
+        concurrencyVersion: 2,
       })
     })
   })
