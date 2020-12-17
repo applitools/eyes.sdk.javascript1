@@ -21,7 +21,13 @@ const BrowserTypes = Enum('BrowserType', {
   EDGE_LEGACY: 'edgelegacy',
   /** @type {'safari'} */
   SAFARI: 'safari',
+  /** @type {'safari-earlyaccess'} */
+  SAFARI_EARLY_ACCESS: 'safari-earlyaccess',
   /** @type {'chrome-one-version-back'} */
+  SAFARI_ONE_VERSION_BACK: 'safari-one-version-back',
+  /** @type {'safari-two-versions-back'} */
+  SAFARI_TWO_VERSIONS_BACK: 'safari-two-versions-back',
+  /** @type {'edgechromium-one-version-back'} */
   CHROME_ONE_VERSION_BACK: 'chrome-one-version-back',
   /** @type {'chrome-two-versions-back'} */
   CHROME_TWO_VERSIONS_BACK: 'chrome-two-versions-back',
@@ -30,10 +36,6 @@ const BrowserTypes = Enum('BrowserType', {
   /** @type {'firefox-two-versions-back'} */
   FIREFOX_TWO_VERSIONS_BACK: 'firefox-two-versions-back',
   /** @type {'safari-one-version-back'} */
-  SAFARI_ONE_VERSION_BACK: 'safari-one-version-back',
-  /** @type {'safari-two-versions-back'} */
-  SAFARI_TWO_VERSIONS_BACK: 'safari-two-versions-back',
-  /** @type {'edgechromium-one-version-back'} */
   EDGE_CHROMIUM_ONE_VERSION_BACK: 'edgechromium-one-version-back',
   /** @type {'edgechromium-two-versions-back'} */
   EDGE_CHROMIUM_TWO_VERSIONS_BACK: 'edgechromium-two-versions-back',
