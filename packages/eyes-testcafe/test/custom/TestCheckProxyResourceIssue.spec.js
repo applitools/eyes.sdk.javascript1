@@ -1,15 +1,14 @@
 // re: https://trello.com/c/HnnKL5VU
 const cwd = process.cwd()
 const path = require('path')
-const {Eyes} = require('../../index')
-const {testServer} = require('@applitools/sdk-shared')
+const {testSetup, testServer} = require('@applitools/sdk-shared')
 let eyes, server
 
 fixture`proxying of resources`
   .before(async () => {
     const staticPath = path.join(cwd, 'test', 'custom', 'fixtures')
     server = await testServer({port: 7777, staticPath})
-    eyes = new Eyes({configPath: path.join(cwd, 'test', 'custom', 'applitools.config.js')})
+    eyes = testSetup.getEyes({vg: true})
   })
   .after(async () => {
     await server.close()

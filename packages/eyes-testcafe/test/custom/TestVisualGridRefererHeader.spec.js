@@ -2,9 +2,9 @@
 
 const path = require('path')
 const cwd = process.cwd()
-const {testServer} = require('@applitools/sdk-shared')
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
-const {Eyes, Target} = require('../../index')
+const {Target} = require('../../index')
+const {testSetup, testServer} = require('@applitools/sdk-shared')
 let serverA, serverB, eyes
 
 fixture`TestVisualGridRefererHeader`
@@ -21,7 +21,7 @@ fixture`TestVisualGridRefererHeader`
         'node_modules/@applitools/sdk-shared/coverage-tests/util/cors-middleware.js',
       ),
     })
-    eyes = new Eyes({configPath: path.join(cwd, 'test', 'custom', 'applitools.config.js')})
+    eyes = testSetup.getEyes({vg: true})
   })
 
   .after(async () => {

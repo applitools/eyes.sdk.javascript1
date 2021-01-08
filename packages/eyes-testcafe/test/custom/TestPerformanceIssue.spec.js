@@ -1,6 +1,4 @@
-const cwd = process.cwd()
-const path = require('path')
-const {Eyes} = require('../../index')
+const {testSetup} = require('@applitools/sdk-shared')
 let eyes
 const pages = [
   {name: 'mopub', path: 'https://www.mopub.com/content/mopub-aem-twitter/en'},
@@ -8,7 +6,7 @@ const pages = [
   {name: 'business', path: 'https://business.twitter.com/content/business-twitter/en.html'},
 ]
 fixture`benchmark`.beforeEach(() => {
-  eyes = new Eyes({configPath: path.join(cwd, 'test', 'custom', 'applitools.config.js')})
+  eyes = testSetup.getEyes({vg: true})
 })
 test.skip(pages[0].path, async t => {
   await t.navigateTo(pages[0].path)

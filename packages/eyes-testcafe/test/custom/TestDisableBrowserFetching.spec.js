@@ -2,9 +2,9 @@
 
 const path = require('path')
 const cwd = process.cwd()
-const {testServer} = require('@applitools/sdk-shared')
+const {testSetup, testServer} = require('@applitools/sdk-shared')
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
-const {Eyes, Target} = require('../../index')
+const {Target} = require('../../index')
 let server, eyes
 
 fixture`TestDisableBrowserFetching`
@@ -18,7 +18,7 @@ fixture`TestDisableBrowserFetching`
         'node_modules/@applitools/sdk-shared/coverage-tests/util/ua-middleware.js',
       ),
     })
-    eyes = new Eyes({configPath: path.join(cwd, 'test', 'custom', 'applitools.config.js')})
+    eyes = testSetup.getEyes({vg: true})
   })
   .after(async () => {
     await server.close()

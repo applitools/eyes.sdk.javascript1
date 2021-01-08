@@ -22,7 +22,7 @@
     "coverage:prod": "yarn coverage:generate && yarn test:coverage && coverage-tests process-report --send-report prod",
     "test:coverage": "APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/generic/*WithVg* test/custom --reporter spec,xunit:coverage-test-report.xml",
     "test:coverage:generic": "APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/generic/*WithVg* --reporter spec,xunit:coverage-test-report.xml",
-    "test:coverage:custom": "APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe (custom)' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/custom --reporter spec,xunit:coverage-test-report.xml",
+    "test:coverage:custom": "APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe (custom)' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/custom --reporter spec,xunit:coverage-test-report.xml",
     "prepublish:setup": "echo 'no-op'",
     "preversion": "bongo preversion && yarn test && yarn coverage:prod",
     "version": "bongo version",
