@@ -3,6 +3,9 @@ module.exports = (req, res, next) => {
     if (req.url === '/stream') {
         res.writeHead(200, {'Content-Type': 'audio/mp3'})
         write()
+        // process.on('SIGTERM', (code) => {
+        //   res.end() // otherwise the process hangs
+        // });
     } else {
       next()
     }
@@ -12,6 +15,4 @@ module.exports = (req, res, next) => {
         setTimeout(write, 50)
     }
   }
-
-  
   
