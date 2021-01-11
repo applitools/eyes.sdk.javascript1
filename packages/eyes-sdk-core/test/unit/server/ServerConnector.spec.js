@@ -14,6 +14,7 @@ const {
   AppOutput,
   Location,
   TestResults,
+  MatchWindowData,
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
@@ -578,5 +579,26 @@ describe('ServerConnector', () => {
     )
     assert.ok(results instanceof TestResults)
     assert.strictEqual(results.getName(), 'fallback result')
+  })
+
+  it('uploads large files', async () => {
+    const {port, close} = await startFakeEyesServer({logger, matchMode: 'always'})
+    const serverUrl = `http://localhost:${port}`
+    const serverConnector = getServerConnector({serverUrl})
+    const buff = Buffer.alloc(1024 * 1024 * 50, 'a')
+    const matchWindowData = new MatchWindowData({
+      appOutput: new AppOutput({screenshot: buff, imageLocation: new Location(20, 40)}),
+    })
+    try {
+      const runningSession = await serverConnector.startSession({
+        appIdOrName: 'appIdOrName',
+        scenarioIdOrName: 'scenarioIdOrName',
+        environment: {displaySize: {width: 1, height: 2}},
+        batchInfo: {},
+      })
+      await serverConnector.matchWindow(runningSession, matchWindowData)
+    } finally {
+      await close()
+    }
   })
 })
