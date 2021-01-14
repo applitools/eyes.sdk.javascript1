@@ -465,6 +465,9 @@ class EyesCore extends EyesBase {
         }
         // TODO create a separate snippet with more sophisticated logic
         region.hint = await this._context.execute('return arguments[0].innerText', element)
+        if (region.hint) {
+          region.hint = this.hint.replace(/[.\\+]/g, '\\$&')
+        }
       }
 
       const domCapture = await takeDomCapture(this._logger, this._context)
