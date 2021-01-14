@@ -496,6 +496,68 @@ class EyesCore extends EyesBase {
     return results.reduce((strs, result) => strs.concat(result), [])
   }
 
+  async extractTextRegions(settings) {
+    const config = settings.toJSON
+      ? settings.toJSON()
+      : this.spec.newTextRegionSettings(settings).toJSON()
+
+    ArgumentGuard.notNull(config.patterns, 'patterns')
+
+    const driver = makeDriver(this._driver.spec, this._logger, this._driver.wrapper)
+    await driver.refreshContexts()
+
+    const screenshot = await screenshoter({
+      logger: this._logger,
+      driver,
+      context: config.context,
+      target: Region.isRegionCompatible(config.target)
+        ? {
+            x: config.target.left,
+            y: config.target.top,
+            width: config.target.width,
+            height: config.target.height,
+          }
+        : config.target,
+      isFully: config.fully,
+      hideScrollbars: false, // because otherwise DOM will not be aligned with image // this._configuration.getHideScrollbars(),
+      hideCaret: this._configuration.getHideCaret(),
+      scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
+      overlap: this._configuration.getStitchOverlap(),
+      wait: this._configuration.getWaitBeforeScreenshots(),
+      crop:
+        this._cutProviderHandler.get() instanceof NullCutProvider
+          ? null
+          : this._cutProviderHandler.get().toObject(),
+      scale:
+        this._scaleProviderHandler.get() instanceof NullScaleProvider
+          ? null
+          : this._scaleProviderHandler.get().getScaleRatio(),
+      debug: {
+        path:
+          this._debugScreenshotsProvider instanceof NullDebugScreenshotProvider
+            ? null
+            : this._debugScreenshotsProvider.getPath(),
+      },
+    })
+
+    const domCapture = await takeDomCapture(this._logger, this._context)
+    await this.getAndSaveRenderingInfo()
+    const [screenshotUrl, domUrl] = await Promise.all([
+      this._serverConnector.uploadScreenshot(GeneralUtils.guid(), await screenshot.image.toPng()),
+      this._serverConnector.postDomSnapshot(GeneralUtils.guid(), domCapture),
+    ])
+
+    return this._serverConnector.extractTextRegions({
+      domUrl,
+      screenshotUrl,
+      location: {x: Math.round(screenshot.region.x), y: Math.round(screenshot.region.y)},
+      patterns: config.patterns,
+      ignoreCase: config.ignoreCase,
+      firstOnly: config.firstOnly,
+      language: config.language,
+    })
+  }
+
   /**
    * Create a viewport page screenshot
    * @return {Promise<EyesScreenshot>}

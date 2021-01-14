@@ -895,6 +895,57 @@ class ServerConnector {
     throw new Error(`ServerConnector.extractText - unexpected status (${response.statusText})`)
   }
 
+  async extractTextRegions({
+    screenshotUrl,
+    domUrl,
+    location,
+    patterns,
+    ignoreCase,
+    firstOnly,
+    language,
+  }) {
+    ArgumentGuard.notNull(screenshotUrl, 'screenshotUrl')
+    this._logger.verbose(
+      `ServerConnector.extractTextRegions called with ${JSON.stringify({
+        screenshotUrl,
+        domUrl,
+        location,
+        patterns,
+        ignoreCase,
+        firstOnly,
+        language,
+      })}`,
+    )
+
+    const config = {
+      name: 'extractTextRegions',
+      method: 'POST',
+      url: GeneralUtils.urlConcat(
+        this._configuration.getServerUrl(),
+        EYES_API_PATH,
+        '/running/images/textregions',
+      ),
+      data: {
+        appOutput: {screenshotUrl, domUrl, location},
+        patterns,
+        ignoreCase,
+        firstOnly,
+        language,
+      },
+    }
+
+    const response = await this._axios.request(config)
+    const validStatusCodes = [HTTP_STATUS_CODES.OK]
+    if (validStatusCodes.includes(response.status)) {
+      this._logger.verbose('ServerConnector.extractTextRegions - post succeeded', response.data)
+      return response.data
+    }
+
+    throw new Error(
+      `ServerConnector.extractTextRegions - unexpected status (${response.statusText})`,
+    )
+  }
+
   async getEmulatedDevicesSizes(serviceUrl) {
     this._logger.verbose(`ServerConnector.getEmulatedDevicesSizes`)
 

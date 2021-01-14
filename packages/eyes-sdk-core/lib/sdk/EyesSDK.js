@@ -5,6 +5,7 @@ const EyesDriver = require('./EyesDriver')
 const EyesContext = require('./EyesContext')
 const EyesElement = require('./EyesElement')
 const CheckSettings = require('../fluent/DriverCheckSettings')
+const makeTextRegionSettings = require('../fluent/TextRegionSettings')
 
 function EyesSDK({name, version, spec, VisualGridClient}) {
   const SDKElement = EyesElement.specialize(spec)
@@ -33,6 +34,18 @@ function EyesSDK({name, version, spec, VisualGridClient}) {
     },
   })
 
+  const SDKTextRegionSettings = makeTextRegionSettings({
+    isElement(element) {
+      return SDKContext.isElement(element)
+    },
+    isSelector(selector) {
+      return SDKContext.isSelector(selector)
+    },
+    isContext(context) {
+      return SDKContext.isReference(context)
+    },
+  })
+
   const SDKEyesClassic = EyesClassic.specialize({
     agentId: `${name}/${version}`,
     spec: {
@@ -50,6 +63,9 @@ function EyesSDK({name, version, spec, VisualGridClient}) {
       },
       newCheckSettings(...args) {
         return new SDKCheckSettings(...args)
+      },
+      newTextRegionSettings(...args) {
+        return SDKTextRegionSettings.from(...args)
       },
     },
   })
@@ -86,6 +102,7 @@ function EyesSDK({name, version, spec, VisualGridClient}) {
     Context: SDKContext,
     Driver: SDKDriver,
     CheckSettings: SDKCheckSettings,
+    TextRegionSettings: SDKTextRegionSettings,
     EyesClassic: SDKEyesClassic,
     EyesVisualGrid: SDKEyesVisualGrid,
     EyesFactory: SDKEyesFactory,
