@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `extractTextRegions` method
 
 ## 12.12.2 - 2021/1/10
 
