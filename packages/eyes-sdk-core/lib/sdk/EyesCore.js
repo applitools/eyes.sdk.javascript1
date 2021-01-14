@@ -499,11 +499,7 @@ class EyesCore extends EyesBase {
     return results.reduce((strs, result) => strs.concat(result), [])
   }
 
-  async extractTextRegions(settings) {
-    const config = settings.toJSON
-      ? settings.toJSON()
-      : this.spec.newTextRegionSettings(settings).toJSON()
-
+  async extractTextRegions(config) {
     ArgumentGuard.notNull(config.patterns, 'patterns')
 
     const driver = makeDriver(this._driver.spec, this._logger, this._driver.wrapper)
@@ -512,17 +508,7 @@ class EyesCore extends EyesBase {
     const screenshot = await screenshoter({
       logger: this._logger,
       driver,
-      context: config.context,
-      target: Region.isRegionCompatible(config.target)
-        ? {
-            x: config.target.left,
-            y: config.target.top,
-            width: config.target.width,
-            height: config.target.height,
-          }
-        : config.target,
-      isFully: config.fully,
-      hideScrollbars: false, // because otherwise DOM will not be aligned with image // this._configuration.getHideScrollbars(),
+      hideScrollbars: false,
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
       overlap: this._configuration.getStitchOverlap(),
