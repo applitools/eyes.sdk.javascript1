@@ -51,9 +51,6 @@ function EyesSDK({name, version, spec, VisualGridClient}) {
       newCheckSettings(...args) {
         return new SDKCheckSettings(...args)
       },
-      newTextRegionSettings(...args) {
-        return SDKTextRegionSettings.from(...args)
-      },
     },
   })
 
