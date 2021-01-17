@@ -29,6 +29,8 @@ const DeviceNames = Enum('DeviceName', {
   Galaxy_S10: 'Galaxy S10',
   /** @type {'Galaxy S10 Plus'} */
   Galaxy_S10_Plus: 'Galaxy S10 Plus',
+  /** @type {'Galaxy S20'} */
+  Galaxy_S20: 'Galaxy S20',
   /** @type {'Galaxy S3'} */
   Galaxy_S3: 'Galaxy S3',
   /** @type {'Galaxy S5'} */
