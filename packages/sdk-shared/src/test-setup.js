@@ -150,25 +150,6 @@ const DEVICES = {
 }
 
 const BROWSERS = {
-  'ff': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      w3c: {
-        'browserName': 'firefox',
-        'platformName': 'Windows 10',
-        'browserVersion': '72.0',
-      },
-      legacy: {
-        'browserName': 'firefox',
-        'platform': 'Windows 10',
-        'version': '62.0',
-      },
-    },
-    options: {
-      ...SAUCE_CREDENTIALS,
-    },
-  },
   'edge-18': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -244,6 +225,21 @@ const BROWSERS = {
     options: {
       name: 'Safari 12',
       seleniumVersion: '3.4.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'firefox-48': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      legacy: {
+        browserName: 'firefox',
+        platform: 'Windows 10',
+        version: '48.0',
+      },
+    },
+    options: {
+      name: 'Firefox 48',
       ...SAUCE_CREDENTIALS,
     },
   },
