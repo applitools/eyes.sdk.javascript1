@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- handle firefox buggy versions
 - fix bug when dom-capture was taken with incorrect scroll location during `extractText` operation
 - avoid js snippet execution in native context
 

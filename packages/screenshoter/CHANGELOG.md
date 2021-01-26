@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- handle firefox buggy versions
 - `crop`, `scale` and `rotate` now should be placed in `stabilization` object
 - rename `context` to `frames`
 - rename `isFully` to `fully`

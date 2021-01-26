@@ -10,7 +10,12 @@ function makeTakeScreenshot(options) {
     return makeTakeNativeScreenshot(options)
   } else if (driver.userAgent) {
     if (driver.userAgent.browser === 'Firefox') {
-      // TODO
+      try {
+        const browserVersion = Number.parseInt(driver.userAgent.browserMajorVersion, 10)
+        if (browserVersion >= 48 && browserVersion <= 72) {
+          return makeTakeMainContextScreenshot(options)
+        }
+      } catch (ignored) {}
     } else if (driver.userAgent.browser === 'Safari') {
       if (driver.userAgent.os === 'iOS' || driver.isIOS) {
         return makeTakeMarkedScreenshot(options)
@@ -27,6 +32,46 @@ function makeTakeDefaultScreenshot({logger, driver, stabilization = {}, debug = 
   return async function takeScreenshot({name} = {}) {
     logger.verbose('Taking screenshot...')
     const image = makeImage(await driver.takeScreenshot())
+    await saveScreenshot(image, {path: debug.path, name, suffix: 'original', logger})
+
+    if (stabilization.rotate) {
+      await image.rotate(stabilization.rotate)
+      await saveScreenshot(image, {path: debug.path, name, suffix: 'rotated', logger})
+    }
+
+    if (stabilization.crop) {
+      await image.crop(stabilization.crop)
+      await saveScreenshot(image, {path: debug.path, name, suffix: 'cropped', logger})
+    }
+
+    if (stabilization.scale) {
+      await image.scale(stabilization.scale)
+    } else {
+      if (!calculateScaleRatio) {
+        const viewportSize = await driver.getViewportSize()
+        const documentSize = await driver.mainContext.getDocumentSize()
+        calculateScaleRatio = makeCalculateScaleRatio({
+          viewportWidth: viewportSize.width,
+          documentWidth: documentSize.width,
+          pixelRatio: await driver.getPixelRatio(),
+        })
+      }
+      await image.scale(calculateScaleRatio(image.width))
+    }
+    await saveScreenshot(image, {path: debug.path, name, suffix: 'scaled', logger})
+
+    return image
+  }
+}
+
+function makeTakeMainContextScreenshot({logger, driver, stabilization = {}, debug = {}}) {
+  let calculateScaleRatio
+  return async function takeScreenshot({name} = {}) {
+    logger.verbose('Taking screenshot...')
+    const originalContext = driver.currentContext
+    await driver.mainContext.focus()
+    const image = makeImage(await driver.takeScreenshot())
+    await originalContext.focus()
     await saveScreenshot(image, {path: debug.path, name, suffix: 'original', logger})
 
     if (stabilization.rotate) {

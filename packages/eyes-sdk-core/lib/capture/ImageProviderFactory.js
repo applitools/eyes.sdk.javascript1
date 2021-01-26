@@ -20,7 +20,8 @@ class ImageProviderFactory {
     if (driver.userAgent) {
       if (driver.userAgent.getBrowser() === BrowserNames.Firefox) {
         try {
-          if (Number.parseInt(driver.userAgent.getBrowserMajorVersion(), 10) >= 48) {
+          const browserVersion = Number.parseInt(driver.userAgent.getBrowserMajorVersion(), 10)
+          if (browserVersion >= 48 && browserVersion <= 72) {
             return new FirefoxScreenshotImageProvider(logger, driver, rotation, eyes)
           }
         } catch (ignored) {
@@ -34,8 +35,9 @@ class ImageProviderFactory {
         }
       }
     }
-    if (driver.isNative)
+    if (driver.isNative) {
       return new MobileApplicationScreenshotImageProvider(logger, driver, rotation)
+    }
     return new TakesScreenshotImageProvider(logger, driver, rotation)
   }
 }
