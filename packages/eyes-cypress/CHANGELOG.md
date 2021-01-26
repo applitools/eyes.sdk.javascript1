@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix documentation about setup of Applitools configuration
 
 ## 3.18.6 - 2021/1/24
 
