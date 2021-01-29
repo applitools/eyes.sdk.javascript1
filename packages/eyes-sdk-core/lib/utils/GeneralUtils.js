@@ -60,7 +60,7 @@ function isAbsoluteUrl(url) {
  * @param {string} url
  * @return {string} - URL with unique query parameter
  */
-function uniqueUrl(url, query) {
+function generateUniqueUrl(url, query) {
   const uniqueId = guid()
   const uniqueUrl = new URL(url)
   if (!url.includes(query)) uniqueUrl.searchParams.append(query, uniqueId)
@@ -520,5 +520,5 @@ module.exports = {
   cachify,
   getBreakpointWidth,
   deprecationWarning,
-  uniqueUrl,
+  generateUniqueUrl,
 }

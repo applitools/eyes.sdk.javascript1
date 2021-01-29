@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-protractor",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "Applitools Eyes SDK for Protractor",
   "keywords": [
     "eyes-protractor",
@@ -36,13 +36,13 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.12.2",
-    "@applitools/visual-grid-client": "15.5.5"
+    "@applitools/eyes-sdk-core": "12.14.2",
+    "@applitools/visual-grid-client": "15.5.14"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "2.3.3",
+    "@applitools/sdk-coverage-tests": "2.3.5",
     "@applitools/sdk-fake-eyes-server": "2.1.1",
-    "@applitools/sdk-release-kit": "0.11.1",
+    "@applitools/sdk-release-kit": "0.12.1",
     "@applitools/sdk-shared": "0.8.5",
     "assert-rejects": "^1.0.0",
     "axios": "^0.21.1",

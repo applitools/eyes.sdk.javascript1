@@ -4,6 +4,19 @@
 ## Unreleased
 
 - handle firefox buggy versions
+
+## 3.0.3 - 2021/1/27
+
+- no changes
+- updated to @applitools/utils@1.0.1 (from 1.0.0)
+- updated to @applitools/utils@1.0.1 (from 1.0.0)
+## 3.0.2 - 2021/1/27
+
+- no changes
+## 3.0.1 - 2021/1/27
+- no changes
+## 3.0.0 - 2021/1/26
+
 - `crop`, `scale` and `rotate` now should be placed in `stabilization` object
 - rename `context` to `frames`
 - rename `isFully` to `fully`

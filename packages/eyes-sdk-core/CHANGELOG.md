@@ -3,8 +3,18 @@
 ## Unreleased
 
 - handle firefox buggy versions
+
+## 12.14.2 - 2021/1/27
+
+- fix: rename function to avoid naming collision
+
+## 12.14.1 - 2021/1/27
+
 - fix bug when dom-capture was taken with incorrect scroll location during `extractText` operation
 - avoid js snippet execution in native context
+- updated to @applitools/driver@1.0.4 (from 1.0.2)
+- updated to @applitools/screenshoter@3.0.3 (from 2.1.1)
+- updated to @applitools/snippets@2.1.1 (from 2.1.0)
 
 ## 12.14.0 - 2021/1/24
 

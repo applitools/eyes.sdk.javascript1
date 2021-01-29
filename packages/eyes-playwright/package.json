@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-playwright",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Applitools Eyes SDK for Playwright",
   "keywords": [
     "eyes-playwright",
@@ -32,17 +32,17 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.10.0",
-    "@applitools/visual-grid-client": "15.4.0"
+    "@applitools/eyes-sdk-core": "12.14.2",
+    "@applitools/visual-grid-client": "15.5.14"
   },
   "peerDependencies": {
     "playwright": ">=1.0.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "2.1.5",
+    "@applitools/sdk-coverage-tests": "2.3.5",
     "@applitools/sdk-fake-eyes-server": "2.1.1",
-    "@applitools/sdk-release-kit": "0.10.6",
-    "@applitools/sdk-shared": "0.5.19",
+    "@applitools/sdk-release-kit": "0.12.1",
+    "@applitools/sdk-shared": "0.8.5",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",

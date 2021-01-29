@@ -39,15 +39,22 @@ jobs:
 
           echo "::group::publish ${{github.event.inputs.name}}"
           cd "packages/${{github.event.inputs.name}}"
+          git status
           yarn
+          git status
           yarn deps
+          git status
           yarn list
+          git status
           yarn prepublish:setup
+          git status
           yarn publish "--${{github.event.inputs.version}}" --access public
+          git status
           echo "::endgroup::"
 
           echo "::group::update master from $BRANCH"
           git checkout master
+          git status
           git pull origin master --rebase
           git merge $BRANCH
           git push origin master

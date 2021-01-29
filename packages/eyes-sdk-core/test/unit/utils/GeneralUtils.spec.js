@@ -70,9 +70,9 @@ describe('GeneralUtils', () => {
     })
   })
 
-  describe('uniqueUrl()', () => {
+  describe('generateUniqueUrl()', () => {
     it('generates a url with a query parameter that has a unique value', () => {
-      const uniqueUrl = GeneralUtils.uniqueUrl('https://google.com', 'some_query')
+      const uniqueUrl = GeneralUtils.generateUniqueUrl('https://google.com', 'some_query')
       const parsedUrl = new URL(uniqueUrl)
       const guid = parsedUrl.searchParams.get('some_query')
       expect(guid).to.be.a.guid()
@@ -80,7 +80,7 @@ describe('GeneralUtils', () => {
 
     it('adds a unique guid to urls with existing query parameters', () => {
       const url = 'https://google.com/?some_query=some_value'
-      const uniqueUrl = GeneralUtils.uniqueUrl(url, 'some_search')
+      const uniqueUrl = GeneralUtils.generateUniqueUrl(url, 'some_search')
       const parsedUrl = new URL(uniqueUrl)
       const guid = parsedUrl.searchParams.get('some_search')
       expect(guid).to.be.a.guid()
@@ -88,7 +88,7 @@ describe('GeneralUtils', () => {
 
     it('does not generate a unique value if provided query parameter already exists', () => {
       const url = 'https://google.com/?some_query=some_value'
-      const uniqueUrl = GeneralUtils.uniqueUrl(url, 'some_query')
+      const uniqueUrl = GeneralUtils.generateUniqueUrl(url, 'some_query')
       expect(uniqueUrl).to.deep.equal(url)
     })
   })

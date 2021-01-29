@@ -72,7 +72,7 @@ Add this file to your project with either:
 
 In order to authenticate via the Applitools server, you need to supply the Eyes-Cypress SDK with the API key you got from Applitools. Read more about how to obtain the API key [here](https://applitools.com/docs/topics/overview/obtain-api-key.html).
 
-To do this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
+To do so, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
 For example, on Linux/Mac:
 
 ```bash
@@ -92,11 +92,28 @@ It's also possible to specify the API key in the `applitools.config.js` file. Th
 ```js
 module.exports = {
   apiKey: 'YOUR_API_KEY',
-  ...
+  // ...
 }
 ```
 
 See the [Advanced configuration](#method-3-the-applitoolsconfigjs-file) section below for more information on using the config file.
+
+### Eyes server URL (optional)
+
+In case the Eyes server is deployed at a location different than https://eyes.applitools.com, then it should be configured similarly to the Applitools API key above. To obtain the server url of your Applitools Eyes dashboard just copy the origin of its url (for example https://MY_COMPANYY.applitools.com).
+
+```bash
+export APPLITOOLS_SERVER_URL=<YOUR_SERVER_URL>
+```
+
+It's also possible to specify the server URL in the `applitools.config.js` file. The property name is `serverUrl`. For example:
+
+```js
+module.exports = {
+  serverUrl: 'YOUR_SERVER_URL',
+  // ...
+}
+```
 
 ## Usage
 

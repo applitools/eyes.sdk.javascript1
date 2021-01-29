@@ -1,6 +1,6 @@
 {
   "name": "@applitools/driver",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Applitools universal framework wrapper",
   "keywords": [
     "applitools",
@@ -28,11 +28,11 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/snippets": "2.1.0",
-    "@applitools/utils": "1.0.0"
+    "@applitools/snippets": "2.1.1",
+    "@applitools/utils": "1.0.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.10.6",
+    "@applitools/sdk-release-kit": "0.12.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",

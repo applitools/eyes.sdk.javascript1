@@ -1,6 +1,6 @@
 {
   "name": "@applitools/screenshoter",
-  "version": "2.1.1",
+  "version": "3.0.3",
   "description": "Applitools universal screenshoter for web and native applications",
   "keywords": [
     "applitools",
@@ -29,12 +29,12 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/utils": "1.0.0",
+    "@applitools/utils": "1.0.1",
     "png-async": "0.9.4"
   },
   "devDependencies": {
-    "@applitools/driver": "1.0.2",
-    "@applitools/sdk-release-kit": "0.10.9",
+    "@applitools/driver": "1.0.4",
+    "@applitools/sdk-release-kit": "0.12.1",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
