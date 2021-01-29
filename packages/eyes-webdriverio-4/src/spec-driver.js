@@ -139,7 +139,7 @@ async function takeScreenshot(driver) {
 }
 async function click(browser, element) {
   if (isSelector(element)) element = await findElement(browser, element)
-  browser.elementIdClick(extractElementId(element))
+  await browser.elementIdClick(extractElementId(element))
 }
 async function type(browser, element, keys) {
   if (isSelector(element)) browser.setValue(transformSelector(element), keys)
