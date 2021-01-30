@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 2.27.1 - 2021/1/29
+
 - chore: add husky
+- updated to @applitools/eyes-sdk-core@12.14.2 (from 12.10.0)
+- updated to @applitools/visual-grid-client@15.5.14 (from 15.4.0)
 
 ## 2.27.0 - 2020/12/18
 
