@@ -678,20 +678,13 @@ cy.eyesOpen({
   browser: {
     iosDeviceInfo: {
       deviceName: 'iPhone XR',
-      screenOrientation: 'landscape', // optional, default: 'portrait'
-      iosVersion: 'latest' // optional, default: undefined (i.e. the default is determined by the Ultrafast grid)
-    },
+      screenOrientation: 'landscape' // optional, default: 'portrait'
+    }
   }
 })
 ```
 
 The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
-
-Possible values for `iosVersion` are:
-
-- `'latest'` - the latest iOS version that's supported by the UFG
-- `'latest-1'` - one version prior to the latest version
-- `undefined` - the UFG's default
 
 ## Setting a timeout
 
