@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix documentation about iOS device configuration
 
 ## 3.18.7 - 2021/2/2
 
