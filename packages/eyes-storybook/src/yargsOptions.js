@@ -49,6 +49,13 @@ module.exports = {
     number: true,
   },
 
+  include: {
+    alias: ['include'],
+    description: 'A string that represents a story titel or a regex (starts and ends with /) to match stories title',
+    requiresArg: false,
+    string: true,
+  },
+
   // general
   exitcode: {
     alias: 'e',
@@ -56,4 +63,5 @@ module.exports = {
     requiresArg: false,
     boolean: true,
   },
+
 };
