@@ -51,7 +51,8 @@ module.exports = {
 
   include: {
     alias: ['include'],
-    description: 'A string that represents a story titel or a regex (starts and ends with /) to match stories title',
+    description:
+      'A string that represents a story titel or a regex (starts and ends with /) to match stories title',
     requiresArg: false,
     string: true,
   },
@@ -63,5 +64,4 @@ module.exports = {
     requiresArg: false,
     boolean: true,
   },
-
 };

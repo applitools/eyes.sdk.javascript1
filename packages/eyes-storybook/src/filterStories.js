@@ -16,14 +16,13 @@ function filterStory(story, config) {
     return localInclude;
   } else if (typeof config.include === 'function') {
     return config.include(story, story_title);
-  } else if(typeof config.include === 'string') {
-    if(config.include.startsWith("/") && config.include.endsWith("/")){
+  } else if (typeof config.include === 'string') {
+    if (config.include.startsWith('/') && config.include.endsWith('/')) {
       // create a regex and remove slashes from the start and end of the input
       let include_input = new RegExp(config.include.substring(1, config.include.length - 1));
       return include_input.test(story_title);
-    } else
-        return (config.include == story_title);
-  }else if (config.include !== undefined) {
+    } else return config.include == story_title;
+  } else if (config.include !== undefined) {
     return config.include;
   } else {
     return true;

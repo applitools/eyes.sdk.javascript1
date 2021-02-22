@@ -7,7 +7,7 @@ module.exports = {
   // storybookUrl: 'http://localhost:9001',
   // puppeteerOptions: {headless: false, devtools: true},
   // include: ({name}) => !/^\[SKIP\]/.test(name),
-  include: "Button: with text",
+  include: 'Button: with text',
   // include: ({name}) => name === 'story 1',
   variations: ({name}) => {
     if (/should also do RTL/.test(name)) {
