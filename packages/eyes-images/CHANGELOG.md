@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add `extractText` and `extractTextRegions` support
+- updated to @applitools/eyes-sdk-core@12.14.10 (from 12.13.5)
 
 ## 4.18.1 - 2021/1/24
 

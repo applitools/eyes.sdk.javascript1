@@ -2,24 +2,30 @@
 
 const fs = require('fs')
 const assert = require('assert')
-const {Eyes, ConsoleLogHandler, TestResultsStatus, GeneralUtils} = require('../../index')
+const {Eyes, ConsoleLogHandler, GeneralUtils} = require('../../index')
 
 let /** @type {Eyes} */ eyes
 describe('EyesImages.OCR', function() {
-  this.timeout(5 * 60 * 1000)
-
   before(function() {
     eyes = new Eyes()
-    eyes.setLogHandler(new ConsoleLogHandler(false))
+    // eyes.setLogHandler(new ConsoleLogHandler(true))
     // eyes.setProxy('http://localhost:8888');
   })
 
-  it('ShouldExtractText', async function() {
+  beforeEach(async function() {
     const testName = `${this.test.title}_${GeneralUtils.randomAlphanumeric()}`
+    await eyes.open(this.test.parent.title, testName)
+  })
+
+  afterEach(async function() {
+    await eyes.close(false)
+  })
+
+  it('ShouldExtractText', async function() {
     const image1 = `${__dirname}/../fixtures/image1.png`
     const image2 = fs.readFileSync(`${__dirname}/../fixtures/image2.png`)
+    const image3 = `${__dirname}/../fixtures/jssdks.png`
 
-    await eyes.open(this.test.parent.title, testName)
     const texts = await eyes.extractText([
       {image: image1, target: {left: 138, top: 0, width: 100, height: 40}},
       {image: image2, target: {left: 366, top: 0, width: 100, height: 40}, hint: 'features'},
@@ -28,31 +34,28 @@ describe('EyesImages.OCR', function() {
         target: {left: 455, top: 0, width: 100, height: 40},
         hint: '\\l+',
       },
+      {image: image3},
     ])
-    await eyes.close(false)
 
-    assert.strictEqual(texts.length, 3)
-    assert.strictEqual(texts[0], 'applitools')
-    assert.strictEqual(texts[1], 'FEATURES')
-    assert.strictEqual(texts[2], 'PRICING')
+    assert.deepStrictEqual(texts, ['applitools', 'FEATURES', 'PRICING', 'JS SDKS'])
   })
 
   it('ShouldExtractTextRegions', async function() {
-    const testName = `${this.test.title}_${GeneralUtils.randomAlphanumeric()}`
     const image1 = `${__dirname}/../fixtures/image1.png`
 
-    await eyes.open(this.test.parent.title, testName)
     const regions = await eyes.extractTextRegions({
       image: image1,
       patterns: ['applitools', 'customers'],
       ignoreCase: true,
     })
-    await eyes.close(false)
 
-    assert.strictEqual(regions['applitools'][0].text, "'Applitools transformed on")
-    assert.strictEqual(regions['applitools'][1].text, "'Applitools took us trom 30 hours")
-    assert.strictEqual(regions['applitools'][2].text, "they've been singing Applitools'")
-
-    assert.strictEqual(regions['customers'][0].text, 'CUSTOMERS')
+    assert.deepStrictEqual(regions, {
+      applitools: [
+        {x: 428, y: 574, width: 142, height: 12, text: "'Applitools transformed on"},
+        {x: 637, y: 574, width: 176, height: 11, text: "'Applitools took us trom 30 hours"},
+        {x: 188, y: 606, width: 168, height: 12, text: "they've been singing Applitools'"},
+      ],
+      customers: [{x: 560, y: 21, width: 63, height: 8, text: 'CUSTOMERS'}],
+    })
   })
 })
