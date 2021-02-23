@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- fix for the cli runner so it doesn't auto-populate the batch name when not specified ([Trello](https://trello.com/c/MGGJ3Rh8))
+- don't auto-populate the batch name when not specified ([Trello](https://trello.com/c/MGGJ3Rh8))
 
 ## 3.16.5 - 2021/1/31
 
