@@ -158,7 +158,6 @@ test('eyes.checkWindow accessibility', async t => {
   })
   await eyes.close(true)
 })
-// THIS
 test('eyes.checkWindow scriptHooks', async t => {
   await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
   await eyes.open({
@@ -246,8 +245,6 @@ test('eyes failTestcafeOnDiff true', async t => {
     assert(true) // we should reach this
   }
 })
-// THIS
-// eslint-disable-next-line
 test('should load applitools.config.js', async t => {
   const configPath = path.join(__dirname, 'applitools.config.js')
   const eyes = new Eyes({configPath})
@@ -261,7 +258,6 @@ test('should load applitools.config.js', async t => {
   const config = eyes.getConfiguration()
   assert.deepStrictEqual(config.getBrowsersInfo(), require(configPath).browser)
 })
-// THIS
 test('should load applitools.config.js w/o args object', async t => {
   const configPath = path.join(__dirname, 'applitools.config.js')
   const eyes = new Eyes({configPath})
