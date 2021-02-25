@@ -43,16 +43,16 @@
     "@applitools/snippets" "2.1.1"
     "@applitools/utils" "1.0.1"
 
-"@applitools/eyes-sdk-core@12.14.7":
-  version "12.14.7"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.7.tgz#ef6ab24949c7803784ab3e3cb577a054eb28c9c2"
-  integrity sha512-4H8xZt5X03U2UJtxFDe9Ncjji+gOfc3HNpBf4qRu8zhLWWYU+YH5D1Imldd5ChUA897sG5RTC7FuYj9xFb2OtA==
+"@applitools/eyes-sdk-core@12.14.10":
+  version "12.14.10"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.10.tgz#868823be87d860c0c2cb1179eac60c220710923b"
+  integrity sha512-sGoAEARb7jE42B5ifPWBIXOH09/l9qxoNu9MV8dR0h8GyHzu/Py74TvxR5/3o+FHehOSmxVTwR70LCrAAWB+rA==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.4.10"
+    "@applitools/dom-snapshot" "4.4.11"
     "@applitools/driver" "1.0.4"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/screenshoter" "3.0.3"
+    "@applitools/screenshoter" "3.0.5"
     "@applitools/snippets" "2.1.1"
     axios "0.21.1"
     chalk "3.0.0"
@@ -64,14 +64,16 @@
     stack-trace "0.0.10"
     tunnel "0.0.6"
 
-"@applitools/eyes-sdk-core@file:../eyes-sdk-core":
-  version "12.14.10"
+"@applitools/eyes-sdk-core@12.14.7":
+  version "12.14.7"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.7.tgz#ef6ab24949c7803784ab3e3cb577a054eb28c9c2"
+  integrity sha512-4H8xZt5X03U2UJtxFDe9Ncjji+gOfc3HNpBf4qRu8zhLWWYU+YH5D1Imldd5ChUA897sG5RTC7FuYj9xFb2OtA==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.4.11"
+    "@applitools/dom-snapshot" "4.4.10"
     "@applitools/driver" "1.0.4"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/screenshoter" "3.0.5"
+    "@applitools/screenshoter" "3.0.3"
     "@applitools/snippets" "2.1.1"
     axios "0.21.1"
     chalk "3.0.0"
