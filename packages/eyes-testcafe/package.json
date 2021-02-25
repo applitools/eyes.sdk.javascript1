@@ -52,7 +52,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "file:../eyes-sdk-core",
+    "@applitools/eyes-sdk-core": "12.14.10",
     "@applitools/visual-grid-client": "15.5.20",
     "rimraf": "3.0.2"
   },
