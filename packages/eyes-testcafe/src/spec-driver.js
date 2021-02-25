@@ -135,9 +135,6 @@ async function transformSelector({driver, selector}) {
   }
   return Selector(selector, {boundTestRun: driver})
 }
-async function setOuterWindowProperties(driver, {width, height} = {}) {
-  await executeScript(driver, `window.outerWidth = ${width}; window.outerHeight = ${height}`)
-}
 //
 // end helpers
 
