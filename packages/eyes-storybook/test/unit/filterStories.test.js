@@ -2,12 +2,20 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const filterStories = require('../../src/filterStories');
+const getStoryTitle = require('../../src/getStoryTitle');
 
 describe('filterStories', () => {
   it('filters by function in global config', () => {
     const stories = [{name: 'aaa', bla: 'kuku'}, {name: 'bbb'}];
-    const config = {include: ({name}) => name === 'aaa'};
-    expect(filterStories({stories, config})).to.eql([{name: 'aaa', bla: 'kuku'}]);
+    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
+
+    const config = {
+      include: ({name}) => {
+        return name === 'aaa';
+      },
+    };
+    const _res = filterStories({stories, config});
+    expect(filterStories({stories, config})).to.eql(stories.splice(0, 1));
   });
 
   it('filters by truthy value in global config', () => {
@@ -27,7 +35,9 @@ describe('filterStories', () => {
       {name: 'aaa', bla: 'kuku'},
       {name: 'bbb', parameters: {eyes: {include: false}}},
     ];
-    expect(filterStories({stories, config: {}})).to.eql([{name: 'aaa', bla: 'kuku'}]);
+    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
+
+    expect(filterStories({stories, config: {}})).to.eql(stories.splice(0, 1));
   });
 
   it('filters with precedence of local (true) over global (false)', () => {
@@ -55,8 +65,16 @@ describe('filterStories', () => {
   });
 
   it('filter by story title when using a function', () => {
-    const stories = [{name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {}}];
-    const config = {include: ({name: _name}, story_title) => story_title === 'bbb: aaa'};
+    const stories = [
+      {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {eyes: {variationUrlParam: 'var1'}}},
+    ];
+    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
+
+    const config = {
+      include: story => {
+        return story.storyTitle === 'bbb: aaa [var1]';
+      },
+    };
     expect(filterStories({stories, config})).to.eql(stories);
   });
 
@@ -71,7 +89,7 @@ describe('filterStories', () => {
       {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {}},
       {name: 'aaa', kind: 'ccc', bla: 'kuku', parameters: {}},
     ];
-    const config = {include: '/bbb: */'};
+    const config = {include: /bbb: */};
     expect(filterStories({stories, config})).to.eql(stories.splice(0, 1));
   });
 });

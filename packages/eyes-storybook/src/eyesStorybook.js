@@ -99,7 +99,6 @@ async function eyesStorybook({
     );
 
     const filteredStories = filterStories({stories, config});
-
     const storiesIncludingVariations = addVariationStories({stories: filteredStories, config});
 
     logger.log(`starting to run ${storiesIncludingVariations.length} stories`);

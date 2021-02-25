@@ -134,6 +134,7 @@ describe('eyesStorybook', () => {
 
     expect(results.map(e => e.title).sort()).to.eql(expectedTitles.sort());
     results = flatten(results.map(r => r.resultsOrErr));
+
     expect(results.some(x => x instanceof Error)).to.be.false;
     expect(results).to.have.length(expectedResults.length);
 
@@ -145,7 +146,9 @@ describe('eyesStorybook', () => {
       const session = await fetch(sessionUrl).then(r => r.json());
       const {scenarioIdOrName} = session.startInfo;
       const [componentName, state] = scenarioIdOrName.split(':').map(s => s.trim());
+
       expect(session.startInfo.defaultMatchSettings.ignoreDisplacements).to.be.true;
+
       expect(session.startInfo.properties).to.eql([
         {name: 'Component name', value: componentName},
         {name: 'State', value: state.replace(/ \[.+\]$/, '')}, // strip off variation
@@ -171,6 +174,7 @@ describe('eyesStorybook', () => {
           coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
+
       expect(imageMatchSettings.floating).to.eql(floating);
       expect(imageMatchSettings.accessibility).to.eql(accessibility);
     }

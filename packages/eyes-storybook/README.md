@@ -168,7 +168,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `tapFilePath`             | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the file is created with the name eyes.tap and contains the Eyes test results. |
 | `xmlFilePath`             | undefined                   | Directory path of a results file. If set, then a [XUnit XML](https://google.github.io/rich-test-results/xunitxml) file is created in this directory, the file is created with the name eyes.xml and contains the Eyes test results. |
 | `waitBeforeScreenshot`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeScreenshot.](#waitBeforeScreenshot)<br/>Note that we use Puppeteer's [page.waitFor()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagewaitforselectororfunctionortimeout-options-args), checkout it's API for more details. |
-| `include`                 | true                        | A predicate function or string specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind``` , ```parameters``` and ```story title``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, parameters}, storyTitle) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration and global config using string and regex - include](#include). |
+| `include`                 | true                        | A predicate function or string specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind``` , ```storyTitle``` and ```parameters``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, storyTitle, parameters}) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration - include](#include). <br/> See also [ examples for global configuration.](#global-include)  | 
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component configuration - variations](#variations).|
 | `notifyOnCompletion`      | false                       | If `true` batch completion notifications are sent. |
 | `dontCloseBatches`        | false                       | If true, batches are not closed for notifyOnCompletion.|
@@ -379,29 +379,6 @@ storiesOf('Some kind', module)
   )
 ```
 
-When  passing a story title (test name) as a  `string` in applitools.config.js file. For example:
-
-```js
-module.exports={
-.
-.
-include: "Button: with text",
-.
-.
-}
-```
-
-When passing a story title (test name) as a  `Regex` in applitools.config.js file. For example:
-
-```js
-module.exports={
-.
-.
-include: "/Button: */",
-.
-.
-}
-```
 
 ### `variations`
 
@@ -726,6 +703,35 @@ An object with the following properties:
             layoutBreakpoints: [500, 1200]
           }
         })
+```
+
+## Global configuration examples
+
+<h2 id="global-include" style="font-size: 20px;font-family: Garamond, serif" >include</h2>
+
+
+When  passing a storyTitle (test name) as a  `string` in applitools.config.js file. For example:
+
+```js
+module.exports={
+.
+.
+include: "Button: with text",
+.
+.
+}
+```
+
+When passing a storyTitle (test name) as a  `Regex` in applitools.config.js file. For example:
+
+```js
+module.exports={
+.
+.
+include: /Button: */,
+.
+.
+}
 ```
 
 ## Running Eyes-Storybook in Docker
