@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix bug that prevented window resizing from working reliably ([Trello](https://trello.com/c/xNCZNfPi))
 
 ## 1.12.5 - 2021/2/2
 
