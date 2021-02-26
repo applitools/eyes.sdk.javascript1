@@ -332,6 +332,8 @@ async function getWindowRect(driver) {
   const initialViewportSize = await executeScript(
     driver,
     `return {
+      x: window.screenX,
+      y: window.screenY,
       width: window.innerWidth,
       height: window.innerHeight
     }`,
@@ -349,6 +351,8 @@ async function getWindowRect(driver) {
     height: initialViewportSize.height - anchorViewportSize.height,
   }
   const windowRect = {
+    x: initialViewportSize.x,
+    y: initialViewportSize.y,
     width: anchorViewportSize.width + diff.width,
     height: anchorViewportSize.height + diff.height,
   }

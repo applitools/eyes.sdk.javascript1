@@ -271,11 +271,13 @@ test('getElementRect (DOM Node snapshot)', async driver => {
 })
 test('getWindowRect', async driver => {
   const rect = await spec.getWindowRect(driver)
+  assert.ok(Number.isInteger(rect.x))
+  assert.ok(Number.isInteger(rect.y))
   assert.ok(Number.isInteger(rect.width))
   assert.ok(Number.isInteger(rect.height))
 })
 test('setWindowRect (width, height)', async driver => {
-  const expectedRect = {width: 500, height: 500}
+  const expectedRect = {x: 0, y: 0, width: 500, height: 500}
   await spec.setWindowRect(driver, expectedRect)
   const actualRect = await spec.getWindowRect(driver)
   assert.deepStrictEqual(actualRect, expectedRect)
