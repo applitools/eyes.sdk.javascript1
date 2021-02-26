@@ -330,10 +330,11 @@ async function waitUntilDisplayed(_driver, element, timeout) {
 // - set the window size to a known value
 // - get the viewport size again
 // - find the difference between them
-// - resize the window back by (using the anchor viewport size + the diff)
+// - resize the window back by (using the initial viewport size + the diff)
 //
-// - TODO: add verification at the end, and potential compensation/retry for
-//         legacy browsers (this will nullify assumption #3)
+// TODO:
+// - add verification at the end (confirms assumption #2)
+// - add compensation/retry for legacy browsers (nullifies assumption #3)
 async function getWindowRect(driver) {
   const anchorWindowSize = {width: 600, height: 600}
   const initialViewportSize = await executeScript(
