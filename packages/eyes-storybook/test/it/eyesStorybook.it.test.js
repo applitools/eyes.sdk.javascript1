@@ -143,7 +143,6 @@ describe('eyesStorybook', () => {
       )}/${encodeURIComponent(testResults.getId())}`;
 
       const session = await fetch(sessionUrl).then(r => r.json());
-      expect(session.startInfo.parentBranchBaselineSavedBefore).to.not.be.undefined;
       const {scenarioIdOrName} = session.startInfo;
       const [componentName, state] = scenarioIdOrName.split(':').map(s => s.trim());
       expect(session.startInfo.defaultMatchSettings.ignoreDisplacements).to.be.true;
