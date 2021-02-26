@@ -315,11 +315,15 @@ async function waitUntilDisplayed(_driver, element, timeout) {
 // running in Github Actions.
 //
 // As a result, we opt for a less efficient implementation in getWindowRect
-// but it is based on one fact which seems to hold true -- window.innerHeight
-// and window.innerWidth are a trustworthy source of truth. From this starting
-// point we're able to construct an understanding of the browser window and
-// calculate the window size - removing the dependency on window.outerHeight
-// and window.outerWidth.
+// but it is based on the following assumptions:
+//   1. window.innerHeight and window.innerWidth are a reliable source of truth
+//   2. setWindowRect(w, h) sets the window correctly to the provided w and h
+//   3. the diff between the window and the viewport doesn't change when
+//      changing the window size
+//
+// From this starting point we're able to construct an understanding of the
+// browser window and calculate the window size - removing the dependency on
+// window.outerHeight and window.outerWidth.
 //
 // So the order goes:
 // - get the current viewport size
@@ -327,8 +331,11 @@ async function waitUntilDisplayed(_driver, element, timeout) {
 // - get the viewport size again
 // - find the difference between them
 // - resize the window back by (using the anchor viewport size + the diff)
+//
 // - TODO: add verification at the end, and potential compensation/retry for legacy browsers
+//         (this will nullify assumption #3)
 async function getWindowRect(driver) {
+  const anchorWindowSize = {width: 600, height: 600}
   const initialViewportSize = await executeScript(
     driver,
     `return {
@@ -338,7 +345,7 @@ async function getWindowRect(driver) {
       height: window.innerHeight
     }`,
   )
-  await setWindowRect(driver, {width: 600, height: 600})
+  await setWindowRect(driver, anchorWindowSize)
   const anchorViewportSize = await executeScript(
     driver,
     `return {
@@ -347,14 +354,14 @@ async function getWindowRect(driver) {
     }`,
   )
   const diff = {
-    width: initialViewportSize.width - anchorViewportSize.width,
-    height: initialViewportSize.height - anchorViewportSize.height,
+    width: anchorWindowSize.width - anchorViewportSize.width,
+    height: anchorWindowSize.height - anchorViewportSize.height,
   }
   const windowRect = {
     x: initialViewportSize.x,
     y: initialViewportSize.y,
-    width: anchorViewportSize.width + diff.width,
-    height: anchorViewportSize.height + diff.height,
+    width: initialViewportSize.width + diff.width,
+    height: initialViewportSize.height + diff.height,
   }
   await setWindowRect(driver, windowRect)
   return windowRect
