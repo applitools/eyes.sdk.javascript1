@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support `ignoreGitMergeBase`
 
 ## 15.5.22 - 2021/2/18
 

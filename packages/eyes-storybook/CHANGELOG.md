@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support `ignoreGitMergeBase`
 
 ## 3.17.1 - 2021/2/24
 
