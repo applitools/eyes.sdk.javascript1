@@ -305,69 +305,7 @@ async function type(driver, element, keys) {
 async function waitUntilDisplayed(_driver, element, timeout) {
   await element.with({visibilityCheck: true, timeout})
 }
-// NOTE:
-// TestCafe doesn't offer a way to get the window size and relying on
-// window.outerWidth & window.outerHeight is not reliable since these
-// values don't get updated when resizing the window, and there are cases
-// where it's not populated (e.g., headless Chrome on Mac). And using a
-// third-party library like testcafe-browser-tools isn't sufficient either
-// since the native binary for linux runs into issues out-of-the-box when
-// running in Github Actions.
-//
-// As a result, we opt for a less efficient implementation in getWindowRect
-// but it is based on the following assumptions:
-//   1. window.innerHeight and window.innerWidth are a reliable source of truth
-//   2. setWindowRect(w, h) sets the window correctly to the provided w and h
-//   3. the diff between the window and the viewport doesn't change when
-//      changing the window size
-//
-// From this starting point we're able to construct an understanding of the
-// browser window and calculate the window size - removing the dependency on
-// window.outerHeight and window.outerWidth.
-//
-// So the order goes:
-// - get the current viewport size
-// - set the window size to a known value
-// - get the viewport size again
-// - find the difference between them
-// - resize the window back by (using the initial viewport size + the diff)
-//
-// TODO:
-// - add verification at the end (confirms assumption #2)
-// - add compensation/retry for legacy browsers (nullifies assumption #3)
-async function getWindowRect(driver) {
-  const anchorWindowSize = {width: 600, height: 600}
-  const initialViewportSize = await executeScript(
-    driver,
-    `return {
-      x: window.screenX,
-      y: window.screenY,
-      width: window.innerWidth,
-      height: window.innerHeight
-    }`,
-  )
-  await setWindowRect(driver, anchorWindowSize)
-  const anchorViewportSize = await executeScript(
-    driver,
-    `return {
-      width: window.innerWidth,
-      height: window.innerHeight
-    }`,
-  )
-  const diff = {
-    width: anchorWindowSize.width - anchorViewportSize.width,
-    height: anchorWindowSize.height - anchorViewportSize.height,
-  }
-  const windowRect = {
-    x: initialViewportSize.x,
-    y: initialViewportSize.y,
-    width: initialViewportSize.width + diff.width,
-    height: initialViewportSize.height + diff.height,
-  }
-  await setWindowRect(driver, windowRect)
-  return windowRect
-}
-async function setWindowRect(driver, {width, height} = {}) {
+async function setViewportSize(driver, {width, height}) {
   await driver.resizeWindow(width, height)
 }
 async function getDriverInfo(_driver) {
@@ -396,8 +334,7 @@ exports.takeScreenshot = takeScreenshot
 exports.click = click
 exports.type = type
 exports.waitUntilDisplayed = waitUntilDisplayed
-exports.getWindowRect = getWindowRect
-exports.setWindowRect = setWindowRect
+exports.setViewportSize = setViewportSize
 exports.hover = hover
 // no-op for coverage-tests
 exports.build = () => {

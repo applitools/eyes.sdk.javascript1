@@ -269,19 +269,14 @@ test('getElementRect (DOM Node snapshot)', async driver => {
   assert.ok(Number.isInteger(Math.floor(rect.width)))
   assert.ok(Number.isInteger(Math.floor(rect.height)))
 })
-test('getWindowRect', async driver => {
-  const rect = await spec.getWindowRect(driver)
-  assert.ok(Number.isInteger(rect.x))
-  assert.ok(Number.isInteger(rect.y))
-  assert.ok(Number.isInteger(rect.width))
-  assert.ok(Number.isInteger(rect.height))
-})
-test('setWindowRect (width, height)', async driver => {
-  const expectedRect = {x: 0, y: 0, width: 500, height: 500}
-  await spec.setWindowRect(driver, expectedRect)
-  const actualRect = await spec.getWindowRect(driver)
-  assert.deepStrictEqual(actualRect.width, expectedRect.width)
-  assert.deepStrictEqual(actualRect.height, expectedRect.height)
+test('setViewportSize (width, height)', async driver => {
+  const expectedRect = {width: 500, height: 500}
+  await spec.setViewportSize(driver, expectedRect)
+  const actualRect = await driver.eval(() => ({
+    width: window.innerWidth, // eslint-disable-line no-undef
+    height: window.innerHeight, // eslint-disable-line no-undef
+  }))
+  assert.deepStrictEqual(actualRect, expectedRect)
 })
 test('Eyes integration', async driver => {
   const eyes = new Eyes()
