@@ -2,20 +2,12 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const filterStories = require('../../src/filterStories');
-const getStoryTitle = require('../../src/getStoryTitle');
 
 describe('filterStories', () => {
   it('filters by function in global config', () => {
     const stories = [{name: 'aaa', bla: 'kuku'}, {name: 'bbb'}];
-    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
-
-    const config = {
-      include: ({name}) => {
-        return name === 'aaa';
-      },
-    };
-    const _res = filterStories({stories, config});
-    expect(filterStories({stories, config})).to.eql(stories.splice(0, 1));
+    const config = {include: ({name}) => name === 'aaa'};
+    expect(filterStories({stories, config})).to.eql([{name: 'aaa', bla: 'kuku'}]);
   });
 
   it('filters by truthy value in global config', () => {
@@ -35,9 +27,7 @@ describe('filterStories', () => {
       {name: 'aaa', bla: 'kuku'},
       {name: 'bbb', parameters: {eyes: {include: false}}},
     ];
-    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
-
-    expect(filterStories({stories, config: {}})).to.eql(stories.splice(0, 1));
+    expect(filterStories({stories, config: {}})).to.eql([{name: 'aaa', bla: 'kuku'}]);
   });
 
   it('filters with precedence of local (true) over global (false)', () => {
@@ -68,8 +58,6 @@ describe('filterStories', () => {
     const stories = [
       {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {eyes: {variationUrlParam: 'var1'}}},
     ];
-    stories.forEach(story => (story['storyTitle'] = getStoryTitle(story)));
-
     const config = {
       include: story => {
         return story.storyTitle === 'bbb: aaa [var1]';
@@ -90,6 +78,6 @@ describe('filterStories', () => {
       {name: 'aaa', kind: 'ccc', bla: 'kuku', parameters: {}},
     ];
     const config = {include: /bbb: */};
-    expect(filterStories({stories, config})).to.eql(stories.splice(0, 1));
+    expect(filterStories({stories, config})).to.eql(stories.slice(0, 1));
   });
 });

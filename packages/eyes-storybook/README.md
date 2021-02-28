@@ -365,21 +365,6 @@ module.exports = {
   ...
 }
 ```
-> NOTE you can use regular expressions or any other method you'd like, as long as you return a `boolean` from this function
-
-#### component
-
-When `false`, the component will not be visually tested. For example:
-
-```js
-// This story will not be tested visually
-storiesOf('Some kind', module)
-  .add(
-    'Some story',
-    () => <div>I am visually perfect!</div>,
-    {eyes: {include: false}}
-  )
-```
 
 When  passing a `storyTitle` as a  `string` only this story will be tested. For example:
 
@@ -399,6 +384,21 @@ module.exports={
 include: /Button: */,
 ...
 }
+```
+> NOTE you can use regular expressions or any other method you'd like, as long as you return a `boolean` from this function
+
+#### component
+
+When `false`, the component will not be visually tested. For example:
+
+```js
+// This story will not be tested visually
+storiesOf('Some kind', module)
+  .add(
+    'Some story',
+    () => <div>I am visually perfect!</div>,
+    {eyes: {include: false}}
+  )
 ```
 
 ### `variations`

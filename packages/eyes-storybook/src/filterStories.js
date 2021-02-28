@@ -7,7 +7,6 @@ function filterStories({stories, config}) {
 
 function filterStory(story, config) {
   const storyTitle = getStoryTitle(story);
-  story['storyTitle'] = storyTitle;
   const localInclude =
     story.parameters && story.parameters.eyes && story.parameters.eyes.hasOwnProperty('include')
       ? story.parameters.eyes.include
@@ -16,7 +15,8 @@ function filterStory(story, config) {
   if (localInclude !== undefined) {
     return localInclude;
   } else if (typeof config.include === 'function') {
-    return config.include(story);
+    debugger;
+    return config.include({...story, storyTitle});
   } else if (typeof config.include === 'string') {
     return config.include == storyTitle;
   } else if (Object.prototype.toString.call(config.include) === '[object RegExp]') {

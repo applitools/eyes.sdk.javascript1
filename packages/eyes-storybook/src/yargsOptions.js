@@ -54,14 +54,12 @@ module.exports = {
       'A string that represents a story title or a regex (starts and ends with /) to match stories title',
     requiresArg: false,
     string: true,
-    coerce:
-      ('include',
-      function(arg) {
-        if (arg.startsWith('/') && arg.endsWith('/')) {
-          // create a regex and remove slashes from the start and end of the input
-          return new RegExp(arg.substring(1, arg.length - 1));
-        } else return arg;
-      }),
+    coerce: function(arg) {
+      if (arg.startsWith('/') && arg.endsWith('/')) {
+        // create a regex and remove slashes from the start and end of the input
+        return new RegExp(arg.substring(1, arg.length - 1));
+      } else return arg;
+    },
   },
 
   // general
