@@ -25,11 +25,11 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
 
   const testLink = diffs.length ? `\n${indent()}See details at: ${diffs[0].getUrl()}` : '';
   return (
-    'Eyes-Cypress detected diffs or errors during execution of visual tests:' +
+    colorify('Eyes-Cypress detected diffs or errors during execution of visual tests:', 'reset') +
     testResultsToString(passed, 'Passed') +
     testResultsToString(diffs, 'Unresolved') +
     testResultsToString(failed, 'Failed') +
-    `${testLink}`
+    colorify(testLink, 'reset')
   );
 
   function testResultsToString(testResultsArr, category) {
