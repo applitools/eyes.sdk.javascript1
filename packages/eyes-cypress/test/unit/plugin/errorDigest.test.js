@@ -30,7 +30,7 @@ describe('errorDigest', () => {
       new TestResults({
         name: 'test1',
         hostDisplaySize: {width: 100, height: 200},
-        url: 'url1',
+        url: 'https://eyes.applitools.com/app/batches/1/2?accountId=UAujt6tHnEKUivQXIz7G6A~~',
         status: 'Unresolved',
       }),
       new TestResults({
@@ -65,7 +65,7 @@ describe('errorDigest', () => {
     const expectedOutput = `Eyes-Cypress detected diffs or errors during execution of visual tests:
        ${chalk.green('Passed - 1 tests')}
          ${chalk.green('\u2713')} ${chalk.reset('test3 [1x2]')}
-       ${chalk.yellow('Diffs detected - 2 tests')}
+       ${chalk.ansi256(214)('Diffs detected - 2 tests')}
          ${chalk.yellow('\u26A0')} ${chalk.reset('test1 [100x200]')}
          ${chalk.yellow('\u26A0')} ${chalk.reset('test2 [300x400]')}
        ${chalk.red('Errors - 3 tests')}
@@ -73,7 +73,7 @@ describe('errorDigest', () => {
          ${chalk.red('\u2716')} ${chalk.reset('test0 [6x7] : Error: bloo')}
          ${chalk.red('\u2716')} ${chalk.reset('[Eyes test not started] : Error: kuku')}
 
-       See details at: url1`;
+       See details at: https://eyes.applitools.com/app/batches/1/2?accountId=UAujt6tHnEKUivQXIz7G6A~~`;
 
     // console.log(_wrap(output)); // debugging
     expect(output).to.deep.equal(expectedOutput);

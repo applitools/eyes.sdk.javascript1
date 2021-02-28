@@ -14,6 +14,7 @@ const formatByStatus = {
   },
   Unresolved: {
     color: 'yellow',
+    chalkFunction: chalk.ansi256(214),
     symbol: '\u26A0',
     title: tests => `Diffs detected - ${tests} tests`,
   },
@@ -23,17 +24,19 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: diff errors', diffs);
   logger.log('errorDigest: test errors', failed);
 
-  const testLink = diffs.length ? `\n${indent()}See details at: ${diffs[0].getUrl()}` : '';
+  const testResultsUrl = diffs.length ? diffs[0].getUrl() : '';
+  const testResultsPrefix = testResultsUrl ? `\n${indent()}See details at: ` : '';
   return (
     colorify('Eyes-Cypress detected diffs or errors during execution of visual tests:', 'reset') +
     testResultsToString(passed, 'Passed') +
     testResultsToString(diffs, 'Unresolved') +
     testResultsToString(failed, 'Failed') +
-    colorify(testLink, 'reset')
+    colorify(testResultsPrefix, 'reset') +
+    colorify(testResultsUrl, 'reset', chalk.ansi256(86))
   );
 
   function testResultsToString(testResultsArr, category) {
-    const {color, title, symbol} = formatByStatus[category];
+    const {color, title, symbol, chalkFunction} = formatByStatus[category];
     const results = testResultsArr.reduce((acc, testResults) => {
       if (!testResults.isEmpty) {
         const error = hasError(testResults) ? stringifyError(testResults) : undefined;
@@ -47,12 +50,14 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
       return acc;
     }, []);
 
-    const coloredTitle = results.length ? colorify(title(results.length), color) : '';
+    const coloredTitle = results.length
+      ? colorify(title(results.length), color, chalkFunction)
+      : '';
     return testResultsSection(coloredTitle, results);
   }
 
-  function colorify(msg, color) {
-    return isInteractive ? msg : chalk[color](msg);
+  function colorify(msg, color, chalkFunction = chalk[color]) {
+    return isInteractive ? msg : chalkFunction(msg);
   }
 }
 
