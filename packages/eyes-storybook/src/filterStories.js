@@ -15,7 +15,6 @@ function filterStory(story, config) {
   if (localInclude !== undefined) {
     return localInclude;
   } else if (typeof config.include === 'function') {
-    debugger;
     return config.include({...story, storyTitle});
   } else if (typeof config.include === 'string') {
     return config.include == storyTitle;
