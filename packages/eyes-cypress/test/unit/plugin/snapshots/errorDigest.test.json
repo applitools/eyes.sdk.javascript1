@@ -1,0 +1,35 @@
+{
+  "works": [
+    "\u001b[0mEyes-Cypress detected diffs or errors during execution of visual tests:\u001b[0m",
+    "       \u001b[32mPassed - 1 tests\u001b[39m",
+    "         \u001b[32m✓\u001b[39m \u001b[0mtest3 [1x2]\u001b[0m",
+    "       \u001b[38;2;255;153;0mDiffs detected - 2 tests\u001b[39m",
+    "         \u001b[33m⚠\u001b[39m \u001b[0mtest1 [100x200]\u001b[0m",
+    "         \u001b[33m⚠\u001b[39m \u001b[0mtest2 [300x400]\u001b[0m",
+    "       \u001b[31mErrors - 3 tests\u001b[39m",
+    "         \u001b[31m✖\u001b[39m \u001b[0mtest0 [4x5] : Error: bla\u001b[0m",
+    "         \u001b[31m✖\u001b[39m \u001b[0mtest0 [6x7] : Error: bloo\u001b[0m",
+    "         \u001b[31m✖\u001b[39m \u001b[0m[Eyes test not started] : Error: kuku\u001b[0m\u001b[0m\u001b[0m",
+    "\u001b[0m\u001b[0m",
+    "\u001b[0m       See details at: \u001b[0m\u001b[38;2;51;255;204mhttps://eyes.applitools.com/app/batches/1/2?accountId=UAujt6tHnEKUivQXIz7G6A~~\u001b[39m"
+  ],
+  "existing results": [
+    "\u001b[0mEyes-Cypress detected diffs or errors during execution of visual tests:\u001b[0m",
+    "       \u001b[32mPassed - 1 tests\u001b[39m",
+    "         \u001b[32m✓\u001b[39m \u001b[0mtest3 [1x2]\u001b[0m"
+  ],
+  "error results": [
+    "\u001b[0mEyes-Cypress detected diffs or errors during execution of visual tests:\u001b[0m",
+    "       \u001b[31mErrors - 1 tests\u001b[39m",
+    "         \u001b[31m✖\u001b[39m \u001b[0m[Eyes test not started] : Error: i failed you\u001b[0m"
+  ],
+  "isInteractive": [
+    "Eyes-Cypress detected diffs or errors during execution of visual tests:",
+    "       Passed - 1 tests",
+    "         ✓ test3 [1x2]",
+    "       Diffs detected - 1 tests",
+    "         ⚠ test1 [100x200]",
+    "",
+    "       See details at: some_url"
+  ]
+}
