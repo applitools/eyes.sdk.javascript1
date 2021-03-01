@@ -29,5 +29,7 @@
     "@applitools/sdk-release-kit": "^0.13.0",
     "mocha": "^8.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@applitools/snaptdout": "^1.0.1"
+  }
 }

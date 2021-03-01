@@ -58,6 +58,11 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
+"@applitools/snaptdout@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@applitools/snaptdout/-/snaptdout-1.0.1.tgz#d33ab8e8750bb6de3d643af92d4fcdaa99df79af"
+  integrity sha512-hP/SBrWl3xkj0K8sJD4hu9PbFeegJDyJUT7teytx0oe+RAVb6h7OxfFwGyshq49t73zIQ5c10kuM7pnQ2LnQTw==
+
 "@azure/abort-controller@^1.0.0":
   version "1.0.3"
   resolved "https://registry.npmjs.org/@azure/abort-controller/-/abort-controller-1.0.3.tgz#9fdb8d5962bbe1fd614f1df7a590c2c49bfb9b24"
