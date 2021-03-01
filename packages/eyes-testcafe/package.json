@@ -16,7 +16,7 @@
     "test:unit": "mocha --no-timeouts ./test/unit/*.spec.js",
     "test:it:chrome": "testcafe chrome test/it/spec-driver.spec.js",
     "test:it:firefox:headless": "testcafe firefox:headless test/it/spec-driver.spec.js",
-    "test:it:fireofx": "testcafe fireofx test/it/spec-driver.spec.js",
+    "test:it:firefox": "testcafe fireofx test/it/spec-driver.spec.js",
     "test:it": "testcafe chrome:headless test/it && yarn test:it:chrome && yarn test:it:firefox:headless && yarn test:it:firefox",
     "test:spec": "testcafe chrome:headless ./test/it/spec-driver.spec.js",
     "test:api": "testcafe chrome:headless ./test/it/legacy-api.spec.js",
