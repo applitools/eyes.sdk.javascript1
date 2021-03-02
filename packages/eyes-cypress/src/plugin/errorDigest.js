@@ -24,19 +24,20 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: diff errors', diffs);
   logger.log('errorDigest: test errors', failed);
 
-  const testResultsUrl = diffs.length ? diffs[0].getUrl() : '';
+  const testResultsUrl = diffs.length
+    ? colorify(diffs[0].getUrl(), 'reset', chalk.ansi256(86))
+    : '';
   const seeDetails = testResultsUrl ? 'See details at:' : '';
   const testResultsPrefix = `\n${indent()}${seeDetails}`;
-  const footer = testResultsUrl
-    ? `\n\n${colorify(testResultsPrefix)} ${colorify(testResultsUrl, 'reset', chalk.ansi256(86))}`
-    : '';
+  const footer = testResultsUrl ? `${colorify(testResultsPrefix)} ${testResultsUrl}` : '';
   return (
     colorify('Eyes-Cypress detected diffs or errors during execution of visual tests.') +
     colorify(` ${seeDetails} ${testResultsUrl}`) +
     testResultsToString(passed, 'Passed') +
     testResultsToString(diffs, 'Unresolved') +
     testResultsToString(failed, 'Failed') +
-    footer
+    footer +
+    '\n\n'
   );
 
   function testResultsToString(testResultsArr, category) {
