@@ -15,6 +15,18 @@ const circular = {param: true}
 circular.inner = circular
 
 storiesOf('Button', module)
+.add('background color', () => (
+  <div style={{fontSize: 'xxx-large'}}>PINK!</div>
+  ), {
+  eyes: {
+    runBefore({rootEl, story}) {
+     document.querySelector("html").style.backgroundColor = 'pink';
+    },
+    runAfter({rootEl, story}){
+     document.querySelector("html").style.backgroundColor = '';
+    }
+  }
+})
   .add('with text', () => (
     <div style={{position: 'relative'}}>with text
       <span style={{position: 'absolute', top: -20}} className="ignore-this">{Date.now()}</span>

@@ -3,6 +3,7 @@ const getStoryUrl = require('./getStoryUrl');
 const getStoryTitle = require('./getStoryTitle');
 const ora = require('ora');
 const {presult} = require('@applitools/functional-commons');
+const runRunAfterScript = require('../dist/runRunAfterScript');
 
 function makeRenderStories({
   getStoryData,
@@ -61,6 +62,7 @@ function makeRenderStories({
         const storyUrl = getStoryUrl(story, storybookUrl);
         const title = getStoryTitle(story);
         const {waitBeforeScreenshot} = (story.parameters && story.parameters.eyes) || {};
+        const eyesParameters = story.parameters && story.parameters.eyes;
 
         try {
           let [error, storyData] = await presult(
@@ -101,6 +103,12 @@ function makeRenderStories({
             const errMsg = `[page ${pageId}] Failed to get story data for "${title}". ${error}`;
             logger.log(errMsg);
             throw new Error(errMsg);
+          }
+
+          if (eyesParameters && eyesParameters.runAfter) {
+            await page.evaluate(runRunAfterScript, story.index).catch(err => {
+              logger.log(`error during runAfter: ${err}`);
+            });
           }
 
           const testResults = await renderStory({
