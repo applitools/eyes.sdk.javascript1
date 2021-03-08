@@ -33,6 +33,7 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
   * [`accessibilityValidation`](#accessibilityvalidation)
   * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an--advanced-configuration---advanced-configuration)
   * [`runBefore`](#runbefore)
+  * [`runAfter`](#runafter)
   * [`scriptHooks`](#scripthooks)
     + [beforeCaptureScreenshot](#beforecapturescreenshot)
   * [`layoutBreakpoints`](#layoutBreakpoints)
@@ -657,6 +658,24 @@ storiesOf('UI components', module)
       }
     },
   })
+```
+
+### `runAfter`
+
+An asynchronous function that will be evaluated after the story's screenshot is taken. This is the place to perform any clean ups that could change the way the next story renders.
+
+For example, removing a background color that was left form a previouse component:
+
+```js
+.add('background color', () => (
+  <div>Component with background color</div>
+  ), {
+  eyes: {
+    runAfter({rootEl, story}){
+     document.querySelector("html").style.backgroundColor = '';
+    }
+  }
+})
 ```
 
 ### `scriptHooks`
