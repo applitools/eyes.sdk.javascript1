@@ -662,9 +662,9 @@ storiesOf('UI components', module)
 
 ### `runAfter`
 
-An asynchronous function that will be evaluated after the story's screenshot is taken. This is the place to perform any clean ups that could change the way the next story renders.
+An asynchronous function that is evaluated after the story's screenshot is taken. This is the place to perform any clean ups that could change the way the next story renders.
 
-For example, removing a background color that was left form a previouse component:
+For example, removing a background color that was left from a previouse component:
 
 ```js
 .add('background color', () => (

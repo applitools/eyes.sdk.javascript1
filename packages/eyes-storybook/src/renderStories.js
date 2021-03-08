@@ -106,6 +106,7 @@ function makeRenderStories({
           }
 
           if (eyesParameters && eyesParameters.runAfter) {
+
             await page.evaluate(runRunAfterScript, story.index).catch(err => {
               logger.log(`error during runAfter: ${err}`);
             });
