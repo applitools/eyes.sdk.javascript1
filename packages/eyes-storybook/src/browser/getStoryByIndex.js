@@ -1,13 +1,12 @@
 const getClientAPI = require('./getClientAPI');
 
-function getStoryIndex(index) {
+function getStoryByIndex(index) {
   let api;
   try {
     api = getClientAPI();
     const story = api.getStories()[index];
     if (!story) {
       console.log('error cannot get story', index);
-      return;
     }
     return story;
   } catch (ex) {
@@ -15,4 +14,4 @@ function getStoryIndex(index) {
   }
 }
 
-module.exports = getStoryIndex;
+module.exports = getStoryByIndex;

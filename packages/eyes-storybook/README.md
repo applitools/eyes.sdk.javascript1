@@ -677,6 +677,7 @@ For example, reverting back to the original background color that was changed by
     },
     runAfter({rootEl, story}){
      document.querySelector("html").style.backgroundColor = window.originalBackgoundColor;
+     delete window.originalBackgoundColor;
     }
   }
 })

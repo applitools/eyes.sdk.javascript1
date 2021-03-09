@@ -25,6 +25,7 @@ storiesOf('Button', module)
     },
     runAfter({rootEl, story}){
      document.querySelector("html").style.backgroundColor = window.originalBackgoundColor;
+     delete window.originalBackgoundColor;
     }
   }
 })
