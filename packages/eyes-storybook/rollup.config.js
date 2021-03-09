@@ -7,6 +7,7 @@ module.exports = [
   'runRunBeforeScript',
   'runRunAfterScript',
   'getClientAPI',
+  'getStoryByIndex',
 ].map(config);
 
 function config(fileName) {

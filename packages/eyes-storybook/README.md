@@ -664,15 +664,19 @@ storiesOf('UI components', module)
 
 An asynchronous function that is evaluated after the story's screenshot is taken. This is the place to perform any clean ups that could change the way the next story renders.
 
-For example, removing a background color that was left from a previouse component:
+For example, reverting back to the original background color that was changed by a previous component:
 
 ```js
 .add('background color', () => (
-  <div>Component with background color</div>
+  <div style={{fontSize: '30px'}}>Component with runBefore hook that modifies the background color</div>
   ), {
   eyes: {
+    runBefore({rootEl, story}) {
+     window.originalBackgoundColor = document.querySelector("html").style.backgroundColor;
+     document.querySelector("html").style.backgroundColor = 'fuchsia';
+    },
     runAfter({rootEl, story}){
-     document.querySelector("html").style.backgroundColor = '';
+     document.querySelector("html").style.backgroundColor = window.originalBackgoundColor;
     }
   }
 })

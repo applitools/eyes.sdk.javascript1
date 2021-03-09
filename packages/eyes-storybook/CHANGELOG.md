@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
- - added after hook 
+ - added runAfter hook 
 
 ## 3.18.0 - 2021/2/26
 

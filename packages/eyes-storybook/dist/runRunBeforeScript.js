@@ -127,11 +127,11 @@ function __runRunBeforeScript(...args) {
     }
   }
 
-  var getStoryIndex_1 = getStoryIndex;
+  var getStoryByIndex = getStoryIndex;
 
   function runRunBeforeScript(index) {
     try {
-      let story = getStoryIndex_1(index);
+      let story = getStoryByIndex(index);
       return story.parameters.eyes.runBefore({rootEl: document.getElementById('root'), story});
     } catch (ex) {
       return {message: ex.message};

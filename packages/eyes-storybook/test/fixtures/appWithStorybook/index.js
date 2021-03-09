@@ -16,14 +16,15 @@ circular.inner = circular
 
 storiesOf('Button', module)
 .add('background color', () => (
-  <div style={{fontSize: 'xxx-large'}}>PINK!</div>
+  <div style={{fontSize: '30px'}}>Add Background Color</div>
   ), {
   eyes: {
     runBefore({rootEl, story}) {
-     document.querySelector("html").style.backgroundColor = 'pink';
+     window.originalBackgoundColor = document.querySelector("html").style.backgroundColor;
+     document.querySelector("html").style.backgroundColor = 'fuchsia';
     },
     runAfter({rootEl, story}){
-     document.querySelector("html").style.backgroundColor = '';
+     document.querySelector("html").style.backgroundColor = window.originalBackgoundColor;
     }
   }
 })
