@@ -31,6 +31,11 @@ describe('getStories', () => {
       expect(stories).to.eql(
         [
           {
+            name: 'background color',
+            kind: 'Button',
+            parameters: {eyes: {runBefore: '__func', runAfter: '__func'}},
+          },
+          {
             name: 'with text',
             kind: 'Button',
             parameters: {
