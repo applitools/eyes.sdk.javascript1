@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix: update getScreenshot to support the correct return type when performing a full page stitch ([Trello](https://trello.com/c/6oVADkSf))
 
 ## 4.19.0 - 2021/2/22
 
@@ -12,7 +13,7 @@
 
 - chore: add husky
 - updated to @applitools/eyes-sdk-core@12.13.5 (from 12.10.0)
-- updated to @applitools/eyes-sdk-core@12.13.5 (from 12.10.0)
+
 ## 4.18.0 - 2020/12/18
 
 - updated to @applitools/eyes-sdk-core@12.10.0 (from 12.9.1)
