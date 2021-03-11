@@ -181,6 +181,11 @@ describe('util', () => {
         const checkSettings = translateArgsToCheckSettings(args)
         assert.deepStrictEqual(checkSettings.getSendDom(), args.sendDom)
       })
+      it('enablePatterns', () => {
+        const args = {enablePatterns: true}
+        const checkSettings = translateArgsToCheckSettings(args)
+        assert.deepStrictEqual(checkSettings.getEnablePatterns(), args.enablePatterns)
+      })
     })
     describe('translate open args to config', () => {
       it('works', () => {
