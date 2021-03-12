@@ -307,4 +307,24 @@ describe('CheckSettingsUtils', () => {
       polyfillAdoptedStyleSheets: true,
     })
   })
+  it('toCheckWindowConfiguration handles enablePatterns', () => {
+    const checkSettings = new CheckSettings().enablePatterns(true)
+
+    const checkWindowConfiguration = toCheckWindowConfiguration({
+      checkSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.deepStrictEqual(checkWindowConfiguration.enablePatterns, true)
+  })
+  it('toCheckWindowConfiguration handles useDom', () => {
+    const checkSettings = new CheckSettings().useDom(true)
+
+    const checkWindowConfiguration = toCheckWindowConfiguration({
+      checkSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.deepStrictEqual(checkWindowConfiguration.useDom, true)
+  })
 })
