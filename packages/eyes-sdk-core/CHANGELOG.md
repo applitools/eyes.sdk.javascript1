@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support enablePatterns & useDom configuration options in checkSettings when running on the visual grid ([Trello](https://trello.com/c/QCK2xDlS))
 
 ## 12.15.0 - 2021/2/26
 
