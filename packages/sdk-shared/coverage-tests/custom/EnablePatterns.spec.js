@@ -13,7 +13,19 @@ describe('EnablePatterns', () => {
   after(async () => {
     await destroyDriver()
   })
-  it('in config', async () => {
+  it('in config (classic)', async () => {
+    await spec.visit(driver, 'https://applitools.com/helloworld/')
+    const eyes = testSetup.getEyes({vg: false})
+    const config = eyes.getConfiguration()
+    config.setEnablePatterns(true)
+    eyes.setConfiguration(config)
+    await eyes.open(driver, 'eyes-testcafe', 'enablePatterns')
+    await eyes.checkWindow('asdf')
+    const result = await eyes.close(false)
+    const testInfo = await getTestInfo(result)
+    assert.ok(testInfo['actualAppOutput']['0']['imageMatchSettings']['enablePatterns'])
+  })
+  it('in config (vg)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
     const eyes = testSetup.getEyes({vg: true})
     const config = eyes.getConfiguration()
@@ -25,14 +37,22 @@ describe('EnablePatterns', () => {
     const testInfo = await getTestInfo(result)
     assert.ok(testInfo['actualAppOutput']['0']['imageMatchSettings']['enablePatterns'])
   })
-  it('in check settings', async () => {
+  it('in check settings (classic)', async () => {
+    await spec.visit(driver, 'https://applitools.com/helloworld/')
+    const eyes = testSetup.getEyes({vg: false})
+    await eyes.open(driver, 'eyes-testcafe', 'enablePatterns')
+    await eyes.check({enablePatterns: true})
+    const result = await eyes.close(false)
+    const testInfo = await getTestInfo(result)
+    assert.ok(testInfo['actualAppOutput']['0']['imageMatchSettings']['enablePatterns'])
+  })
+  it('in check settings (vg)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
     const eyes = testSetup.getEyes({vg: true})
     await eyes.open(driver, 'eyes-testcafe', 'enablePatterns')
     await eyes.check({enablePatterns: true})
     const result = await eyes.close(false)
     const testInfo = await getTestInfo(result)
-    console.log(testInfo['actualAppOutput']['0'])
     assert.ok(testInfo['actualAppOutput']['0']['imageMatchSettings']['enablePatterns'])
   })
 })
