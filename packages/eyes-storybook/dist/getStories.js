@@ -219,18 +219,27 @@ function __getStories(...args) {
     function getStoriesThroughClientAPI(clientApi) {
       return clientApi.getStories().map((story, index) => {
         const {name, kind, parameters} = story;
+        const hasEyesParameters =
+          parameters && parameters.eyes && typeof parameters.eyes === 'object';
         let parametersIfSerialized, error;
         try {
           parametersIfSerialized = JSON.parse(JSON.stringify(parameters));
-          if (parameters && parameters.eyes && typeof parameters.eyes === 'object') {
-            for (const prop in parameters.eyes) {
-              if (typeof parameters.eyes[prop] === 'function') {
-                parametersIfSerialized.eyes[prop] = '__func';
-              }
+        } catch (e) {
+          try {
+            if (hasEyesParameters) {
+              parametersIfSerialized = JSON.parse(JSON.stringify({eyes: parameters.eyes}));
+            }
+          } catch (ex) {
+            error = `Ignoring parameters for story: "${name} ${kind}" since they are not serilizable. Error: "${e.message}"`;
+          }
+        }
+
+        if (parametersIfSerialized && hasEyesParameters) {
+          for (const prop in parameters.eyes) {
+            if (typeof parameters.eyes[prop] === 'function') {
+              parametersIfSerialized.eyes[prop] = '__func';
             }
           }
-        } catch (e) {
-          error = `Ignoring parameters for story: "${name} ${kind}" since they are not serilizable. Error: "${e.message}"`;
         }
 
         return {
