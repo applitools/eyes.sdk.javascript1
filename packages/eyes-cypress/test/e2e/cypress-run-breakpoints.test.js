@@ -4,13 +4,26 @@ const {exec} = require('child_process');
 const {promisify: p} = require('util');
 const path = require('path');
 const pexec = p(exec);
+const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const fs = require('fs');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
 const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-breakpoint');
 
 describe('layout breakpoints', () => {
+  let closeServer;
   before(async () => {
+    const middlewareFile = path.resolve(
+      __dirname,
+      '../../../sdk-shared/coverage-tests/util/slow-middleware.js',
+    );
+    const staticPath = path.resolve(__dirname, '../fixtures');
+    const server = await testServer({
+      port: 5555,
+      staticPath,
+      middlewareFile,
+    });
+    closeServer = server.close;
     if (fs.existsSync(targetTestAppPath)) {
       fs.rmdirSync(targetTestAppPath, {recursive: true});
     }
@@ -23,6 +36,7 @@ describe('layout breakpoints', () => {
 
   after(async () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
+    await closeServer();
   });
 
   it('works for js layouts', async () => {

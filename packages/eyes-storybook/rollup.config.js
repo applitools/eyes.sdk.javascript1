@@ -5,6 +5,7 @@ module.exports = [
   'getStories',
   'renderStoryWithClientAPI',
   'runRunBeforeScript',
+  'runRunAfterScript',
   'getClientAPI',
 ].map(config);
 

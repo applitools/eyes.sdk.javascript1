@@ -7,3 +7,4 @@ eyes.tap
 .vscode/
 test/fixtures/images/
 /logs/
+!/dist

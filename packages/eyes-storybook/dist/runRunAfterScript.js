@@ -1,6 +1,6 @@
 
-function __runRunBeforeScript(...args) {
-  var runRunBeforeScript = (function () {
+function __runRunAfterScript(...args) {
+  var runRunAfterScript = (function () {
   'use strict';
 
   const API_VERSIONS = {
@@ -128,22 +128,22 @@ function __runRunBeforeScript(...args) {
 
   var getStoryByIndex_1 = getStoryByIndex;
 
-  function runRunBeforeScript(index) {
+  function runRunAfterScript(index) {
     try {
       const story = getStoryByIndex_1(index);
       if (!story) return;
-      return story.parameters.eyes.runBefore({rootEl: document.getElementById('root'), story: story});
+      return story.parameters.eyes.runAfter({rootEl: document.getElementById('root'), story});
     } catch (ex) {
       return {message: ex.message};
     }
   }
 
-  var runRunBeforeScript_1 = runRunBeforeScript;
+  var runRunAfterScript_1 = runRunAfterScript;
 
-  return runRunBeforeScript_1;
+  return runRunAfterScript_1;
 
 }());
 
-  return runRunBeforeScript.apply(this, args);
+  return runRunAfterScript.apply(this, args);
 }
-module.exports = __runRunBeforeScript
+module.exports = __runRunAfterScript

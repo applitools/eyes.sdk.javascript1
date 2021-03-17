@@ -53,7 +53,7 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
             cypress
               .viewport(Number(requiredWidth), height, {log: false})
               .wait(300, {log: false})
-              .then(() => {
+              .then({log: false, timeout: 900000}, () => {
                 return takeDomSnapshot(options).then(snapshot => {
                   browsersInfo.forEach(({index}) => (snapshots[index] = snapshot));
                 });

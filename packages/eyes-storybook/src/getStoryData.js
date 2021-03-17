@@ -5,6 +5,7 @@ const renderStoryWithClientAPI = require('../dist/renderStoryWithClientAPI');
 const runRunBeforeScript = require('../dist/runRunBeforeScript');
 const getStoryTitle = require('./getStoryTitle');
 const {URL} = require('url');
+const runRunAfterScript = require('../dist/runRunAfterScript');
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
@@ -51,6 +52,12 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloa
       page,
       layoutBreakpoints: eyesParameters ? eyesParameters.layoutBreakpoints : undefined,
     });
+
+    if (eyesParameters && eyesParameters.runAfter) {
+      await page.evaluate(runRunAfterScript, story.index).catch(err => {
+        logger.log(`error during runAfter: ${err}`);
+      });
+    }
 
     logger.log(`done getting data from story`, title);
     return snapshots;

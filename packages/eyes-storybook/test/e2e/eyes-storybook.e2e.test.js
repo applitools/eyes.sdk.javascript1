@@ -62,6 +62,7 @@ See details at <some_url>
 Button with-space yes-indeed: a yes-a b [Chrome] [1024x768] - Passed
 Button with-space yes-indeed/nested with-space yes: b yes-a b [Chrome] [1024x768] - Passed
 Button with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome] [1024x768] - Passed
+Button: background color [Chrome] [1024x768] - Passed
 Button: with some emoji [Chrome] [1024x768] - Passed
 Button: with text [Chrome] [1024x768] - Passed
 Image: image [Chrome] [1024x768] - Passed
@@ -98,8 +99,8 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
 ✔ Storybook was started
 - Reading stories
 ✔ Reading stories
-- Done 0 stories out of 19
-✔ Done 19 stories out of 19
+- Done 0 stories out of 20
+✔ Done 20 stories out of 20
 `);
   });
 

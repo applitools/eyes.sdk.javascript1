@@ -1,6 +1,6 @@
 
-function __runRunBeforeScript(...args) {
-  var runRunBeforeScript = (function () {
+function __getStoryByIndex(...args) {
+  var getStoryByIndex = (function () {
   'use strict';
 
   const API_VERSIONS = {
@@ -112,38 +112,27 @@ function __runRunBeforeScript(...args) {
 
   var getClientAPI_1 = getClientAPI;
 
-  function getStoryByIndex(index) {
+  function getStoryIndex(index) {
     let api;
     try {
       api = getClientAPI_1();
       const story = api.getStories()[index];
       if (!story) {
         console.log('error cannot get story', index);
+        return;
       }
       return story;
     } catch (ex) {
-      throw new Error(JSON.stringify({message: ex.message, version: api ? api.version : undefined}));
+      return {message: ex.message, version: api ? api.version : undefined};
     }
   }
 
-  var getStoryByIndex_1 = getStoryByIndex;
+  var getStoryByIndex = getStoryIndex;
 
-  function runRunBeforeScript(index) {
-    try {
-      const story = getStoryByIndex_1(index);
-      if (!story) return;
-      return story.parameters.eyes.runBefore({rootEl: document.getElementById('root'), story: story});
-    } catch (ex) {
-      return {message: ex.message};
-    }
-  }
-
-  var runRunBeforeScript_1 = runRunBeforeScript;
-
-  return runRunBeforeScript_1;
+  return getStoryByIndex;
 
 }());
 
-  return runRunBeforeScript.apply(this, args);
+  return getStoryByIndex.apply(this, args);
 }
-module.exports = __runRunBeforeScript
+module.exports = __getStoryByIndex

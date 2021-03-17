@@ -71,6 +71,7 @@ describe('eyesStorybook', () => {
       },
       {name: 'Button with-space yes-indeed/nested with-space yes: b yes-a b', isPassed: true},
       {name: 'Button with-space yes-indeed: a yes-a b', isPassed: true},
+      {name: 'Button: background color', isPassed: true},
       {name: 'Button: with some emoji', isPassed: true},
       {name: 'Button: with text', isPassed: true},
       {name: 'Image: image', isPassed: true},
@@ -120,6 +121,7 @@ describe('eyesStorybook', () => {
       'Button with-space yes-indeed: a yes-a b',
       'Button with-space yes-indeed/nested with-space yes: b yes-a b',
       'Button with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b',
+      'Button: background color',
       'SOME section|Nested/Component: story 1.1',
       'SOME section|Nested/Component: story 1.2',
       'Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b',
@@ -187,8 +189,8 @@ describe('eyesStorybook', () => {
 
     expect(getEvents().join('')).to.equal(`- Reading stories
 ✔ Reading stories
-- Done 0 stories out of 19
-✔ Done 19 stories out of 19
+- Done 0 stories out of 20
+✔ Done 20 stories out of 20
 `);
   });
 
