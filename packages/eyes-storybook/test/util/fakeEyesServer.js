@@ -13,6 +13,8 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
   let serverUrl;
   let renderCounter = 0;
   const renderings = {};
+  let currentlyRunning = 0;
+  let maxRunning = 0;
 
   const app = express();
   app.use(express.json());
@@ -130,6 +132,7 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
   });
 
   app.delete('/api/tasks/:method/:id', (req, res) => {
+    currentlyRunning--;
     const runningSessionId = decodeURIComponent(req.params.id);
     const runningSession = runningSessions[runningSessionId];
     const testResults = createTestResultFromRunningSession(runningSession);
@@ -140,6 +143,8 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
   app.post('/api/sessions/running', (req, res) => {
     const runningSession = createRunningSessionFromStartInfo(req.body.startInfo);
     runningSessions[runningSession.id] = runningSession;
+    currentlyRunning++;
+    maxRunning = Math.max(maxRunning, currentlyRunning);
 
     const {id, sessionId, batchId, baselineId, url} = runningSession;
     res.send({id, sessionId, batchId, baselineId, url});
@@ -231,6 +236,10 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
     const runningSession = runningSessions[req.params.id];
 
     res.send(createTestResultFromRunningSession(runningSession));
+  });
+
+  app.get('/api/usage', (_req, res) => {
+    res.send({maxRunning});
   });
 
   function createTestResultFromRunningSession(runningSession) {

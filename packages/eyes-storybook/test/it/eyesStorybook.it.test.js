@@ -1,4 +1,4 @@
-const {describe, it, before, after} = require('mocha');
+const {describe, it, before, after, beforeEach, afterEach} = require('mocha');
 const flatten = require('lodash.flatten');
 const {expect} = require('chai');
 const testStorybook = require('../util/testStorybook');
@@ -7,6 +7,7 @@ const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const fakeEyesServer = require('../util/fakeEyesServer');
 const eyesStorybook = require('../../src/eyesStorybook');
 const generateConfig = require('../../src/generateConfig');
+const defaultConfig = require('../../src/defaultConfig');
 const {configParams: externalConfigParams} = require('@applitools/visual-grid-client');
 const {makeTiming} = require('@applitools/monitoring-commons');
 const logger = require('../util/testLogger');
@@ -32,12 +33,12 @@ describe('eyesStorybook', () => {
   });
 
   let serverUrl, closeEyesServer;
-  before(async () => {
+  beforeEach(async () => {
     const {port, close} = await fakeEyesServer();
     closeEyesServer = close;
     serverUrl = `http://localhost:${port}`;
   });
-  after(async () => {
+  afterEach(async () => {
     await closeEyesServer();
   });
 
@@ -192,6 +193,92 @@ describe('eyesStorybook', () => {
 - Done 0 stories out of 20
 ✔ Done 20 stories out of 20
 `);
+  });
+
+  it('enforces default concurrency', async () => {
+    const {stream} = testStream();
+    const configPath = path.resolve(__dirname, '../fixtures/applitools.config.js');
+    const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
+    await eyesStorybook({
+      config: {
+        ...config,
+        serverUrl,
+        storybookUrl: 'http://localhost:9001',
+      },
+      logger,
+      performance,
+      timeItAsync,
+      outputStream: stream,
+    });
+
+    const {maxRunning} = await fetch(`${serverUrl}/api/usage`).then(r => r.json());
+    expect(maxRunning).to.equal(5); // TODO require from core
+  });
+
+  it('enforces testConcurrency', async () => {
+    const {stream} = testStream();
+    const configPath = path.resolve(__dirname, '../fixtures/applitools.config.js');
+    const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
+    await eyesStorybook({
+      config: {
+        ...config,
+        serverUrl,
+        storybookUrl: 'http://localhost:9001',
+        testConcurrency: 3,
+      },
+      logger,
+      performance,
+      timeItAsync,
+      outputStream: stream,
+    });
+
+    const {maxRunning} = await fetch(`${serverUrl}/api/usage`).then(r => r.json());
+    expect(maxRunning).to.equal(3);
+  });
+
+  it('enforces testConcurrency over legacy concurrency', async () => {
+    const {stream} = testStream();
+    const configPath = path.resolve(__dirname, '../fixtures/applitools.config.js');
+    const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
+    await eyesStorybook({
+      config: {
+        ...config,
+        serverUrl,
+        storybookUrl: 'http://localhost:9001',
+        testConcurrency: 3,
+        concurrency: 20,
+      },
+      logger,
+      performance,
+      timeItAsync,
+      outputStream: stream,
+    });
+
+    const {maxRunning} = await fetch(`${serverUrl}/api/usage`).then(r => r.json());
+    expect(maxRunning).to.equal(3);
+  });
+
+  it('enforces legacy concurrency', async () => {
+    const {stream} = testStream();
+    const configPath = path.resolve(
+      __dirname,
+      '../fixtures/applitools-legacy-concurrency.config.js',
+    );
+    const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
+    await eyesStorybook({
+      config: {
+        ...config,
+        storybookUrl: 'http://localhost:9001',
+        serverUrl,
+      },
+      logger,
+      performance,
+      timeItAsync,
+      outputStream: stream,
+    });
+
+    const {maxRunning} = await fetch(`${serverUrl}/api/usage`).then(r => r.json());
+    expect(maxRunning).to.equal(10);
   });
 
   it('sends parentBranchBaselineSavedBefore when branchName and parentBranchName are specified, and there is a merge-base time for them', async () => {

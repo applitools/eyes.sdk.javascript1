@@ -38,7 +38,11 @@ function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = [
     result.showLogs = true;
   }
 
-  if (result.storyDataGap === undefined && result.testConcurrency !== undefined) {
+  if (!result.testConcurrency && !result.concurrency) {
+    result.testConcurrency = 5; // TODO require from core
+  }
+
+  if (result.storyDataGap === undefined) {
     result.storyDataGap = result.testConcurrency;
   }
   return result;
