@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix regression with `concurrency` that was introduced in version 3.17.1
 
 ## 3.20.1 - 2021/3/17
 
