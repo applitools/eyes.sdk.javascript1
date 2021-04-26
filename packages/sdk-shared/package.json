@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@applitools/functional-commons": "1.6.0",
-    "@applitools/sdk-coverage-tests": "2.3.8",
+    "@applitools/sdk-coverage-tests": "2.3.11",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chalk": "3.0.0",
