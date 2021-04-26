@@ -51,7 +51,7 @@
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "pkg": "^4.4.9",
+    "pkg": "^5.0.0",
     "prettier": "1.19.0"
   },
   "scripts": {
