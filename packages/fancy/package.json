@@ -21,7 +21,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
-    "@applitools/visual-grid-client": "^15.3.2",
+    "@applitools/visual-grid-client": "^15.8.2",
     "@applitools/snaptdout": "^1.5.4",
     "mocha": "^8.2.1"
   }
