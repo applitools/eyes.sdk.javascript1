@@ -34,7 +34,7 @@
     "webdriverio": "~4.14.4"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "2.3.9",
+    "@applitools/sdk-coverage-tests": "2.3.11",
     "@applitools/sdk-fake-eyes-server": "2.1.1",
     "@applitools/sdk-release-kit": "^0.13.0",
     "@applitools/sdk-shared": "0.8.8",
