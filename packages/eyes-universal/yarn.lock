@@ -144,10 +144,10 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-coverage-tests@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.5.tgz#a6046c0b72918f45f574a7810cee2a25426a8650"
-  integrity sha512-5HCkUR9Y3W5W9qE6qZEJSMpyFk9aBa55oD03sIAuUA5d52em/hdLess2KFePUyRV/aiteJOAweNIsLFwGHqrNA==
+"@applitools/sdk-coverage-tests@^2.3.11":
+  version "2.3.11"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.11.tgz#3d43851837e607cfa7dbf06c66dffe2b1f7097f4"
+  integrity sha512-E/NoP2ilKJ2SxblJjcSTrNe3M+SAcgyzvfOn6X22dO5BtHWCrs0dAip30ydWD8/hfRX3IbP4RSFedqOhaIJoAQ==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"
