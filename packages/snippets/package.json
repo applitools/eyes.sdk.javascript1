@@ -30,7 +30,7 @@
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@rollup/plugin-babel": "^5.2.1",
-    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-commonjs": "^18.0.0",
     "chalk": "^4.1.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
