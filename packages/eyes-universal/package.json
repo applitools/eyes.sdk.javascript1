@@ -46,7 +46,7 @@
     "@applitools/sdk-coverage-tests": "^2.3.5",
     "@applitools/sdk-fake-eyes-server": "^2.1.1",
     "@applitools/sdk-release-kit": "^0.11.1",
-    "@applitools/sdk-shared": "^0.8.5",
+    "@applitools/sdk-shared": "^0.8.8",
     "eslint": "^7.13.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",

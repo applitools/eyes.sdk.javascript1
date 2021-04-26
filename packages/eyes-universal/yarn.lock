@@ -144,10 +144,10 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-coverage-tests@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.5.tgz#a6046c0b72918f45f574a7810cee2a25426a8650"
-  integrity sha512-5HCkUR9Y3W5W9qE6qZEJSMpyFk9aBa55oD03sIAuUA5d52em/hdLess2KFePUyRV/aiteJOAweNIsLFwGHqrNA==
+"@applitools/sdk-coverage-tests@2.3.8", "@applitools/sdk-coverage-tests@^2.3.5":
+  version "2.3.8"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.8.tgz#684e43ce8d155adfa395e8f5a19a999ef4c4f0ec"
+  integrity sha512-6GnImU/+0iaySJjxljC616D/hFN0L+KXCdoP9Y9gVbeh1odQvG2TQeW75rq0RO2LjrwBAXDxCzMoT33zLloJkw==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"
@@ -186,13 +186,34 @@
     node-fetch "2.6.0"
     yargs "15.0.2"
 
-"@applitools/sdk-shared@0.8.5", "@applitools/sdk-shared@^0.8.5":
+"@applitools/sdk-shared@0.8.5":
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.5.tgz#f432744d93c67b330445f55796da634a7f08ff7a"
   integrity sha512-eMw4E960NDUaiVts6jVS3hEUR/snAZ6H5JIbUTvWlYAQRyB3Jst3USC3dL9LHNqNsMqqvt5C6Q+sJXiyG9yMhA==
   dependencies:
     "@applitools/functional-commons" "1.6.0"
     "@applitools/sdk-coverage-tests" "2.3.3"
+    chai "4.2.0"
+    chai-as-promised "7.1.1"
+    chalk "3.0.0"
+    cookie-parser "1.4.5"
+    cors "2.8.5"
+    express "4.17.1"
+    filenamify "4.1.0"
+    handlebars "4.7.6"
+    morgan "1.10.0"
+    ncp "2.0.0"
+    node-fetch "2.6.1"
+    prettier "1.18.2"
+    yargs "15.3.1"
+
+"@applitools/sdk-shared@^0.8.8":
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.8.tgz#cb611248cf9528034549d79ba1121040cabace33"
+  integrity sha512-nbVHIXbRXuoxofg3MAsAjO0yMoi4JpG95n3uOLRJf9WNAbPi6Fk32mtZdJ9lF5UoCM2Sy0WnKgO++Wa9WNXnMQ==
+  dependencies:
+    "@applitools/functional-commons" "1.6.0"
+    "@applitools/sdk-coverage-tests" "2.3.8"
     chai "4.2.0"
     chai-as-promised "7.1.1"
     chalk "3.0.0"
