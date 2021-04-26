@@ -102,7 +102,7 @@
     "react-modal": "^3.6.1",
     "react-tooltip": "^3.9.2",
     "ua-parser-js": "^0.7.18",
-    "webextension-polyfill": "0.3.1"
+    "webextension-polyfill": "0.8.0"
   },
   "resolutions": {
     "set-value": "^3.0.1",
