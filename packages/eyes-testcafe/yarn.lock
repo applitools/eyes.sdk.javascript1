@@ -163,9 +163,9 @@
     yargs "16.0.3"
 
 "@applitools/sdk-coverage-tests@^2.3.9":
-  version "2.3.9"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.9.tgz#2de167a2b834e02c2d1469b21d7aae381cc4a142"
-  integrity sha512-KC80YaRH1Rs8W48fL95bzR1WlZWajUOwVQU3cYXvi/qoZgEmux43/EzqNxaMu5fodbC/oXw81XTpM5kHeESdHw==
+  version "2.3.11"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.11.tgz#3d43851837e607cfa7dbf06c66dffe2b1f7097f4"
+  integrity sha512-E/NoP2ilKJ2SxblJjcSTrNe3M+SAcgyzvfOn6X22dO5BtHWCrs0dAip30ydWD8/hfRX3IbP4RSFedqOhaIJoAQ==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"
