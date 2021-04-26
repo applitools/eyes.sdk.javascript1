@@ -28,7 +28,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@applitools/snippets": "2.1.1",
+    "@applitools/snippets": "2.1.3",
     "@applitools/utils": "1.0.1"
   },
   "devDependencies": {

@@ -58,10 +58,10 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/snippets@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.1.tgz#c5ec8b5b2d35da429349c03ac4e769cf0a9da598"
-  integrity sha512-DfAZVeljh1my/KTeM2F4qmvPK1oPaNGfAOShTqK0gNv4c9bafWww6j1IKahX856vuLtkK/F4f20C0CqtrM2bvA==
+"@applitools/snippets@2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.3.tgz#8596bb70c884e4d220798b62d9f17db77c36992c"
+  integrity sha512-c4efLfVK/yHBPJnNjqO8GcEd98m276NgPhUy+b7aIf2MazbQq2kYMnDUsONeKXS8SucnPyuhFO1JL6xkq9bnYw==
 
 "@applitools/utils@1.0.1":
   version "1.0.1"
