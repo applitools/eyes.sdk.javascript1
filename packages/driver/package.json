@@ -32,7 +32,7 @@
     "@applitools/utils": "1.0.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.12.0",
+    "@applitools/sdk-release-kit": "0.13.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
