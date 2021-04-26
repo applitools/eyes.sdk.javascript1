@@ -44,7 +44,7 @@
     "@applitools/sdk-release-kit": "0.13.0",
     "@applitools/sdk-shared": "0.8.8",
     "assert-rejects": "^1.0.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chromedriver": "^86.0.0",
