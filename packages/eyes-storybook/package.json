@@ -67,7 +67,7 @@
     "lodash.flatten": "4.4.0",
     "lodash.pick": "4.4.0",
     "ora": "3.4.0",
-    "puppeteer": "1.20.0",
+    "puppeteer": "9.0.0",
     "yargs": "15.4.1"
   },
   "devDependencies": {
