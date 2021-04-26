@@ -51,7 +51,7 @@
     "@applitools/sdk-release-kit": "0.13.0",
     "@applitools/sdk-shared": "0.8.8",
     "@applitools/snaptdout": "1.0.1",
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "chai-spies": "^1.0.0",
     "cookie-parser": "^1.4.4",
     "cypress": "^6.5.0",
