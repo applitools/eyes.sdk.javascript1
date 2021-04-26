@@ -30,7 +30,7 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
-    "@azure/storage-blob": "12.2.0-preview.1",
+    "@azure/storage-blob": "12.5.0",
     "@babel/core": "7.12.10",
     "axios": "0.20.0",
     "chai": "4.2.0",
