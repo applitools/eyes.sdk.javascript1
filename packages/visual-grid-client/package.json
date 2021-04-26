@@ -62,7 +62,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "express": "^4.17.1",
-    "husky": "^4.3.8",
+    "husky": "^6.0.0",
     "mocha": "^8.0.1",
     "morgan": "^1.9.1",
     "nock": "^11.3.5",
