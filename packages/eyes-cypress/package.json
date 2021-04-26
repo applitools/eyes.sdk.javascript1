@@ -58,7 +58,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-mocha-no-only": "^1.1.0",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-prettier": "^2.7.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "husky": "^4.3.8",
     "lodash.omit": "^4.5.0",
     "mocha": "^8.0.1",
