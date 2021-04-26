@@ -43,7 +43,7 @@
     "mime-types": "2.1.27",
     "mkdirp": "0.5.5",
     "postcss-value-parser": "4.1.0",
-    "throat": "5.0.0"
+    "throat": "6.0.1"
   },
   "browser": {
     "@applitools/jsdom": false
