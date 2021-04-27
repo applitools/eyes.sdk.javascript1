@@ -61,7 +61,7 @@
     "eslint-plugin-prettier": "^2.7.0",
     "husky": "^4.3.8",
     "lodash.omit": "^4.5.0",
-    "mocha": "^8.0.1",
+    "mocha": "^8.3.2",
     "morgan": "^1.9.1",
     "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
