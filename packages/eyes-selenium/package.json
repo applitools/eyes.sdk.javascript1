@@ -53,7 +53,7 @@
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.8",
+    "husky": "^6.0.0",
     "mocha": "^8.0.1",
     "module-alias": "^2.2.2",
     "ncp": "^2.0.0",
