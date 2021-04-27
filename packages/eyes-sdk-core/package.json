@@ -54,7 +54,7 @@
     "@applitools/sdk-release-kit": "0.13.0",
     "@applitools/visual-grid-client": "15.8.1",
     "assert-rejects": "1.0.0",
-    "chai": "4.2.0",
+    "chai": "4.3.4",
     "chai-uuid": "1.0.6",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
