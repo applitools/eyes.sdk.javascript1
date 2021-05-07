@@ -109,9 +109,13 @@ async function findElements(driver, selector) {
   return driver.findElements(transformSelector(selector))
 }
 async function getElementRect(_driver, element) {
-  const {x, y} = await element.getLocation()
-  const {width, height} = await element.getSize()
-  return {x, y, width, height}
+  if (TypeUtils.isFunction(element.getRect)) {
+    return element.getRect()
+  } else {
+    const {x, y} = await element.getLocation()
+    const {width, height} = await element.getSize()
+    return {x, y, width, height}
+  }
 }
 async function getWindowRect(driver) {
   try {
@@ -188,15 +192,20 @@ async function getDriverInfo(driver) {
   const browserName = capabilities.get('browserName')
   const browserVersion = capabilities.get('browserVersion')
   const isMobile = ['android', 'ios'].includes(platformName && platformName.toLowerCase())
+  const isNative = isMobile && !browserName
+  const viewportRect = isNative ? capabilities.get('viewportRect') : null
+  const pixelRatio = isNative ? capabilities.get('pixelRatio') : null
   return {
     sessionId,
     isMobile,
-    isNative: isMobile && !browserName,
+    isNative,
     deviceName,
     platformName,
     platformVersion,
     browserName,
     browserVersion,
+    viewportRect,
+    pixelRatio,
   }
 }
 async function getTitle(driver) {

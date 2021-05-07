@@ -138,16 +138,20 @@ async function getDriverInfo(driver) {
   const browserName = capabilities.get('browserName')
   const browserVersion = capabilities.get('browserVersion')
   const isMobile = ['android', 'ios'].includes(platformName && platformName.toLowerCase())
-
+  const isNative = isMobile && !browserName
+  const viewportRect = isNative ? capabilities.get('viewportRect') : null
+  const pixelRatio = isNative ? capabilities.get('pixelRatio') : null
   return {
     sessionId,
     isMobile,
-    isNative: isMobile && !browserName,
+    isNative,
     deviceName,
     platformName,
     platformVersion,
     browserName,
     browserVersion,
+    viewportRect,
+    pixelRatio,
   }
 }
 async function getTitle(driver) {

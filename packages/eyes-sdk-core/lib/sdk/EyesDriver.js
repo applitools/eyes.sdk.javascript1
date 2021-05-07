@@ -192,6 +192,8 @@ class EyesDriver {
       this._platformVersion = info.platformVersion
       this._browserName = info.browserName
       this._browserVersion = info.browserVersion
+      this._viewportRect = info.viewportRect
+      this._pixelRatio = info.pixelRatio
 
       if (!this._isNative) {
         this._userAgentString = await EyesUtils.getUserAgent(this._logger, this)
@@ -426,6 +428,9 @@ class EyesDriver {
    * @return {Promise<RectangleSize>}
    */
   async getViewportSize() {
+    if (this._viewportRect) {
+      return new RectangleSize(this._viewportRect).scale(1 / this._pixelRatio)
+    }
     const size = this.spec.getViewportSize
       ? await this.spec.getViewportSize(this._driver)
       : await EyesUtils.getViewportSize(this._logger, this._mainContext)
@@ -479,9 +484,12 @@ class EyesDriver {
    */
   async getPixelRatio() {
     if (this._isNative) {
-      const viewportSize = await this.getViewportSize()
-      const screenshot = await this.takeScreenshot()
-      return screenshot.getWidth() / viewportSize.getWidth()
+      if (!this._pixelRatio) {
+        const viewportSize = await this.getViewportSize()
+        const screenshot = await this.takeScreenshot()
+        this._pixelRatio = screenshot.getWidth() / viewportSize.getWidth()
+      }
+      return this._pixelRatio
     } else {
       return EyesUtils.getPixelRatio(this._logger, this._currentContext)
     }

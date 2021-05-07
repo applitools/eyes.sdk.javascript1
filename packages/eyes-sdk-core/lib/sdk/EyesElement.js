@@ -93,13 +93,16 @@ class EyesElement {
     return this.withRefresh(async () => {
       if (this._context.driver.isNative) {
         const rect = await this.spec.getElementRect(this._context.unwrapped, this._element)
-        return new Region({
+        const region = new Region({
           left: rect.x,
           top: rect.y,
           width: rect.width,
           height: rect.height,
           coordinatesType: CoordinatesTypes.CONTEXT_RELATIVE,
         })
+        return this._context.driver._pixelRatio
+          ? region.scale(1 / this._context.driver._pixelRatio)
+          : region
       } else {
         return EyesUtils.getElementRect(this._logger, this._context, this)
       }

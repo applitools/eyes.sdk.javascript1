@@ -208,10 +208,11 @@ async function getOrientation(browser) {
   return orientation.toLowerCase()
 }
 async function getDriverInfo(browser) {
+  const isNative = browser.isMobile && !browser.capabilities.browserName
   return {
     sessionId: browser.sessionId,
     isMobile: browser.isMobile,
-    isNative: browser.isMobile && !browser.capabilities.browserName,
+    isNative,
     deviceName: browser.capabilities.desired
       ? browser.capabilities.desired.deviceName
       : browser.capabilities.deviceName,
@@ -219,6 +220,8 @@ async function getDriverInfo(browser) {
     platformVersion: browser.capabilities.platformVersion,
     browserName: browser.capabilities.browserName,
     browserVersion: browser.capabilities.browserVersion,
+    viewportRect: isNative ? browser.capabilities.viewportRect : null,
+    pixelRatio: isNative ? browser.capabilities.pixelRatio : null,
   }
 }
 async function getTitle(browser) {
