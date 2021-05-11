@@ -6,6 +6,7 @@ const createCheckSettings = require('./createCheckSettings')
 const isInvalidAccessibility = require('./isInvalidAccessibility')
 const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 const makeWaitForTestEnd = require('./makeWaitForTestEnd')
+const chalk = require('chalk')
 
 function makeCheckWindow({
   globalState,
@@ -168,6 +169,8 @@ function makeCheckWindow({
         return
       }
 
+      const hooks = scriptHooksToArray(scriptHooks.beforeCaptureScreenshot)
+
       const renderRequest = createRenderRequest({
         url,
         browser: browsers[index],
@@ -176,7 +179,7 @@ function makeCheckWindow({
         selector,
         selectorsToFindRegionsFor,
         region,
-        scriptHooks,
+        scriptHooks: {beforeCaptureScreenshot: hooks[index]},
         sendDom,
         visualGridOptions,
       })
@@ -325,6 +328,32 @@ function makeCheckWindow({
       })
 
       return renderRequestTask.promise
+    }
+
+    function scriptHooksToArray(hooks) {
+      if (Array.isArray(hooks)) {
+        return hooks
+      }
+
+      if (!hooks || typeof hooks === 'string') {
+        return Array(browsers.length).fill(hooks)
+      }
+
+      return Object.keys(hooks).reduce((acc, key, index) => {
+        const browser = browsers[index]
+        if (browser) {
+          const {name, deviceName} = browser
+          const browserName = name || deviceName
+          acc.push(hooks[browserName] || hooks['default'])
+        } else {
+          console.log(
+            chalk.yellow(
+              `${key} was provided a bcs hook but was not found in the browser configuration`,
+            ),
+          )
+        }
+        return acc
+      }, [])
     }
   }
 }

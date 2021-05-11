@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- adding multiple before capture screenshot hooks support
 ## 15.8.2 - 2021/4/26
 
 - rename `variantId` to `variationGroupId`
