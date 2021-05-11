@@ -50,7 +50,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "filenamify": "4.1.0",
-    "handlebars": "4.7.6",
+    "handlebars": "4.7.7",
     "morgan": "1.10.0",
     "ncp": "2.0.0",
     "node-fetch": "2.6.1",
