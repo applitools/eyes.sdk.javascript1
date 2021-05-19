@@ -24,7 +24,12 @@ describe('handlers', () => {
       });
 
       await handlers.open({});
-      await handlers.checkWindow({useDom: true, enablePatterns: true, ignoreDisplacements: true, variationGroupId: 'variationGroupId'});
+      await handlers.checkWindow({
+        useDom: true,
+        enablePatterns: true,
+        ignoreDisplacements: true,
+        variationGroupId: 'variationGroupId',
+      });
       expect(_args.useDom).to.be.true;
       expect(_args.enablePatterns).to.be.true;
       expect(_args.ignoreDisplacements).to.be.true;
