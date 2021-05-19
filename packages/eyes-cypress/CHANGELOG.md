@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+ - add the option to sent , variationGroupId to checkSettings
+
 
 ## 3.21.1 - 2021/5/12
 

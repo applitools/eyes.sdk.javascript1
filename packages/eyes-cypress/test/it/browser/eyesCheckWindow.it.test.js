@@ -120,6 +120,7 @@ describe('eyesCheckWindow', () => {
     const accessibility = 'accessibility';
     const matchLevel = 'matchLevel';
     const visualGridOptions = 'visualGridOptions';
+    const variationGroupId = 'variationGroupId';
 
     await eyesCheckWindow('bla doc', {
       tag,
@@ -141,8 +142,8 @@ describe('eyesCheckWindow', () => {
       accessibility,
       matchLevel,
       visualGridOptions,
+      variationGroupId,
     });
-
     expect(sendRequestInput).to.eql({
       command: 'checkWindow',
       data: {
@@ -176,6 +177,7 @@ describe('eyesCheckWindow', () => {
         accessibility,
         matchLevel,
         visualGridOptions,
+        variationGroupId,
       },
     });
     expect(resourcesPutted).to.eql([

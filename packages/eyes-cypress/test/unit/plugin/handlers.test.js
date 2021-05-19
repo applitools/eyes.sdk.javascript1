@@ -140,6 +140,7 @@ describe('handlers', () => {
     const accessibility = 'accessibility';
     const matchLevel = 'matchLevel';
     const visualGridOptions = 'visualGridOptions';
+    const variationGroupId = 'variationGroupId';
     const resourceContents = {};
 
     const result = await handlers.checkWindow({
@@ -165,6 +166,7 @@ describe('handlers', () => {
       accessibility,
       matchLevel,
       visualGridOptions,
+      variationGroupId,
     });
 
     expect(result).to.eql({
@@ -193,6 +195,7 @@ describe('handlers', () => {
       accessibility,
       matchLevel,
       visualGridOptions,
+      variationGroupId,
       __openArgs: {
         __test: 123,
         accessibilitySettings: undefined,
@@ -346,6 +349,7 @@ describe('handlers', () => {
       accessibility: undefined,
       matchLevel: undefined,
       visualGridOptions: undefined,
+      variationGroupId: undefined,
     });
   });
 

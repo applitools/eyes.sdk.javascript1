@@ -190,6 +190,7 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [scriptHooks](#scriptHooks)
     - [layoutBreakpoints](#layoutBreakpoints)
     - [sendDom](#sendDom)
+    - [variationGroupId](#variationGroupId)
   - [Close](#Close)
 - [Concurrency](#Concurrency)
 - [Advanced configuration](#Advanced-configuration)
@@ -420,6 +421,15 @@ cy.eyesCheckWindow({
 ```js
 cy.eyesCheckWindow({sendDom: false})
 ```
+
+##### `variationGroupId`
+
+```js
+cy.eyesCheckWindow({variationGroupId: 'Login Screen'})
+```
+
+For more information, visit our documentation page: https://applitools.com/docs/features/baseline-variations-groups.html
+
 
 ##### `useDom`
 

@@ -94,6 +94,7 @@ function makeHandlers({
       accessibility,
       matchLevel,
       visualGridOptions,
+      variationGroupId,
     }) => {
       logger.log(`[handlers] checkWindow: checkWindow=${typeof checkWindow}`);
       if (!checkWindow) {
@@ -133,6 +134,7 @@ function makeHandlers({
         accessibility,
         matchLevel,
         visualGridOptions,
+        variationGroupId,
       });
     },
 
