@@ -43,7 +43,7 @@
   "dependencies": {
     "express": "4.17.1",
     "filenamify": "4.1.0",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "ua-parser-js": "0.7.21",
     "uuid": "3.3.3"
   },
