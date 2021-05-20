@@ -36,7 +36,7 @@
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chalk": "4.1.1",
-    "handlebars": "4.7.6",
+    "handlebars": "4.7.7",
     "node-fetch": "2.6.1",
     "prettier": "2.3.0",
     "sync-fetch": "0.3.0",
