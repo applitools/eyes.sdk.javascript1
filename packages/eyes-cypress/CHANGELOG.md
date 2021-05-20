@@ -2,7 +2,7 @@
 
 ## Unreleased
 
- - add the option to sent , variationGroupId to checkSettings
+ - add the option to send , variationGroupId to checkwidnow
 
 
 ## 3.21.1 - 2021/5/12

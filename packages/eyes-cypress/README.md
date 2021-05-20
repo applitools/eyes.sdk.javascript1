@@ -425,7 +425,7 @@ cy.eyesCheckWindow({sendDom: false})
 ##### `variationGroupId`
 
 ```js
-cy.eyesCheckWindow({variationGroupId: 'Login Screen'})
+cy.eyesCheckWindow({variationGroupId: 'Login screen variation #1'})
 ```
 
 For more information, visit our documentation page: https://applitools.com/docs/features/baseline-variations-groups.html
