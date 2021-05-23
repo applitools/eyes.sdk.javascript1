@@ -107,7 +107,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   implements Required<Configuration<TElement, TSelector>> {
   protected readonly _spec: ConfigurationSpec<TElement, TSelector>
 
-  private _config: Configuration<TElement, TSelector> = {}
+  private _config: Configuration<TElement, TSelector> = {properties: []}
 
   constructor(config?: Configuration<TElement, TSelector>) {
     if (!config) return this
@@ -512,7 +512,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     this._config.properties = properties
   }
   getProperties(): PropertyDataData[] {
-    return this.properties.map(property => new PropertyDataData(property))
+    return this.properties.map((property) => new PropertyDataData(property))
   }
   setProperties(properties: PropertyData[]): this {
     this.properties = properties
@@ -919,11 +919,15 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this._config.scrollRootElement
   }
   set scrollRootElement(scrollRootElement: TElement | TSelector) {
-    utils.guard.custom(scrollRootElement, value => this._spec.isElement(value) || this._spec.isSelector(value), {
-      name: 'scrollRootElement',
-      message: 'must be element or selector',
-      strict: false,
-    })
+    utils.guard.custom(
+      scrollRootElement,
+      (value) => this._spec.isElement(value) || this._spec.isSelector(value),
+      {
+        name: 'scrollRootElement',
+        message: 'must be element or selector',
+        strict: false,
+      },
+    )
     this._config.scrollRootElement = scrollRootElement
   }
   getScrollRootElement(): TElement | TSelector {
@@ -1019,7 +1023,11 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
   addBrowser(browserInfo: RenderInfo): this
   addBrowser(width: number, height: number, name?: BrowserName): this
-  addBrowser(browserInfoOrWidth: RenderInfo | number, height?: number, name: BrowserName = BrowserName.CHROME) {
+  addBrowser(
+    browserInfoOrWidth: RenderInfo | number,
+    height?: number,
+    name: BrowserName = BrowserName.CHROME,
+  ) {
     if (utils.types.isObject(browserInfoOrWidth)) return this.addBrowsers(browserInfoOrWidth)
     else return this.addBrowsers({width: browserInfoOrWidth, height, name})
   }
