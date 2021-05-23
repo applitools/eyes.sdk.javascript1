@@ -522,6 +522,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   addProperty(prop: PropertyData): this
   addProperty(propOrName: PropertyData | string, value?: string): this {
     const property = utils.types.isString(propOrName) ? {name: propOrName, value} : propOrName
+    if (!this.properties) this.properties = []
     this.properties.push(property)
     return this
   }
