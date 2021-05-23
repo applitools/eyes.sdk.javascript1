@@ -512,7 +512,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     this._config.properties = properties
   }
   getProperties(): PropertyDataData[] {
-    return this.properties.map((property) => new PropertyDataData(property))
+    return this.properties?.map((property) => new PropertyDataData(property)) ?? []
   }
   setProperties(properties: PropertyData[]): this {
     this.properties = properties
@@ -522,7 +522,6 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   addProperty(prop: PropertyData): this
   addProperty(propOrName: PropertyData | string, value?: string): this {
     const property = utils.types.isString(propOrName) ? {name: propOrName, value} : propOrName
-    if (!this.properties) this.properties = []
     this.properties.push(property)
     return this
   }
