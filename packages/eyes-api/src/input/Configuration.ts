@@ -107,7 +107,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   implements Required<Configuration<TElement, TSelector>> {
   protected readonly _spec: ConfigurationSpec<TElement, TSelector>
 
-  private _config: Configuration<TElement, TSelector> = {properties: []}
+  private _config: Configuration<TElement, TSelector> = {}
 
   constructor(config?: Configuration<TElement, TSelector>) {
     if (!config) return this
@@ -522,6 +522,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   addProperty(prop: PropertyData): this
   addProperty(propOrName: PropertyData | string, value?: string): this {
     const property = utils.types.isString(propOrName) ? {name: propOrName, value} : propOrName
+    if (!this.properties) this.properties = []
     this.properties.push(property)
     return this
   }
