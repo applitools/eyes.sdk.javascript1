@@ -1,6 +1,5 @@
 'use strict'
 
-const {cosmiconfigSync} = require('cosmiconfig')
 const GeneralUtils = require('./GeneralUtils')
 const Logger = require('../logging/Logger')
 
@@ -9,24 +8,58 @@ function getConfig({
   configPath,
   logger = new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
 } = {}) {
-  const explorer = cosmiconfigSync('applitools', {
-    searchPlaces: ['applitools.config.js', 'package.json', 'eyes.config.js', 'eyes.json'],
-  })
-
-  let defaultConfig = {}
+  const possibleConfigs = ['applitools.config.js', 'eyes.config.js', 'eyes.json']
+  const envConfig = populateEnvConfig(configParams)
   try {
-    configPath = GeneralUtils.getEnvValue('CONFIG_PATH') || configPath
-    const result = configPath ? explorer.load(configPath) : explorer.search()
+    const envConfigPath = GeneralUtils.getEnvValue('CONFIG_PATH')
+    const customConfigPath = envConfigPath || configPath
 
-    if (result) {
-      const {config, filepath} = result
-      logger.log('Loading configuration from', filepath)
-      defaultConfig = config
+    if (customConfigPath) {
+      logger.log('Loading configuration from', customConfigPath)
+      const config = require(customConfigPath)
+      return Object.assign(config, envConfig)
+    } else {
+      const config = require(findConfigFile(possibleConfigs))
+      return Object.assign(config, envConfig)
     }
   } catch (ex) {
-    logger.log(`An error occurred while loading configuration. configPath=${configPath}\n`, ex)
+    if (Object.keys(envConfig).length) {
+      return envConfig
+    }
+    const errorMessage = `An error occurred while loading configuration. configPath=${configPath}\n`
+    logger.log(errorMessage, ex)
+    throw new Error(`${errorMessage}${ex}`)
   }
+}
 
+/**
+ * @param {string} camelCaseStr
+ * @return {string}
+ */
+function toEnvVarName(camelCaseStr) {
+  return camelCaseStr.replace(/(.)([A-Z])/g, '$1_$2').toUpperCase()
+}
+
+function findConfigFile(possibleConfigs, errors = []) {
+  let index = 0
+
+  for (const configFile of possibleConfigs) {
+    try {
+      return require.resolve(`./${configFile}`, {paths: [process.cwd()]})
+    } catch (error) {
+      // save errors to continue checking for other config files
+      // throw the earliest encountered error
+      errors.push(error)
+      if (index === possibleConfigs.length - 1) {
+        throw errors[0]
+      }
+    } finally {
+      index++
+    }
+  }
+}
+
+function populateEnvConfig(configParams) {
   const envConfig = {}
   for (const p of configParams) {
     envConfig[p] = GeneralUtils.getEnvValue(toEnvVarName(p))
@@ -43,15 +76,7 @@ function getConfig({
     }
   })
 
-  return Object.assign({}, defaultConfig, envConfig)
-}
-
-/**
- * @param {string} camelCaseStr
- * @return {string}
- */
-function toEnvVarName(camelCaseStr) {
-  return camelCaseStr.replace(/(.)([A-Z])/g, '$1_$2').toUpperCase()
+  return envConfig
 }
 
 module.exports = {

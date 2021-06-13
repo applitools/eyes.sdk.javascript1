@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix config lookup and validation
 ## 12.20.3 - 2021/6/8
 
 - replace setWindowRect with setWindowSize in spec driver

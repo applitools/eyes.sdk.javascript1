@@ -8,6 +8,7 @@ const {promisify: p} = require('util')
 const {ServerConnector} = require('../../index')
 const {ConfigUtils, Configuration} = require('../../index')
 
+process.chdir('..')
 const _userConfig = ConfigUtils.getConfig({configParams: ['apiKey', 'serverUrl', 'proxy']})
 const _configuration = new Configuration(_userConfig)
 
