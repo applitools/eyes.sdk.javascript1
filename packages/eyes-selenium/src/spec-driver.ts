@@ -5,7 +5,7 @@ import type * as Selenium from 'selenium-webdriver'
 export type Driver = Selenium.WebDriver
 export type Element = Selenium.WebElement
 export type Selector = Selenium.Locator | {using: string; value: string} | string | {type: string; selector: string}
-
+export type Cookie = Selenium.IWebDriverCookie
 // #region HELPERS
 
 const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
@@ -198,6 +198,10 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   await driver.wait(until.elementIsVisible(element), timeout)
 }
 
+export async function getCookies(driver: Driver): Promise<Cookie[]> {
+  return driver.manage().getCookies()
+}
+
 // #endregion
 
 // #region TESTING
@@ -220,7 +224,10 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     appium = false,
     args = [],
     headless,
-  } = parseEnv({...env, legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'})
+  } = parseEnv({
+    ...env,
+    legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3',
+  })
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {
     const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]

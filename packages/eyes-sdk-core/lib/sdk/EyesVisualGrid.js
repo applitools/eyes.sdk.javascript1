@@ -15,6 +15,7 @@ const {
   resolveAllRegionElements,
   toCheckWindowConfiguration,
 } = require('../fluent/CheckSettingsUtils')
+const extractCookies = require('../utils/extractCookies')
 
 /**
  * @typedef {import('../capture/CorsIframeHandles').CorsIframeHandle} CorsIframeHandle
@@ -279,12 +280,19 @@ class EyesVisualGrid extends EyesCore {
           configuration: this._configuration,
         })
 
+        const cookies = await extractCookies({
+          driver: this._driver,
+          logger: this._logger,
+          snapshots,
+        })
+
         return await this._checkWindowCommand({
           ...config,
           closeAfterMatch,
           throwEx,
           snapshot: snapshots,
           url,
+          cookies,
         })
       } finally {
         await EyesUtils.cleanupElementMarkers(

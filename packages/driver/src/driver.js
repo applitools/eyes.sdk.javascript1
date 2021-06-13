@@ -443,6 +443,10 @@ class Driver {
     if (this._isNative) return null
     return this.spec.getUrl(this._driver)
   }
+
+  async getCookies() {
+    return this.spec.getCookies(this._driver)
+  }
 }
 
 module.exports = Driver

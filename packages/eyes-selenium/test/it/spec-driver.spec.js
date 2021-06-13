@@ -11,6 +11,7 @@ describe('spec driver', async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
       driver = spec.transformDriver(driver)
       await driver.get(url)
+      console.log(driver);
     })
 
     after(async () => {
