@@ -192,6 +192,7 @@ class EyesDriver {
       this._platformVersion = info.platformVersion
       this._browserName = info.browserName
       this._browserVersion = info.browserVersion
+      this._supportsCdp = info.supportsCdp
     }
 
     if (!this._isNative) {
@@ -501,7 +502,12 @@ class EyesDriver {
   }
 
   async getCookies() {
-    return this.spec.getCookies(this._driver)
+    if (this._supportsCdp) {
+      const {cookies} = await this.spec.executeCdpCommand(this._driver, 'Network.getAllCookies')
+      return cookies
+    } else {
+      return this.spec.getCookies(this._driver)
+    }
   }
 }
 

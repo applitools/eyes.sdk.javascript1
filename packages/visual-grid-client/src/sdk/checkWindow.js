@@ -55,6 +55,7 @@ function makeCheckWindow({
     closeAfterMatch,
     throwEx = true,
     variationGroupId,
+    cookies,
   }) {
     const snapshots = Array.isArray(snapshot) ? snapshot : Array(browsers.length).fill(snapshot)
 
@@ -99,6 +100,7 @@ function makeCheckWindow({
         userAgent,
         referer: url,
         proxySettings: wrappers[0].getProxy(),
+        cookies,
       })
       await putResources([dom, ...Object.values(resources)])
       return {dom, resources: Object.values(resources)}
