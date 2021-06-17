@@ -446,12 +446,8 @@ class Driver {
   }
 
   async getCookies() {
-    if (this._supportsCdp) {
-      const {cookies} = await this.spec.executeCdpCommand(this._driver, 'Network.getAllCookies')
-      return cookies
-    } else {
-      return this.spec.getCookies(this._driver)
-    }
+    if (this._isNative || !this.spec.getCookies) return []
+    return this.spec.getCookies(this._driver)
   }
 }
 
