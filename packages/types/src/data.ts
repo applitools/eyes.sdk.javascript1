@@ -267,3 +267,16 @@ export type SessionUrls = {
   readonly batch?: string
   readonly session?: string
 }
+export type LogHandler = CustomLogHandler | FileLogHandler | ConsoleLogHandler
+
+export type Cookie = {
+  name: string
+  value: string
+  domain?: string
+  path?: string
+  maxAge?: number
+  expires?: Date
+  sameSite?: string
+  httpOnly?: boolean
+  secure?: boolean
+}

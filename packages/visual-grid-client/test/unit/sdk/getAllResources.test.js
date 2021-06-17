@@ -802,4 +802,6 @@ describe('getAllResources', () => {
     const resources2 = await getAllResources({resourceUrls: [url1], preResources: {}})
     expect(resources2).to.eql(expectedResources)
   })
+
+  // TODO add tests for cookies
 })

@@ -1,6 +1,6 @@
 const {URL} = require('url')
 
-function getResourceCookies(url, cookies) {
+function getResourceCookies(url, cookies = []) {
   return cookies
     .reduce((acc, cookie) => {
       const {hostname, pathname, protocol} = new URL(url)

@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import * as legacy from './legacy'
+import {Options} from '@applitools/types'
 
 export type Driver = Applitools.WebdriverIO.Browser
 export type Element =
@@ -7,6 +8,7 @@ export type Element =
   | {ELEMENT: string}
   | {'element-6066-11e4-a52e-4f735466cecf': string}
 export type Selector = Applitools.WebdriverIO.Selector | string | legacy.By | {type: string; selector: string}
+export type Cookie = Options.Cookie
 // #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
@@ -271,6 +273,24 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
   } else {
     // @ts-ignore
     await element.waitForDisplayed({timeout})
+  }
+}
+
+// export async function executeCdpCommand(driver: Driver, commandName: string, args = {}): Promise<any> {
+//   return driver.sendCommandAndGetResult(commandName, args)
+// }
+
+export async function getCookies(driver: Driver): Promise<Cookie[]> {
+  const capabilities = browser.capabilities as any
+  const supportsCdp = driver.isDevTools || capabilities.browserName.search(/chrome/i) !== -1
+  if (supportsCdp) {
+    const {cookies} = await driver.sendCommandAndGetResult('Network.getAllCookies', {})
+    return cookies.map((cookie: any) => {
+      cookie.expiry = cookie.expires
+      delete cookie.expires
+    })
+  } else {
+    return driver.getCookies()
   }
 }
 

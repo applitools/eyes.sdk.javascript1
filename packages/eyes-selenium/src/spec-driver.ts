@@ -45,6 +45,7 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
+  // TODO: add cdp command
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     const cmd = require('selenium-webdriver/lib/command')
     cmd.Name.SWITCH_TO_PARENT_FRAME = 'switchToParentFrame'
