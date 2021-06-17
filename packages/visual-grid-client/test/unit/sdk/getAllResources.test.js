@@ -803,5 +803,28 @@ describe('getAllResources', () => {
     expect(resources2).to.eql(expectedResources)
   })
 
-  // TODO add tests for cookies
+  it('handles cookies', async () => {
+    let result
+    const fetchResource = async (url, options) => {
+      result = {
+        url,
+        cookie: options.headers.Cookie,
+      }
+      return result
+    }
+    const resourceCache = createResourceCache()
+    getAllResources = makeGetAllResources({
+      fetchResource,
+      resourceCache,
+      logger: testLogger,
+    })
+    await getAllResources({
+      resourceUrls: ['http://some-url.com/images/image.png'],
+      cookies: [{domain: 'some-url.com', path: '/images', name: 'hello', value: 'world'}],
+    })
+    expect(result).to.deep.equal({
+      url: 'http://some-url.com/images/image.png',
+      cookie: 'hello=world;',
+    })
+  })
 })
