@@ -1,7 +1,6 @@
 const assert = require('assert')
 const spec = require('../../dist/spec-driver')
 const {By} = require('../../dist/legacy')
-const {prepareStackTrace} = require('../../../eyes-sdk-core/lib/errors/EyesError')
 
 describe('spec driver', async () => {
   let browser, destroyBrowser
