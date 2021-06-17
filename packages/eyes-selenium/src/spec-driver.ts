@@ -5,7 +5,7 @@ import type * as Selenium from 'selenium-webdriver'
 export type Driver = Selenium.WebDriver
 export type Element = Selenium.WebElement
 export type Selector = Selenium.Locator | {using: string; value: string} | string | {type: string; selector: string}
-export type Cookie = Selenium.IWebDriverCookie
+
 // #region HELPERS
 
 const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
@@ -45,7 +45,6 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
-  // TODO: add cdp command
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     const cmd = require('selenium-webdriver/lib/command')
     cmd.Name.SWITCH_TO_PARENT_FRAME = 'switchToParentFrame'
@@ -198,6 +197,7 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   const element = await findElement(driver, selector)
   await driver.wait(until.elementIsVisible(element), timeout)
 }
+
 // #endregion
 
 // #region TESTING
@@ -220,10 +220,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     appium = false,
     args = [],
     headless,
-  } = parseEnv({
-    ...env,
-    legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3',
-  })
+  } = parseEnv({...env, legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'})
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {
     const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]
