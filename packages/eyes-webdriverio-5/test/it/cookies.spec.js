@@ -41,13 +41,14 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
 
     await spec.visit(driver, 'http://localhost:4458')
 
-    // const cdpCookies = await driver.sendCommandAndGetResult('Network.getAllCookies', {})
+    await driver.reload()
+
     const cookies = await driver.getCookies()
     console.log(cookies)
 
     await eyes.open(driver, 'Eyes Selenium SDK - Cookies', 'Cookie test', {width: 800, height: 600})
     await eyes.check({isFully: true, disableBrowserFetching: true})
-    const results = await eyes.close(true)
+    const results = await eyes.close(false)
     console.log(results)
     await corsServer.close()
     await server.close()

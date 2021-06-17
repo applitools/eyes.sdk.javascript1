@@ -37,24 +37,16 @@
 
 "@applitools/driver@1.0.7":
   version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.0.7.tgz#f2b96fd43ae4c7e381bfba666687041a73c1c54a"
-  integrity sha512-cQL7Z/LAISnd8IXA7rJCr4EgURZ4Ypg3c4lCfMObPGz8fHjQnbAgdinTk7ceplkgoVBCrh4EPk23umOEbq6Ugw==
-  dependencies:
-    "@applitools/snippets" "2.1.3"
-    "@applitools/utils" "1.2.0"
-
-"@applitools/driver@1.0.7":
-  version "1.0.7"
   resolved "https://registry.npmjs.org/@applitools/driver/-/driver-1.0.7.tgz#f2b96fd43ae4c7e381bfba666687041a73c1c54a"
   integrity sha512-cQL7Z/LAISnd8IXA7rJCr4EgURZ4Ypg3c4lCfMObPGz8fHjQnbAgdinTk7ceplkgoVBCrh4EPk23umOEbq6Ugw==
   dependencies:
     "@applitools/snippets" "2.1.3"
     "@applitools/utils" "1.2.0"
 
-"@applitools/eyes-api@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-api/-/eyes-api-1.0.3.tgz#07d95fb9fb5b408a98ec3e7d28290067daecbab4"
-  integrity sha512-zrQa6vZyu4ob5JiW/6XOpvx3iimBduhzEAI6dUKx61CX2JUGbCqGU9tyyB8lkGgaI2wAC9YKqz0xulORD6/JEw==
+"@applitools/eyes-api@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/@applitools/eyes-api/-/eyes-api-1.0.5.tgz#0c5f51b7ada07eae7976ab45abcb2e36e998c125"
+  integrity sha512-iOyolrAwG9567r/PNaLHYNqhPbx1J0/djq1iv2yhppfkwivAktSEtW/UBG4IF2pnI4Y4eYFxCk6FUigY6/Spqg==
   dependencies:
     "@applitools/logger" "1.0.1"
     "@applitools/types" "1.0.3"
@@ -72,27 +64,6 @@
     "@applitools/screenshoter" "3.0.8"
     "@applitools/snippets" "2.1.3"
     "@applitools/types" "1.0.3"
-    axios "0.21.1"
-    chalk "3.0.0"
-    cosmiconfig "6.0.0"
-    dateformat "3.0.3"
-    debug "4.2.0"
-    deepmerge "4.2.2"
-    png-async "0.9.4"
-    stack-trace "0.0.10"
-    tunnel "0.0.6"
-
-"@applitools/eyes-sdk-core@12.20.3":
-  version "12.20.3"
-  resolved "https://registry.npmjs.org/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.20.3.tgz#684dc155fdb50bfc1ee0c917a8b1c395efd78f1f"
-  integrity sha512-3Rsm7eDPGCQHx6LXmhr50JytqndrqDSERkdLTxuK1rl2eYygWhJOsRq6enn+lz5WDCj5GUQ2cZCozpBBOutzgg==
-  dependencies:
-    "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.5.3"
-    "@applitools/driver" "1.0.7"
-    "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/screenshoter" "3.0.8"
-    "@applitools/snippets" "2.1.3"
     axios "0.21.1"
     chalk "3.0.0"
     cosmiconfig "6.0.0"
@@ -1753,11 +1724,7 @@ cli-spinners@^2.1.0:
 
 cli-table3@0.6.0:
   version "0.6.0"
-<<<<<<< Updated upstream
-  resolved "https://registry.yarnpkg.com/cli-table3/-/cli-table3-0.6.0.tgz#b7b1bc65ca8e7b5cef9124e13dc2b21e2ce4faee"
-=======
   resolved "https://registry.npmjs.org/cli-table3/-/cli-table3-0.6.0.tgz#b7b1bc65ca8e7b5cef9124e13dc2b21e2ce4faee"
->>>>>>> Stashed changes
   integrity sha512-gnB85c3MGC7Nm9I/FkiasNBOKjOiO1RNuXXarQms37q4QMpWdlbBgD/VnOStA2faG1dpXMv31RFApjX1/QdgWQ==
   dependencies:
     object-assign "^4.1.0"

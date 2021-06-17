@@ -198,11 +198,6 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   const element = await findElement(driver, selector)
   await driver.wait(until.elementIsVisible(element), timeout)
 }
-
-export async function getCookies(driver: Driver): Promise<Cookie[]> {
-  return driver.manage().getCookies()
-}
-
 // #endregion
 
 // #region TESTING

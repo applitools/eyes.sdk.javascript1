@@ -1,29 +1,24 @@
 const {URL} = require('url')
 
 function getResourceCookies(url, cookies = []) {
-  return cookies
-    .reduce((acc, cookie) => {
-      const {hostname, pathname, protocol} = new URL(url)
-      const {domain, path, expires} = cookie
+  return cookies.reduce((acc, cookie) => {
+    const resourceUrl = new URL(url)
 
-      const resourceUrl = hostname + pathname
-      const cookieUrl = domain + path
+    const domainMatch = cookie.domain.startsWith('.')
+      ? resourceUrl.hostname.includes(cookie.domain.slice(1))
+      : resourceUrl.hostname === cookie.domain
+    if (!domainMatch) return acc
 
+    const pathMatch = resourceUrl.pathname.startsWith(cookie.path)
+    if (!pathMatch) return acc
 
-      // ? should we send cookies blindly according to hostname and path alone ?
-      // ? python impl checks subdomain, protocol, and expiry
-      // ? https://github.com/applitools/eyes.sdk.python/blob/482b9f7756d4503865471da4dea464ccde634539/eyes_selenium/applitools/selenium/visual_grid/resource_collection_task.py#L227
-      // const cookieExpiry = new Date(expires * 1000).getTime()
-      // const currentTime = new Date().getTime()
-      // const expired = currentTime > cookieExpiry
+    if (cookie.secure && resourceUrl.protocol !== 'https:') return acc
 
-      if (resourceUrl.includes(cookieUrl)) {
-        acc.push(`${cookie.name}=${cookie.value};`)
-      }
+    const expired = cookie.expiry >= 0 && Date.now() > cookie.expiry * 1000
+    if (expired) return acc
 
-      return acc
-    }, [])
-    .join(' ')
+    return acc + `${cookie.name}=${cookie.value};`
+  }, '')
 }
 
 module.exports = getResourceCookies

@@ -1,6 +1,7 @@
 const assert = require('assert')
 const spec = require('../../dist/spec-driver')
 const {By} = require('../../dist/legacy')
+const {prepareStackTrace} = require('../../../eyes-sdk-core/lib/errors/EyesError')
 
 describe('spec driver', async () => {
   let browser, destroyBrowser
@@ -129,6 +130,9 @@ describe('spec driver', async () => {
         },
       })
     })
+    it.only('getCookies()', async () => {
+      await getCookies()
+    })
   })
 
   describe('onscreen desktop (@webdriver)', async () => {
@@ -190,6 +194,9 @@ describe('spec driver', async () => {
           platformName: 'WINDOWS',
         },
       })
+    })
+    it.only('getCookies()', async () => {
+      await getCookies(true)
     })
   })
 
@@ -386,6 +393,9 @@ describe('spec driver', async () => {
         },
       })
     })
+    it.only('getCookies()', async () => {
+      await getCookies()
+    })
   })
 
   async function isDriver({input, expected}) {
@@ -531,5 +541,53 @@ describe('spec driver', async () => {
       Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
       expected,
     )
+  }
+
+  async function getCookies(legacy = false) {
+    if (!legacy) {
+      const cdpCommand = [
+        'Network.setCookie',
+        {
+          domain: 'what',
+          expiry: -1,
+          httpOnly: false,
+          name: 'hello',
+          path: '/',
+          sameSite: undefined,
+          secure: false,
+          value: 'goodbye',
+          name: 'hello',
+          value: 'world',
+        },
+      ]
+      if (browser.isDevTools) {
+        const puppeteer = await browser.getPuppeteer()
+        const [page] = await puppeteer.pages()
+        await page._client.send(...cdpCommand)
+      } else {
+        await browser.sendCommand(...cdpCommand)
+      }
+
+      assert.deepStrictEqual(await spec.getCookies(browser), [
+        {
+          domain: 'what',
+          expiry: -1,
+          httpOnly: false,
+          name: 'hello',
+          path: '/',
+          sameSite: undefined,
+          secure: false,
+          value: 'goodbye',
+          name: 'hello',
+          value: 'world',
+        },
+      ])
+    } else {
+      // TODO: implement IE test
+      // await browser.addCookie({name: 'hello', value: 'world'})
+      // assert.deepStrictEqual(await spec.getCookies(browser), [
+      //   {name: 'hello', value: 'world', domain: 'applitools.github.io'},
+      // ])
+    }
   }
 })
