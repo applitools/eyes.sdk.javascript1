@@ -2,7 +2,7 @@ const {expect} = require('chai')
 const getResourceCookies = require('../../../src/sdk/getResourceCookies')
 
 describe('getResourceCookies', () => {
-  it('should return cookies per url', () => {
+  it('should handle cookies per url', () => {
     const url = 'https://somedomain.com'
     const cookies = [
       {domain: 'somedomain.com', path: '/', name: 'hello', value: 'world'},
@@ -12,7 +12,7 @@ describe('getResourceCookies', () => {
     expect(getResourceCookies(url, cookies)).to.equal('hello=world;')
   })
 
-  it('should return cookies per path', () => {
+  it('should handle cookies per path', () => {
     const url = 'https://somedomain.com/images/image.png'
     const cookies = [
       {domain: 'somedomain.com', path: '/images', name: 'hello', value: 'world'},
@@ -23,7 +23,7 @@ describe('getResourceCookies', () => {
     expect(getResourceCookies(url, cookies)).to.equal('hello=world;goodbye=moon;')
   })
 
-  it('should work with subdomains', () => {
+  it('should handle subdomains', () => {
     const url = 'https://mydomain.somedomain.com/images/image.png'
     const cookies = [
       {domain: 'someotherdomain.com', path: '/images', name: 'hello', value: 'world'},
@@ -32,6 +32,11 @@ describe('getResourceCookies', () => {
     ]
 
     expect(getResourceCookies(url, cookies)).to.equal('goodbye=moon;')
+    expect(
+      getResourceCookies('https://domain.com', [
+        {domain: '.domain.com', path: '/', name: 'sub', value: 'domain'},
+      ]),
+    ).to.equal('sub=domain;')
   })
 
   it('should handle secure cookies', () => {
