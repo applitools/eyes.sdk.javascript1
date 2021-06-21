@@ -110,7 +110,7 @@ async function takeDomSnapshots({
   async function getContextCookies(context) {
     if (!allCookies) {
       const {cookies, all} = await context.getCookies()
-      if (all) allCookies = true
+      allCookies = all
       allBrowserCookies.push(...cookies)
     }
   }

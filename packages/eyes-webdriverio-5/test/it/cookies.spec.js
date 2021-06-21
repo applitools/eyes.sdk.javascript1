@@ -42,13 +42,9 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
 
     await spec.visit(driver, 'http://localhost:4458?name=token&value=12345&path=/images&domain=localhost')
 
-    // await driver.refresh()
+    console.log(await driver.getCookies())
 
-    // await driver.switchToFrame(await driver.findElement('css', '#frame'))
-    const cookies = await driver.getCookies()
-    console.log(cookies)
-
-    await eyes.open(driver, 'Eyes Selenium SDK - Cookies', 'Cookie test', {width: 800, height: 600})
+    await eyes.open(driver, 'Eyes Selenium SDK - Cookies', 'Cookie test')
     await eyes.check({isFully: true, disableBrowserFetching: true})
     const results = await eyes.close(false)
     console.log(results)
