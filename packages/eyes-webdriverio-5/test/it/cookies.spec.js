@@ -40,10 +40,7 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
       showLogs: true,
     })
 
-    await spec.visit(
-      driver,
-      'http://localhost:4458?name=token&value=12345&path=/images&domain=localhost',
-    )
+    await spec.visit(driver, 'http://localhost:4458?name=token&value=12345&path=/images&domain=localhost')
 
     // await driver.refresh()
 
