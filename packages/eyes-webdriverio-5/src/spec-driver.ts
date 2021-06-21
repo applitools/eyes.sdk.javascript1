@@ -275,31 +275,34 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
   }
 }
 
-export async function getCookies(browser: Driver): Promise<types.Cookie[]> {
+export async function getCookies(browser: Driver): Promise<types.CookieObject> {
   const capabilities = browser.capabilities as any
   let allCookies
   if (browser.isDevTools) {
     const puppeteer = await browser.getPuppeteer()
     const [page] = await puppeteer.pages()
     const {cookies} = await (page as any)._client.send('Network.getAllCookies')
-    allCookies = cookies
+    allCookies = {cookies, all: true}
   } else if (capabilities.browserName.search(/chrome/i) !== -1) {
     const {cookies} = await browser.sendCommandAndGetResult('Network.getAllCookies', {})
-    allCookies = cookies
+    allCookies = {cookies, all: true}
   } else {
-    allCookies = await browser.getCookies()
+    allCookies = {cookies: await browser.getCookies(), all: false}
   }
 
-  return allCookies.map((cookie: any) => ({
-    name: cookie.name,
-    value: cookie.value,
-    domain: cookie.domain,
-    path: cookie.path,
-    expiry: cookie.expires ?? cookie.expiry,
-    sameSite: cookie.sameSite,
-    httpOnly: cookie.httpOnly,
-    secure: cookie.secure,
-  }))
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
+  }
 }
 
 // #endregion

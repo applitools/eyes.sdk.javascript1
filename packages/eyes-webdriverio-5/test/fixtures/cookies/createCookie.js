@@ -1,8 +1,7 @@
-module.exports = (_req, res, next) => {
-  res.cookie('token', '12345', {
-    domain: 'localhost',
-    // path: '/images/',
-    expires: new Date(Date.now() + 10000),
-  })
+module.exports = (req, res, next) => {
+  const {query} = req
+  if (Object.keys(query).length) {
+    res.cookie(query.name, query.value, query)
+  }
   next()
 }

@@ -367,6 +367,11 @@ class EyesContext {
     }
     return this._innerOffset
   }
+
+  async getCookies() {
+    await this.focus()
+    return this.spec.getCookies(this._context)
+  }
 }
 
 module.exports = EyesContext

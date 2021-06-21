@@ -189,6 +189,7 @@ async function eyesStorybook({
     logger.log('Getting stories from storybook');
     const spinner = ora({text: 'Reading stories', stream: outputStream});
     spinner.start();
+    
     logger.log('navigating to storybook url:', storybookUrl);
     const [navigateErr] = await presult(page.goto(storybookUrl, {timeout: readStoriesTimeout}));
     if (navigateErr) {

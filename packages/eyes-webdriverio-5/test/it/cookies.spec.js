@@ -8,6 +8,7 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
 // const CDP = require('chrome-remote-interface')
 
 ;(async function () {
+  let server, corsServer
   try {
     const [driver, destroyDriver] = await spec.build({
       browser: 'chrome',
@@ -18,14 +19,14 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
     const corsStaticPath = `${staticPath}/cors_images`
     const middlewareFile = `${staticPath}/restrictCookies.js`
 
-    const corsServer = await testServerInProcess({
+    corsServer = await testServerInProcess({
       port: 4459,
       allowCors: true,
       staticPath: corsStaticPath,
       middlewareFile,
     })
 
-    const server = await testServerInProcess({
+    server = await testServerInProcess({
       port: 4458,
       staticPath,
       middlewareFile: `${staticPath}/createCookie.js`,
@@ -39,10 +40,14 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
       showLogs: true,
     })
 
-    await spec.visit(driver, 'http://localhost:4458')
+    await spec.visit(
+      driver,
+      'http://localhost:4458?name=token&value=12345&path=/images&domain=localhost',
+    )
 
-    await driver.reload()
+    // await driver.refresh()
 
+    // await driver.switchToFrame(await driver.findElement('css', '#frame'))
     const cookies = await driver.getCookies()
     console.log(cookies)
 
@@ -50,11 +55,12 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
     await eyes.check({isFully: true, disableBrowserFetching: true})
     const results = await eyes.close(false)
     console.log(results)
-    await corsServer.close()
-    await server.close()
     await destroyDriver(driver)
-    // await eyes.abort()
+    await eyes.abort()
   } catch (error) {
     throw error
+  } finally {
+    await corsServer.close()
+    await server.close()
   }
 })()
