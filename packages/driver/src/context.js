@@ -395,6 +395,11 @@ class Context {
   async focusElement(element) {
     return scripts.focusElement(this._logger, this, element)
   }
+
+  async getCookies() {
+    await this.focus()
+    return this.spec.getCookies(this._context)
+  }
 }
 
 module.exports = Context

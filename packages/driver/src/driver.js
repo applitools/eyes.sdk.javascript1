@@ -444,11 +444,6 @@ class Driver {
     if (this._isNative) return null
     return this.spec.getUrl(this._driver)
   }
-
-  async getCookies() {
-    if (this._isNative || !this.spec.getCookies) return []
-    return this.spec.getCookies(this._driver)
-  }
 }
 
 module.exports = Driver

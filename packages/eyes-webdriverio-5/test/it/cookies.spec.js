@@ -5,7 +5,6 @@ const {setupEyes} = require('@applitools/test-utils')
 const {testServerInProcess} = require('@applitools/test-server')
 const cwd = process.cwd()
 const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './src', './spec-driver'))
-// const CDP = require('chrome-remote-interface')
 
 ;(async function () {
   let server, corsServer
@@ -37,7 +36,7 @@ const spec = require(path.resolve(cwd, fs.existsSync('./dist') ? './dist' : './s
       displayName: 'check window fully with vg and cookies',
       baselineName: 'Cookies',
       saveNewTests: true,
-      showLogs: true,
+      saveLogs: true,
     })
 
     await spec.visit(driver, 'http://localhost:4458?name=token&value=12345&path=/images&domain=localhost')
