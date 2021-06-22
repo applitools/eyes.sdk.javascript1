@@ -804,12 +804,10 @@ describe('getAllResources', () => {
   })
 
   it('handles cookies', async () => {
-    let result
+    const results = []
     const fetchResource = async (url, options) => {
-      result = {
-        url,
-        cookie: options.headers.Cookie,
-      }
+      const result = {url, cookie: options.headers.Cookie}
+      results.push(result)
       return result
     }
     const resourceCache = createResourceCache()
@@ -819,12 +817,38 @@ describe('getAllResources', () => {
       logger: testLogger,
     })
     await getAllResources({
-      resourceUrls: ['http://some-url.com/images/image.png'],
-      cookies: [{domain: 'some-url.com', path: '/images', name: 'hello', value: 'world'}],
+      resourceUrls: [
+        'http://some-url.com/images/image.png',
+        'http://some-other-url.com/pictures/picture.jpeg',
+        'http://my-domain.com/static/style.css',
+        'http://web.theweb.com/resources/resource.css',
+        'http://theinternet.com/assets/public/img.png',
+      ],
+      cookies: [
+        {
+          domain: 'some-other-url.com',
+          path: '/pictures',
+          name: 'hello',
+          value: 'world',
+          expiry: Date.now() / 1000,
+        },
+        {
+          domain: '.theweb.com',
+          path: '/resources/',
+          name: 'resource',
+          value: 'alright',
+        },
+        {domain: 'some-url.com', path: '/images', name: 'hello', value: 'world'},
+        {domain: 'my-domain.com', path: '/static', name: 'static', value: 'yes', secure: true},
+        {domain: 'theinternet.com', path: '/assets/public', name: 'assets', value: 'okay'},
+      ],
     })
-    expect(result).to.deep.equal({
-      url: 'http://some-url.com/images/image.png',
-      cookie: 'hello=world;',
-    })
+    expect(results).to.deep.equal([
+      {url: 'http://some-url.com/images/image.png', cookie: 'hello=world;'},
+      {url: 'http://some-other-url.com/pictures/picture.jpeg', cookie: undefined}, // expired
+      {url: 'http://my-domain.com/static/style.css', cookie: undefined}, // non secure (http)
+      {url: 'http://web.theweb.com/resources/resource.css', cookie: 'resource=alright;'},
+      {url: 'http://theinternet.com/assets/public/img.png', cookie: 'assets=okay;'},
+    ])
   })
 })
