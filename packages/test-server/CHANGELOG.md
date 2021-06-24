@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add https support
 
 ## 1.0.3 - 2021/5/24
 

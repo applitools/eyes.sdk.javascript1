@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- support cookies
 ## 5.31.8 - 2021/6/15
 
 - added full typescript support

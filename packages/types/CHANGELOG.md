@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `Cookie` and `CookieObject` types
 
 ## 1.0.3 - 2021/6/15
 
