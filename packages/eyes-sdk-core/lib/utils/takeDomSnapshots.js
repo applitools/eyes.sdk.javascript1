@@ -16,7 +16,7 @@ async function takeDomSnapshots({
   getIosDevicesSizes,
 }) {
   let allCookies = false
-  const allBrowserCookies = []
+  const cookieJar = []
 
   if (!breakpoints) {
     logger.verbose(`taking single dom snapshot`)
@@ -26,7 +26,7 @@ async function takeDomSnapshots({
       showLogs,
       skipResources,
     })
-    return {snapshots: Array(browsers.length).fill(snapshot), cookies: allBrowserCookies}
+    return {snapshots: Array(browsers.length).fill(snapshot), cookies: cookieJar}
   }
 
   const requiredWidths = await getRequiredWidths()
@@ -88,7 +88,7 @@ async function takeDomSnapshots({
     browsersInfo.forEach(({index}) => (snapshots[index] = snapshot))
   }
   await driver.setViewportSize(viewportSize)
-  return {snapshots, cookies: allBrowserCookies}
+  return {snapshots, cookies: cookieJar}
 
   async function getRequiredWidths() {
     return await browsers.reduce((widths, browser, index) => {
@@ -111,7 +111,7 @@ async function takeDomSnapshots({
     if (!allCookies) {
       const {cookies, all} = await context.getCookies()
       allCookies = all
-      allBrowserCookies.push(...cookies)
+      cookieJar.push(...cookies)
     }
   }
 }
