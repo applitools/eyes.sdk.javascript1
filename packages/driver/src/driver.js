@@ -187,7 +187,6 @@ class Driver {
       this._platformVersion = info.platformVersion
       this._browserName = info.browserName
       this._browserVersion = info.browserVersion
-      this._supportsCdp = info.supportsCdp
 
       if (!this._isNative) {
         this._userAgentString = await scripts.getUserAgent(this._logger, this)

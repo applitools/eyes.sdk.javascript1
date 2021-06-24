@@ -36,7 +36,7 @@ describe('TestCookies', () => {
   })
 
   beforeEach(async () => {
-    ;[driver, destroyDriver] = await spec.build({browser: 'chrome', attach: true})
+    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
   })
 
   afterEach(async () => {
@@ -44,7 +44,7 @@ describe('TestCookies', () => {
   })
 
   it('get cookies', async () => {
-    const url = adjustUrlToDocker('http://localhost:5557')
+    const url = adjustUrlToDocker('http://localhost:5557?name=token&value=12345&path=/images')
     await spec.visit(driver, url)
     const eyes = setupEyes({vg: true, disableBrowserFetching: true})
     await eyes.open(driver, 'Cookies', 'TestCookies', {width: 800, height: 600})
