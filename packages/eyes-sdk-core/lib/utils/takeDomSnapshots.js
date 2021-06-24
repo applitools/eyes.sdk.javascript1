@@ -21,7 +21,7 @@ async function takeDomSnapshots({
   if (!breakpoints) {
     logger.verbose(`taking single dom snapshot`)
     const snapshot = await takeDomSnapshot(logger, driver, {
-      getContextCookies,
+      onSnapshotContext,
       disableBrowserFetching,
       showLogs,
       skipResources,
@@ -79,7 +79,7 @@ async function takeDomSnapshots({
     }
 
     const snapshot = await takeDomSnapshot(logger, driver, {
-      getContextCookies,
+      onSnapshotContext,
       disableBrowserFetching,
       showLogs,
       skipResources,
@@ -107,7 +107,7 @@ async function takeDomSnapshots({
     }, Promise.resolve(new Map()))
   }
 
-  async function getContextCookies(context) {
+  async function onSnapshotContext(context) {
     if (!allCookies) {
       const {cookies, all} = await context.getCookies()
       allCookies = all

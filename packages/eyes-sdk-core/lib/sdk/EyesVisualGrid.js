@@ -257,10 +257,6 @@ class EyesVisualGrid extends EyesCore {
         const browsers = this._configuration.getBrowsersInfo()
         const showLogs = this._configuration.getShowLogs()
 
-        // TODO: when in localhost mode - we get CORS cookies
-        // ? so essentially we get duplicated cookies
-        // ? this shouldn't behave this way in "production"
-
         const {snapshots, cookies} = await takeDomSnapshots({
           breakpoints,
           browsers,
