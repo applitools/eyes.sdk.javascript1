@@ -3,6 +3,11 @@
 ## Unreleased
 
 - support cookies
+- fix an issue with screenshots during locate logic
+
+## 12.21.2 - 2021/6/27
+
+- fix return driver from eyes open
 
 ## 12.21.1 - 2021/6/15
 

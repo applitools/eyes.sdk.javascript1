@@ -42,12 +42,12 @@ describe('spec driver', () => {
     })
     it('isEqualElements(element, element)', async function (driver) {
       const {value: element} = await driver.element('css selector', 'div')
-      assert.ok(spec.isEqualElements(driver, element, element))
+      assert.ok(await spec.isEqualElements(driver, element, element))
     })
     it('isEqualElements(element1, element2)', async function (driver) {
       const {value: element1} = await driver.element('css selector', 'div')
       const {value: element2} = await driver.element('css selector', 'h1')
-      assert.ok(!spec.isEqualElements(driver, element1, element2))
+      assert.ok(!(await spec.isEqualElements(driver, element1, element2)))
     })
     it('executeScript(strings, args)', async function (driver) {
       const script = 'return arguments[0]'

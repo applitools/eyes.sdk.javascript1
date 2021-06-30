@@ -1,6 +1,6 @@
-import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
-import {TestResultsStatus, TestResultsStatusLiteral} from '../enums/TestResultsStatus'
+import * as utils from '@applitools/utils'
+import {TestResultsStatus, TestResultsStatusEnum} from '../enums/TestResultsStatus'
 import {RectangleSize, RectangleSizeData} from '../input/RectangleSize'
 import {TestAccessibilityStatus} from './TestAccessibilityStatus'
 import {SessionUrls, SessionUrlsData} from './SessionUrls'
@@ -10,7 +10,7 @@ export type TestResults = {
   readonly testId?: string
   readonly name?: string
   readonly secretToken?: string
-  readonly status?: TestResultsStatusLiteral
+  readonly status?: TestResultsStatus
   readonly appName?: string
   readonly batchId?: string
   readonly batchName?: string
@@ -86,14 +86,14 @@ export class TestResultsData implements Required<TestResults> {
     this._results.secretToken = secretToken
   }
 
-  get status(): TestResultsStatusLiteral {
+  get status(): TestResultsStatus {
     return this._results.status
   }
-  getStatus(): TestResultsStatus {
-    return this.status as TestResultsStatus
+  getStatus(): TestResultsStatusEnum {
+    return this.status as TestResultsStatusEnum
   }
   /** @deprecated */
-  setStatus(status: TestResultsStatus) {
+  setStatus(status: TestResultsStatusEnum) {
     this._results.status = status
   }
 
@@ -384,7 +384,7 @@ export class TestResultsData implements Required<TestResults> {
   }
 
   isPassed(): boolean {
-    return this._results.status === TestResultsStatus.Passed
+    return this._results.status === TestResultsStatusEnum.Passed
   }
 
   async delete(): Promise<void> {

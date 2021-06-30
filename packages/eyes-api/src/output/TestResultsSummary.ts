@@ -1,5 +1,5 @@
 import * as utils from '@applitools/utils'
-import {TestResultsStatus} from '../enums/TestResultsStatus'
+import {TestResultsStatusEnum} from '../enums/TestResultsStatus'
 import {TestFailedError} from '../errors/TestFailedError'
 import {TestResults} from './TestResults'
 import {TestResultContainer, TestResultContainerData} from './TestResultContainer'
@@ -36,9 +36,9 @@ export class TestResultsSummaryData implements TestResultsSummary {
 
       if (container.testResults) {
         if (container.testResults.status) {
-          if (container.testResults.status === TestResultsStatus.Failed) this._failed += 1
-          else if (container.testResults.status === TestResultsStatus.Passed) this._passed += 1
-          else if (container.testResults.status === TestResultsStatus.Unresolved) this._unresolved += 1
+          if (container.testResults.status === TestResultsStatusEnum.Failed) this._failed += 1
+          else if (container.testResults.status === TestResultsStatusEnum.Passed) this._passed += 1
+          else if (container.testResults.status === TestResultsStatusEnum.Unresolved) this._unresolved += 1
         }
 
         this._matches += container.testResults.matches

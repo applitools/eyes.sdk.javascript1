@@ -631,7 +631,7 @@ class EyesCore extends EyesBase {
         return new ContextBasedScaleProviderFactory(
           this._logger,
           entireSize,
-          this._viewportSizeHandler.get(),
+          this._viewportSizeHandler.get() || (await this._driver.getViewportSize()),
           this._devicePixelRatio,
           this._driver.isMobile,
           this._scaleProviderHandler,

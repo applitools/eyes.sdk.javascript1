@@ -223,8 +223,6 @@ class EyesVisualGrid extends EyesCore {
     this._getEmulatedDevicesSizes = getEmulatedDevicesSizes
 
     await this._initCommon()
-
-    return this._driver.wrapper
   }
   /**
    * @param {string|CheckSettings<TElement, TSelector>} [nameOrCheckSettings] - name of the test case

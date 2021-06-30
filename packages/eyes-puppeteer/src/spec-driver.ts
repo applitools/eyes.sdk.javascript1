@@ -142,7 +142,7 @@ export async function findElements(frame: Context, selector: Selector): Promise<
   return isXpath(selector) ? frame.$x(selector) : frame.$$(selector)
 }
 export async function getElementRect(
-  _frame: Context,
+  _frame: Driver,
   element: Element,
 ): Promise<{x: number; y: number; width: number; height: number}> {
   const {x, y, width, height} = await element.boundingBox()

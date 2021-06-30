@@ -19,11 +19,10 @@ module.exports = {
   // See https://nightwatchjs.org/guide/#external-globals
   globals_path: '',
 
-  webdriver: {},
-
   eyes: {
-    // enableEyesLogs: true,
     // useVisualGrid: true,
+    // concurrency: 2,
+    enableEyesLogs: false,
     appName: 'eyes-nightwatch',
     testName: 'hello world',
     viewportSize: {width: 800, height: 600},
@@ -51,14 +50,6 @@ module.exports = {
           w3c: false,
         },
       },
-      // W3C
-      //capabilities: {
-      //  browserName: 'chrome',
-      //  'goog:chromeOptions': {
-      //    w3c: true,
-      //    args: ['--headless'],
-      //  },
-      //},
 
       webdriver: {
         port: 4444,

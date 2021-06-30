@@ -1,10 +1,10 @@
 import * as utils from '@applitools/utils'
-import {SessionType, SessionTypeLiteral} from '../enums/SessionType'
-import {StitchMode, StitchModeLiteral} from '../enums/StitchMode'
-import {MatchLevel} from '../enums/MatchLevel'
-import {BrowserType} from '../enums/BrowserType'
-import {DeviceName} from '../enums/DeviceName'
-import {ScreenOrientation} from '../enums/ScreenOrientation'
+import {SessionType, SessionTypeEnum} from '../enums/SessionType'
+import {StitchMode, StitchModeEnum} from '../enums/StitchMode'
+import {MatchLevelEnum} from '../enums/MatchLevel'
+import {BrowserTypeEnum} from '../enums/BrowserType'
+import {DeviceNameEnum} from '../enums/DeviceName'
+import {ScreenOrientationEnum} from '../enums/ScreenOrientation'
 import {AccessibilitySettings} from './AccessibilitySettings'
 import {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo, ChromeEmulationInfoLegacy} from './RenderInfo'
 import {CutProvider} from './CutProvider'
@@ -47,7 +47,7 @@ export type OpenConfiguration = {
   testName?: string
   displayName?: string
   viewportSize?: RectangleSize
-  sessionType?: SessionTypeLiteral
+  sessionType?: SessionType
   properties?: PropertyData[]
   batch?: BatchInfo
   defaultMatchSettings?: ImageMatchSettings
@@ -78,7 +78,7 @@ export type CheckConfiguration = {
 
 export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   waitBeforeScreenshots?: number
-  stitchMode?: StitchModeLiteral
+  stitchMode?: StitchMode
   hideScrollbars?: boolean
   hideCaret?: boolean
   stitchOverlap?: number
@@ -261,16 +261,16 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get sessionType(): SessionTypeLiteral {
+  get sessionType(): SessionType {
     return this._config.sessionType
   }
-  set sessionType(sessionType: SessionTypeLiteral) {
+  set sessionType(sessionType: SessionType) {
     this._config.sessionType = sessionType
   }
-  getSessionType(): SessionType {
-    return this.sessionType as SessionType
+  getSessionType(): SessionTypeEnum {
+    return this.sessionType as SessionTypeEnum
   }
-  setSessionType(sessionType: SessionType): this {
+  setSessionType(sessionType: SessionTypeEnum): this {
     this.sessionType = sessionType
     return this
   }
@@ -716,10 +716,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     this.defaultMatchSettings = defaultMatchSettings
     return this
   }
-  getMatchLevel(): MatchLevel {
-    return this.defaultMatchSettings?.matchLevel as MatchLevel
+  getMatchLevel(): MatchLevelEnum {
+    return this.defaultMatchSettings?.matchLevel as MatchLevelEnum
   }
-  setMatchLevel(matchLevel: MatchLevel): this {
+  setMatchLevel(matchLevel: MatchLevelEnum): this {
     if (!this.defaultMatchSettings) this.defaultMatchSettings = {}
     this.defaultMatchSettings.matchLevel = matchLevel
     return this
@@ -794,17 +794,17 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get stitchMode(): StitchModeLiteral {
+  get stitchMode(): StitchMode {
     return this._config.stitchMode
   }
-  set stitchMode(stitchMode: StitchModeLiteral) {
-    utils.guard.isEnumValue(stitchMode, StitchMode, {name: 'stitchMode'})
+  set stitchMode(stitchMode: StitchMode) {
+    utils.guard.isEnumValue(stitchMode, StitchModeEnum, {name: 'stitchMode'})
     this._config.stitchMode = stitchMode
   }
-  getStitchMode(): StitchMode {
-    return this.stitchMode as StitchMode
+  getStitchMode(): StitchModeEnum {
+    return this.stitchMode as StitchModeEnum
   }
-  setStitchMode(stitchMode: StitchMode): this {
+  setStitchMode(stitchMode: StitchModeEnum): this {
     this.stitchMode = stitchMode
     return this
   }
@@ -961,12 +961,12 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
   addBrowser(browserInfo: RenderInfo): this
-  addBrowser(width: number, height: number, name?: BrowserType): this
-  addBrowser(browserInfoOrWidth: RenderInfo | number, height?: number, name: BrowserType = BrowserType.CHROME) {
+  addBrowser(width: number, height: number, name?: BrowserTypeEnum): this
+  addBrowser(browserInfoOrWidth: RenderInfo | number, height?: number, name = BrowserTypeEnum.CHROME) {
     if (utils.types.isObject(browserInfoOrWidth)) return this.addBrowsers(browserInfoOrWidth)
     else return this.addBrowsers({width: browserInfoOrWidth, height, name})
   }
-  addDeviceEmulation(deviceName: DeviceName, screenOrientation = ScreenOrientation.PORTRAIT) {
+  addDeviceEmulation(deviceName: DeviceNameEnum, screenOrientation = ScreenOrientationEnum.PORTRAIT) {
     if (!this.browsersInfo) this.browsersInfo = []
     this.browsersInfo.push({chromeEmulationInfo: {deviceName, screenOrientation}})
     return this

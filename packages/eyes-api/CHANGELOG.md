@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- create plain enums types
+
+## 1.0.6 - 2021/6/27
+
+- support thenable webdrivers
 
 ## 1.0.5 - 2021/6/15
 

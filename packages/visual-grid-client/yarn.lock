@@ -33,10 +33,10 @@
     "@applitools/snippets" "2.1.3"
     "@applitools/utils" "1.2.0"
 
-"@applitools/eyes-sdk-core@12.21.1":
-  version "12.21.1"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.21.1.tgz#36697a10a2f51a1f875f9cda89e6daf5b15805f3"
-  integrity sha512-rsiG/D1T4SROaPXikc4P99lYJqHrw6Fx3i0VyP7UHnVwsut/HqriD0ekSYez/RE2EWkUcKhP+Pvg038af1FC3w==
+"@applitools/eyes-sdk-core@12.21.2":
+  version "12.21.2"
+  resolved "https://registry.npmjs.org/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.21.2.tgz#b66658e4701270c4ba311e7c854a2fdea9409926"
+  integrity sha512-9JUn5GPvJmm1APlKMK+BcKgIr9w9VkxscpuKps+F2YTufAr/fhzBdxpvBCI/jir7FLQP19eTI2Z0cDQU3UsJ1Q==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.3"
@@ -196,10 +196,10 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.3.tgz#5ab233a087e5e6a4e356a22c9adcab23e959e03f"
-  integrity sha512-70V6g/jDqGGCxL5Eip2aydJbjZ3ULHQxNWhUSVDAuzyCZav5pR0hE03Cx/R2rvMoapXltScG4SOkXp+JmR7Haw==
+"@applitools/test-utils@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@applitools/test-utils/-/test-utils-1.0.4.tgz#46d50b7ab107188ce551d58e903969d29a6e9785"
+  integrity sha512-ygiJz0ZdJHa9XznTKhixwT3bSHyAfHsKsiJ33QvsYnuzhmBhCrkyRujBRdYgHvIILtX45srCJQGHvHNgUqHodg==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"

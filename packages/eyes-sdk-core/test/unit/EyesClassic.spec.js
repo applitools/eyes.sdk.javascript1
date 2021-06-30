@@ -22,12 +22,6 @@ describe('EyesClassic', () => {
   })
 
   describe('#open()', () => {
-    it('should return Driver', async () => {
-      driver = await eyes.open(driver, 'FakeApp', 'FakeTest')
-      assert.strictEqual(driver instanceof MockDriver, true)
-      await eyes.close()
-    })
-
     it('should throw IllegalState: Eyes not open', async () => {
       await assertRejects(eyes.check('test', CheckSettings.window()), /IllegalState: Eyes not open/)
     })

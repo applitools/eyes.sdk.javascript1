@@ -1,32 +1,32 @@
-import {BrowserTypeLiteral} from '../enums/BrowserType'
-import {DeviceNameLiteral} from '../enums/DeviceName'
-import {IosDeviceNameLiteral} from '../enums/IosDeviceName'
-import {IosVersionLiteral} from '../enums/IosVersion'
-import {ScreenOrientationLiteral} from '../enums/ScreenOrientation'
+import {BrowserType} from '../enums/BrowserType'
+import {DeviceName} from '../enums/DeviceName'
+import {IosDeviceName} from '../enums/IosDeviceName'
+import {IosVersion} from '../enums/IosVersion'
+import {ScreenOrientation} from '../enums/ScreenOrientation'
 
 export type DesktopBrowserInfo = {
-  name?: BrowserTypeLiteral
+  name?: BrowserType
   width: number
   height: number
 }
 
 export type ChromeEmulationInfo = {
   chromeEmulationInfo: {
-    deviceName: DeviceNameLiteral
-    screenOrientation?: ScreenOrientationLiteral
+    deviceName: DeviceName
+    screenOrientation?: ScreenOrientation
   }
 }
 
 /** @deprecated */
 export type ChromeEmulationInfoLegacy = {
-  deviceName: DeviceNameLiteral
-  screenOrientation?: ScreenOrientationLiteral
+  deviceName: DeviceName
+  screenOrientation?: ScreenOrientation
 }
 
 export type IOSDeviceInfo = {
   iosDeviceInfo: {
-    deviceName: IosDeviceNameLiteral
-    iosVersion?: IosVersionLiteral
-    screenOrientation?: ScreenOrientationLiteral
+    deviceName: IosDeviceName
+    iosVersion?: IosVersion
+    screenOrientation?: ScreenOrientation
   }
 }

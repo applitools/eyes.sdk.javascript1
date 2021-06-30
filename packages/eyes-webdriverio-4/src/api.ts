@@ -27,6 +27,8 @@ export class Configuration extends api.Configuration<Element, Selector> {
   protected static readonly _spec = sdk
 }
 
+export type OCRRegion = api.OCRRegion<Element, Selector>
+
 export type CheckSettingsPlain = api.CheckSettingsPlain<Element, Selector>
 
 export class CheckSettings extends api.CheckSettings<Element, Selector> {

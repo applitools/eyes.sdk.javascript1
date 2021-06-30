@@ -30,24 +30,16 @@ async function runTest(driver, useVisualGrid) {
     eyes.setLogHandler(new ConsoleLogHandler(true))
   }
 
-  const wrappedDriver = await eyes.open(
-    driver,
-    'SessionStartInfo',
-    `TestAccessibility${useVisualGrid ? '_VG' : ''}`,
-    {
-      width: 700,
-      height: 460,
-    },
-  )
-
-  const element1 = await wrappedDriver.findElement('element1')
+  await eyes.open(driver, 'SessionStartInfo', `TestAccessibility${useVisualGrid ? '_VG' : ''}`, {
+    width: 700,
+    height: 460,
+  })
 
   const checkSettings = CheckSettings.window()
     .accessibilityRegion(
       {left: 10, top: 20, width: 30, height: 40},
       AccessibilityRegionType.LargeText,
     )
-    .accessibilityRegion(element1, AccessibilityRegionType.BoldText)
     .accessibilityRegion('element2', AccessibilityRegionType.IgnoreContrast)
 
   await eyes.check('', checkSettings)
@@ -65,7 +57,6 @@ async function runTest(driver, useVisualGrid) {
 
   const expectedAccessibilityRegions = [
     {type: 'LargeText', isDisabled: false, left: 10, top: 20, width: 30, height: 40},
-    {type: 'BoldText', isDisabled: false, left: 10, top: 11, width: 101, height: 102},
     {type: 'IgnoreContrast', isDisabled: false, left: 20, top: 21, width: 201, height: 202},
     {type: 'IgnoreContrast', isDisabled: false, left: 30, top: 31, width: 301, height: 302},
   ]

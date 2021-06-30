@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "types",
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declarationMap": false,
+    "sourceMap": false,
 
     "target": "ES2017",
     "module": "commonjs",

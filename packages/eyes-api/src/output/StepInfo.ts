@@ -1,5 +1,5 @@
-import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
+import * as utils from '@applitools/utils'
 import {AppUrls, AppUrlsData} from './AppUrls'
 import {ApiUrls, ApiUrlsData} from './ApiUrls'
 

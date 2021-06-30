@@ -1,5 +1,6 @@
+import type * as logger from '@applitools/logger'
 import * as utils from '@applitools/utils'
-import makeLogger, * as logger from '@applitools/logger'
+import makeLogger from '@applitools/logger'
 import {
   LogHandler,
   LogHandlerData,

@@ -160,8 +160,6 @@ class EyesClassic extends EyesCore {
       this._configuration.getViewportSize(),
       this._configuration.getSessionType(),
     )
-
-    return this._driver.wrapper
   }
   async _check(checkSettings, closeAfterMatch = false, throwEx = true) {
     checkSettings.ignoreCaret(checkSettings.getIgnoreCaret() || this.getIgnoreCaret())

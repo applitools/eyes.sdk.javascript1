@@ -1,5 +1,5 @@
-import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
+import * as utils from '@applitools/utils'
 
 export type SessionUrls = {
   readonly batch?: string

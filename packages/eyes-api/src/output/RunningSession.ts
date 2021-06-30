@@ -1,5 +1,5 @@
-import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
+import * as utils from '@applitools/utils'
 import {RenderingInfo, RenderingInfoData} from './RenderingInfo'
 
 export type RunningSession = {

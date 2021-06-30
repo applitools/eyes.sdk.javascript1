@@ -1,4 +1,4 @@
-export enum MatchLevel {
+export enum MatchLevelEnum {
   None = 'None',
   LegacyLayout = 'Layout1',
   Layout = 'Layout',
@@ -8,4 +8,4 @@ export enum MatchLevel {
   Exact = 'Exact',
 }
 
-export type MatchLevelLiteral = MatchLevel | `${MatchLevel}`
+export type MatchLevel = `${MatchLevelEnum}`

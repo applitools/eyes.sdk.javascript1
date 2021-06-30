@@ -34,6 +34,18 @@ describe('getIframeUrl', () => {
     expect(getIframeUrl(baseUrl)).to.equal(expected);
   });
 
+  it('removes .html files from pathname', () => {
+    const baseUrl = 'http://some/url/index.html';
+    const expected = 'http://some/url/iframe.html?eyes-storybook=true';
+    expect(getIframeUrl(baseUrl)).to.equal(expected);
+  });
+
+  it('removes .html files from pathname with query params', () => {
+    const baseUrl = 'http://some/url/index.html/?hello=world';
+    const expected = 'http://some/url/iframe.html?eyes-storybook=true';
+    expect(getIframeUrl(baseUrl)).to.equal(expected);
+  });
+
   it('throws on invalid base URL', () => {
     const baseUrl = 'bla';
     try {

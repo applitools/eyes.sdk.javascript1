@@ -1,9 +1,9 @@
+import type {Eyes} from './Eyes'
 import * as utils from '@applitools/utils'
 import {RectangleSizeData} from './input/RectangleSize'
 import {TestResultsData} from './output/TestResults'
 import {ValidationInfoData} from './output/ValidationInfo'
 import {ValidationResultData} from './output/ValidationResult'
-import type {Eyes} from './Eyes'
 
 /** @deprecated */
 export abstract class SessionEventHandler {
