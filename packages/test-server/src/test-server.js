@@ -52,8 +52,9 @@ function testServer(argv = {}) {
   const log = args => showLogs && console.log(args)
 
   return new Promise((resolve, reject) => {
+    let server;
     if (key && cert) {
-      const server = https.createServer({
+      server = https.createServer({
         key: fs.readFileSync(key),
         cert: fs.readFileSync(cert)
       }, app).listen(port, (err) => {
@@ -67,7 +68,7 @@ function testServer(argv = {}) {
         }
       })
     } else {
-      const server = app.listen(port, err => {
+      server = app.listen(port, err => {
         if (err) {
           log('error starting test server', err)
           reject(err)

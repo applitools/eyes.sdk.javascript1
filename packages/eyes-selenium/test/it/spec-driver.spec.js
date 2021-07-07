@@ -6,7 +6,7 @@ describe('spec driver', async () => {
   let driver, destroyDriver
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
-  describe('headless desktop', async () => {
+  describe.only('headless desktop', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
       driver = spec.transformDriver(driver)
@@ -95,6 +95,9 @@ describe('spec driver', async () => {
           platformName: 'linux',
         },
       })
+    })
+    it('getCookies()', async () => {
+      await getCookies()
     })
   })
 
@@ -316,5 +319,24 @@ describe('spec driver', async () => {
       Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
       expected,
     )
+  }
+
+  async function getCookies() {
+    await driver.manage().addCookie({name: 'hello', value: 'world'})
+    assert.deepStrictEqual(await spec.getCookies(driver), {
+      all: true,
+      cookies: [
+        {
+          domain: 'applitools.github.io',
+          path: '/',
+          expiry: -1,
+          sameSite: undefined,
+          secure: true,
+          httpOnly: false,
+          name: 'hello',
+          value: 'world',
+        },
+      ],
+    })
   }
 })
