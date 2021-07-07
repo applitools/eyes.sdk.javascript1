@@ -230,7 +230,7 @@ export async function getCookies(driver: Driver): Promise<types.CookieObject> {
   } else {
     allCookies = {cookies: await driver.manage().getCookies(), all: false}
   }
-  
+
   return {
     cookies: allCookies.cookies.map((cookie: any) => ({
       name: cookie.name,
