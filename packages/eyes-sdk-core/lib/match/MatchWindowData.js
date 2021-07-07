@@ -15,7 +15,7 @@ class MatchWindowData {
    * @param {boolean} [data.ignoreMismatch]
    * @param {Options} [data.options]
    */
-  constructor({userInputs, appOutput, tag, ignoreMismatch, options} = {}) {
+  constructor({userInputs, appOutput, tag, ignoreMismatch = false, options} = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }

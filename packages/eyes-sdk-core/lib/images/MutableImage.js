@@ -1,4 +1,5 @@
 'use strict'
+const crypto = require('crypto')
 const Location = require('../geometry/Location')
 const RectangleSize = require('../geometry/RectangleSize')
 const TypeUtils = require('../utils/TypeUtils')
@@ -278,6 +279,17 @@ class MutableImage {
   async getImageBase64() {
     await packImage(this)
     return this._imageBuffer.toString('base64')
+  }
+
+  /**
+   * @return {?Promise<string>}
+   */
+  async getImageSha256(type = 'hex') {
+    const buffer = await this.getImageBuffer()
+    return crypto
+      .createHash('sha256')
+      .update(buffer)
+      .digest(type)
   }
 
   /**

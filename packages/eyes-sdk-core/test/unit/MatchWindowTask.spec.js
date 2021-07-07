@@ -14,6 +14,8 @@ const {
   Location,
 } = require('../../index')
 const {EyesBaseImpl} = require('../testUtils')
+const MutableImage = require('../../lib/images/MutableImage')
+const EyesScreenshot = require('../../lib/capture/EyesScreenshot')
 const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
 
 describe('MatchWindowTask', () => {
@@ -124,6 +126,33 @@ describe('MatchWindowTask', () => {
           },
         },
       })
+    })
+  })
+
+  describe('_tryTakeScreenshot', () => {
+    it('should return the same screenshot if it matches the previous one', async () => {
+      // sha256 of the word 'screenshot' === 4441146b0fe1d5c6845af126ba5ce6003ea77d6b4cb04d14114f86a925c5dbca
+      const eyes = new EyesBaseImpl()
+      const screenshotBuffer = Buffer.from('screenshot')
+      const screenshot = new EyesScreenshot(new MutableImage(screenshotBuffer))
+      const appOutputMock = {getScreenshot: () => screenshot}
+      const appOutput = new AppOutputWithScreenshot(appOutputMock, screenshot)
+      const matchWindowTask = new MatchWindowTask(true, true, true, true, eyes, appOutput)
+
+      const screenshotSha = await screenshot.getImage().getImageSha256()
+      matchWindowTask._lastScreenshotSha = screenshotSha
+
+      const secondScreenshot = await matchWindowTask._tryTakeScreenshot(
+        null,
+        null,
+        null,
+        false,
+        {getRenderId: () => ''},
+        null,
+      )
+
+      const secondScreenshotSha = await secondScreenshot.getImage().getImageSha256()
+      expect(screenshotSha).to.equal(secondScreenshotSha)
     })
   })
 })

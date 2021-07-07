@@ -21,7 +21,7 @@ class MatchWindowAndCloseData extends MatchWindowData {
     userInputs,
     appOutput,
     tag,
-    ignoreMismatch,
+    ignoreMismatch = false,
     options,
     updateBaselineIfDifferent,
     updateBaselineIfNew,

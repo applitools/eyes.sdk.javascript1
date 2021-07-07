@@ -1350,22 +1350,13 @@ class EyesBase {
       outputProvider,
     )
 
-    const matchResult = await EyesBase.matchWindow(
-      regionProvider,
-      tag,
-      ignoreMismatch,
-      checkSettings,
-      this,
-      source,
-    )
+    const matchResult = await EyesBase.matchWindow(regionProvider, tag, checkSettings, this, source)
     await this.afterMatchWindow()
 
     this._logger.verbose('MatchWindow Done!')
     validationResult.setAsExpected(matchResult.getAsExpected())
 
-    if (!ignoreMismatch) {
-      this.clearUserInputs()
-    }
+    this.clearUserInputs()
 
     this._validateResult(tag, matchResult)
     this._logger.verbose('Done!')
@@ -1427,14 +1418,7 @@ class EyesBase {
       this._configuration.getSaveFailedTests(),
     )
 
-    const results = await EyesBase.matchWindow(
-      regionProvider,
-      tag,
-      ignoreMismatch,
-      checkSettings,
-      this,
-      source,
-    )
+    const results = await EyesBase.matchWindow(regionProvider, tag, checkSettings, this, source)
     await this.afterMatchWindow()
 
     try {
@@ -1587,7 +1571,7 @@ class EyesBase {
    * @param {string} [source]
    * @return {Promise<MatchResult>}
    */
-  static async matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, self, source) {
+  static async matchWindow(regionProvider, tag, checkSettings, self, source) {
     let retryTimeout = -1
 
     if (checkSettings) {
@@ -1595,7 +1579,7 @@ class EyesBase {
     }
 
     self._logger.verbose(
-      `CheckWindowBase(${regionProvider.constructor.name}, '${tag}', ${ignoreMismatch}, ${retryTimeout})`,
+      `CheckWindowBase(${regionProvider.constructor.name}, '${tag}', ${retryTimeout})`,
     )
 
     const region = await regionProvider.getRegion()
@@ -1606,7 +1590,6 @@ class EyesBase {
       region,
       tag,
       self._shouldMatchWindowRunOnceOnTimeout,
-      ignoreMismatch,
       checkSettings,
       retryTimeout,
       source,

@@ -11,6 +11,7 @@ class ImageMatchOptions {
    * @param {string} options.renderId - The render ID of the screenshot to match.
    * @param {Trigger[]} options.userInputs - A list of triggers between the previous matchWindow call and the current matchWindow
    *   call. Can be array of size 0, but MUST NOT be null.
+   * @param {boolean} options.replaceLast - Tells the server to replace last mismatched image with current one
    * @param {boolean} options.ignoreMismatch - Tells the server whether or not to store a mismatch for the current window as
    *   window in the session.
    * @param {boolean} options.ignoreMatch - Tells the server whether or not to store a match for the current window as window in
@@ -26,6 +27,7 @@ class ImageMatchOptions {
     name,
     renderId,
     userInputs,
+    replaceLast,
     ignoreMismatch,
     ignoreMatch,
     forceMismatch,
@@ -43,6 +45,7 @@ class ImageMatchOptions {
     this._name = name
     this._renderId = renderId
     this._userInputs = userInputs
+    this._replaceLast = replaceLast
     this._ignoreMismatch = ignoreMismatch
     this._ignoreMatch = ignoreMatch
     this._forceMismatch = forceMismatch
@@ -71,6 +74,13 @@ class ImageMatchOptions {
    */
   getUserInputs() {
     return this._userInputs
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getReplaceLast() {
+    return this._replaceLast
   }
 
   /**
