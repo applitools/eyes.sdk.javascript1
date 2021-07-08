@@ -224,7 +224,8 @@ export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
       allCookies = {cookies, all: true}
     }
   } else {
-    allCookies = {cookies: await driver.manage().getCookies(), all: false}
+    const cookies = await driver.manage().getCookies()
+    allCookies = {cookies, all: false}
   }
 
   return {
