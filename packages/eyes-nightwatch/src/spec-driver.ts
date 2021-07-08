@@ -211,16 +211,10 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 }
 
 export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
-  let allCookies
-  const {browserName} = await getDriverInfo(driver)
-  if (browserName.search(/chrome/i) !== -1) {
-  } else {
-    const cookies = await call(driver, 'getCookies')
-    allCookies = {cookies, all: false}
-  }
+  const cookies = await call(driver, 'getCookies')
 
   return {
-    cookies: allCookies.cookies.map((cookie: any) => ({
+    cookies: cookies.map((cookie: any) => ({
       name: cookie.name,
       value: cookie.value,
       domain: cookie.domain,
@@ -230,7 +224,7 @@ export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
       httpOnly: cookie.httpOnly,
       secure: cookie.secure,
     })),
-    all: allCookies.all,
+    all: false,
   }
 }
 
