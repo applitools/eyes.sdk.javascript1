@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.7 - 2021/6/30
+
 - create plain enums types
 
 ## 1.0.6 - 2021/6/27

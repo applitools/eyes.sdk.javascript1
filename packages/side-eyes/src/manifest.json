@@ -2,8 +2,8 @@
   "description": "Applitools plugin for Selenium IDE",
   "manifest_version": 2,
   "name": "Applitools for Selenium IDE",
-  "version": "1.12.1",
-  "version_name": "1.12.1",
+  "version": "1.13.0",
+  "version_name": "1.13.0",
   "homepage_url": "https://applitools.com/",
   "icons": {
     "70": "icons/icon_70.png",
@@ -21,12 +21,8 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "webRequest",
     "downloads",
-    "contextMenus",
-    "webNavigation",
     "storage",
-    "debugger",
     "<all_urls>"
   ],
   "web_accessible_resources": [

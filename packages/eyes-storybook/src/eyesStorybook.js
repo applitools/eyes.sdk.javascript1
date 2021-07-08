@@ -59,6 +59,7 @@ async function eyesStorybook({
     getIosDevicesSizes,
     getEmulatedDevicesSizes,
     getResourceUrlsInCache,
+    getSetRenderInfo,
   } = makeVisualGridClient({
     userAgent,
     ...config,
@@ -101,6 +102,7 @@ async function eyesStorybook({
     },
   });
   try {
+    await getSetRenderInfo();
     const [stories] = await Promise.all(
       [getStoriesWithSpinner()].concat(
         new Array(CONCURRENT_PAGES).fill().map(async () => {

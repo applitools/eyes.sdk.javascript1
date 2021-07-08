@@ -181,8 +181,9 @@ export async function executeScript(t: Driver, script: ((arg: any) => any) | str
     Array.from({length: elementsCount}, (_, index) => elements.nth(index)),
   )
 }
-export async function mainContext(t: Driver): Promise<void> {
+export async function mainContext(t: Driver): Promise<Driver> {
   await t.switchToMainWindow()
+  return t
 }
 // NOTE:
 // Switching from the current browsing context up one-level is not built into
@@ -193,8 +194,9 @@ export async function mainContext(t: Driver): Promise<void> {
 // needed to construct and walk through the frame tree with DFS.
 // See `findPathToChildContext` in core/lib/sdk/EyesDriver.js for details.
 // export async function parentContext(t: Driver): Promise<void> {}
-export async function childContext(t: Driver, element: Element): Promise<void> {
+export async function childContext(t: Driver, element: Element): Promise<Driver> {
   await t.switchToIframe(element)
+  return t
 }
 export async function findElement(t: Driver, selector: Selector): Promise<Element> {
   const element = await transformSelector(selector).with({boundTestRun: t})()

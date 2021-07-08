@@ -6,3 +6,6 @@ export function makeSDK<TDriver, TContext, TElement, TSelector>(options: {
   spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
   VisualGridClient: any
 }): types.Core<TDriver, TElement, TSelector>
+
+export const TestResultsFormatter: any
+export const ConfigUtils: any

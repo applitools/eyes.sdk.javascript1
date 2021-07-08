@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-webdriverio",
-  "version": "5.31.8",
+  "version": "5.31.9",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "keywords": [
     "eyes-webdriverio",
@@ -70,18 +70,18 @@
   },
   "dependencies": {
     "@applitools/dom-snapshot": "4.5.3",
-    "@applitools/eyes-api": "1.0.5",
-    "@applitools/eyes-sdk-core": "12.21.1",
+    "@applitools/eyes-api": "1.0.7",
+    "@applitools/eyes-sdk-core": "12.21.3",
     "@applitools/utils": "1.2.0",
-    "@applitools/visual-grid-client": "15.8.11"
+    "@applitools/visual-grid-client": "15.8.12"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.1.1",
+    "@applitools/api-extractor": "1.1.2",
     "@applitools/scripts": "1.0.1",
     "@applitools/sdk-coverage-tests": "^2.3.11",
     "@applitools/sdk-release-kit": "^0.13.0",
     "@applitools/sdk-shared": "0.9.3",
-    "@applitools/test-utils": "1.0.3",
+    "@applitools/test-utils": "1.0.4",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "@wdio/cli": "5.18.6",

@@ -134,6 +134,7 @@ function makeRenderingGridClient({
     doGetEmulatedDevicesSizes,
     doGetIosDevicesSizes,
   } = getRenderMethods(renderWrapper)
+
   const resourceCache = createResourceCache()
   const fetchCache = createResourceCache()
 
@@ -238,6 +239,7 @@ function makeRenderingGridClient({
     getResourceUrlsInCache,
     getIosDevicesSizes,
     getEmulatedDevicesSizes,
+    getSetRenderInfo,
   }
 
   async function getInitialData() {
@@ -299,6 +301,10 @@ function makeRenderingGridClient({
 
   function getResourceUrlsInCache() {
     return resourceCache.getKeys()
+  }
+
+  async function getSetRenderInfo() {
+    return await getInitialData()
   }
 }
 

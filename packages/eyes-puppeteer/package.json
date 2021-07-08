@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-puppeteer",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Applitools Eyes SDK for Puppeteer",
   "keywords": [
     "eyes-puppeteer",
@@ -63,8 +63,8 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.0.6",
-    "@applitools/eyes-sdk-core": "12.21.2",
+    "@applitools/eyes-api": "1.0.7",
+    "@applitools/eyes-sdk-core": "12.21.3",
     "@applitools/utils": "1.2.0",
     "@applitools/visual-grid-client": "15.8.12"
   },

@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+## 1.13.0 - 2021/6/30
+
+- remove unused permissions
+
+## 1.12.2 - 2021/6/30
+
+- bump @applitools/eyes-selenium version to 4.44.0
+
 ## 1.12.1 - 2021/3/11
 
 - fix error that was preventing classic stitch mode from capturing a screenshot ([Trello](https://trello.com/c/6oVADkSf))

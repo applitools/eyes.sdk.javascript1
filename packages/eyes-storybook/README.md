@@ -32,7 +32,7 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
   * [`strictRegions`](#strictregions)
   * [`accessibilityRegions`](#accessibilityregions)
   * [`accessibilityValidation`](#accessibilityvalidation)
-  * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an--advanced-configuration---advanced-configuration)
+  * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an-advanced-configuration)
   * [`runBefore`](#runbefore)
   * [`runAfter`](#runafter)
   * [`scriptHooks`](#scripthooks)
@@ -665,9 +665,16 @@ storiesOf('Components with ignoreDisplacements', module)
 });
 ```
 
-## Parameters that cannot be set as an [Advanced configuration](#advanced-configuration)
+## Parameters that cannot be set as an [advanced configuration](#advanced-configuration)
 
-### `runBefore`
+### `runBefore` and `runAfter` functions
+
+The `runBefore` function can be used to perform any action prior to taking the story snapshot. The `runAfter` method should be used to cleanup any side-effect that `runBefore` creates, if there are any.   
+For example, if `runBefore` adds a class to the `body` element, this class should be removed in `runAfter`. This is because the browser tab's window is not reloaded between stories.
+
+ _Note: `rootEl` also needs to be cleaned up, so any modification that was done on this element in `runBefore` should be reverted in `runAfter`._
+
+#### `runBefore`
 
 An asynchronous function that will be evaluated before the story's screenshot is taken. This is the place to perform any interaction with the story using DOM API's.
 
@@ -693,7 +700,7 @@ storiesOf('UI components', module)
   })
 ```
 
-### `runAfter`
+#### `runAfter`
 
 An asynchronous function that is evaluated after the story's screenshot is taken. This is the place to perform any clean ups that could change the way the next story renders.
 

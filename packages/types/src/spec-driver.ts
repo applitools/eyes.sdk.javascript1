@@ -14,7 +14,7 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   isStaleElementError(error: any): boolean
   isEqualElements(context: TContext, element1: TElement, element2: TElement): Promise<boolean>
   mainContext(context: TContext): Promise<TContext>
-  parentContext(context: TContext): Promise<TContext>
+  parentContext?(context: TContext): Promise<TContext>
   childContext(context: TContext, element: TElement): Promise<TContext>
   executeScript(context: TContext, script: ((arg?: any) => any) | string, arg?: any): Promise<any>
   findElement(context: TContext, selector: SpecSelector<TSelector>): Promise<TElement | null>

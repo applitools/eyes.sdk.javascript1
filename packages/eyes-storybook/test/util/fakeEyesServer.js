@@ -20,12 +20,16 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp} 
   app.use(express.json());
 
   // renderInfo
-  app.get('/api/sessions/renderinfo', (_req, res) => {
-    res.send({
-      serviceUrl: serverUrl,
-      accessToken: 'access-token',
-      resultsUrl: `${serverUrl}/results`,
-    });
+  app.get('/api/sessions/renderinfo', (req, res) => {
+    if (req.query.apiKey === 'INVALIDAPIKEY') {
+      res.status(401).send();
+    } else {
+      res.send({
+        serviceUrl: serverUrl,
+        accessToken: 'access-token',
+        resultsUrl: `${serverUrl}/results`,
+      });
+    }
   });
 
   // render

@@ -18,7 +18,7 @@ if (!token)
   )
 
 // fetch changelog details
-const changelog = exec(`sed '1,/${tag}/d;/## v/q' ./CHANGELOG.MD | sed '/^ *$/q'`, {
+const changelog = exec(`sed '1,/${tag}/d;/## v/q' ./CHANGELOG.md | sed '/^ *$/q'`, {
   encoding: 'utf8',
 }).trim()
 

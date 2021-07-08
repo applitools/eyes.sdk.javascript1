@@ -85,13 +85,6 @@ export async function findElement(frame: Context, selector: Selector): Promise<E
 export async function findElements(frame: Context, selector: Selector): Promise<Element[]> {
   return frame.$$(transformSelector(selector))
 }
-export async function getElementRect(
-  _frame: Context,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {x, y, width, height} = await element.boundingBox()
-  return {x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height)}
-}
 export async function getViewportSize(page: Driver): Promise<{width: number; height: number}> {
   return page.viewportSize()
 }

@@ -346,4 +346,27 @@ describe('eyesStorybook', () => {
       expect(session.startInfo.parentBranchBaselineSavedBefore).to.be.undefined;
     }
   });
+
+  it('fail immediately, wrong api key', async () => {
+    const config = {apiKey: 'INVALIDAPIKEY'}; // this is a well-known apiKey that is meant to return 401 from fake eyes server
+    let errorMessage;
+
+    try {
+      await eyesStorybook({
+        config: {
+          serverUrl,
+          storybookUrl: 'http://localhost:9001',
+          ...config,
+          appName: 'bla',
+          browser: [{name: 'chrome', width: 800, height: 600}],
+        },
+        logger,
+        performance,
+      });
+    } catch (e) {
+      errorMessage = e.message;
+    } finally {
+      expect(errorMessage).to.equal('Request failed with status code 401(Unauthorized)');
+    }
+  });
 });
