@@ -279,7 +279,7 @@ export type Cookie = {
   secure?: boolean
 }
 
-export type CookieObject = {
+export type CookiesObject = {
   cookies: Cookie[]
   all: boolean
 }

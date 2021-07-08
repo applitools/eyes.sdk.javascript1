@@ -275,7 +275,7 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
   }
 }
 
-export async function getCookies(browser: Driver): Promise<types.CookieObject> {
+export async function getCookies(browser: Driver): Promise<types.CookiesObject> {
   const capabilities = browser.capabilities as any
   let allCookies
   if (browser.isDevTools) {

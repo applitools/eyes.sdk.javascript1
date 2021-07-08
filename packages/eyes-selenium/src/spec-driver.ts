@@ -46,8 +46,8 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
-  const cmd = require('selenium-webdriver/lib/command')
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
+    const cmd = require('selenium-webdriver/lib/command')
     cmd.Name.SWITCH_TO_PARENT_FRAME = 'switchToParentFrame'
     driver.getExecutor().defineCommand(cmd.Name.SWITCH_TO_PARENT_FRAME, 'POST', '/session/:sessionId/frame/parent')
 
@@ -205,15 +205,11 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   await driver.wait(until.elementIsVisible(element), timeout)
 }
 
-export async function getCookies(driver: Driver): Promise<types.CookieObject> {
+export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
   const capabilities = await driver.getCapabilities()
   let allCookies
   if (capabilities.get('browserName').search(/chrome/i) !== -1) {
     const cmd = require('selenium-webdriver/lib/command')
-    cmd.Name.EXECUTE_CDP = 'executeCdp'
-    driver
-      .getExecutor()
-      .defineCommand(cmd.Name.EXECUTE_CDP, 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
     if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
       const command = new cmd.Command(cmd.Name.EXECUTE_CDP)
         .setParameter('cmd', 'Network.getAllCookies')
