@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support cookies
 - added full typescript support
 - introduced @applitools/eyes-api package with new api
 
