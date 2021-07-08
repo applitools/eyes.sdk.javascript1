@@ -97,7 +97,22 @@ describe('spec driver', async () => {
       })
     })
     it('getCookies()', async () => {
-      await getCookies()
+      const expected = {
+        all: true,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            path: '/',
+            expiry: 16741494013,
+            sameSite: undefined,
+            secure: true,
+            httpOnly: false,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      }
+      await getCookies(expected)
     })
   })
 
@@ -179,8 +194,24 @@ describe('spec driver', async () => {
         },
       })
     })
-    it.skip('getCookies()', async () => {
-      await getCookies()
+    it('getCookies()', async () => {
+      await spec.visit(driver, url)
+      const expected = {
+        all: false,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            path: '/',
+            expiry: 16741494013,
+            sameSite: undefined,
+            secure: true,
+            httpOnly: false,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      }
+      await getCookies(expected)
     })
   })
 
@@ -323,23 +354,8 @@ describe('spec driver', async () => {
       expected,
     )
   }
-  async function getCookies() {
-    console.log(await driver.executeScript('return document.URL'))
-    await driver.manage().addCookie({name: 'hello', value: 'world'})
-    assert.deepStrictEqual(await spec.getCookies(driver), {
-      all: true,
-      cookies: [
-        {
-          domain: 'applitools.github.io',
-          path: '/',
-          expiry: -1,
-          sameSite: undefined,
-          secure: true,
-          httpOnly: false,
-          name: 'hello',
-          value: 'world',
-        },
-      ],
-    })
+  async function getCookies(expected) {
+    await driver.manage().addCookie({name: 'hello', value: 'world', expiry: 16741494013})
+    assert.deepStrictEqual(await spec.getCookies(driver), expected)
   }
 })

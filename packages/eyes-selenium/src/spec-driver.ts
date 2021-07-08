@@ -206,9 +206,9 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 }
 
 export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
-  const capabilities = await driver.getCapabilities()
+  const {browserName, isMobile} = await getDriverInfo(driver)
   let allCookies
-  if (capabilities.get('browserName').search(/chrome/i) !== -1) {
+  if (!isMobile && browserName.search(/chrome/i) !== -1) {
     const cmd = require('selenium-webdriver/lib/command')
     if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
       const command = new cmd.Command(cmd.Name.EXECUTE_CDP)

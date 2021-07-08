@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import type * as Nightwatch from 'nightwatch'
+import type * as types from '@applitools/types'
 
 export type Driver = Nightwatch.NightwatchAPI
 export type Element =
@@ -207,6 +208,30 @@ export async function scrollIntoView(driver: Driver, element: Element | Selector
 }
 export async function waitUntilDisplayed(driver: Driver, selector: Selector, timeout: number): Promise<void> {
   await call(driver, 'waitForElementVisible' as any, ...transformSelector(selector), timeout)
+}
+
+export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
+  let allCookies
+  const {browserName} = await getDriverInfo(driver)
+  if (browserName.search(/chrome/i) !== -1) {
+  } else {
+    const cookies = await call(driver, 'getCookies')
+    allCookies = {cookies, all: false}
+  }
+
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
+  }
 }
 
 // #endregion

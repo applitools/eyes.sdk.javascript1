@@ -277,13 +277,14 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
 
 export async function getCookies(browser: Driver): Promise<types.CookiesObject> {
   const capabilities = browser.capabilities as any
+  const {isDevTools, isMobile} = browser
   let allCookies
-  if (browser.isDevTools) {
+  if (isDevTools) {
     const puppeteer = await browser.getPuppeteer()
     const [page] = await puppeteer.pages()
     const {cookies} = await (page as any)._client.send('Network.getAllCookies')
     allCookies = {cookies, all: true}
-  } else if (capabilities.browserName.search(/chrome/i) !== -1) {
+  } else if (!isMobile && capabilities.browserName.search(/chrome/i) !== -1) {
     const {cookies} = await browser.sendCommandAndGetResult('Network.getAllCookies', {})
     allCookies = {cookies, all: true}
   } else {
