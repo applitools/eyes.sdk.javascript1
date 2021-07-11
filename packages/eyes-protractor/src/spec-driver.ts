@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import type * as Protractor from 'protractor'
+import type * as types from '@applitools/types'
 
 export type Driver = Protractor.ProtractorBrowser
 export type Element = Protractor.WebElement | Protractor.ElementFinder
@@ -27,7 +28,7 @@ function transformSelector(selector: Selector): Protractor.Locator {
 // #region UTILITY
 
 export function isDriver(driver: any): driver is Driver {
-  return utils.types.instanceOf<Driver>(driver, 'ProtractorBrowser')
+  return utils.types.instanceOf(driver, 'ProtractorBrowser')
 }
 export function isElement(element: any): element is Element {
   return (
@@ -97,7 +98,7 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
     else throw err
   }
 }
-export async function findElements(driver: Driver, selector: Selector): Promise<Element> {
+export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(transformSelector(selector))
 }
 export async function getElementRect(
@@ -117,7 +118,7 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
   await window.setPosition(0, 0)
   await window.setSize(size.width, size.height)
 }
-export async function getOrientation(driver: Driver): Promise<string> {
+export async function getOrientation(driver: Driver): Promise<"portrait" | "landscape"> {
   const capabilities = await driver.getCapabilities()
   const orientation = capabilities.get('orientation') || capabilities.get('deviceOrientation')
   return orientation.toLowerCase()
@@ -181,6 +182,33 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   const {until} = require('protractor')
   const element = await findElement(driver, selector)
   await driver.wait(until.elementIsVisible(element), timeout)
+}
+
+export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
+  let allCookies
+  const {browserName, isMobile} = await getDriverInfo(driver)
+  if (!isMobile && browserName.search(/chrome/i) !== -1) {
+    const {cookies} = await (driver as any).driver.sendChromiumCommandAndGetResult('Network.getAllCookies', {})
+    allCookies = {cookies, all: true}
+  } else {
+    const cookies = await driver.manage().getCookies()
+    allCookies = {cookies, all: false}
+  }
+
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
+  }
+
 }
 
 // #endregion

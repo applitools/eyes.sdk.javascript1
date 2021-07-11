@@ -8,7 +8,7 @@ describe('spec driver', async () => {
 
   describe('headless desktop', async () => {
     before(async () => {
-      ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
+      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', attach: true})
       driver = spec.transformDriver(driver)
       await driver.get(url)
     })
@@ -96,7 +96,7 @@ describe('spec driver', async () => {
         },
       })
     })
-    it('getCookies()', async () => {
+    it.only('getCookies()', async () => {
       const expected = {
         all: true,
         cookies: [

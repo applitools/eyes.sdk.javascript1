@@ -130,7 +130,21 @@ describe('spec driver', async () => {
       })
     })
     it('getCookies()', async () => {
-      await getCookies()
+      await getCookies({
+        all: true,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            expiry: -1,
+            sameSite: undefined,
+            httpOnly: false,
+            path: '/',
+            secure: true,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      })
     })
   })
 
@@ -196,7 +210,7 @@ describe('spec driver', async () => {
     })
     it('getCookies()', async () => {
       await spec.visit(browser, url)
-      await getCookies(true, {
+      await getCookies({
         all: false,
         cookies: [
           {
@@ -248,7 +262,7 @@ describe('spec driver', async () => {
     })
     it('getCookies()', async () => {
       await spec.visit(browser, url)
-      await getCookies(true, {
+      await getCookies({
         all: false,
         cookies: [
           {
@@ -574,51 +588,8 @@ describe('spec driver', async () => {
       expected,
     )
   }
-  async function getCookies(legacy = false, expected) {
-    if (!legacy) {
-      const cdpCommand = [
-        'Network.setCookie',
-        {
-          domain: 'what',
-          expiry: -1,
-          httpOnly: false,
-          name: 'hello',
-          path: '/',
-          sameSite: undefined,
-          secure: false,
-          value: 'goodbye',
-          name: 'hello',
-          value: 'world',
-        },
-      ]
-      if (browser.isDevTools) {
-        const puppeteer = await browser.getPuppeteer()
-        const [page] = await puppeteer.pages()
-        await page._client.send(...cdpCommand)
-      } else {
-        await browser.sendCommand(...cdpCommand)
-      }
-
-      assert.deepStrictEqual(await spec.getCookies(browser), {
-        all: true,
-        cookies: [
-          {
-            domain: 'what',
-            expiry: -1,
-            httpOnly: false,
-            name: 'hello',
-            path: '/',
-            sameSite: undefined,
-            secure: false,
-            value: 'goodbye',
-            name: 'hello',
-            value: 'world',
-          },
-        ],
-      })
-    } else {
-      await browser.addCookie({name: 'hello', value: 'world', secure: true})
-      assert.deepStrictEqual(await spec.getCookies(browser), expected)
-    }
+  async function getCookies(expected) {
+    await browser.addCookie({name: 'hello', value: 'world', secure: true})
+    assert.deepStrictEqual(await spec.getCookies(browser), expected)
   }
 })
