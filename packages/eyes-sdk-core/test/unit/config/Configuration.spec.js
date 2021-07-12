@@ -15,6 +15,7 @@ const {
   SessionType,
   ProxySettings,
   PropertyData,
+  BrowserType,
 } = require('../../../index')
 
 const STRING_CONFIGS = [
@@ -249,6 +250,20 @@ describe('Configuration', () => {
 
     assert.strictEqual(configuration.getAppName(), configuration2.getAppName())
     assert.notStrictEqual(configuration.getApiKey(), configuration2.getApiKey())
+  })
+
+  it('mergeConfig, browser env added only once', () => {
+    const configuration = new Configuration()
+    configuration.setAppName('test')
+    configuration.setApiKey('apiKey')
+    configuration.addBrowser(800, 800, BrowserType.FIREFOX)
+
+    let configuration2 = configuration
+    configuration2.setBranchName('testBranch')
+
+    configuration.mergeConfig(configuration2.toJSON())
+
+    assert.strictEqual(configuration.getBrowsersInfo().length, 1)
   })
 
   it('cloneConfig', () => {

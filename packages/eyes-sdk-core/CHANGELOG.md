@@ -1,7 +1,7 @@
 # Change Log
 
 ## Unreleased
-
+ - make sure that we are not adding the same browser environment more than once when marging configs
 
 ## 12.21.3 - 2021/6/30
 
