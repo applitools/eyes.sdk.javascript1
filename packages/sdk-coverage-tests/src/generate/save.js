@@ -8,9 +8,9 @@ async function createTestFiles(tests, {outDir, ext, format}) {
   fs.rmdirSync(targetDirectory, {recursive: true})
   fs.mkdirSync(targetDirectory, {recursive: true})
 
-  tests.forEach(async test => {
+  tests.forEach(test => {
     const filePath = path.resolve(targetDirectory, `${test.key}${ext}`)
-    fs.writeFileSync(filePath, format ? await prettier.format(test.code, format) : test.code)
+    fs.writeFileSync(filePath, format ? prettier.format(test.code, format) : test.code)
   })
 }
 

@@ -1,3 +1,3 @@
-import type {Eyes} from './index'
+import {Eyes} from './index'
 
 export default Eyes

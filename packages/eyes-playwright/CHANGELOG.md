@@ -3,8 +3,14 @@
 ## Unreleased
 
 - support cookies
+
+## 1.8.3 - 2021/7/14
+
 - added full typescript support
 - introduced @applitools/eyes-api package with new api
+- updated to @applitools/eyes-api@1.0.7 (from 1.0.3)
+- updated to @applitools/eyes-sdk-core@12.21.3 (from 12.20.0)
+- updated to @applitools/visual-grid-client@15.8.13 (from 15.8.7)
 
 ## 1.8.2 - 2021/5/25
 

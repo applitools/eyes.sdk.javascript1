@@ -118,7 +118,8 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
   await window.setPosition(0, 0)
   await window.setSize(size.width, size.height)
 }
-export async function getOrientation(driver: Driver): Promise<"portrait" | "landscape"> {
+
+export async function getOrientation(driver: Driver): Promise<'landscape' | 'portrait'> {
   const capabilities = await driver.getCapabilities()
   const orientation = capabilities.get('orientation') || capabilities.get('deviceOrientation')
   return orientation.toLowerCase()

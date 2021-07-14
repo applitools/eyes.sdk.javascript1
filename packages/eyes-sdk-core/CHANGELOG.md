@@ -4,6 +4,15 @@
 
 - support cookies
 
+## 12.21.5 - 2021/7/14
+
+- updated to @applitools/types@1.0.4 (from 1.0.3)
+
+## 12.21.4 - 2021/7/14
+
+- TestResultsFormatter and ConfigUtils to exports
+- updated to @applitools/dom-snapshot@4.5.4 (from 4.5.3)
+
 ## 12.21.3 - 2021/6/30
 
 - fix an issue with screenshots during locate logic
