@@ -54,7 +54,7 @@ export function transformDriver(driver: Driver): Driver {
     cmd.Name.EXECUTE_CDP = 'executeCdp'
     driver
       .getExecutor()
-      .defineCommand(cmd.Name.EXECUTE_CDP, 'POST', 'session/:sessionId/chromium/send_command_and_get_result')
+      .defineCommand(cmd.Name.EXECUTE_CDP, 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
   }
 
   return driver

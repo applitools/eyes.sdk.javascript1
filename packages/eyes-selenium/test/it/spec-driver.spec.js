@@ -8,7 +8,7 @@ describe('spec driver', async () => {
 
   describe('headless desktop', async () => {
     before(async () => {
-      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', attach: true})
+      ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
       driver = spec.transformDriver(driver)
       await driver.get(url)
     })

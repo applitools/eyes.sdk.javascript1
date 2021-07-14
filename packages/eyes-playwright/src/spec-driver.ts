@@ -127,8 +127,8 @@ export async function waitUntilDisplayed(frame: Context, selector: Selector): Pr
 
 export async function getCookies(context: Driver | Context): Promise<types.CookiesObject> {
   const userAgent = await context.evaluate('navigator.userAgent')
-  const page = isDriver(context) ? context.context() : context.page().context()
-  const allCookies = await page.cookies()
+  const browserContext = isDriver(context) ? context.context() : context.page().context()
+  const allCookies = await browserContext.cookies()
 
   return {
     cookies: allCookies.map((cookie: any) => ({
