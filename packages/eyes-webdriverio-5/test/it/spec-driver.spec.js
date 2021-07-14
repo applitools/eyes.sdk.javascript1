@@ -129,6 +129,23 @@ describe('spec driver', async () => {
         },
       })
     })
+    it('getCookies()', async () => {
+      await getCookies({
+        all: true,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            expiry: -1,
+            sameSite: undefined,
+            httpOnly: false,
+            path: '/',
+            secure: true,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      })
+    })
   })
 
   describe('onscreen desktop (@webdriver)', async () => {
@@ -191,6 +208,24 @@ describe('spec driver', async () => {
         },
       })
     })
+    it('getCookies()', async () => {
+      await spec.visit(browser, url)
+      await getCookies({
+        all: false,
+        cookies: [
+          {
+            domain: undefined,
+            expiry: undefined,
+            sameSite: undefined,
+            httpOnly: false,
+            path: '/',
+            secure: true,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      })
+    })
   })
 
   describe('mobile browser (@mobile)', async () => {
@@ -223,6 +258,24 @@ describe('spec driver', async () => {
           platformName: 'Android',
           platformVersion: '10',
         },
+      })
+    })
+    it('getCookies()', async () => {
+      await spec.visit(browser, url)
+      await getCookies({
+        all: false,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            expiry: undefined,
+            sameSite: undefined,
+            httpOnly: false,
+            path: '/',
+            secure: true,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
       })
     })
   })
@@ -386,6 +439,9 @@ describe('spec driver', async () => {
         },
       })
     })
+    it('getCookies()', async () => {
+      await getCookies()
+    })
   })
 
   async function isDriver({input, expected}) {
@@ -531,5 +587,9 @@ describe('spec driver', async () => {
       Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
       expected,
     )
+  }
+  async function getCookies(expected) {
+    await browser.addCookie({name: 'hello', value: 'world', secure: true})
+    assert.deepStrictEqual(await spec.getCookies(browser), expected)
   }
 })

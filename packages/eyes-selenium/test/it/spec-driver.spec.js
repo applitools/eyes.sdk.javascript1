@@ -96,6 +96,24 @@ describe('spec driver', async () => {
         },
       })
     })
+    it.only('getCookies()', async () => {
+      const expected = {
+        all: true,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            path: '/',
+            expiry: 16741494013,
+            sameSite: undefined,
+            secure: true,
+            httpOnly: false,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      }
+      await getCookies(expected)
+    })
   })
 
   describe('onscreen desktop (@webdriver)', async () => {
@@ -175,6 +193,25 @@ describe('spec driver', async () => {
           platformVersion: '10',
         },
       })
+    })
+    it('getCookies()', async () => {
+      await spec.visit(driver, url)
+      const expected = {
+        all: false,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            path: '/',
+            expiry: 16741494013,
+            sameSite: undefined,
+            secure: true,
+            httpOnly: false,
+            name: 'hello',
+            value: 'world',
+          },
+        ],
+      }
+      await getCookies(expected)
     })
   })
 
@@ -316,5 +353,9 @@ describe('spec driver', async () => {
       Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
       expected,
     )
+  }
+  async function getCookies(expected) {
+    await driver.manage().addCookie({name: 'hello', value: 'world', expiry: 16741494013})
+    assert.deepStrictEqual(await spec.getCookies(driver), expected)
   }
 })

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support cookies
 
 ## 12.21.5 - 2021/7/14
 

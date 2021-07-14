@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import type * as Playwright from 'playwright'
+import type * as types from '@applitools/types'
 
 export type Driver = Playwright.Page
 export type Element = Playwright.ElementHandle
@@ -122,6 +123,26 @@ export async function scrollIntoView(frame: Context, element: Element | Selector
 }
 export async function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void> {
   await frame.waitForSelector(transformSelector(selector))
+}
+
+export async function getCookies(context: Driver | Context): Promise<types.CookiesObject> {
+  const userAgent = await context.evaluate('navigator.userAgent')
+  const browserContext = isDriver(context) ? context.context() : context.page().context()
+  const allCookies = await browserContext.cookies()
+
+  return {
+    cookies: allCookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: (userAgent as string).indexOf('Chrome') != -1,
+  }
 }
 
 // #endregion

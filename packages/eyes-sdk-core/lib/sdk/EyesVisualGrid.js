@@ -254,7 +254,8 @@ class EyesVisualGrid extends EyesCore {
         )
         const browsers = this._configuration.getBrowsersInfo()
         const showLogs = this._configuration.getShowLogs()
-        const snapshots = await takeDomSnapshots({
+
+        const {snapshots, cookies} = await takeDomSnapshots({
           breakpoints,
           browsers,
           disableBrowserFetching,
@@ -267,6 +268,7 @@ class EyesVisualGrid extends EyesCore {
           getIosDevicesSizes: this._getIosDevicesSizes,
           showLogs,
         })
+
         const [{url}] = snapshots
         if (this.getCorsIframeHandle() === CorsIframeHandles.BLANK) {
           snapshots.forEach(CorsIframeHandler.blankCorsIframeSrcOfCdt)
@@ -283,6 +285,7 @@ class EyesVisualGrid extends EyesCore {
           throwEx,
           snapshot: snapshots,
           url,
+          cookies,
         })
       } finally {
         await EyesUtils.cleanupElementMarkers(

@@ -1,4 +1,5 @@
 import * as utils from '@applitools/utils'
+import type * as types from '@applitools/types'
 import type * as Puppeteer from 'puppeteer'
 
 export type Driver = Puppeteer.Page
@@ -186,6 +187,24 @@ export async function scrollIntoView(frame: Context, element: Element | Selector
 }
 export async function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void> {
   await frame.waitForSelector(transformSelector(selector))
+}
+
+export async function getCookies(page: Driver): Promise<types.CookiesObject> {
+  const cookies = await page.cookies()
+
+  return {
+    cookies: cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: true,
+  }
 }
 
 // #endregion

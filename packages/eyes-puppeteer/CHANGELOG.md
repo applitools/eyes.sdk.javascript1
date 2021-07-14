@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support cookies
 
 ## 1.7.4 - 2021/6/30
 

@@ -4,10 +4,12 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const {resolve} = require('path')
+const fs = require('fs');
 const cors = require('cors')
+const https = require('https');
 
 function testServer(argv = {}) {
-  const {staticPath = resolve('./test/fixtures'), port = 0, allowCors, showLogs, middlewareFile} = argv
+  const {staticPath = resolve('./test/fixtures'), port = 0, allowCors, showLogs, middlewareFile, key, cert} = argv
 
   const app = express()
   app.use(cookieParser())
@@ -50,25 +52,42 @@ function testServer(argv = {}) {
   const log = args => showLogs && console.log(args)
 
   return new Promise((resolve, reject) => {
-    const server = app.listen(port, err => {
-      if (err) {
-        log('error starting test server', err)
-        reject(err)
-      } else {
-        const serverPort = server.address().port
-        const close = server.close.bind(server)
-        log(`test server running at port: ${serverPort}`)
-        resolve({port: serverPort, close})
-      }
-
-      server.on('error', err => {
-        if (err.code === 'EADDRINUSE') {
-          log(`error: test server could not start at port ${server.address().port}: port is already in use.`)
+    let server;
+    if (key && cert) {
+      server = https.createServer({
+        key: fs.readFileSync(key),
+        cert: fs.readFileSync(cert)
+      }, app).listen(port, (err) => {
+        if (err) {
+          log('error starting test server', err)
+          reject(err)
         } else {
-          log('error in test server:', err)
+          const close = server.close.bind(server)
+          log(`test server running at port: ${port}`)
+          resolve({port, close})
         }
-        reject(err)
       })
+    } else {
+      server = app.listen(port, err => {
+        if (err) {
+          log('error starting test server', err)
+          reject(err)
+        } else {
+          const serverPort = server.address().port
+          const close = server.close.bind(server)
+          log(`test server running at port: ${serverPort}`)
+          resolve({port: serverPort, close})
+        }
+      })
+    }
+    
+    server.on('error', err => {
+      if (err.code === 'EADDRINUSE') {
+        log(`error: test server could not start at port ${server.address().port}: port is already in use.`)
+      } else {
+        log('error in test server:', err)
+      }
+      reject(err)
     })
   })
 }

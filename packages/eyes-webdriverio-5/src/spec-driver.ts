@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import * as legacy from './legacy'
+import type * as types from '@applitools/types'
 
 export type Driver = Applitools.WebdriverIO.Browser
 export type Element =
@@ -271,6 +272,38 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
   } else {
     // @ts-ignore
     await element.waitForDisplayed({timeout})
+  }
+}
+
+export async function getCookies(browser: Driver): Promise<types.CookiesObject> {
+  const capabilities = browser.capabilities as any
+  const {isDevTools, isMobile} = browser
+  let allCookies
+  if (isDevTools) {
+    const puppeteer = await browser.getPuppeteer()
+    const [page] = await puppeteer.pages()
+    const {cookies} = await (page as any)._client.send('Network.getAllCookies')
+    allCookies = {cookies, all: true}
+  } else if (!isMobile && capabilities.browserName.search(/chrome/i) !== -1) {
+    const {cookies} = await browser.sendCommandAndGetResult('Network.getAllCookies', {})
+    allCookies = {cookies, all: true}
+  } else {
+    const cookies = await browser.getCookies()
+    allCookies = {cookies, all: false}
+  }
+
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
   }
 }
 

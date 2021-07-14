@@ -267,3 +267,19 @@ export type SessionUrls = {
   readonly batch?: string
   readonly session?: string
 }
+
+export type Cookie = {
+  name: string
+  value: string
+  domain?: string
+  path?: string
+  expires?: Date
+  sameSite?: string
+  httpOnly?: boolean
+  secure?: boolean
+}
+
+export type CookiesObject = {
+  cookies: Cookie[]
+  all: boolean
+}

@@ -1,6 +1,7 @@
 import * as utils from '@applitools/utils'
 import * as legacy from './legacy'
 import type * as Selenium from 'selenium-webdriver'
+import type * as types from '@applitools/types'
 
 export type Driver = Selenium.WebDriver
 export type Element = Selenium.WebElement
@@ -49,7 +50,13 @@ export function transformDriver(driver: Driver): Driver {
     const cmd = require('selenium-webdriver/lib/command')
     cmd.Name.SWITCH_TO_PARENT_FRAME = 'switchToParentFrame'
     driver.getExecutor().defineCommand(cmd.Name.SWITCH_TO_PARENT_FRAME, 'POST', '/session/:sessionId/frame/parent')
+
+    cmd.Name.EXECUTE_CDP = 'executeCdp'
+    driver
+      .getExecutor()
+      .defineCommand(cmd.Name.EXECUTE_CDP, 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
   }
+
   return driver
 }
 export function isStaleElementError(error: any): boolean {
@@ -198,6 +205,43 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   await driver.wait(until.elementIsVisible(element), timeout)
 }
 
+export async function getCookies(driver: Driver): Promise<types.CookiesObject> {
+  const {browserName, isMobile} = await getDriverInfo(driver)
+  const seleniumVersion3 = process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+  console.log(seleniumVersion3)
+  let allCookies
+  if (!isMobile && browserName.search(/chrome/i) !== -1) {
+    const cmd = require('selenium-webdriver/lib/command')
+    const command = new cmd.Command(seleniumVersion3 ? cmd.Name.EXECUTE_CDP : 'sendAndGetDevToolsCommand')
+      .setParameter('cmd', 'Network.getAllCookies')
+      .setParameter('params', {})
+    if (seleniumVersion3) {
+      const {cookies} = await (driver as any).schedule(command)
+      allCookies = {cookies, all: true}
+    } else {
+      const {cookies} = await (driver as any).execute(command)
+      allCookies = {cookies, all: true}
+    }
+  } else {
+    const cookies = await driver.manage().getCookies()
+    allCookies = {cookies, all: false}
+  }
+
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
+  }
+}
+
 // #endregion
 
 // #region TESTING
@@ -220,7 +264,10 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     appium = false,
     args = [],
     headless,
-  } = parseEnv({...env, legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'})
+  } = parseEnv({
+    ...env,
+    legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3',
+  })
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {
     const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]

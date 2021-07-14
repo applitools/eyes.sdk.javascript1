@@ -224,6 +224,25 @@ describe('spec driver', () => {
         expected,
       )
     })
+    it('getCookies()', async function (driver) {
+      await driver.setCookie({name: 'hello', value: 'world', expiry: 16741494013, sameSite: 'None', secure: true})
+      const cookies = await spec.getCookies(driver)
+      assert.deepStrictEqual(cookies, {
+        all: false,
+        cookies: [
+          {
+            domain: 'applitools.github.io',
+            expiry: 16741494013,
+            httpOnly: false,
+            name: 'hello',
+            path: '/',
+            sameSite: 'None',
+            secure: true,
+            value: 'world',
+          },
+        ],
+      })
+    })
     it.skip('click()')
     it.skip('type()')
     it.skip('scrollIntoView()')

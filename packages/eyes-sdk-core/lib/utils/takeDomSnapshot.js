@@ -30,6 +30,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     removeReverseProxyURLPrefixes = !!process.env
       .APPLITOOLS_SCRIPT_REMOVE_REVERSE_PROXY_URL_PREFIXES,
     uniqueUrl = generateUniqueUrl,
+    onSnapshotContext,
   } = options
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
   const arg = {
@@ -66,13 +67,13 @@ async function takeDomSnapshot(logger, driver, options = {}) {
       }`,
     )
 
+    await onSnapshotContext(context)
     const snapshot = await EyesUtils.executePollScript(logger, context, scripts, {
       executionTimeout,
       pollTimeout,
     })
 
     const selectorMap = createFramesPaths({snapshot, logger})
-
     for (const {path, parentSnapshot, cdtNode} of selectorMap) {
       const references = path.reduce((parent, selector) => {
         return {reference: {type: 'css', selector}, parent}
@@ -88,6 +89,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
             err,
           )
         })
+
       if (frameContext) {
         const frameSnapshot = await takeContextDomSnapshot(frameContext)
         frameSnapshot.url = uniqueUrl(frameSnapshot.url, 'applitools-iframe')
