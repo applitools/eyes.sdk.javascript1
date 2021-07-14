@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support cookies
 ## 1.16.3 - 2021/7/14
 
 - updated to @applitools/eyes-api@1.0.7 (from 1.0.3)
