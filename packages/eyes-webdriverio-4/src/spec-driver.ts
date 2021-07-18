@@ -1,5 +1,6 @@
 import * as utils from '@applitools/utils'
 import * as legacy from './legacy'
+import type * as types from '@applitools/types'
 
 export type Driver = WebdriverIO.Client<void>
 export type Element =
@@ -56,14 +57,14 @@ export function transformElement(element: Element): Element {
 export function extractSelector(element: Element): Selector {
   return utils.types.has(element, 'selector') ? (element.selector as string) : undefined
 }
-export function isStaleElementError(error: any, selector: Selector): boolean {
+export function isStaleElementError(error: any): boolean {
   if (!error) return false
   const errOrResult = error.originalError || error
   return errOrResult instanceof Error
     ? (errOrResult as any).seleniumStack && (errOrResult as any).seleniumStack.type === 'StaleElementReference'
-    : errOrResult.value && errOrResult.selector && errOrResult.selector === selector
+    : errOrResult.value && errOrResult.selector
 }
-export function isEqualElements(_browser: Driver, element1: Element, element2: Element): boolean {
+export async function isEqualElements(_browser: Driver, element1: Element, element2: Element): Promise<boolean> {
   if (!element1 || !element2) return false
   const elementId1 = extractElementId(element1)
   const elementId2 = extractElementId(element2)
@@ -110,8 +111,8 @@ export async function setWindowSize(browser: Driver, size: {width: number; heigh
   await browser.windowHandlePosition({x: 0, y: 0})
   await browser.windowHandleSize(size)
 }
-export async function getOrientation(browser: Driver): Promise<string> {
-  const orientation = ((await browser.getOrientation()) as unknown) as string
+export async function getOrientation(browser: Driver): Promise<'landscape' | 'portrait'> {
+  const orientation = (await (browser as any).getOrientation())
   return orientation.toLowerCase()
 }
 export async function getDriverInfo(browser: Driver): Promise<any> {
@@ -164,6 +165,32 @@ export async function scrollIntoView(browser: Driver, element: Element | Selecto
 }
 export async function waitUntilDisplayed(browser: Driver, selector: Selector, timeout: number): Promise<void> {
   await browser.waitForVisible(selector as string, timeout)
+}
+
+export async function getCookies(browser: Driver): Promise<types.CookiesObject> {
+  const {isMobile, browserName} = await getDriverInfo(browser);
+  let allCookies
+  if (!isMobile && browserName.search(/chrome/i) !== -1) {
+    const {cookies} = await (browser as any).sendCommandAndGetResult('Network.getAllCookies', {})
+    allCookies = {cookies, all: true}
+  } else {
+    const cookies = await browser.getCookie()
+    allCookies = {cookies, all: false}
+  }
+
+  return {
+    cookies: allCookies.cookies.map((cookie: any) => ({
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      expiry: cookie.expires ?? cookie.expiry,
+      sameSite: cookie.sameSite,
+      httpOnly: cookie.httpOnly,
+      secure: cookie.secure,
+    })),
+    all: allCookies.all,
+  }
 }
 
 // #endregion

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/api-extractor@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.1.1.tgz#1fa26e8ebf59e77a0ad77d3b9521eecadd94f0a3"
-  integrity sha512-BdDxCqXJm4gEcN2BA7dkvCuvJaRdt0ZEdeQ5kcFqrgWjDWUHj1nDVGU8DgGT1vZqc0FFg6mgNI9naEMSXPTExA==
+"@applitools/api-extractor@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/@applitools/api-extractor/-/api-extractor-1.1.3.tgz#51e8b9443fd25f939e77d8c51370ff561f16c05c"
+  integrity sha512-SYu5oYjyZYgvlPpwxaCGSA2WS/sLyaox2kQ0C5Of/hwCK0sOkouTq9VlbfpaREKnWBoP2SAazeuNJJ1DV9NRlg==
   dependencies:
     prettier "2.2.1"
     typedoc "0.20.33"
@@ -35,6 +35,16 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
+"@applitools/dom-snapshot@4.5.4":
+  version "4.5.4"
+  resolved "https://registry.npmjs.org/@applitools/dom-snapshot/-/dom-snapshot-4.5.4.tgz#e0cee1d34f316ccfb04b77df9bf56c2909483f70"
+  integrity sha512-v58sScU9KJMDUUcF5yPLqx0b9oJCdy9imSjmKv5lTsUBtaEy34+45JH6X1synEHFkrIzrxmSmC9ECbBXqPFSlQ==
+  dependencies:
+    "@applitools/dom-shared" "1.0.5"
+    "@applitools/functional-commons" "1.6.0"
+    css-tree "1.0.0-alpha.39"
+    pako "1.0.11"
+
 "@applitools/driver@1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.0.7.tgz#f2b96fd43ae4c7e381bfba666687041a73c1c54a"
@@ -43,19 +53,19 @@
     "@applitools/snippets" "2.1.3"
     "@applitools/utils" "1.2.0"
 
-"@applitools/eyes-api@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-api/-/eyes-api-1.0.3.tgz#07d95fb9fb5b408a98ec3e7d28290067daecbab4"
-  integrity sha512-zrQa6vZyu4ob5JiW/6XOpvx3iimBduhzEAI6dUKx61CX2JUGbCqGU9tyyB8lkGgaI2wAC9YKqz0xulORD6/JEw==
+"@applitools/eyes-api@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/@applitools/eyes-api/-/eyes-api-1.0.7.tgz#553c13d1be16546a917620c63d00a758cb00d83e"
+  integrity sha512-52tse1Jr2FnJS077YpIWwy3WaVvfakh/NcDwJZGJo+cJSkhphPpUy8QrvhKXbjv2QOF4dP/hcgAKGMpe8Y1gYQ==
   dependencies:
     "@applitools/logger" "1.0.1"
-    "@applitools/types" "1.0.1"
+    "@applitools/types" "1.0.3"
     "@applitools/utils" "1.2.0"
 
-"@applitools/eyes-sdk-core@12.20.3":
-  version "12.20.3"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.20.3.tgz#684dc155fdb50bfc1ee0c917a8b1c395efd78f1f"
-  integrity sha512-3Rsm7eDPGCQHx6LXmhr50JytqndrqDSERkdLTxuK1rl2eYygWhJOsRq6enn+lz5WDCj5GUQ2cZCozpBBOutzgg==
+"@applitools/eyes-sdk-core@12.21.3":
+  version "12.21.3"
+  resolved "https://registry.npmjs.org/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.21.3.tgz#4dcef5abeac2fa6cb37f5a84e910f0999f178971"
+  integrity sha512-ShdyYDcigUAtgXjyjhaGqVW5IUBjcfzhRvahU78cXPUsbFE9DcSsm6ktJWkAk2EliA9JYDw2TBY0bMlyXxdOyw==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.3"
@@ -63,6 +73,29 @@
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/screenshoter" "3.0.8"
     "@applitools/snippets" "2.1.3"
+    "@applitools/types" "1.0.3"
+    axios "0.21.1"
+    chalk "3.0.0"
+    cosmiconfig "6.0.0"
+    dateformat "3.0.3"
+    debug "4.2.0"
+    deepmerge "4.2.2"
+    png-async "0.9.4"
+    stack-trace "0.0.10"
+    tunnel "0.0.6"
+
+"@applitools/eyes-sdk-core@12.21.5":
+  version "12.21.5"
+  resolved "https://registry.npmjs.org/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.21.5.tgz#63aba5685967dfe0c2674759f8b353f0accb5647"
+  integrity sha512-AYQ5LkU02pREO+UCfGhWOlTtjWUDVsaLR/bvPpCAxLx+J5USl4fcSiTdOeWsnpOHLyN27P6Rj3gJucfVZBM5xg==
+  dependencies:
+    "@applitools/dom-capture" "11.0.1"
+    "@applitools/dom-snapshot" "4.5.4"
+    "@applitools/driver" "1.0.7"
+    "@applitools/isomorphic-fetch" "3.0.0"
+    "@applitools/screenshoter" "3.0.8"
+    "@applitools/snippets" "2.1.3"
+    "@applitools/types" "1.0.4"
     axios "0.21.1"
     chalk "3.0.0"
     cosmiconfig "6.0.0"
@@ -272,22 +305,35 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.1.tgz#74cd7d34c9ea5d3e3b3f2ff548e4d3993ed80dfe"
-  integrity sha512-FuPsoQgnLiQe3prYqJTPTPme/Ia40yL54lgei5PNLNoe24X0gj5kB7SO4PZxOofiQHgsR5qSBplyRMBi4iSjag==
+"@applitools/test-utils@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@applitools/test-utils/-/test-utils-1.0.4.tgz#46d50b7ab107188ce551d58e903969d29a6e9785"
+  integrity sha512-ygiJz0ZdJHa9XznTKhixwT3bSHyAfHsKsiJ33QvsYnuzhmBhCrkyRujBRdYgHvIILtX45srCJQGHvHNgUqHodg==
+  dependencies:
+    chalk "4.1.1"
+    node-fetch "2.6.1"
+
+"@applitools/types@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@applitools/types/-/types-1.0.3.tgz#1f7c8eac46df2f534ab95f36f8ef3a1341e2917e"
+  integrity sha512-g2T2fq4PHyLZNbsPA68RSymVrEDjI1F0kMoLa/CJXZahYaZTUaS9f1n93CO2mOQyMlXyfywffUFa+nL6mQDFLA==
+
+"@applitools/types@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@applitools/types/-/types-1.0.4.tgz#09d461e6da2654b2e503da509e33d0254e5f789b"
+  integrity sha512-qD07Vnif3koE5tz45RqP/AKnnjTJvdttum1zBD6MjbB2t6xxrvTRbGkgz2PC5b5zw8fPqsT3zoUK25JDW32JLg==
 
 "@applitools/utils@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.0.tgz#a79774ffdb894a73fbca5d24eba66ef17119a7c6"
   integrity sha512-NzynRgRavbTns5M85DJXXaMY/57xBte3F/tnK5nr3DSBhKTQnkjXIFwryPU5bVwEcpoGEVF0T1Gyq37WnDe38Q==
 
-"@applitools/visual-grid-client@15.8.9":
-  version "15.8.9"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.9.tgz#231d457834371dd4d624708b20684c7e05b6a2da"
-  integrity sha512-lScw9E/wp6F/ijGHT5ipSlMRi/mi5neas9ONnihFkt1sUmRjExogeYC2cktx0kGlMLUqWzS3PB8K9LdMnWQN2w==
+"@applitools/visual-grid-client@15.8.13":
+  version "15.8.13"
+  resolved "https://registry.npmjs.org/@applitools/visual-grid-client/-/visual-grid-client-15.8.13.tgz#484aa94fbeb2632b8c28a9fe1376eebbf1987ee0"
+  integrity sha512-98s8GhC/z22QKKck0ZgxpPMBYMTu6JsnnzS0o3yfpa1vxqF5Z0fxvJw6IiebCz8qNBTfHdKwvRT0NDohl8Pg7A==
   dependencies:
-    "@applitools/eyes-sdk-core" "12.20.3"
+    "@applitools/eyes-sdk-core" "12.21.3"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.3"
     "@applitools/isomorphic-fetch" "3.0.0"
